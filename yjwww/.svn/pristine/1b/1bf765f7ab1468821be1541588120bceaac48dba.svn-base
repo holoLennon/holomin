@@ -1,0 +1,26 @@
+// Ionic Starter App
+/**
+ * 启动加载
+ */
+app.run(function($ionicPlatform, $rootScope, $state, $ionicLoading, $log,zspecService,Storage) {
+    $log.debug("app.run");
+    if (_ClientInfo.cli == 1 || _ClientInfo.cli == 2) {
+        //cid的回调
+        var callback = function(cid) {
+            $log.debug("cid:" + cid);
+            var user = Storage.get(LOGINED_USER_B);
+            if (user != null) {
+                zspecService.putCid(cid);
+            }
+            Storage.set(GETUICID, cid);
+        };
+        //启动
+        document.addEventListener("deviceready", function() {
+            getui.init(callback);
+        }, false);
+        //关闭后重新打开
+        document.addEventListener("resume", function() {
+            getui.getCid(callback);
+        }, false);
+    }
+});

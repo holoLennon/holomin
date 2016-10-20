@@ -1,0 +1,8 @@
+修改：
+rjs/app.js中的版本号
+以上热更使用
+如果HD有变化，要更新apk或ipa则还要修改以下：
+copy/0/苹果/config.xml
+copy/0/安卓/config.xml
+\copy\1\app_ios\www\js\conf_app.js中的硬件版本号
+\copy\1\app_android\www\js\conf_app.js中的硬件版本号

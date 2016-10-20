@@ -1,0 +1,152 @@
+<!--Cmscontent，内容详细信息-->
+<ion-view view-title='内容' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">修改时间:{{obj.gmtModifiedString}}</li>
+		<li class="item">发布时间:{{obj.gmtReleaseString}}</li>
+		<li class="item">显示时间:{{obj.gmtShowString}}</li>
+		<li class="item">状态:{{obj.statusApplyPassRefuseString}}</li>
+		<li class="item">频道:{{obj.cmschannelIdString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">主标题:{{obj.title}}</li>
+		<li class="item">副标题:{{obj.title1}}</li>
+		<li class="item">肩标题:{{obj.title2}}</li>
+		<li class="item">作者:{{obj.author}}</li>
+		<li class="item"><a href='\"+{{obj.linkto}}+\"' target='_blank'>查看</a></li>
+		<li class="item">图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">图2</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">图3</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img3}}' style="height:120px"></li>
+		<li class="item">图4</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img4}}' style="height:120px"></li>
+		<li class="item">图5</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img5}}' style="height:120px"></li>
+		<li class="item">简介:{{obj.intro}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号:<input type="text" placeholder="序号"  ng-model="obj.id"></label>
+		<label class="item item-input"><span class="input-label">发布时间:</span><input type="datetime" ng-model="obj.gmtRelease"></label>
+		<label class="item item-input"><span class="input-label">显示时间:</span><input type="datetime" ng-model="obj.gmtShow"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				状态:
+			</div>
+			<select  ng-model="obj.statusApplyPassRefuse">
+				<option ng-repeat="(key,val) in obj.statusApplyPassRefuseMap" value="{{key}}" ng-selected="val==obj.statusApplyPassRefuse">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">频道:<input type="text" placeholder="频道"  ng-model="obj.cmschannelId"></label>
+		<label class="item item-input">排列顺序:<input type="text" placeholder="排列顺序"  ng-model="obj.priority"></label>
+		<label class="item item-input">主标题:<input type="text" placeholder="主标题"  ng-model="obj.title"></label>
+		<label class="item item-input">副标题:<input type="text" placeholder="副标题"  ng-model="obj.title1"></label>
+		<label class="item item-input">肩标题:<input type="text" placeholder="肩标题"  ng-model="obj.title2"></label>
+		<label class="item item-input">作者:<input type="text" placeholder="作者"  ng-model="obj.author"></label>
+		<label class="item item-input">直接链接到:<input type="text" placeholder="直接链接到"  ng-model="obj.linkto"></label>
+        <label class="item item-input">图1:
+          <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 120px;"></label>
+        <label class="item item-input">图2:
+          <div ngf-select ngf-drop ng-model="files_img2" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img2}}" style="height: 120px;"></label>
+        <label class="item item-input">图3:
+          <div ngf-select ngf-drop ng-model="files_img3" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img3}}" style="height: 120px;"></label>
+        <label class="item item-input">图4:
+          <div ngf-select ngf-drop ng-model="files_img4" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img4}}" style="height: 120px;"></label>
+        <label class="item item-input">图5:
+          <div ngf-select ngf-drop ng-model="files_img5" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img5}}" style="height: 120px;"></label>
+		<label class="item item-input">简介:<input type="text" placeholder="简介"  ng-model="obj.intro"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

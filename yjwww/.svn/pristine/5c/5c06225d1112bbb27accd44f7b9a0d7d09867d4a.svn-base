@@ -1,0 +1,39 @@
+/**
+ * ProductTypeLinkProductListHomeCtrl，商品类型包含商品列表
+ */
+appctrl.controller('HomeCtrl', function ($scope, $rootScope, $timeout,
+                                                                   $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                                                   $location, $state,
+                                                                   $cordovaNetwork, $cordovaGoogleAnalytics, $log, Storage,
+                                                                   ENV, ProductTypeLinkProductService, GaodeService, CommonService,MemberdoctorService) {
+  $log.debug("enter Home ctrl");
+
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function () {
+    $log.debug("Home ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function () {
+    $log.debug("Home ctrl afterEnter");
+    if (ctrlReinitMap.get('HomeCtrl')) {
+      ctrlReinitMap.remove('HomeCtrl');
+      $log.debug("Homectrl afterEnter init");
+     // $scope.init();
+    }
+  });
+
+  /**
+   * 初始化
+   */
+  $scope.init = function () {
+
+  };
+
+
+  $scope.init();
+  ctrlReinitMap.remove('HomeCtrl');
+});

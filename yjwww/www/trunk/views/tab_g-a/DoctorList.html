@@ -1,0 +1,49 @@
+<!--Homepage业务员首页-->
+<ion-view view-title="大数据" hide-nav-bar="true" class="allweb" style="background-color: #fff;">
+  <ion-header-bar class="bar-positive row">
+    <div class="bar bar-header bar-positive row" style="border: none;">
+      <ul style="width:100%;margin-top: 2px;">
+        <li class="fl" style="width:10%" ng-click="rx('#/tab/SalesmanQrcode/'+meuser.id)"><a ng-click="rx('#/tab/SalesmanQrcode/'+meuser.id)"><img src="res/img/icon_nav_saoma.png" style="height:30px;width:30px;"/></a></li>
+        <li class="fl" style="width:70%;margin-left:15px;text-align: left;"><input style="height: 30px;width:100%;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="输入医生姓名进行搜索" ng-model="searchData" ></li>
+        <li class="fl" style="width:10%;margin-left: 10px;"><a ng-click="search()" style="text-decoration: none;"><i class="ion-ios-search" style="font-size: 26px;position: absolute;top:11px;opacity: 0.8;color: #fff;"></i></a></li>
+      </ul>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="100%" collection-item-height="150px" style="position: relative;margin-top: 10px;">
+        <a href="{{obj.qrimg}}" style="position: absolute;left:82%;top:5%;">
+          <img reset-img ng-src="{{obj.qrimg}}" style="margin:auto;display: block;width: 50px;border: 2px solid indianred"/>
+        </a>
+        <a>
+          <ul ng-click="goUrlDoctor(obj)">
+            <li class="fl" style="width:30%">
+              <img ng-if="obj.img1==null ||obj.obj4!=1   " src="res/img/yishengtouxiang.png" style="mwidth: 80px;height:80px;margin-left: -65px;vertical-align: middle;border-radius: 50%;" />
+              <img ng-if="obj.img1" ng-src='{{obj.img1}}' style="width:80px;height:80px;margin-left: -65px;vertical-align: middle;border-radius: 50%;" />
+            </li>
+            <li class="fl" style="width:70%;margin-left: -55px;">
+              <h2 style="margin-left:10px;margin-top: -10px;">{{obj.name}}</h2>
+              <div class="item-text-wrap" ng-if="obj.obj4!=1" style="width:100%;margin-left:45px;padding-bottom:3px; font-size: 14px;color: #2F2F2F;margin-left:10px;">
+                <span>职称：{{obj.dlevelString}}</span></br>
+                <span>所属单位：{{obj.company}}</span></br>
+                <span  class="fr" style="margin-top: 10px;">审核中</span></br>
+              </div>
+              <div class="item-text-wrap" ng-if="obj.obj4==1" style="width:100%; margin-left:10px;padding-bottom:3px; font-size: 14px;color: #2F2F2F;">
+                <span>职称：{{obj.dlevelString}}</span></br>
+                <span>所属单位：{{obj.company}}</span></br>
+                <span>会员：<i style="color: #DA0E0E;">{{obj.obj1}}</i>人</span>
+                <span style="margin-left:15px;">药笺：<i style="color: #DA0E0E;">{{obj.obj2}}</i>单</span></br>
+                <span>已完成：<i style="color: #DA0E0E;">{{obj.obj3}}</i>单</span></br>
+                <span  class="fr">审核通过</span></br>
+              </div>
+            </li>
+          </ul>
+        </a>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,29 @@
+<!--Seller，业务员详细信息-->
+<ion-view view-title='业务员' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">级别:{{obj.dlevelString}}</li>
+		<li class="item">姓名:{{obj.name}}</li>
+		<li class="item">身份证号:{{obj.idcard}}</li>
+		<li class="item">年龄:{{obj.age}}</li>
+		<li class="item">性别:{{obj.usersexString}}</li>
+		<li class="item">入司时间:{{obj.gmtInString}}</li>
+		<li class="item">就职时间(合作时间):{{obj.gmtWorkString}}</li>
+		<li class="item">所在区域:{{obj.area}}</li>
+		<li class="item">直接销售总额:{{obj.mmoney}}</li>
+		<li class="item">下属团队销售总额:{{obj.mmoneyteam}}</li>
+		<li class="item">总销售金额:{{obj.mmoneyall}}</li>
+		<li class="item">上级:{{obj.parentidString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">孩子数量:{{obj.childrennum}}</li>
+		<li class="item">祖先:{{obj.family}}</li>
+		<li class="item">二维码</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.qrimg}}' style="height:120px"></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

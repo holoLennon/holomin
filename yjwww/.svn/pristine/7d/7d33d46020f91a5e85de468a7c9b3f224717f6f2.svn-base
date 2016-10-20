@@ -1,0 +1,100 @@
+<!--Wwwhome，手机页首页配置详细信息-->
+<ion-view view-title='首页' hide-nav-bar="true" class="allweb" cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="height: 100%;">
+      <img src="res/img/logo-b.png" style="height:30px;width:30px;margin-top: -3px;"/>
+    </div>
+    <div class="col col-70" style="height:100%;margin-left:-15px;">
+      <input style="height: 30px;width:100%;margin-top: -3px;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="请输入药品名称" ng-model="searchData" >
+    </div>
+    <div class="col col-10" ng-click="search()" style="height:100%;padding-left: 3%;">
+      <i class="ion-ios-search" style="font-size: 24px;position: absolute;top:11px;opacity: 0.8;color: #fff;"></i>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="has-tabs has-header">
+    <ul class="list" ng-if="obj && vm.isedit==false">
+      <li class="gund" >
+        <ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/1')">
+              <img src="res/img/tui1.png" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/3')">
+              <img src="res/img/tui2.png" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/4')">
+              <img src="res/img/tui3.png" width="100%">
+            </div>
+          </ion-slide>
+        </ion-slide-box>
+      </li>
+      <li style="width: 100%;margin-top: 10px;margin-bottom: 10px;font-weight: normal;font-size: 14px;">
+        <div class="fl" style="text-align: center;width: 25%;">
+          <a href="#/tab/DoctorTypeList" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/mingyimingjia.png" style="width:65%;"/>
+            <p>名医名家</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 25%;">
+          <a href="#/tab/MemberdoctorList" style="text-decoration: none;color: #4d4d4d;">
+            <img ng-if="msgnum==0"src="res/img/sirenyisheng.png" style="width:65%;"/>
+            <img ng-if="msgnum>0" src="res/img/sirenyishengnew.png" style="width:65%;"/>
+            <p>我的医生</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 25%;">
+          <a href="#/tab/ProductList/0" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/didaoyaocai.png" style="width: 65%;"/>
+            <p>道地药材</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 25%;">
+          <a href="#/tab/ProductList/1" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/yangshengguan.png" style="width:65%;"/>
+            <p>养生馆</p>
+          </a>
+        </div>
+      </li>
+      <li class="item row" style="height:100px;border: none">
+        <div class="col"><a href="#/tab/Topic/5"><img src='res/img/mingshi.jpg' style=";width: 100%;position:absolute; right:0%;top:0%;"></a></div>
+      </li>
+      <li class="row" style="margin-top:10px; border-top: 0.5px solid #ddd;">
+        <div class="col" style="padding-top: 10px;"><b style="border:1px solid #7E5335;height:7px;margin-left: 5px;margin-right: 4px;"></b>名师经典</div>
+      </li>
+      <li style="margin-top: 5px;">
+        <div class="fl" style="text-align: center;width: 50%;">
+          <a href="#/tab/Topic/6" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/yangtu1.jpg" style="width:98%;"/>
+            <p>中医药膳</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 50%;">
+          <a href="#/tab/Topic/6" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/yangtu2.jpg" style="width:98%;"/>
+            <p>中医药剂</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 50%;">
+          <a href="#/tab/Topic/6" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/yangtu3.jpg" style="width: 98%;"/>
+            <p>中医典籍</p>
+          </a>
+        </div>
+        <div class="fl" style="text-align: center;width: 50%;">
+          <a href="#/tab/Topic/6" style="text-decoration: none;color: #4d4d4d;">
+            <img src="res/img/yangtu4.jpg" style="width:98%;"/>
+            <p>中医文化</p>
+          </a>
+        </div>
+      </li>
+    </ul>
+    </ion-content>
+  </ion-view>

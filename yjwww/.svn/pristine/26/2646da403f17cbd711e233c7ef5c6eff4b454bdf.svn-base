@@ -1,0 +1,37 @@
+<!--DoctorTypeList，医生科室列表-->
+<ion-view view-title="医生科室列表"  >
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <div class="gund" >
+      <ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+        <ion-slide>
+          <div class="box blue" >
+            <img src="res/img/shouye1.jpg" width="100%">
+          </div>
+        </ion-slide>
+        <ion-slide>
+          <div class="box blue">
+            <img src="res/img/topic14.jpg" width="100%">
+          </div>
+        </ion-slide>
+        <ion-slide>
+          <div class="box blue">
+            <img src="res/img/topic15.jpg" width="100%">
+          </div>
+        </ion-slide>
+      </ion-slide-box>
+    </div>
+    <ion-list class="list">
+      <div style="width:100%;">
+        <span style="font-size: 16px;font-weight:400;line-height: 28px;color: #0099FF;padding-left: 12px;">按科室找医生</span>
+        <ul style="width:100%;border-top: 0.5px solid #ddd;">
+          <li ng-repeat="obj in list" ng-click="rx('#/tab/DoctorList/'+obj.id)" style="width:25%;float:left;border-right: 0.5px solid #ddd;border-bottom: 0.5px solid #ddd;text-align: center;">
+            <img ng-src="{{obj.img}}" reset-img style="height: 65px;padding-top: 5px;"/>
+          </li>
+        </ul>
+      </div>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

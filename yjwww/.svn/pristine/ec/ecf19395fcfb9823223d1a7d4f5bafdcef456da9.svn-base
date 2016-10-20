@@ -1,0 +1,71 @@
+<!--Editmember，会员密码修改-->
+<ion-view view-title="个人信息" cache-view="false">
+    <ion-content style="margin-bottom: 46px;">
+        <ul>
+            <label>
+                <label class="item item-input" style="border-radius: 0px;border:none;border-bottom:0.5px solid #ddd;">
+                    <!--<img src="res/img/yishengtouxiang.png" style="max-width: 60px;max-height:60px;"/>-->
+                    <img reset_img="Doc" ng-src='{{obj.img1}}' style="max-width:60px;max-height:60px;"/>
+                  <span style="font-size: 10px;margin-top: 35px;margin-left:30%;text-alignt: right" >点击下方相机按钮上传图像
+                   <br><i ng-if="progressPercentage>0 && progressPercentage<100" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+                  </span>
+                </label>
+            </label>
+            <label class="item item-input" style="overflow: visible;">姓名：<input type="text" placeholder="姓名"  ng-model="obj.name"  ng-readonly="!isedit" style="padding-left: 45px;"><span style="color: #ccc;font-size: 12px;position:relative;left:-30px;">不可修改</span></label>
+            <label>
+                <div class="item item-input item-select" style="width:180px;border:none;height: 80%;border-top: 0.5px solid #ddd;">
+                    <div class="input-label">性别：
+                        <select  ng-model="obj.usersex" style="font-size: 14px;width:100px;text-align: left;background-color:#f4f4f4;color: #714629;">
+                            <option ng-repeat="(key,val) in obj.usersexMap" value="{{key}}" ng-selected="val==obj.usersexString">{{val}}</option>
+                        </select>
+                    </div>
+                </div>
+            </label>
+          <label>
+                <div class="item item-input item-select" style="width:220px;border:none;height: 80%;border-top: 0.5px solid #ddd;">
+                    <div class="input-label">职称：
+                        <select  ng-model="obj.dlevel" style="background-color: #f4f4f4;">
+                            <option ng-repeat="(key,val) in obj.dlevelMap" value="{{key}}" ng-selected="val==obj.dlevelString">{{val}}</option>
+                        </select>
+                    </div>
+                </div>
+            </label>
+          <label class="item item-input item-input-wrapper" style="height: 100px;overflow: visible;padding-left: 16px;">主治病症：
+            <textarea row="3" style="height:100%;width: 100%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="您擅长的主治病症"  ng-model="obj.majorMedical"></textarea>
+          </label>
+            <label class="item item-input">执业单位：<input type="text" placeholder="工作单位"  ng-model="obj.company"></label>
+            <label class="item item-input">电子邮件：<input type="text" placeholder="电子邮件"  ng-model="obj.email"></label>
+          <label class="item item-input">图文咨询：<input type="text" placeholder="图文咨询"  ng-model="obj.price">元/24小时</label>
+        </ul>
+    </ion-content>
+    <div class="bar bar-subfooter" style="height: 35px;background-color: #F4F4F4;">
+        <ul style="width: 100%;height:100%;padding-bottom:5px;">
+            <li class="fr" style="width:15%;">
+                <div class="up-buttons" style="margin-top:-20px;">
+                    <div ngf-select ngf-drop ng-model="files" ngf-model-invalid="invalidFiles"
+                         ng-model-options="modelOptionsObj"
+                         ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                         ng-disabled="disabled" ngf-capture="capture"
+                         ngf-drag-over-class="dragOverClassObj"
+                         ngf-validate="validateObj"
+                         ngf-resize="resizeObj"
+                         ngf-resize-if="resizeIfFn($file, $width, $height)"
+                         ngf-dimensions="dimensionsFn($file, $width, $height)"
+                         ngf-duration="durationFn($file, $duration)"
+                         ngf-keep="keepDistinct ? 'distinct' : keep"
+                         ngf-fix-orientation="orientation"
+                         ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+                        <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+                    </div>
+                </div>
+            </li>
+            <li class="fr" style="width: 85%;height:90%;">
+                <div style="text-align: center;">
+                    <a ng-click="vm.isedit=false;save()" class="button button-positive"style="margin-top:-20px;width:48%;margin-left: 2px" >确定</a>
+                    <button class="button button-positive" ng-click="rx('#/tab/User/'+obj.id)"style="margin-top:-20px;width:48%;margin-left: 4px" >修改密码</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+</ion-view>
+

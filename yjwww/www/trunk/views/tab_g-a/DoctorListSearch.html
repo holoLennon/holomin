@@ -1,0 +1,39 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="医生列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+    <ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="goUrlDoctor(obj)" collection-item-width="100%" collection-item-height="160px">
+                <a >
+                    <ul>
+                        <li class="fl" style="width: 30%;">
+                            <!--<img reset-img ng-src='{{obj.img1}}'style="max-width: 100px;max-height:110px;margin-left: -55px;vertical-align: middle;" ></li>-->
+                            <img ng-if="obj.img1==null" src="res/img/yishengtouxiang.png" style="max-width: 100px;max-height:110px;margin-left: -55px;vertical-align: middle;" />
+                            <img ng-if="obj.img1!=null" ng-src='{{obj.img1}}' style="max-width: 100px;max-height:110px;margin-left: -55px;vertical-align: middle;" />
+                        <li class="fl" style="width: 70%;margin-left: -55px;">
+                            <h2 style="margin-left:45px;margin-top: -10px;">{{obj.name}}</h2>
+                            <div ng-if="obj.obj4!=1" style="margin-left:45px;padding-bottom:3px; font-size: 14px;color: #2F2F2F;">
+                                <span>职称：{{obj.dlevelString}}</span></br>
+                                <span>所属单位：{{obj.hospitalIdStringid}}</span></br>
+                                <span  class="fr">审核中</span></br>
+                            </div>
+                            <div ng-if="obj.obj4==1" style="margin-left:45px;padding-bottom:3px; font-size: 14px;color: #2F2F2F;">
+                                <span>职称：{{obj.dlevelString}}</span></br>
+                                <span>所属单位：{{obj.hospitalIdStringid}}</span></br>
+                                <span>会员：<i style="color: #DA0E0E;">{{obj.obj1}}</i>人</span></br>
+                                <span>药笺：<i style="color: #DA0E0E;">{{obj.obj2}}</i>单</span></br>
+                                <span>已完成：<i style="color: #DA0E0E;">{{obj.obj3}}</i>单</span></br>
+                                <span  class="fr">审核通过</span></br>
+                            </div>
+                        </li>
+                    </ul>
+                </a>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

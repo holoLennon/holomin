@@ -1,0 +1,10 @@
+<ion-view view-title="订单详情">
+    <ion-content has-bouncing="false"><!--内容不会向下拖出上面的空白-->
+        <div class="list card">
+            <div class="item item-body">
+                <h2 class="bargin_tit">我的总销售额</h2>
+                <h2 class="bargin_tit" ng-if="obj!=null">共{{obj.totalAskSumprice}}元</h2>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

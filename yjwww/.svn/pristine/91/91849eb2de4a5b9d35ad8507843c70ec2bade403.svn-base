@@ -1,0 +1,26 @@
+<!--CartList，购物车列表-->
+<ion-view view-title="购物车列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Cart/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Cart/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>序号ID:{{obj.id}}</span>
+				<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+				<span>消费者会员:{{obj.memberIdString}}</span>
+				<span>产品:{{obj.productIdString}}</span>
+				<span>数量:{{obj.num}}</span>
+				<span>单价:{{obj.price}}</span>
+				<span>总价:{{obj.sumprice}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

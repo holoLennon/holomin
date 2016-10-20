@@ -1,0 +1,125 @@
+/**
+ * UserAddr，用户的收货地址详细
+ */
+appctrl.controller('UserAddrCtrl', function($scope, $rootScope, $log, $timeout,
+                                             $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                             $location, $state,
+                                             $cordovaNetwork, $cordovaGoogleAnalytics,
+                                             $stateParams,
+                                             ENV,CommonService,UserAddrService,Storage) {
+    $log.debug("enter UserAddr ctrl");
+	/**参数*/
+    var id = $stateParams.id;
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    if(id==='0')
+        $scope.vm.isedit=true;
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("UserAddr ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("UserAddr ctrl afterEnter");
+        if (ctrlReinitMap.get('UserAddrCtrl')) {
+            ctrlReinitMap.remove('UserAddrCtrl');
+            $log.debug("UserAddr ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 结束后
+     */
+	$scope.$on('$destroy', function() {
+		$log.debug("UserAddr ctrl destroy");
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("UserAddr ctrl init id="+id);
+      $scope.pcc = areaTree;
+		  $scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("UserAddr ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_UserAddr);
+        }else{
+            $scope.obj=UserAddrService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+        $log.debug("UserAddr ctrl get id="+id);
+        if(isblank0(id)) {
+            UserAddrService.newget().then(function (data) {
+                $log.debug("UserAddr ctrl newget then");
+                $scope.obj=data;
+            });
+        }else{
+            UserAddrService.get(id).then(function (data) {
+                $log.debug("UserAddr ctrl get then");
+                $scope.obj=data;
+            });
+        }
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug("UserAddr ctrl get id="+id);
+      $log.debug($scope.vm.province.id);
+        $scope.obj.areaid=$scope.vm.county.id;
+        if(isblank($scope.obj.manname)||isblank($scope.obj.mobile)||isblank($scope.obj.address)){
+          CommonService.alertm('请填写正确的地址信息');
+          $scope.vm.isedit=true;
+          return;
+        };
+
+        if(isblank0(id)) {
+            if(Storage.get(LOGINED_USER)!=null){
+              $scope.obj.memberId=Storage.get(LOGINED_USER).id;
+              $log.debug("dassdad="+$scope.obj.memberId);
+            };
+            UserAddrService.create($scope.obj).then(function (data) {
+                $log.debug("UserAddr ctrl save then");
+                $scope.obj=data;
+                $location.path("/tab/UserAddr/"+$scope.obj.id);
+            });
+        }else{
+            UserAddrService.update($scope.obj).then(function (data) {
+                $log.debug("UserAddr ctrl update then");
+                $scope.obj=data;
+                $location.path("/tab/UserAddr/"+$scope.obj.id);
+            });
+        }
+    };
+    $scope.setDefaultAdd=function(){
+      Storage.set("MemberUserAddrId",$scope.obj.id);
+      Storage.set("MemberUserAddr",$scope.vm.province.text+$scope.vm.city.text+$scope.vm.county.text+$scope.obj.address);
+      $location.path("/tab/RC_receiveWay");
+    }
+    /**
+     * 点击了叉叉，如果是id=0，返回上一页
+     */
+    $scope.clickx=function(){
+        if(id==='0')
+            goBack();
+    };
+    $scope.init();
+    ctrlReinitMap.remove('UserAddrCtrl');
+});

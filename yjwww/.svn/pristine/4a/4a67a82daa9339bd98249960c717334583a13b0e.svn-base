@@ -1,0 +1,19 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表-->
+<ion-view view-title="商品列表" cache-view="false" >
+
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" ng-repeat="obj in listx" ng-click="rx('#/tab/Product/1/'+obj.productId)" collection-item-width="100%" collection-item-height="150px;">
+                <img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="height: 60px"/>
+                <h2 style="overflow: visible">{{obj.productIdString}}</h2>
+                 <span style="font-size: 12px;color: #8c8c8c;width: 80%;"> 规格： {{obj.productIdProductObj.productstyle}}<span ng-if="obj.productIdProductObj.itypeMi=='1' || obj.productIdProductObj.itypeMiString=='医保类'" style="color: #FE918C;margin-left: 10px;font-size: 14px;">医保</span></span>
+                <p>
+                    <span style="color: red;font-size: 14px">价格：￥{{obj.productIdProductObj.price}}</span><br>
+                    <span style="font-size: 12px;color: #8c8c8c;width: 80%;">主要功效:{{obj.productIdProductObj.intro}}</span>
+                </p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

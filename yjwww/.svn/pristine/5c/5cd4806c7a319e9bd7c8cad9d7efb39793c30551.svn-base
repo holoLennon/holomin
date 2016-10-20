@@ -1,0 +1,22 @@
+<!--Tmp-->
+<ion-view view-title="Tmp" >
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header">
+    <div class="list">
+      <div class="item item-divider" style="border: none"></div>
+      <a class="item"style="border: none" ng-click="captureAudio();">
+        <p>
+          <span>声音</span>
+        </p>
+      </a>
+      <a class="item"style="border: none" ng-click="play();">
+        <p>
+          <audio id="audio" ng-src="{{sce(obj.voa1)}}"></audio>
+          <span>声音文件：({{obj.voa1}})</span>
+        </p>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

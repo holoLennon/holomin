@@ -1,0 +1,38 @@
+<!--DoctorList，医生会员列表-->
+<ion-view view-title="医生会员列表" hide-nav-bar="true">
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="height:100%;margin-top: -5px;">
+      <a ng-click="fanhui()"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;"/></a>
+    </div>
+    <div class="col col-50" style="height:100%;margin-top: -5px;">
+      <input style="height: 30px;width:95%;margin-top: 3px;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="请输入医生名称" ng-model="searchDoctor">
+    </div>
+    <div class="col col-10" style="height:100%;margin-top: -3px;">
+      <a ng-click="doctorsearch(searchDoctor)"><img src="res/img/a_sosuo.png" style="height:22px;width:22px;margin-top:6px;opacity: 0.5;"/></a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Doctor/{{obj.id}}" collection-item-width="'100%'" collection-item-height="120px" style="border-bottom: 3px solid #ddd;">
+        <img style="width:80px;height:80px;border-radius: 50%;margin-top: -10px;" src="res/img/touxiang.png"/>
+        <div>
+          <span class="fl" style="font-weight: normal;width:30%;font-size: 18px;color: #000;">{{obj.myname}}</span>
+          <span class="fl" style="width:33%;font-size: 14px;color: #A6A6A6;font-weight: normal;">{{obj.addr}}</span>
+          <span class="fl" style="width:35%;font-size: 14px;color: #A6A6A6;font-weight: normal;">{{obj.dlevelString}}</span>
+        </div>
+        <div class="fc" style="border-bottom: 1px solid #ddd;line-height: 35px;">
+          <span style="font-weight: normal;">{{obj.productchannelIdString}}</span>
+        </div>
+        <div style="line-height: 35px;">
+          <span class="fl" style="width:33%;font-size: 14px;color: #A6A6A6;font-weight: normal;">咨询费用：¥{{obj.consultingFees}}</span>
+        </div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show= "!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

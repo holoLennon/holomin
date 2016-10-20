@@ -1,0 +1,19 @@
+<!--Medicalrec，病历详细信息-->
+<ion-view view-title='病历' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul class="list" ng-if="obj">
+      <li class="item">用户ID:{{obj.idString}}</li>
+      <li class="item">创建时间:{{obj.gmtCreateString}}</li>
+      <li class="item">过敏史:{{obj.hisAllergic}}</li>
+      <li class="item">家族史:{{obj.hisFamily}}</li>
+      <li class="item">月经史:{{obj.hisMenstrual}}</li>
+      <li class="item">婚育史:{{obj.hisMarriage}}</li>
+      <li class="item">病史列表:{{obj.listMedicalrecPage}}</li>
+      <li class="item">健康列表:{{obj.listMedicalrecHealth}}</li>
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

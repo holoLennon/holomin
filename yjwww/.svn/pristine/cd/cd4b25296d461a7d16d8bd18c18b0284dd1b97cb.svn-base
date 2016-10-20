@@ -1,0 +1,51 @@
+<!--DoctorProductList，医生的药架列表-->
+<ion-view view-title="我的药架" cache-view="false">
+	<ion-nav-buttons side="right">
+    <a ng-if="act==1" class="button button-positive" ng-click="chooseThis(obj)" style="background-color: #FF9933;color: #000;border-radius: 10px;">确定</a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+      <ion-list class="list">
+        <ion-item class="item-avatar cart_list" bindonce collection-repeat="obj in list" collection-item-width="101%" collection-item-height="100px">
+          <img ng-src="{{obj.productIdProductObj.img1}}" reset-img class="cart_list_img"/>
+          <div>
+            <div class="cart_list_title">
+              <div class="cart_list_title_l">{{obj.productIdProductObj.commonname}}</div>
+              <div class="cart_list_title_r" style="font-size: 10px">单价：￥{{obj.productIdProductObj.price}}</div>
+            </div>
+            <div class="cart_list_title">
+              <div class="cart_list_title_2">规格：{{obj.productIdProductObj.punitString}}</div>
+            </div>
+            <div class="cart_list_oper">
+              <ul ng-if="act==1">
+                <li class="fl">
+                  <button class="button button-positive button-outline button-remove" ng-click="cartRemove(obj.productIdProductObj)">
+                    <i class="icon ion-ios-minus-outline"></i>
+                  </button>
+                </li>
+                <li class="fl">
+                  <!--<span class="content_number">{{obj.productIdProductObj.num}}</span>-->
+                  <input type="number" style="width:50px;font-size: 16px;margin-top: 4px;" placeholder="数量">
+                </li>
+                <li class="fl">
+                  <button class="button button-positive button-outline button-add" ng-click="cartAdd(obj.productIdProductObj)">
+                    <i class="icon ion-plus-circled"></i>
+                  </button>
+                </li>
+              </ul>
+              <div ng-if="act!=1" class="cart_list_oper_num">
+                <p style="color: #191919;width: 83%;line-height: 40px;">主治：{{obj.productIdProductObj.intro}}</p>
+              </div>
+              <div class="cart_list_oper_delete">
+                <button class="button button-delete" ng-if="act==0 " ng-click="delDoctorProduct(obj.id)">
+                  <i class="icon ion-ios-trash-outline"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

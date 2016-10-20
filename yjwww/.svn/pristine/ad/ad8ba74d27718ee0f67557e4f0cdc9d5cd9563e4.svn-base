@@ -1,0 +1,34 @@
+<!--TopicList，专题列表-->
+<ion-view view-title="专题列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Topic/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Topic/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>序号ID:{{obj.id}}</span>
+				<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+				<span>状态:{{obj.statusValidOrNotString}}</span>
+				<span>标题:{{obj.title}}</span>
+				<span>图1:{{obj.img1}}</span>
+				<span>文1:{{obj.txt1}}</span>
+				<span>图2:{{obj.img2}}</span>
+				<span>文2:{{obj.txt2}}</span>
+				<span>图3:{{obj.img3}}</span>
+				<span>文3:{{obj.txt3}}</span>
+				<span>图4:{{obj.img4}}</span>
+				<span>文4:{{obj.txt4}}</span>
+				<span>图5:{{obj.img5}}</span>
+				<span>文5:{{obj.txt5}}</span>
+				<span>产品列表:{{obj.listTopicProduct}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

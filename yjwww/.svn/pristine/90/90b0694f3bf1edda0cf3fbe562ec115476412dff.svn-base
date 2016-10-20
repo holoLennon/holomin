@@ -1,0 +1,71 @@
+<!--aboutus，关于我们-->
+<ion-view view-title='关于我们' cache-view="false">
+  <ion-nav-buttons side="right"></ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul>
+      <li style="width: 100%;background-color: #F5F0EB;">
+        <img src='res/img_tcm/dayuyi.jpg' style="width: 100%" >
+      </li>
+      <li style="width: 100%;font-weight: normal;">
+        <a class="item" style="border: none">
+          <span class="fl">官方微信：</span>
+          <span class="fr">微信号：dayuy</span>
+        </a>
+      </li>
+      <li style="width: 100%;font-weight: normal;">
+        <a class="item" style="border: none">
+          <span class="fl">官方网站：</span>
+          <span class="fr">www.yijian.com</span>
+        </a>
+      </li>
+      <li style="width: 100%;font-weight: normal;">
+        <a class="item"style="border: none" href="tel:\\0571-85389727" >
+          <span class="fl">电话客服：</span>
+          <span class="fr">0571-85389727</span>
+        </a>
+      </li>
+      <li style="width: 100%;font-weight: normal;">
+        <a class="item" style="border: none">
+          <span>官方资格证：</span>
+        </a>
+        <ul style="width: 100%;text-align: center;margin-left: 1%;">
+          <li class="fl" style="width: 32%;border-right: 1px solid #E5DDCC;">
+            <img src="res/img_tcm/yaopinxkz.jpg" style="width: 100%;border-right: 1px solid #E5DDCC;"/>
+            <p style="height: 40px;">药品经营许可证</p>
+          </li>
+          <li class="fl" style="width: 32%;border-right: 1px solid #E5DDCC;">
+            <img src="res/img_tcm/ypjyzlgl.jpg" style="width: 100%;border-right: 1px solid #E5DDCC;"/>
+            <p style="height: 40px;">药品经营质量管理</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/yaopinxinxi.jpg" style="width: 100%;"/>
+            <p style="height: 40px;">药品信息服务资格证</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/zongbuxinyong.jpg" style="width: 100%;border-right: 1px solid #E5DDCC;"/>
+            <p style="height: 40px;">总部机构信用代码证</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/zongbukaihu.jpg" style="width: 100%;border-right: 1px solid #E5DDCC;"/>
+            <p style="height: 40px;">总部开户许可证</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/zongbushipinliut.jpg" style="width: 100%;"/>
+            <p style="height: 40px;">总部食品流通许可证</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/zongbusecond.jpg" style="width: 100%;border-right: 1px solid #E5DDCC;"/>
+            <p style="height: 40px;">总部第二类医疗器械备案</p>
+          </li>
+          <li class="fl" style="width: 32%">
+            <img src="res/img_tcm/zongbuyingyezhizhao.jpg" style="width: 100%;"/>
+            <p style="height: 40px;">总部营业执照</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <!--<img src='res/img_tcm/yijian.jpg'  style="width: 100%" >-->
+  </ion-content>
+</ion-view>
+
+

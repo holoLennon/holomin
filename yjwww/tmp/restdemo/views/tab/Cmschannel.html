@@ -1,0 +1,21 @@
+<!--Cmschannel，内容频道详细信息-->
+<ion-view view-title='内容频道' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">名称:{{obj.channelName}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+		<li class="item">父ID:{{obj.parentidString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">孩子数量:{{obj.childrennum}}</li>
+		<li class="item">大图</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img}}' style="height:120px"></li>
+		<li class="item">小图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

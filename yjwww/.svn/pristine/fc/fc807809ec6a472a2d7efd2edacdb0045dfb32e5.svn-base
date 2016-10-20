@@ -1,0 +1,13 @@
+<!--CmscontentExtTxt，内容详细信息-->
+<ion-view view-title='内容' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">内容ID:{{obj.idString}}</li>
+		<li class="item">详细介绍:{{obj.txt}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

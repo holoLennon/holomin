@@ -1,0 +1,16 @@
+<!--ProductTypeLinkProduct，商品类型包含商品详细信息-->
+<ion-view view-title='商品类型包含商品' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">商品ID:{{obj.productIdString}}</li>
+		<li class="item">商品类型ID:{{obj.productTypeIdString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

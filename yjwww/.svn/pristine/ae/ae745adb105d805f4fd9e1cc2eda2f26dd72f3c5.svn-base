@@ -1,0 +1,34 @@
+<!--UserAddr，用户的收货地址详细信息-->
+<ion-view view-title='用户的收货地址' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">消费者会员:{{obj.memberIdString}}</li>
+		<li class="item">收货地址:{{obj.address}}</li>
+		<li class="item">联系人:{{obj.manname}}</li>
+		<li class="item">手机号:{{obj.mobile}}</li>
+		<li class="item">性别:{{obj.sexString}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">联系人:<input type="text" placeholder="联系人"  ng-model="obj.manname"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				性别:
+			</div>
+			<select  ng-model="obj.sex">
+				<option ng-repeat="(key,val) in obj.sexMap" value="{{key}}" ng-selected="val==obj.sex">{{val}}</option>
+			</select>
+		</label>
+    <label class="item item-input">手机号:<input type="text" placeholder="手机号"  ng-model="obj.mobile"></label>
+    <label class="item item-input">收货地址:<input type="text" placeholder="收货地址"  ng-model="obj.address"></label>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    <a ng-if="obj && vm.isedit==false" ng-click="setDefaultAdd()">设置为默认收货方式</a>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,25 @@
+<!--DruggistList，药剂师列表-->
+<ion-view view-title="药师列表"  cache-view="false" >
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list"  collection-item-width="'100%'" collection-item-height="150px"  ng-href="tel:\\{{obj.mobile}}">
+        <a>
+          <img reset-img ng-src='{{obj.img2}}'style="max-width: 100px;max-height:110px;margin-left: -55px;vertical-align: middle;" >
+          <h2 style="margin-left:45px;margin-top: -110px">{{obj.myname}}</h2></br>
+          <div style="margin-left:45px;padding-bottom:3px; font-size: 14px">
+            <span style="color: #8c8c8c;line-height: 20px;" ng-if="obj.mobile==13867952050 || obj.mobile==13185198998">职称:执业药师</span>
+            <span style="color: #8c8c8c;line-height: 20px;" ng-if="obj.mobile!=13867952050 && obj.mobile!=13185198998">职称:执业中药师</span>
+            </br><span style="color: #8c8c8c;line-height: 20px;">执照号码:{{obj.licenseno}}</span></br>
+            <span style="line-height: 20px;"><a  style="border: none;color: #8c8c8c;line-height: 20px;" ng-href="tel:\\{{obj.mobile}}">电话:{{obj.mobile}}</a></span></br>
+          </div>
+        </a>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

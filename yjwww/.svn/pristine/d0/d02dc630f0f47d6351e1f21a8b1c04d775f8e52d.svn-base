@@ -1,0 +1,87 @@
+<style type="text/css">
+  #map{position:absolute;top:60px;bottom:0;width:100%;}
+  #gaode_container_shopdrugstore{
+    height: 80%;
+    width: 100%;
+  }
+  .AMapArea{
+    height: 62%!important;
+    margin: 0px;
+    padding: 0px;
+  }
+  .amap-adcontent-body {
+    width: 90%;
+  }
+  .info-title{
+    color: white;
+    font-size: 14px;
+    background-color: rgba(0,155,255,0.8);
+    line-height: 26px;
+    padding: 0px 0 0 6px;
+    font-weight: lighter;
+    letter-spacing: 1px
+  }
+  .info-content{
+    padding: 4px;
+    color: #666666;
+    line-height: 23px;
+  }
+  .info-content img{
+    float: left;
+    margin: 3px;
+  }
+  #panelSearchRet {
+    position: fixed;
+    background-color: white;
+    max-height: 90%;
+    overflow-y: auto;
+    top: 10px;
+    right: 10px;
+    width: 280px;
+    border-bottom: solid 1px silver;
+  }
+
+</style>
+<!--药店地图-->
+<ion-view view-title="药店"  hide-nav-bar="true" class="allweb" cache-view='true'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row bar bar-header" >
+    <div class="col col-20">
+      <a href="#/tab/Wwwhome" style="text-decoration: none;"><i class="ion-chevron-left" style="font-size: 28px;color: #fff;"></i><span style="color: #fff;margin-left: 5px;position: absolute;line-height: 30px;font-weight: 400;">首页</span></a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <div class="AMapArea" id="amap">
+      <div id="gaode_container_shopdrugstore" tabindex="0"></div>
+
+      <select required="" class="form-control" ng-model="province" ng-options="o as o.text for o in pcc" ng-change="city=province.children[0];county=city.children[0];" style="width:68px;height:30px;text-align:center;margin-left: 8px;margin-top: 15px;">
+      </select>
+      <select class="form-control" ng-model="city" ng-options="o as o.text for o in province.children" ng-change="county=city.children[1];" style="width:68px;height:30px;margin-left:4px;text-align:center;">
+      </select>
+      <select class="form-control" ng-model="county" ng-options="o as o.text for o in city.children" style="width:68px;height:30px;margin-left:4px;text-align:center;">
+      </select>
+      <button class="button-positive" ng-click="searchByCounty(county)" style="color:#fff;margin-left:8px;;margin-top: 8px;width:74px;height:32px;background-color: #3485c3; border: 0px;border-radius: 3px;">
+        查找
+      </button>
+
+      <ion-list class="list">
+        <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="'100%'" collection-item-height="120px" style="margin-top: 10px">
+          <img src="res/img/yaofang.png"  style="margin-top: -13px;"/>
+          <div class="item item-text-wrap" style="width:90%;font-size: 12px;color: #8c8c8c;border: none;margin-top: -18px;background-color: snow;height:100px;position: relative;">
+            <span style="font-size: 14px;color: black;word-break:break-all;overflow: visible;">{{obj.cname}}</span><br>
+            <span style="word-break:break-all;">地址:{{obj.addr}}</span>
+            <br>
+            <span>联系电话:{{obj.tele}}</span>
+            <br>
+            <a ng-href="tel:\\{{obj.tele}}" style="font-size: 24px;position: absolute;top:15%;left:105%;"><i class="icon ion-ios-telephone-outline"></i></a>
+            <a ng-click="nav(obj);" style="font-size: 24px;position: absolute;top:75%;left:105%;"><i class="icon ion-navigate"></i></a>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,60 @@
+<!--MedicalrecPageList，病历之病史页面列表-->
+<ion-view view-title="病历之病史列表" cache-view='false'>
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button" style="border-radius: 5px;" href="#/tab/MedicalrecPage/0">添加病史</a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ul class="list">
+            <div bindonce ng-repeat="obj in list" style="width: 100%">
+              <div class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+                <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">病历信息：{{obj.id}}</p>
+                <a ng-click="deletePage(obj)" style="font-weight:normal;background-color:#F29C9F;color: #fff;font-size: 12px;margin-left: 20px;border-radius: 5px;padding-left: 5px;padding-right: 5px;">删除该病历</a>
+                <a ng-click="gotoMedicalPage(obj.id)" style="font-weight:normal;background-color:#F29C9F;color: #fff;font-size: 12px;margin-left: 20px;border-radius: 5px;padding-left: 5px;padding-right: 5px;">查看该病历详情</a>
+              </div>
+              <div class="item" style="border: none;width: 100%;">
+                <div class="fl" style="line-height: 30px;"> 创建病史时间：</div>
+                <div class="fl" style="width: 61%;">
+                  <input type="text" placeholder="创建病史时间"  ng-model="obj.gmtCreateString" style="background-color: #fff !important;margin-top: -5px;">
+                </div>
+              </div>
+              <div class="item" style="border: none;height: 80px;width: 100%;">
+                <div class="fl"> 病历说明：</div>
+                <div class="fl" style="width: 70%;">
+                  <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit"  ng-model="obj.diagnose"></textarea>
+                </div>
+              </div>
+              <div class="item" style="border: none;height: 80px;width: 100%;">
+                <div class="fl"> 器械检查：</div>
+                <div class="fl" style="width: 70%;">
+                  <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit" ng-model="obj.hickeyCheck"></textarea>
+                </div>
+              </div>
+              <div class="row" ng-if="obj.img1!=null || obj.img2!=null || obj.img3!=null" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+                <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">病历照片</p>
+              </div>
+              <div style="width: 100%;background-color: #fff;">
+                <ul>
+                  <li class="fl" ng-if="obj.img1!=null" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;margin-left:1%;text-align: center;background-color: #fff;">
+                    <a href="{{obj.img1}}">
+                      <img ng-src="{{obj.img1}}" reset-img style="height: 70px;margin-top:4px;"/>
+                    </a>
+                  </li>
+                  <li class="fl" ng-if="obj.img2!=null" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+                    <a href="{{obj.img2}}">
+                      <img ng-src="{{obj.img2}}" reset-img style="height: 70px;margin-top:4px;"/>
+                    </a>
+                  </li>
+                  <li class="fl" ng-if="obj.img3!=null" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+                    <a href="{{obj.img3}}">
+                      <img ng-src="{{obj.img3}}" reset-img style="height: 70px;margin-top:4px;"/>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        </ul>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

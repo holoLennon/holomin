@@ -1,0 +1,66 @@
+<!--PrescriptCreate，添加常用药方 -->
+<ion-view view-title="添加常用药方"  >
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header" style="background-color: #fff;">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <div class="row" style="width: 100%;height: 60px;background-color: #fff;">
+      <input class="col col-90" type="text" placeholder="药方名称"  style="height:40px;margin:auto;border-radius:3px;padding-left:10px;background-color: #ddd;"  ng-model="obj.title">
+    </div>
+    <div class="row" style="width: 100%;height: 70px;background-color: #fff;border-top: 10px solid #ddd;">
+      <div class="col col-95" style="margin: auto;">
+        <div class="row">
+          <div class="col col-90">
+            <input style="height: 40px;width:100%;padding-left: 5px;border-radius: 3px;" type="text" placeholder="请输入药材名称"  ng-model="obj.productname" >
+          </div>
+          <div class="col col-10">
+            <a ng-click="search(obj.productname,$event)" style="color: #000;text-decoration: none;"><i class="ion-search" style="font-size: 30px;"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ion-list>
+      <ion-item bindonce collection-repeat="prescriptProduct in listPrescriptProduct" collection-item-width="100%" collection-item-height="80px">
+        <div class="row">
+          <div class="col col-40"><p>{{prescriptProduct.title}}</p></div>
+          <div class="col col-40"><!--数字加减按钮-->
+            <button class="button button-positive button-outline button-remove" ng-click="ppRemove(prescriptProduct)">
+              <i class="icon ion-ios-minus-outline"></i>
+            </button>
+            <span>{{prescriptProduct.num}}</span>
+            <button class="button button-positive button-outline button-add" ng-click="ppAdd(prescriptProduct)">
+              <i class="icon ion-plus-circled"></i>
+            </button>
+            <span>克</span>
+          </div>
+          <div class="col col-20"><!--删除按钮-->
+            <button class="button button-delete" ng-click="pProductDel(pProduct)">
+              <i class="icon ion-ios-trash-outline"></i>
+            </button>
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+    <div class="row" style="width: 100%;height: 80px;">
+      <div class="col col-60 button" style="text-align: center;margin: auto;" ng-click="savePrescript()">
+        添加到我的常用药方
+      </div>
+    </div>
+    <script id="my-popover.html" type="text/ng-template">
+      <ion-popover-view style="width: 98%;left:1%;">
+        <ion-header-bar>
+          <h1 class="title">药品</h1>
+        </ion-header-bar>
+        <ion-content>
+          <ion-list>
+            <ion-item bindonce collection-repeat="product in list" collection-item-width="100%" collection-item-height="40px"  ng-click="choose(product)">
+              <span style="padding-left: 10px;font-weight: normal;">{{product.title}}</span>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-popover-view>
+    </script>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

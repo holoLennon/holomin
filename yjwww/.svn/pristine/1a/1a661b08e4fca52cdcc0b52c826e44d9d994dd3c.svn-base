@@ -1,0 +1,41 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表 Home-->
+<ion-view view-title="云药房" hide-nav-bar="true" class="allweb" style="background-color: #eeeeee;">
+  <ion-header-bar class="bar-positive row">
+
+    <div class="col col-100" style="text-align: center;margin:auto;">
+      <a class="fc" style="color: #fff;">云药房</a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <!--<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>-->
+    <div style="margin-bottom:8px;">
+      <div class="AMapArea" id="amap">
+        <div id="gaode_container_shopdrugstore" tabindex="0"></div>
+
+        <select required="" class="form-control" ng-model="province" ng-options="o as o.text for o in pcc" ng-change="city=province.children[0];county=city.children[0];" style="font-size: 12px;;width:67px;height:30px;margin-left:8px;margin-top: 15px;text-align: left;">
+        </select>
+        <select class="form-control" ng-model="city" ng-options="o as o.text for o in province.children" ng-change="county=city.children[1];" style="font-size: 12px;width:79px;height:30px;margin-left:1px;margin-top: 15px;text-align: left;">
+        </select>
+        <select class="form-control" ng-model="county" ng-options="o as o.text for o in city.children" style="font-size: 12px;;width:79px;height:30px;margin-left:1px;margin-top: 15px;text-align: left;">
+        </select>
+        <button class=" button-positive" ng-click="searchByCounty(county,city,province)" style="margin-left:7px;;margin-top:5px;width:60px;height:32px;background-color: #008aec; border: 0px;border-radius: 5px;color: #fff;">
+          查找
+        </button>
+      </div>
+    </div>
+    <ion-list class="list" style="border: none;">
+      <ion-item class="item-avatar item-text-wrap" bindonce collection-repeat="obj in list"  ng-click="rx('#/tab/StoreProduct/'+obj.productId)"  collection-item-width="100%" collection-item-height="100px" style="border: 1px solid #ddd;">
+        <img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="margin-top: -10px;border-radius: 0px;width: 100%;"/>
+        <h2>{{obj.productIdProductObj.myname}}</h2>
+        <p>
+          <span>价格:{{obj.productIdProductObj.productstyle}}元</span><br>
+          <span>规格:{{obj.productIdProductObj.intro}}</span>
+        </p>
+      </ion-item>
+    </ion-list>
+
+  <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+  <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+
+</ion-view>

@@ -1,0 +1,8 @@
+{
+  "name": "yijianwww_b",
+  "ios_identifier": "com.zmax.yijianwww_b",
+  "android_identifier": "com.zmax.yijianwww_b",
+  "update": "now",
+  "content_url": "http://yijian.zjjnyd.com/yijianwwwupdatea_b",
+  "min_native_interface": "1"
+}

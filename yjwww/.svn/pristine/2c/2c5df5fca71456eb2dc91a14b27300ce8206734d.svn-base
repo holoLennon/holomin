@@ -1,0 +1,34 @@
+<!--DruggistList，药剂师列表-->
+<ion-view view-title="药剂师列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Druggist/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Druggist/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>用户ID:{{obj.id}}</span>
+				<span>执照号码:{{obj.licenseno}}</span>
+				<span>执照照片:{{obj.img1}}</span>
+				<span>头像:{{obj.img2}}</span>
+				<span>姓名:{{obj.name}}</span>
+				<span>职称:{{obj.dlevelString}}</span>
+				<span>用户性别:{{obj.usersexString}}</span>
+				<span>证件类型:{{obj.idtypeString}}</span>
+				<span>证件号码:{{obj.idnum}}</span>
+				<span>邮编:{{obj.zip}}</span>
+				<span>地址:{{obj.addr}}</span>
+				<span>工作单位:{{obj.company}}</span>
+				<span>手机:{{obj.mobile}}</span>
+				<span>座机:{{obj.tele}}</span>
+				<span>电子邮件:{{obj.email}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

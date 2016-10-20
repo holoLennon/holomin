@@ -1,0 +1,206 @@
+/**
+ * Doctor，医生会员详细
+ */
+appctrl.controller('DoctorCtrl', function($scope, $rootScope, $log, $timeout,
+                                             $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                             $location, $state,
+                                             $cordovaNetwork,$ionicHistory, $cordovaGoogleAnalytics,
+                                             $stateParams,Storage,
+                                             ENV,CommonService,DoctorService,Upload) {
+    $log.debug("enter Doctor ctrl");
+	/**参数*/
+    $scope.user=Storage.get(LOGINED_USER_B);
+    var id = $stateParams.id;
+    id=($scope.user)?$scope.user.id:0;
+    var uprooturl="http://yijian.zjjnyd.com/yijian/rest";
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    if(id==='0')
+        $scope.vm.isedit=true;
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Doctor ctrl beforeEnter");
+        $scope.user=Storage.get(LOGINED_USER_B);
+        id=($scope.user)?$scope.user.id:0;
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Doctor ctrl afterEnter");
+        if (ctrlReinitMap.get('DoctorCtrl')) {
+            ctrlReinitMap.remove('DoctorCtrl');
+            $log.debug("Doctor ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Doctor ctrl init id="+id);
+		$scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Doctor ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Doctor);
+        }else{
+            $scope.obj=DoctorService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+  /**
+   * 选择了科室2
+   */
+  $scope.makeProductchannelId=function(){
+    $log.debug("productchannelId"+$scope.obj.productchannelId);
+    $scope.obj.productchannelId=$scope.obj.productchannelIdProductchannelObj.id;
+  };
+    /**
+     * 获取网络对象
+     */
+    $scope.get = function () {
+      $log.debug("Doctor ctrl get id=" + id);
+      if (isblank0(id)) {
+        return;
+      } else {
+        DoctorService.get(id).then(function (data) {
+          $scope.obj = data;
+          angular.forEach(data.obj1, function (item) {
+            angular.forEach(item.children, function (item2) {
+              if (data.productchannelId == item2.id) {
+                $scope.obj.productchannelIdProductchannelObj = item2;
+                $scope.obj.ks1 = item;
+              }
+            });
+          });
+        });
+      }
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug("Doctor ctrl get id="+id);
+        $scope.makeProductchannelId();
+        if(isblank0(id)) {
+            return;
+        }else{
+            DoctorService.update($scope.obj).then(function (data) {
+                $log.debug("Doctor ctrl update then");
+                $scope.obj=data;
+                CommonService.alertm("信息保存成功");
+                $ionicHistory.goBack();
+            });
+        }
+    };
+  /**
+   * 图片上传结束保存
+   */
+  $scope.uploadsave=function(){
+    $log.debug("Doctor ctrl get id="+id);
+    $log.debug($scope.obj)
+    if(isblank0(id)) {
+      return;
+    }else{
+      DoctorService.update($scope.obj).then(function (data) {
+        $log.debug("Doctor ctrl update then");
+        $scope.obj=data;
+        CommonService.alertm("图片上传成功");
+      });
+    }
+  };
+    /*上传图片*/
+    $scope.upload = function(file, resumable) {
+        $scope.errorMsg = null;
+        uploadUsingUpload(file, resumable);
+    };
+    function uploadUsingUpload(file, resumable) {
+        file.upload = Upload.upload({
+            url: uprooturl+'/upload' + $scope.getReqParams(),
+            resumeSizeUrl: resumable ? uprooturl+'/upload?name=' + encodeURIComponent(file.name) : null,
+            resumeChunkSize: resumable ? $scope.chunkSize : null,
+            headers: {
+                'optional-header': 'header-value'
+            },
+            data: {username: $scope.username},
+          file: file
+        }).progress(function (evt) {
+          //进度条
+          $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+          $log.debug('progess:' + $scope.progressPercentage + '%' + evt.config.file.name);
+        }).success(function (data) {
+            angular.forEach(data.result, function (item) {
+                if(item.fieldName=='url'){
+                    $log.debug(item.value);
+                    if(item.value!=null){
+                        //$scope.obj.msg
+                        var upurl='http://yijian.zjjnyd.com/yijian'+item.value;
+                        $scope.obj.img1=upurl;
+                        $scope.uploadsave();
+                    }
+                }
+            });
+        })
+
+        file.upload.then(function (response) {
+            $timeout(function () {
+                file.result = response.data;
+            });
+        }, function (response) {
+            if (response.status > 0)
+                $scope.errorMsg = response.status + ': ' + response.data;
+        }, function (evt) {
+            file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+        });
+        file.upload.xhr(function (xhr) {
+
+        });
+    }
+    /**
+     * 如果files发生改变，则进行上传
+     */
+    $scope.$watch('files', function (files) {
+        $log.debug(files);
+        if (files != null) {
+            if (!angular.isArray(files)) {
+                $timeout(function () {
+                    $scope.files = files = [files];
+                });
+                return;
+            }
+            for (var i = 0; i < files.length; i++) {
+                Upload.imageDimensions(files[i]).then(function (d) {
+                    $scope.d = d;
+                    console.log(d);
+                });
+                $scope.errorMsg = null;
+                (function (f) {
+                    $scope.upload(f, true);
+                })(files[i]);
+            }
+        }
+    });
+    $scope.isResumeSupported = Upload.isResumeSupported();
+    $scope.chunkSize = 100000;
+    $scope.success_action_redirect = $scope.success_action_redirect || window.location.protocol + '//' + window.location.host;
+    $scope.jsonPolicy = $scope.jsonPolicy || '{\n  "expiration": "2020-01-01T00:00:00Z",\n  "conditions": [\n    {"bucket": "angular-file-upload"},\n    ["starts-with", "$key", ""],\n    {"acl": "private"},\n    ["starts-with", "$Content-Type", ""],\n    ["starts-with", "$filename", ""],\n    ["content-length-range", 0, 524288000]\n  ]\n}';
+    $scope.acl = $scope.acl || 'private';
+
+    $scope.getReqParams = function () {
+        return $scope.generateErrorOnServer ? '?errorCode=' + $scope.serverErrorCode +
+        '&errorMessage=' + $scope.serverErrorMsg : '';
+    };
+    $scope.modelOptionsObj = {};
+    $scope.init();
+    ctrlReinitMap.remove('DoctorCtrl');
+});

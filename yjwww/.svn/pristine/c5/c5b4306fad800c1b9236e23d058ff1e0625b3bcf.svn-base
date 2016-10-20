@@ -1,0 +1,36 @@
+<!--MedicalrecHealth，病历之健康指标详细信息-->
+<ion-view view-title='健康指标' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item" style="font-weight: normal;padding:5px;">创建时间:{{obj.gmtCreateString}}</li>
+    <ul class="item">
+      <li class="fl" ng-if="obj.height!=null && obj.height!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        身高:{{obj.height}}&nbsp;cm
+      </li>
+      <li class="fl" ng-if="obj.weight!=null && obj.weight!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        体重:{{obj.weight}}&nbsp;kg
+      </li>
+      <li class="fl" ng-if="obj.temperature!=null && obj.temperature!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        体温:{{obj.temperature}}&nbsp;℃
+      </li>
+      <li class="fl" ng-if="obj.pulse!=null && obj.pulse!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        脉搏:{{obj.pulse}}&nbsp;次/分
+      </li>
+      <li class="fl" ng-if="obj.systolicPre!=null && obj.systolicPre!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        收缩压:{{obj.systolicPre}}&nbsp;mmHg
+      </li>
+      <li class="fl" ng-if="obj.diastolicPre!=null && obj.diastolicPre!==0" style="width: 50%;font-weight: normal;padding:5px;">
+        舒张压:{{obj.diastolicPre}}&nbsp;mmHg
+      </li>
+      <li class="fc" ng-if="obj.bloodSugar!=null && obj.bloodSugar!==0" style="font-weight: normal;padding:5px;">空腹血糖:{{obj.bloodSugar}}&nbsp;mmol/l</li>
+      <li class="fc" ng-if="obj.bloodSugar1!=null && obj.bloodSugar1!==0" style="font-weight: normal;padding:5px;">早餐前2小时血糖:{{obj.bloodSugar1}}&nbsp;mmol/l</li>
+      <li class="fc" ng-if="obj.bloodSugar2!=null && obj.bloodSugar2!==0" style="font-weight: normal;padding:5px;">午餐前2小时血糖:{{obj.bloodSugar2}}&nbsp;mmol/l</li>
+      <li class="fc" ng-if="obj.glyHemog!=null && obj.glyHemog!==0" style="font-weight: normal;padding:5px;">糖化血红蛋白:{{obj.glyHemog}}&nbsp;%</li>
+    </ul>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

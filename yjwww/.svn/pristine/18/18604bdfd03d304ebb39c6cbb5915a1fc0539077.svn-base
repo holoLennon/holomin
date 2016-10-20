@@ -1,0 +1,21 @@
+<!--MedicalrecHealthList，病历之健康指标列表-->
+<ion-view view-title="健康指标列"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button" style="border-radius: 5px;" ng-click="rx('#/tab/MedicalrecHealth/0')">添加记录</a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="'100%'" collection-item-height="100px">
+                <img src="res/img/healthy.png" style="width: 60px;"/>
+                <h2>{{obj.myname}}</h2>
+                <span>健康序列号:{{obj.id}}</span><br>
+                <span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+                <button ng-click="deleteById(obj.id)" style="background-color:#F29C9F;color: #fff;font-size: 16px;border-radius: 5px;">删除</button>
+                <button ng-click="rx('#/tab/MedicalrecHealth/'+obj.id)" style="background-color:#00B8EE;color: #fff;font-size: 16px;border-radius: 5px;">编辑</button>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

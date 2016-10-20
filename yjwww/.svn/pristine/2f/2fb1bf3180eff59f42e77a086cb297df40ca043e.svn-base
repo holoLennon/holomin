@@ -1,0 +1,40 @@
+<ion-view view-title='用户病历' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+    <!--<a ng-if="vm.isedit==false" ng-click="vm.isedit=true">添加病例</a>-->
+    <a ng-click="vm.isedit=true" style="color:#fff;font-weight:normal;font-size: 16px;line-height: 34px;">添加病例</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <!--修改-->
+    <ul class="list">
+      <p style=" text-indent: 1em;margin-top: 8px;">基本信息</p>
+      <label class="item item-input">姓名:<input type="text" placeholder="姓名" ng-model="obj.name"></label>
+      <form action="" method="get" style="line-height: 56px;padding-left: 16px;font-size: 16px;">性别：
+        <input name="sex" id="man" type="radio" value="" /><label for="man">男</label>
+        <input name="sex" id="woman" type="radio" value="" /><label for="woman">女</label>
+      </form>
+      <label class="item item-input">年龄:
+        <input type="number" placeholder="年龄"  ng-model="obj.age">
+      </label>
+      <label class="item item-input">过敏史:<input type="text" placeholder="过敏史"  ng-model="obj.hisAllergic"></label>
+      <label class="item item-input">家族史:
+        <textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="家族史"  ng-model="obj.hisFamily"></textarea>
+      </label>
+      <label class="item item-input">月经史:
+        <textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="月经史"  ng-model="obj.hisMenstrual"></textarea>
+      </label>
+      <label class="item item-input">婚育史:
+        <textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="婚育史"  ng-model="obj.hisMarriage"></textarea>
+      </label>
+      <p style=" text-indent: 1em;margin-top: 8px">现况主述</p>
+      <label class="item item-input">
+        <textarea row="5" style="height: 80px;width: 100%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="请描述您现在的症状"></textarea>
+      </label>
+      <label class="item item-input">
+        <div style="width: 100%;height:80px;text-align: center;">还未添加病历</div>
+      </label>
+    </ul>
+    <!--<ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>-->
+  </ion-content>
+</ion-view>
+

@@ -1,0 +1,26 @@
+//
+//  AppDelegate+CDVGeTui.h
+//  pushnotification
+//
+//  Created by bjquan on 16/3/8.
+//
+//
+
+#import "AppDelegate.h"
+#import <objc/runtime.h>
+
+#import "CDVGeTui.h"
+#import "GeTuiSdk.h"  // GetuiSdk头文件，需要使用的地方需要添加此代码
+
+#import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioToolbox.h>
+
+
+/// 个推开发者网站中申请App时，注册的AppId、AppKey、AppSecret  【医药一键通医生版】
+#define kGtAppId           @"XjVibm3yMJ7YfulTf3XhB1"
+#define kGtAppKey          @"q8neNdYK9r7eoxNTAAme26"
+#define kGtAppSecret       @"3oqg7jdHuB7GsbK8Jp4Pg4"
+
+@interface AppDelegate (CDVGeTui)<GeTuiSdkDelegate,UIAlertViewDelegate>
+
+@end

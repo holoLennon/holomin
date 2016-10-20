@@ -1,0 +1,29 @@
+<!--ProductTypeList，商品类型列表-->
+<ion-view  view-title="药品服务" cache-view="false">
+  <div id="main" class="h100" >
+    <ion-content class="has-tabs navig">
+      <div class="navigation">
+        <ul class="nav am-ft-darkgray" >
+          <li ng-repeat="cat in list" ng-click="changeNavCat($index,cat.id)" ng-class="{active : isSelected($index)}">
+            <img ng-src="{{cat.img}}" reset-img style="height: 65px;padding-top: 5px;"/>
+            <!--{{cat.channelName}}-->
+          </li>
+        </ul>
+      </div>
+    </ion-content>
+    <ion-content class="has-tabs home_nav">
+      <!--<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>-->
+      <div class="nav_content">
+        <!-- 右列表 -->
+        <ul am-mode="flat chip" ng-class="{'am-list':true, active: isSelected($index)}" ng-repeat="cat in list" style="background-color: white;height:1600px;">
+          <li ng-repeat="cat2 in cat.children">
+            <a ng-click="gotoUrlProductList(cat2)" class="item item-divider" style="background-color: white;line-height:50px;">
+              <span ng-bind="cat2.channelName"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page[selected-1].hasNextPage" >下拉加载更多</ion-infinite-scroll>
+    </ion-content>
+  </div>
+</ion-view>

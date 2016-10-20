@@ -1,0 +1,48 @@
+<!--Doctor，医生会员详细信息-->
+<ion-view view-title='医生详细信息' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul class="list" ng-if="obj" style="background-color: #fff;">
+      <li>
+        <div style="width: 100%;height:60%;text-align: center;margin-top: 10px;">
+          <ul>
+            <li class="fl" style="width: 22%;">
+              <img reset_img="Mem"  ng-src='{{obj.img1}}' style="float:left;max-width: 45px;max-height:80px;border-radius: 0px;margin-left: 10px;"/>
+            </li>
+            <li class="fl" style="font-weight: normal;text-align: left;width: 78%;">
+              <span style="margin-top: 10px;font-weight: 600;font-size: 14px;line-height: 30px;">{{obj.name}}<span style="font-weight: 400;font-size: 12px;margin-left: 10px;">{{obj.productchannelIdProductchannelObj.channelName}}</span> <span style="font-weight: 400;font-size: 12px;margin-left: 10px;">{{obj.dlevelString}}</span> </span><br/>
+              <span style="line-height: 22px;word-break:break-all; word-wrap:break-word ;">{{obj.company}}</span><br/>
+              <span style="line-height: 24px;">咨询费用：¥{{obj.consultingFees}}</span>
+              <div>
+                <ul>
+                  <li class="fl">
+                    <button class="button-icon" style="border-color:#6699FF;color:#6699FF;border-radius:10px;background-color: #fff;"  ng-click="follow(obj)" ng-if="obj.obj2.statusDm!=2">关注</button>
+                    <button class="button-icon" style="border-color:red;color:red;border-radius:10px;background-color: #fff;"  ng-if="obj.obj2.statusDm==2">已关注</button>
+                  </li>
+                  <li class="fl">
+                    <button class="button-icon" style="border-color:#6699FF;color:#6699FF;border-radius:10px;background-color: #fff;margin-left: 30px;"  ng-click="followAndGotoMD(obj)" >图文咨询</button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="fc" style="border-top: 8px solid #EFEFEF;margin-top: 20px;">
+        <div style="width:100%;height: 30px;background-color: #FAFAFA;"><p style="line-height: 30px;text-indent: 1em;">医学专长：</p></div>
+        <div style="width: 100%;background-color: #fff;">
+          <label class="item" style="width: 98%;margin: auto;background-color: #fff !important;">
+            <div class="item-text-wrap">
+              <span style="width: 90%;word-break: break-all;">
+                {{obj.majorMedical}}
+              </span>
+            </div>
+            </label>
+        </div>
+      </li>
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

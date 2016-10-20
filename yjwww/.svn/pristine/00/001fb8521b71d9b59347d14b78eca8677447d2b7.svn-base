@@ -1,0 +1,5 @@
+这里指的是生成热更文件之前
+dev 开发
+app 指所有app共用的部分
+a/a_b/i/i_b 四项具体app
+online_trunk 线上（微信）

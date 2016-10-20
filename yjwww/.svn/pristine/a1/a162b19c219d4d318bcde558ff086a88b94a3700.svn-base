@@ -1,0 +1,52 @@
+<!--MedicalrecRpt，病历之检查报告详细信息-->
+<ion-view view-title='检查报告' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button" style="border-radius: 5px;" ng-click="vm.isedit=true">编辑</a>
+	  <a ng-if="vm.isedit==true" class="button button-dark" style="border-radius: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced" style="border-radius: 5px;" ng-click="vm.isedit=false;save()">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">病史ID:{{obj.medicalrecPageIdString}}</li>
+		<li class="item">患者:{{obj.medicalrecIdString}}</li>
+		<li class="item">化验单类型:{{obj.ttypeString}}</li>
+		<li class="item">化验单图片</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:100px;margin-top: -8px;"></li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">病史ID:<input type="text" placeholder="病史ID"  ng-model="obj.medicalrecPageId"></label>
+    <label class="item item-input">患者:<input type="text" placeholder="病史ID"  ng-model="obj.medicalrecIdString"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				化验单类型:
+			</div>
+			<select  ng-model="obj.ttype">
+				<option ng-repeat="(key,val) in obj.ttypeMap" value="{{key}}" ng-selected="val==obj.ttype">{{val}}</option>
+			</select>
+		</label>
+        <label class="item item-input">化验单图片:
+          <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 100px;margin-top: -8px;"></label>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

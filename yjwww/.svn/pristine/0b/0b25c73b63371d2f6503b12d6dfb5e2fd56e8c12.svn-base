@@ -1,0 +1,30 @@
+<!--Product，商品详细信息-->
+<ion-view view-title='大御医'>
+    <ion-nav-buttons side="right"></ion-nav-buttons>
+    <ion-content class="has-header">
+      <ul>
+        <li style="width: 100%;background-color: #F5F0EB;">
+          <img src='res/img_tcm/dayuyi.jpg' style="width: 100%">
+        </li>
+        <li style="width: 100%;font-weight: normal;">
+          <a class="item" style="border: none">
+            <span class="fl">官方微信：</span>
+            <span class="fr">微信号：dayuy</span>
+          </a>
+        </li>
+        <li style="width: 100%;font-weight: normal;">
+          <a class="item" style="border: none">
+            <span class="fl">官方网站：</span>
+            <span class="fr">www.yijian.com</span>
+          </a>
+        </li>
+        <li style="width: 100%;font-weight: normal;">
+          <a class="item"style="border: none" href="tel:\\0571-85389727" >
+            <span class="fl">电话客服：</span>
+            <span class="fr">0571-85389727</span>
+          </a>
+        </li>
+      </ul>
+    </ion-content>
+</ion-view>
+

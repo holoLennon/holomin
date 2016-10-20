@@ -1,0 +1,33 @@
+<!--MemberdoctorList，医患关系列表-->
+<ion-view view-title="患者列表"  cache-view="false" hide-nav-bar="true" style="background-color: #eee;">
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-90" style="height:100%;">
+      <input style="height: 30px;width:100%;margin-top: -3px;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="搜索患者姓名" ng-model="searchData" >
+    </div>
+    <div class="col col-10" ng-click="search()" style="height:100%;">
+      <a style="color: #fff;text-decoration: none;"><i class="ion-ios-search" style="font-size: 30px;"></i></a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="goUrlDmmsgList(obj);" collection-item-width="100%" collection-item-height="140px">
+        <img ng-if="obj.memberIdMemberObj.img1==null" src="res/img/touxiang.png" style="max-width: 50px;max-height: 50px;margin-top: -5px;margin-left: 1%;"/>
+        <img ng-if="obj.memberIdMemberObj.img1!=null" ng-src="{{obj .memberIdMemberObj.img1}}" style="max-width: 50px;max-height: 50px;margin-top: -5px;margin-left: 1%;"/>
+        <div style="margin-left: 5%;">
+          <span style="color: #8c8c8c;line-height: 32px;">姓名：{{obj.memberIdMemberObj.name}}</span></span>
+          <span style="font-size: 6px;margin-left: 5%;"><span style="font-size: 12px" ng-if="obj.dmsgnotread>0" class="badge badge-assertive">{{obj.dmsgnotread}}</span></span><br>
+          <span style="color: #8c8c8c;line-height: 32px;">性别：{{obj.memberIdMemberObj.usersexString}}</span></br>
+					<span style="color: #8c8c8c;line-height: 32px;" >
+						<a style="border: none;color: #8c8c8c;" ng-href="tel:\\{{obj.memberIdMemberObj.mobile}}">电话:{{obj.memberIdMemberObj.mobile}}</a>
+					</span>
+        </div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

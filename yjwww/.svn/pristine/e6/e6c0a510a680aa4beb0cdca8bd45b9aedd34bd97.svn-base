@@ -1,0 +1,65 @@
+/**
+ * Cart，购物车详细
+ */
+appctrl.controller('CartCtrl', function($scope, $rootScope, $location, $log, Storage, ENV, CommonService, CartService) {
+    $log.debug("enter Cart ctrl");
+	/**参数*/
+    var id = $stateParams.id;
+    /**页面对象*/
+    $scope.vm={};
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Cart ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Cart ctrl afterEnter");
+        if (ctrlReinitMap.get('CartCtrl')) {
+            ctrlReinitMap.remove('CartCtrl');
+            $log.debug("Cart ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 结束后
+     */
+	$scope.$on('$destroy', function() {
+		$log.debug("Cart ctrl destroy");
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Cart ctrl init id="+id);
+		$scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Cart ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Cart);
+        }else{
+            $scope.obj=CartService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+		CartService.get(id).then(function (data) {
+			$log.debug("Cart ctrl get then");
+			$scope.obj=data;
+		});
+    };
+    $scope.init();
+    ctrlReinitMap.remove('CartCtrl');
+});

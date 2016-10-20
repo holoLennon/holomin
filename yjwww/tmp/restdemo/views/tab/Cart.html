@@ -1,0 +1,18 @@
+<!--Cart，购物车详细信息-->
+<ion-view view-title='购物车' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">消费者会员:{{obj.memberIdString}}</li>
+		<li class="item">产品:{{obj.productIdString}}</li>
+		<li class="item">数量:{{obj.num}}</li>
+		<li class="item">单价:{{obj.price}}</li>
+		<li class="item">总价:{{obj.sumprice}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

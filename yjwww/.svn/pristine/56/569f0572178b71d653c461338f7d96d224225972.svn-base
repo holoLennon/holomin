@@ -1,0 +1,47 @@
+<!--Topic，专题详细信息-->
+<ion-view view-title="专题"   cache-view='false' hide-nav-bar="true">
+  <div class="bar bar-header bar-positive row">
+    <div class="col col-20">
+      <a href="#/tab/Wwwhome"><img src="res/img/back.png" style="height:32px;min-width: initial;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-80" style="margin: auto;text-align: center;color:#fff;padding-top: 9px;">
+      <div dynamic="obj.title"></div>
+    </div>
+  </div>
+
+	<ion-content class="has-header has-tabs" >
+    <!--<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>-->
+		<ul class="list" ng-if="obj ">
+			<li class="item" style="padding:0px;border:none;" ng-if="obj.img1">
+        <img reset-img ng-src='{{obj.img1}}' style="width:100%;text-align:center;">
+      </li>
+			<li class="item item-text-wrap" style="font-size: 16px;color: black;font-weight:normal;text-indent: 2em;border:none;" ng-if="obj.txt1">{{obj.txt1}}</li>
+      <li class="item" style="padding:0px;border:none;" ng-if="obj.img2">
+        <img reset-img ng-src='{{obj.img2}}' style="width:100%;text-align:center;">
+      </li>
+      <li class="item item-text-wrap" style="font-size: 16px;color: black;font-weight:normal;text-indent: 2em;border:none;" ng-if="obj.txt2">{{obj.txt2}}</li>
+      <li class="item" style="padding:0px;border:none;" ng-if="obj.img3">
+        <img reset-img ng-src='{{obj.img3}}' style="width:100%;text-align:center;">
+      </li>
+      <li class="item item-text-wrap" style="font-size: 16px;color: black;font-weight:normal;text-indent: 2em;border:none;" ng-if="obj.txt3">{{obj.txt3}}</li>
+      <li class="item" style="padding:0px;border:none;" ng-if="obj.img4">
+        <img reset-img ng-src='{{obj.img4}}' style="width:100%;text-align:center;">
+      </li>
+      <li class="item item-text-wrap" style="font-size: 16px;color: black;font-weight:normal;text-indent: 2em;border:none;" ng-if="obj.txt4">{{obj.txt4}}</li>
+			<li class="item" style="padding:0px;border:none;" ng-if="obj.img5">
+        <img reset-img ng-src='{{obj.img5}}' style="width:100%;text-align:center;">
+      </li>
+			<li class="item item-text-wrap" style="font-size: 16px;color: black;font-weight:normal;text-indent: 2em;border:none;" ng-if="obj.txt5">{{obj.txt5}}</li>
+      <li ng-if="obj.listTopicProduct" style=" list_style:none;background-color: #F5F5F5;width: 100%;">
+        <ion-item class="item-avatar item-text-wrap" bindonce ng-repeat="obj1 in obj.listTopicProduct" ng-click="rx('#/tab/Product/'+obj1.productId)" style="background-color:#fff;width:100%;height:100px;">
+          <img ng-src="{{obj1.productIdProductObj.img1}}" reset-img style="margin-top: -10px;border-radius: 0px;width: 100%;"/>
+          <h2>{{obj1.productIdProductObj.title}}</h2>
+          <span style="font-size:14px;">价格:{{obj1.productIdProductObj.price}}元</span><br>
+          <span style="font-size:14px;">规格:{{obj1.productIdProductObj.productstyle}}</span>
+        </ion-item>
+      </li>
+    </ul>
+    <br/>
+    <!--<ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>-->
+	</ion-content>
+</ion-view>

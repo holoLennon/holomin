@@ -1,0 +1,320 @@
+/**
+ * DmmsgList，会员端 医患聊天记录列表
+ */
+appctrl.controller('DmmsgListCtrl', function($scope, $rootScope,$timeout,
+                                             $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                             $location, $state,$stateParams,$ionicScrollDelegate,
+                                             $cordovaNetwork, $cordovaGoogleAnalytics,$log,$interval,Storage,
+                                             ENV,DmmsgService,$compile, Upload, $http,CommonService,$sce,$cordovaCapture,$ionicHistory) {
+  $log.debug("enter DmmsgList ctrl");
+  /**参数*/
+  var fromto = $stateParams.fromto;
+  var memberId = $stateParams.memberId;
+  var doctorId = $stateParams.doctorId;
+  var intervalEachMsg = {};
+  $scope.sce = $sce.trustAsResourceUrl;
+  //聊天异步问题
+  $scope.act=1;
+  /**页码*/
+  $scope.page=_.clone(_Page);
+  /**页面显示的列表*/
+  $scope.vm={};
+  $scope.list=[];
+  $scope.obj={};
+  /**
+   * 达到页面底部
+   */
+  $scope.scrollBottom = function() {
+    $ionicScrollDelegate.scrollBottom();
+  };
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("DmmsgList ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("DmmsgList ctrl afterEnter");
+    if (ctrlReinitMap.get('DmmsgListCtrl')) {
+      ctrlReinitMap.remove('DmmsgListCtrl');
+      $log.debug("DmmsgList ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  /**
+   * 离开
+   */
+  $scope.$on('$destroy', function() {
+    $log.debug("DmmsgList ctrl $destroy");
+    $interval.cancel(intervalEachMsg);
+
+  });
+  /**
+   * 获取新消息
+   */
+  $scope.eachMsg=function(){
+    $log.debug("DmmsgList newmsg ");
+    if($scope.list.length==0){
+      $log.debug("newmsg $scope.list.length==0 ");
+      return;
+    }
+
+    //var dt=formatStdDate($scope.list[0].gmtCreate);
+    var dt=$scope.list[$scope.list.length-1].gmtCreateString
+    var page=_.clone(_Page);
+    page.where="(status =1 or status =2)  and gmtCreate > '"+dt+"' and memberId="+memberId+" and doctorId="+doctorId;//Storage.get("DmmsgList"+"QueryWhere");
+    page.pageNo=1;
+    DmmsgService.first(null,page).then(function (data) {
+      $log.debug("DmmsgList ctrl newmsg then");
+      if(data && data.length>0){
+        $scope.addList(data);
+        $scope.scrollBottom();
+      }
+
+    });
+  };
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    $log.debug("DmmsgList ctrl init ");
+    $scope.page.where="(status =1 or status =2) and memberId="+memberId+" and doctorId="+doctorId;//Storage.get("DmmsgList"+"QueryWhere");
+    $scope.page.pageNo=1;
+    $scope.page.hasNextPage=false;
+    $scope.list=[];
+    $scope.first();
+    $scope.newDmmsg();
+    intervalEachMsg=$interval( $scope.eachMsg, 5000);
+  };
+
+  /**
+   * 给list上加数据
+   * @param data
+   */
+  $scope.addList=function(data){
+    angular.forEach(data, function (item) {
+      $scope.list.push(item);
+      if( $scope.obj1==null){
+        $scope.obj1=item;
+        $scope.vm.doctorImg=item.doctorIdDoctorObj.img1;
+        $scope.vm.memberImg=item.memberIdMemberObj.img1;
+      }
+    });
+    if(data && data.length < $scope.page.pageSize){
+      $scope.page.hasNextPage=false;
+    }else{
+      $scope.page.hasNextPage=true;
+    }
+  };
+  /**
+   * item高度自适应
+   */
+  /**
+   * 第一次查询
+   */
+  $scope.first=function(){
+    DmmsgService.first(null,$scope.page).then(function (data) {
+      $log.debug("DmmsgList ctrl query then");
+      $scope.addList(data);
+      $scope.list= _.sortBy($scope.list,
+        function(data) {
+          return data.gmtCreateString;
+        });
+      $scope.scrollBottom();
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+  };
+  /**
+   * 创建一个新的空的聊天消息
+   */
+  $scope.newDmmsg=function(){
+    $scope.obj=_.clone(_Dmmsg);
+    $scope.obj.fromto=fromto;//Integer 发送接收
+    $scope.obj.memberId=memberId; //Integer 会员
+    $scope.obj.doctorId=doctorId; //Integer 医生
+    $scope.act=1;
+  };
+  /**
+   * 保存
+   */
+  $scope.save=function(){
+    if($scope.obj.msg==null){
+      return;
+    }
+    if($scope.act==1){
+      $scope.act=2;
+      DmmsgService.create($scope.obj).then(function (data) {
+        $log.debug("Dmmsg ctrl save then");
+        $scope.list.push(data);
+        $scope.scrollBottom();
+        $scope.newDmmsg();
+      });
+    }
+  };
+  //图片上传
+  /**上传进度 %*/
+  $scope.progressPercentage =0;
+  /**错误信息*/
+  $scope.errorMsg = null;
+  /*上传图片*/
+  $scope.upload = function(file, imgfield) {
+    var clientInfo=Storage.get(CLIENT_INFO);
+    var token=(clientInfo)?clientInfo.token:'';
+    token = token.replace(/\+/g, "%2B ");
+    file.upload = Upload.upload({
+      url: restbase+'/upload',
+      resumeSizeUrl: restbase+'/upload?name=' + encodeURIComponent(file.name)+"&token="+token,
+      resumeChunkSize:100000,
+      headers: {
+        'optional-header': 'header-value'
+      },
+      data: {username: $scope.username},
+      file: file
+    }).progress(function (evt) {
+      //进度条
+      $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      $scope.progressPercentage = ($scope.progressPercentage>100)?100:$scope.progressPercentage;
+      //$log.debug('progess:' + $scope.progressPercentage + '%,' + evt.config.file.name);
+    }).success(function (data) {
+      angular.forEach(data.result, function (item) {
+        if(item.fieldName=='url'){
+          //$log.debug(item.value);
+          if(item.value!=null){
+            $scope.obj[imgfield]=wbase+item.value;
+            $scope.obj.msg="<a href='"+ $scope.obj[imgfield]+"'><img class='imgthumbs' style='max-width:100%;max-height:100%;' src='"+ $scope.obj[imgfield]+"'></a>"
+            $scope.save();
+          }
+        }
+      });
+    })
+    file.upload.then(function (response) {
+      $timeout(function () {
+        file.result = response.data;
+      });
+    }, function (response) {
+      if (response.status > 0)
+        $scope.errorMsg = response.status + ': ' + response.data;
+    }, function (evt) {
+      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+    file.upload.xhr(function (xhr) {
+
+    });
+  };
+  $scope.modelOptionsObj = {};
+
+  /**
+   * 如果"files_img1"这个控件发生改变，则进行上传
+   */
+  $scope.files_img1=null;
+  $scope.$watch('files_img1', function (files) {
+    if (files != null) {
+      if (!angular.isArray(files)) {
+        $timeout(function () {
+          $scope.files_img1 = files = [files];
+        });
+        return;
+      }
+      for (var i = 0; i < files.length; i++) {
+        $scope.errorMsg = null;
+        (function (f) {
+          $scope.upload(f, 'img1');
+        })(files[i]);
+      }
+    }
+  });
+  /**
+   * 录音
+   *
+   */
+  $scope.captureAudio = function() {
+    $log.debug("captureAudio..."+_ClientInfo.cli);
+    if (_ClientInfo.cli == 1 || _ClientInfo.cli == 2 || _ClientInfo.cli == 0) {
+      $scope.captureAudioHd();
+    }else{
+      $scope.obj.voa1=wbase+"/userfiles/users/1037/files/201608/20160811201207zjbo.amr";
+    }
+
+  };
+  /**
+   * 录音
+   * 获取录音，上传服务器，得到文件的互联网地址
+   */
+  $scope.captureAudioHd = function() {
+    $log.debug("captureAudio...");
+    //文件数量=1，时长限制=30秒
+    var options = { limit: 1, duration: 30 };
+    $cordovaCapture.captureAudio(options).then(function(mediaFiles) {
+      //得到声音文件
+      $log.debug("captureAudio...Success! Audio data is here");
+      var i, path, len;
+      for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+        path = mediaFiles[i].fullPath;
+        $log.debug(path);
+        //声音文件上传服务器
+        $scope.ftUpload(path,
+          function(ret){
+            //$log.debug(JSON.stringify(ret));
+            var jr=jsonpObj2Obj(ret);
+            //声音文件互联网地址
+            $scope.obj.voa1=wbase+jr["msg"];
+            $scope.vm.voa1=  $scope.sce($scope.obj.voa1);
+            var audio='audio'+($scope.list[$scope.list.length-1].id+1);
+           $scope.obj.msg="<a ng-click='play("+("\""+audio+"\"")+")'><p><audio id='"+audio+"' ng-src='"+$scope.vm.voa1+"'></audio></p><img id='img"+audio+"' class='imgthumbs' style='max-width:100%;max-height:100%;' src='res/img/wifi-hole.png'></a>"
+            $scope.save();
+          }
+        );
+        // do something interesting with the file
+      }
+      // Success! Audio data is here
+    }, function(err) {
+      // An error occurred. Show a message to the user
+      $log.debug("captureAudio...An error occurred "+err);
+    });
+  }
+  //播放事件
+  $scope.play = function(audio) {
+    var voa = document.getElementById(audio);
+    voa.play();
+    var img=document.getElementById("img"+audio);
+    console.log("img.............");
+    console.log(img);
+   var t=setTimeout(function(){
+      img.src="res/img/wifi.gif";
+    },0);
+    //播放停止
+      var voa = document.getElementById(audio);
+      voa.loop = false;
+      voa.addEventListener('ended', function () {
+        img.src="res/img/wifi-hole.png";
+      }, false);
+    //设定停止时间防语音文件破损
+    //var t=setTimeout(function(){
+    //  img.src="res/img/wifi-hole.png";
+    //},5000);
+  }
+
+  //长按事件
+  $scope.onHold=function(obj){
+    CommonService.confirm("是否删除消息").then(function(res) {
+      if(res) {
+        obj.status=3;
+        DmmsgService.update(obj).then(function (data) {
+          $scope.init();
+        });
+      }
+    });
+  };
+  /**
+   * 返回
+   */
+  $scope.fanhui=function(){
+    $ionicHistory.goBack();
+  };
+
+  $scope.init();
+  ctrlReinitMap.remove('DmmsgListCtrl');
+});

@@ -1,0 +1,132 @@
+/**
+ * drugstoreList，可选择的药店列表
+ */
+appctrl.controller('DrugstoreListCtrl', function($scope, $rootScope,$timeout,
+                                                 $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                                 $location, $state,$stateParams,CommonService,
+                                                 $cordovaNetwork, $cordovaGoogleAnalytics,$log,Storage,$ionicHistory,
+                                                 ENV,DrugstoreService) {
+  $log.debug("enter drugstoreList ctrl");
+  //参数。0表示从订单过来。
+  $scope.act = $stateParams.act;
+  /**页码*/
+  $scope.page=_.clone(_Page);
+  /**页面显示的列表*/
+  $scope.list=[];
+
+  $scope.searchDoctorType="";
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("drugstoreList ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("drugstoreList ctrl afterEnter");
+    if (ctrlReinitMap.get('drugstoreListCtrl')) {
+      ctrlReinitMap.remove('drugstoreListCtrl');
+      $log.debug("drugstoreList ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    $log.debug("drugstoreList ctrl init ");
+    $scope.page.where=" attr= '直营'";
+    $scope.page.pageNo=1;
+    $scope.page.hasNextPage=false;
+    $scope.list=[];
+    $scope.first();
+  };
+  /**
+   * 上拉刷新
+   */
+  $scope.doRefresh=function(){
+    $scope.init();
+  };
+  /**
+   * 给list上加数据
+   * @param data
+   */
+  $scope.addList=function(data){
+    angular.forEach(data, function (item) {
+      $scope.list.push(item);
+    });
+    if(data && data.length < $scope.page.pageSize){
+      $scope.page.hasNextPage=false;
+    }else{
+      $scope.page.hasNextPage=true;
+    }
+    if($scope.list.length<1){
+      //CommonService.alertm('您的药架还没有药品，请先添加药品！');
+      $scope.showConfirm();
+    }
+  };
+  /**
+   * 搜索
+   */
+  $scope.search=function(searchDoctorType){
+    if(isblank(searchDoctorType)){
+      $scope.init();
+    }else{
+      $scope.page.where= "cname like  '%"+searchDoctorType+"%' "
+      $scope.page.pageNo=1;
+      $scope.page.hasNextPage=false;
+      $scope.list=[];
+      $scope.first2();
+    }
+  };
+  /**
+   * 根据搜索的医生姓名进行查询
+   */
+  $scope.first2=function(){
+    DrugstoreService.first(null,$scope.page).then(function (data) {
+      if(data == "" || data == undefined || data == null){
+        CommonService.alertm("查无此药店！");
+        return;
+      }else{
+        $scope.addList(data);
+        $scope.$broadcast('scroll.refreshComplete');
+      }
+    });
+  };
+  /**
+   * 第一次查询
+   */
+  $scope.first=function(){
+    DrugstoreService.first(null,$scope.page).then(function (data) {
+      $log.debug("drugstoreList ctrl query then");
+      $scope.addList(data);
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+
+  };
+
+  /**
+   * 下拉加载更多查询
+   */
+  $scope.more=function(){
+    $log.debug("drugstoreList ctrl more=========");
+    if(!$scope.page.hasNextPage){
+      return;
+    }
+    DrugstoreService.more($scope.page).then(function (data) {
+      $log.debug("drugstoreList ctrl more then");
+      $scope.addList(data);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  };
+  $scope.chooseThis=function(obj){
+    ctrlReinitMap.put('OrderrCtrl-drugstore',obj)
+    $ionicHistory.goBack();
+  }
+  $scope.init();
+  ctrlReinitMap.remove('drugstoreListCtrl');
+});
+

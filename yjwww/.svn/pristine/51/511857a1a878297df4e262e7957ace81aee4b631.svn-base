@@ -1,0 +1,224 @@
+appctrl.controller('myCtrl', function($scope, $rootScope, $log, $timeout,
+                                          $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                          $location, $state,
+                                          $cordovaNetwork, $cordovaGoogleAnalytics,
+                                          $stateParams,
+                                          ENV,CommonService,MemberService,Storage,$ionicHistory,Upload) {
+    $log.debug("enter my ctrl");
+    var me;
+    $scope.obj={};
+    $scope.vm={};
+   var uprooturl="http://yijian.zjjnyd.com/yijian/rest";
+
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("my ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("my ctrl afterEnter");
+        if (ctrlReinitMap.get('myCtrl')) {
+            ctrlReinitMap.remove('myCtrl');
+            $log.debug("my ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $scope.checklogin();
+    };
+
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+        if(!me)
+            return;
+        MemberService.get(me.id).then(function (data) {
+            $log.debug("my ctrl get then");
+            $scope.obj=data;
+        });
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        if($scope.obj.name==""||$scope.obj.age==""){
+            CommonService.alertm('请完善您的个人信息');
+            return;
+        }
+        if($scope.obj.age>=120){
+            CommonService.alertm('输入的年龄不能大于120');
+            return;
+        }
+        MemberService.update($scope.obj).then(function (data) {
+            $log.debug("my ctrl update then");
+            $scope.obj=data;
+          CommonService.alertm("信息保存成功");
+          $ionicHistory.goBack();
+        });
+    };
+  /**
+   * 图片上传结束保存
+   */
+  $scope.uploadsave=function(){
+    MemberService.update($scope.obj).then(function (data) {
+      $log.debug("my ctrl update then");
+      $scope.obj=data;
+      CommonService.alertm("图片上传成功");
+    });
+  };
+
+
+    /**
+     * 打开登录窗口
+     */
+    $scope.login=function(){
+        $rootScope.$broadcast('event.NeedLoginException','member');
+    };
+    /**
+     * 收到登录成功的通知
+     */
+    $scope.$on('event.logined', function(event,data) {
+        $log.debug("收到通知：event.logined,data="+data);
+        $scope.checklogin();
+    });
+    /**
+     * 登录检查
+     */
+    $scope.checklogin=function(){
+        me=Storage.get(LOGINED_USER);
+        if(me){
+          $log.debug(me);
+          id = me.id;
+          $scope.obj=$scope.get();
+          $log.debug($scope.obj);
+        }
+    };
+    /**
+     * 退出
+     */
+    $scope.logout=function(){
+        CommonService.confirm('确认退出？').then(function(res) {if(res) {
+            $scope.user=null;
+            Storage.remove(LOGINED_USER);
+            var clientInfo=Storage.get(CLIENT_INFO);
+            clientInfo.token=null;
+            Storage.set(CLIENT_INFO,clientInfo);
+
+            location.replace(document.referrer);
+
+        } else {}});
+    };
+    /**
+     * 清除缓存
+     */
+    $scope.clear=function(){
+        Storage.clear();
+        CommonService.alertm('清除缓存');
+        $scope.init();
+    };
+    /**
+     * 找回密码
+     */
+    $scope.editpassword=function(){
+        CommonService.alertm('请与客服联系，我们确认后分配初始密码');
+    };
+    /**  直接拨打号码咨询购买*/
+    $scope.telephone = function (){
+        alert('请拨打客服电话：0571-85389727     咨询购买该药品!');
+    };
+
+
+  /*上传图片*/
+  $scope.upload = function(file, resumable) {
+    $scope.errorMsg = null;
+    uploadUsingUpload(file, resumable);
+  };
+  function uploadUsingUpload(file, resumable) {
+    file.upload = Upload.upload({
+      url: uprooturl+'/upload' + $scope.getReqParams(),
+      resumeSizeUrl: resumable ? uprooturl+'/upload?name=' + encodeURIComponent(file.name) : null,
+      resumeChunkSize: resumable ? $scope.chunkSize : null,
+      headers: {
+        'optional-header': 'header-value'
+      },
+      data: {username: $scope.username},
+      file: file
+    }).progress(function (evt) {
+      //进度条
+      $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      $log.debug('progess:' + $scope.progressPercentage + '%' + evt.config.file.name);
+    }).success(function (data) {
+      angular.forEach(data.result, function (item) {
+        if(item.fieldName=='url'){
+          $log.debug(item.value);
+          if(item.value!=null){
+            //$scope.obj.msg
+            var upurl='http://yijian.zjjnyd.com/yijian'+item.value;
+            $scope.obj.img1=upurl;
+            $scope.uploadsave();
+          }
+        }
+      });
+    })
+
+    file.upload.then(function (response) {
+      $timeout(function () {
+        file.result = response.data;
+      });
+    }, function (response) {
+      if (response.status > 0)
+        $scope.errorMsg = response.status + ': ' + response.data;
+    }, function (evt) {
+      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+    file.upload.xhr(function (xhr) {
+
+    });
+  }
+  /**
+   * 如果files发生改变，则进行上传
+   */
+  $scope.$watch('files', function (files) {
+    $log.debug(files);
+    if (files != null) {
+      if (!angular.isArray(files)) {
+        $timeout(function () {
+          $scope.files = files = [files];
+        });
+        return;
+      }
+      for (var i = 0; i < files.length; i++) {
+        Upload.imageDimensions(files[i]).then(function (d) {
+          $scope.d = d;
+          console.log(d);
+        });
+        $scope.errorMsg = null;
+        (function (f) {
+          $scope.upload(f, true);
+        })(files[i]);
+      }
+    }
+  });
+  $scope.isResumeSupported = Upload.isResumeSupported();
+  $scope.chunkSize = 100000;
+  $scope.success_action_redirect = $scope.success_action_redirect || window.location.protocol + '//' + window.location.host;
+  $scope.jsonPolicy = $scope.jsonPolicy || '{\n  "expiration": "2020-01-01T00:00:00Z",\n  "conditions": [\n    {"bucket": "angular-file-upload"},\n    ["starts-with", "$key", ""],\n    {"acl": "private"},\n    ["starts-with", "$Content-Type", ""],\n    ["starts-with", "$filename", ""],\n    ["content-length-range", 0, 524288000]\n  ]\n}';
+  $scope.acl = $scope.acl || 'private';
+
+  $scope.getReqParams = function () {
+    return $scope.generateErrorOnServer ? '?errorCode=' + $scope.serverErrorCode +
+    '&errorMessage=' + $scope.serverErrorMsg : '';
+  };
+  $scope.modelOptionsObj = {};
+
+    $scope.init();
+    ctrlReinitMap.remove('myCtrl');
+});

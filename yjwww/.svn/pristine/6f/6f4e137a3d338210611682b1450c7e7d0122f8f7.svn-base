@@ -1,0 +1,52 @@
+<ion-view  hide-nav-bar="true" class="allweb" view-title='我的' style="background-color: #eeeeee;">
+    <ion-header-bar class="bar bar-header bar-positive" style="border: none">
+      <div class="title" style="margin: auto">我的资料</div>
+      <a class="ion-ios-gear-outline" ng-click="rx('#/tab/Setting')" style="color: #fff;text-decoration: none;font-size: 34px;position: absolute;top:7px;left:88%;"></a>
+    </ion-header-bar>
+    <div class="login"  ng-click="login()" ng-if="!user" style="height: 80px;background: none">
+      <div class="login_info" style="margin-top: 80px;text-align: center;">
+        <p style="color: #8c8f96;">您还未登录，请登录查看信息</p>
+        <p>立即登录</p>
+      </div>
+    </div>
+    <div class="login" ng-if="user" style="margin-top: 40px;">
+      <div class="login_info" style="background-color: #008cad;height: 150px;text-align: center;">
+        <img src="res/img/c_seller.png" width="80px"/>
+        <p style="font-size: 16px;color: white">{{obj.myname}}</p>
+      </div>
+    </div>
+
+  <ion-content class="has-tabs has-header" style="margin-top: 150px">
+      <ul>
+        <li><a style="font-size: 14px;line-height: 30px; color: #707070;margin-left: 10px;">医生经纪人</a></li>
+        <li style="margin-left: 2%;">
+          <ul style="width:100%;text-align: center" >
+            <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a ng-click="rx('#/tab/SalesmanQrcode/'+meuser.id)" style="text-decoration: none;">
+                <img src="res/img/wodeerweima.png" style="width:50%;margin-top: 6px;"/>
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">我的二维码</p>
+              </a>
+            </li>
+            <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a ng-click="rx('#/tab/Editseller')" style="text-decoration: none;">
+                <img src="res/img/shezhi.png" style="width:50%;margin-top: 6px;"/>
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">个人信息</p>
+              </a>
+            </li>
+            <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a  ng-click="rx('#/tab/Madingpage')" style="text-decoration: none;">
+                <img src="res/img/xueshuqu.png" style="width:50%;margin-top: 6px;" />
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">学术区</p>
+              </a>
+            </li>
+            <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;margin-top: 10px;">
+              <a ng-click="rx('#/tab/fuwu')" style="text-decoration: none;" >
+                <img src="res/img/service.png" style="width:50%;margin-top: 6px;" />
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">我的服务</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+    </ul>
+  </ion-content>
+</ion-view>

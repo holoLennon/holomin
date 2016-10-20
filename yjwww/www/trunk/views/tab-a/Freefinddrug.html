@@ -1,0 +1,25 @@
+<ion-view view-title='轻松找药'cache-view="false" >
+    <ion-content><!--内容不会向下拖出上面的空白-->
+        <!--医生的会员列表,obj.obj1=member表内容-->
+        <div class="list" >
+            <a class="item item-thumbnail-left" style="padding-left: 66px;min-height: 50px;" ng-click="jumpPage('ProductchannelList')" >
+                <img src="res/img/keshizhaoyao.png" style="width: 40px;height:40px;">
+                <h2>按科室找药</h2>
+                <p>根据科室查询疾病症状、快速找药
+                </p>
+            </a>
+            <!--<a class="item item-thumbnail-left" href="#/tab/Madingpage" style="padding-left: 66px;min-height: 50px;" ng-click="jumpPage('Madingpage')">
+                <img src="res/img/buweizhaoyao.png" style="width: 40px;height:40px;">
+                <h2>按部位找药</h2>
+                <p>根据生病部位，快速找药
+                </p>
+            </a>-->
+            <a class="item item-thumbnail-left" style="padding-left: 66px;min-height: 50px;" ng-click="rx('#/tab/DrugstoreListMap')">
+                <img src="res/img/zhoubianzhaoyao.png" style="width: 40px;height:40px;" >
+                <h2>周边找药</h2>
+                <p>查找附近药店，医院
+                </p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

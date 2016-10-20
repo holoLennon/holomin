@@ -1,0 +1,29 @@
+<!--Pay，订单支付页-->
+<ion-view view-title="确认下单" cache-view="true">
+  <ion-content class="has-tabs has-header">
+    <!-- 选择支付方式 -->
+    <label class="item item-input">支付方式：</label>
+    <div class="orderr_list">
+      <div class="orderr_item">
+        <div ng-click="obj.itypePay=0;obj.itypeCarriage=0">
+          <div class="item_content" style="position: relative;">
+            <img src="res/img/paylogo.png" style="width:20px;position: absolute;top:1px;left:0px;margin-right: 20px;">
+            <span style="position: absolute;top:0px;left:30px;">支付宝支付</span>
+          </div>
+          <div class="item_select">
+            <i ng-if="obj.itypePay==0" class="ion-ios-checkmark-outline" style="font-size: 24px;"></i>
+            <i ng-if="obj.itypePay!=0" class="ion-ios-circle-outline" style="font-size: 24px;"></i>
+          </div>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+  <div class="footer_order">
+    <div style="width: 60%;float: left;text-align: center;"><span>支付：￥</span>{{obj.sumprice - obj.pomotionprice1-obj.cardticketSumprice}}</div>
+    <button class="button order_button" ng-click="payClick()" style="border:none;border-radius: 5px;background-color: red;color: #fff;">
+      确认下单
+    </button>
+  </div>
+</ion-view>
+

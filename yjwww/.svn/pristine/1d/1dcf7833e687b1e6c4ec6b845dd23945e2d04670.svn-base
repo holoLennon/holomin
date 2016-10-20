@@ -1,0 +1,41 @@
+<!--OrderrList，订单列表-->\
+
+<ion-view view-title="订单列表" cache-view="false">
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="90%" collection-item-height="260px" style="border:none;border-bottom: 4px solid #F5F5F5;margin-top: 20px;margin-left: 1em;padding:1em;">
+        <div ng-click="rx('#/tab/Orderr/'+obj.id)" style="font-size: 12px;margin-top: -10px;border-bottom: 1px solid #eee;margin-left: -6px;">
+          <span>订单号：{{obj.sn}}</span><br>
+          <span>订单来源：{{obj.iotypeString}}<span style="margin-left: 22px;">支付状态：{{obj.statusString}}</span></span><br>
+          <div ng-if="obj.iotype==0 || obj.iotype==0">
+            <span>开药医生： {{obj.doctorWrString}}</span></br>
+          </div>
+          <span >配货方式：</span><span>{{obj.itypeCarriageString}}</span><br>
+          <div class="item-text-wrap" ng-if="obj.status==2">
+            <span style="color:#DA0E0E;width: 95%;word-break: break-all;">取药药店： {{obj.drugstoreIdDrugstoreObj.cname}}</span>
+          </div>
+          <span>订单生成时间:{{obj.gmtCreateString}}</span></br>
+        </div>
+        <img ng-src="{{obj.img1}}" reset-img style="height: 80px;width:80px;margin-top:5px;margin-left: -6px;"/>
+        <div class="item" style="font-size: 12px;color: #8c8c8c;border: none;margin-top: -80px;margin-left:26%;background: none;padding-bottom: 8px;">
+          <span class="item-text-wrap" style="font-size: 14px;color: black"><span style="width: 95%;word-break: break-all;">{{obj.title}}</span></span><br>
+          <span style="font-size: 12px;color: red">商品数量： {{obj.productnums}}</span><br>
+          <span style="font-size: 12px;color: red">订单总金额：￥ {{obj.sumprice}}</span>
+        </div>
+        <div class="button button-assertive fr" style="min-height:25px;line-height:25px;font-size: 13px;border: 0px;border-radius: 3px;" ng-if="obj.status!=2" ng-click="delOrderr(obj)">取消订单</div>
+        <!--<a class="button" ng-if="obj.iotype==0&&obj.status==0" ng-click="rx('#/tab/receiveWay/'+obj.id)">
+          配货服务
+        </a>-->
+        <div class="button button-positive fr" ng-if="obj.iotype==0&&obj.status==0" ng-click="rx('#/tab/receiveWay/'+obj.id)" style="color:#fff;min-height:25px;line-height:25px;font-size: 13px;background-color: #3485c3; border: 0px;border-radius: 3px;margin-right: 5px;">
+          配货服务
+        </div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

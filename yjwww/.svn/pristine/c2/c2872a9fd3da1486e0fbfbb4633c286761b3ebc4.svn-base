@@ -1,0 +1,10 @@
+这里指的是生成热更文件之前
+
+复制顺序
+app 安卓苹果APP
+app_android/app_ios 所有的安卓/所有的苹果
+android/android_b/ios/ios_b 安卓会员/安卓医生/苹果会员/苹果医生
+
+其它：
+dev 开发
+online_trunk 线上服务器（微信版）

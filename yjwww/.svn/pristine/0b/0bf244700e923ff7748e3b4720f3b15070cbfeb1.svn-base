@@ -1,0 +1,55 @@
+<!--ProductTypeList，商品类型列表-->
+<ion-view  view-title="分类"hide-nav-bar="true" class="allweb" >
+    <ion-header-bar class="bar-positive row" style="background-color: #008CAD;">
+        <div class="col col-20">
+            <a ng-click="fanhui()"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;margin-top: -3px;"/>
+            </a>
+        </div>
+        <div class="col col-70" style="height: 40px;">
+            <input style="height: 90%;width:100%;padding-left: 5px;border-radius:3px;" class="ion-beijing" type="text" placeholder="请输入药品名称" ng-model="searchData" >
+        </div>
+        <div class="col col-10">
+            <a ng-click="search()" ><img src="res/img/a_sosuo.png" style="height:22px;width:22px;margin-top: 3px;opacity: 0.5;"/></a>
+        </div>
+    </ion-header-bar>
+    <div id="main" class="h100" >
+        <ion-content class="has-tabs navig">
+            <div class="navigation">
+                <ul class="nav am-ft-darkgray" >
+                    <li ng-repeat="cat in obj.children" ng-click="changeNavCat($index)" ng-class="{active : isSelected($index)}">{{cat.channelName}}</li>
+                </ul>
+            </div>
+        </ion-content>
+        <ion-content class="has-tabs home_nav">
+            <div class="nav_content">
+                <!-- 右列表 -->
+                <div am-mode="flat chip" ng-class="{'am-list':true, active: isSelected($index)}"  ng-repeat="cat in obj.children" style="background-color: white;height:1000px;" >
+                    <div ng-repeat="cat2 in cat.children">
+                        <div class="item item-divider" style="background-color: white">
+                            <span ng-bind="cat2.channelName"></span>
+                        </div>
+                      <div style="margin-top: 5px;">
+                        <ul style="width:100%;float:left;">
+                          <li ng-repeat="cat3 in cat2.children" style="width:30%;float:left;">
+                            <!--<a class="item" ng-click="gotoUrlProductTypeLinkProductList(cat3)" style="border: none;" >-->
+                            <a class="item" ng-click="gotoUrlProductTypeLinkProductList(cat3)" style="border: none;clear:both;padding: 5px;">
+                              <ul style="clear:both;">
+                                <li style="text-align: center">
+                                  <img ng-src="{{cat3.img}}" reset-img style="width: 70%;border-radius: 50%;">
+                                </li>
+                                <li style="font-size: 12px;text-align: center">
+                                  <span ng-bind="cat3.channelName"></span>
+                                </li>
+                              </ul>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                    </div>
+                </div>
+            </div>
+            <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page[selected-1].hasNextPage" >下拉加载更多</ion-infinite-scroll>
+        </ion-content>
+    </div>
+</ion-view>

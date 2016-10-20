@@ -1,0 +1,44 @@
+<!--MedicalrecHealth，病历之健康指标详细信息-->
+<ion-view view-title='病历之健康指标' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">病历ID:{{obj.medicalrecIdString}}</li>
+		<li class="item">身高:{{obj.height}}</li>
+		<li class="item">体重:{{obj.weight}}</li>
+		<li class="item">体温:{{obj.temperature}}</li>
+		<li class="item">脉搏:{{obj.pulse}}</li>
+		<li class="item">收缩压:{{obj.systolicPre}}</li>
+		<li class="item">舒张压:{{obj.diastolicPre}}</li>
+		<li class="item">血糖:{{obj.bloodSugar}}</li>
+		<li class="item">早餐前2小时血糖:{{obj.bloodSugar1}}</li>
+		<li class="item">午餐前2小时血糖:{{obj.bloodSugar2}}</li>
+		<li class="item">糖化血红蛋白:{{obj.glyHemog}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号ID:<input type="text" placeholder="序号ID"  ng-model="obj.id"></label>
+		<label class="item item-input">病历ID:<input type="text" placeholder="病历ID"  ng-model="obj.medicalrecId"></label>
+		<label class="item item-input">身高:<input type="text" placeholder="身高"  ng-model="obj.height"></label>
+		<label class="item item-input">体重:<input type="text" placeholder="体重"  ng-model="obj.weight"></label>
+		<label class="item item-input">体温:<input type="text" placeholder="体温"  ng-model="obj.temperature"></label>
+		<label class="item item-input">脉搏:<input type="text" placeholder="脉搏"  ng-model="obj.pulse"></label>
+		<label class="item item-input">收缩压:<input type="text" placeholder="收缩压"  ng-model="obj.systolicPre"></label>
+		<label class="item item-input">舒张压:<input type="text" placeholder="舒张压"  ng-model="obj.diastolicPre"></label>
+		<label class="item item-input">血糖:<input type="text" placeholder="血糖"  ng-model="obj.bloodSugar"></label>
+		<label class="item item-input">早餐前2小时血糖:<input type="text" placeholder="早餐前2小时血糖"  ng-model="obj.bloodSugar1"></label>
+		<label class="item item-input">午餐前2小时血糖:<input type="text" placeholder="午餐前2小时血糖"  ng-model="obj.bloodSugar2"></label>
+		<label class="item item-input">糖化血红蛋白:<input type="text" placeholder="糖化血红蛋白"  ng-model="obj.glyHemog"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

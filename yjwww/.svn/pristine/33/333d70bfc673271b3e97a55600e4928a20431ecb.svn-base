@@ -1,0 +1,87 @@
+<!--Medicalrec，病历详细信息-->
+<ion-view view-title='病历' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+    <a ng-if="vm.isedit==false" class="button" ng-click="vm.isedit=true;toping()">编辑病例</a>
+    <a ng-if="vm.isedit==true" class="button button-dark" ng-click="vm.isedit=false;clickx()">退出</a>
+    <a ng-if="vm.isedit==true" class="button button-balanced" ng-click="vm.isedit=false;save()">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul class="list" ng-if="obj && vm.isedit==false">
+      <label class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+        <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">基本信息</p>
+      </label>
+      <div style="width:100%;background-color: white;">
+        <label class="item" style="border: none;height: 38px;">患者：{{obj.idString}}</label>
+        <label class="item" style="border: none;height: 38px;">性别：{{obj.idMemberObj.usersexString}}</label>
+        <label class="item" style="border: none;height: 38px;">年龄：{{obj.idMemberObj.age}}</label>
+        <label class="item" style="border: none;height: 38px;">创建时间：{{obj.gmtCreateString}}</label>
+        <label class="item" style="border: none;height: 80px;width: 100%;">
+          <div class="fl"> 过敏史：</div>
+          <div class="fl" style="width: 77%;">
+            <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.hisAllergic}}</textarea>
+          </div>
+        </label>
+        <label class="item" style="border: none;height: 80px;width: 100%;">
+          <div class="fl"> 家族史：</div>
+          <div class="fl" style="width: 77%;">
+            <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.hisFamily}}</textarea>
+          </div>
+        </label>
+        <!-- 0性别为男  1性别为女-->
+        <label ng-if="obj.idMemberObj.usersex===1" class="item" style="border: none;height: 80px;width: 100%;">
+          <div class="fl"> 月经史：</div>
+          <div class="fl" style="width: 77%;">
+            <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.hisMenstrual}}</textarea>
+          </div>
+        </label>
+        <label ng-if="obj.idMemberObj.usersex===1" class="item" style="border: none;height: 80px;width: 100%;">
+          <div class="fl"> 婚育史：</div>
+          <div class="fl" style="width: 77%;">
+            <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.hisMarriage}}</textarea>
+          </div>
+        </label>
+      </div>
+      <label class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+        <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">现况主述</p>
+      </label>
+      <label class="item" ng-click="gotoMedicalrecPageList()">病历信息{{obj.hisMarriage}}</label>
+    </ul>
+    <!--修改-->
+    <ul class="list" ng-if="obj && vm.isedit==true">
+      <label class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+        <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">基本信息</p>
+      </label>
+      <label class="item" style="border: none;height: 38px;">性别：{{obj.idMemberObj.usersexString}}</label>
+      <label class="item" style="border: none;height: 38px;">年龄：{{obj.idMemberObj.age}}</label>
+      <!--<label class="item item-input">过敏史:<input type="text" placeholder="过敏史"  ng-model="obj.hisAllergic"></label>-->
+      <label class="item" style="border: none;height: 80px;width: 100%;">
+        <div class="fl"> 过敏史：</div>
+        <div class="fl" style="width: 77%;">
+          <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.hisAllergic"></textarea>
+        </div>
+      </label>
+      <label class="item" style="border: none;height: 80px;width: 100%;">
+        <div class="fl"> 家族史：</div>
+        <div class="fl" style="width: 77%;">
+          <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.hisFamily"></textarea>
+        </div>
+      </label>
+      <label ng-if="obj.idMemberObj.usersex===1" class="item" style="border: none;height: 80px;width: 100%;">
+        <div class="fl"> 月经史：</div>
+        <div class="fl" style="width: 77%;">
+          <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.hisMenstrual"></textarea>
+        </div>
+      </label>
+      <label ng-if="obj.idMemberObj.usersex===1" class="item" style="border: none;height: 80px;width: 100%;">
+        <div class="fl"> 婚育史：</div>
+        <div class="fl" style="width: 77%;">
+          <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.hisMarriage"></textarea>
+        </div>
+      </label>
+      <label class="item" ng-click="gotoMedicalrecPage()">创建病历:{{obj.hisMarriage}}</label>
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+
+</ion-view>

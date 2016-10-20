@@ -1,0 +1,18 @@
+<ion-tabs class="tabs-icon-top tabs-positie tabs-color-positive {{hideTabs}}">
+
+  <ion-tab title="首页" icon-off="ion-b-paper-outline" icon-on="ion-b-paper" ng-click ="nowtabs('A')" >
+    <ion-nav-view name="tab_b-a"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="患者" icon-off="ion-b-copy-outline" icon-on="ion-b-copy" ng-click ="nowtabs('B')" >
+    <ion-nav-view name="tab_b-b"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="服务" icon-off="ion-b-albums-outline" icon-on="ion-b-albums"  ng-click ="nowtabs('C')" >
+    <ion-nav-view name="tab_b-c"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="我的" icon-off="ion-b-person-outline" icon-on="ion-b-person" href="#/tab/my" ng-click ="nowtabs('D')">
+    <ion-nav-view name="tab_b-d"></ion-nav-view>
+  </ion-tab>
+</ion-tabs>

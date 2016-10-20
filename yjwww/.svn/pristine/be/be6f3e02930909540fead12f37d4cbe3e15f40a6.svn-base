@@ -1,0 +1,52 @@
+<!--Doctor，医生会员详细信息-->
+<ion-view view-title='医生详细信息' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul class="list" ng-if="obj" style="background-color: #fff;">
+      <li>
+        <div style="width: 100%;height:60%;text-align: center;margin-top: 10px;">
+          <ul>
+            <li class="fl">
+              <img style="width:80px;height:80px;border-radius: 50%;" src="res/img/touxiang.png"/>
+            </li>
+            <li class="fl" style="font-weight: normal;margin-left: 20px;text-align: left;">
+              <span style="margin-top: 10px;font-weight: 600;font-size: 16px;line-height: 30px;">{{obj.name}} <span style="font-weight: 400;font-size: 14px;margin-left: 10px;">{{obj.productchannelIdProductchannelObj.channelName}}</span> <span style="font-weight: 400;font-size: 14px;margin-left: 10px;">{{}}主治医师</span> </span><br/>
+              <span style="line-height: 24px;">{{obj.company}}</span><br/>
+              <span style="line-height: 24px;">咨询费用：¥20{{obj.price}}</span>
+              <div>
+                <ul>
+                  <li class="fl">
+                    <button class="button-icon" style="border-color:#6699FF;color:#6699FF;border-radius:10px;background-color: #fff;"  ng-click="follow(obj)" ng-if="obj.obj2.statusDm!=2">关注</button>
+                    <div class="button-icon" style="margin-top: 10px;border-color:#6699FF;color:#6699FF;border-radius:10px;background-color: #fff;"  ng-if="obj.obj2.statusDm==2">已关注</div>
+                  </li>
+                  <li class="fr">
+                    <button class="button-icon" style="border-color:#6699FF;color:#6699FF;border-radius:10px;background-color: #fff;"  ng-click="followAndGotoMD(obj)" >图文咨询</button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="fc" style="border-top: 8px solid #EFEFEF;margin-top: 20px;">
+        <div style="width:100%;height: 30px;background-color: #FAFAFA;"><p style="line-height: 30px;text-indent: 1em;">执业经历：</p></div>
+        <div style="width: 100%;background-color: #fff;">
+          <label class="item item-input" style="width: 98%;height: 100px;margin: auto;background-color: #fff !important;">
+            {{}}
+          </label>
+        </div>
+      </li>
+      <li class="fc" style="border-top: 8px solid #EFEFEF;margin-top: 20px;">
+        <div style="width:100%;height: 30px;background-color: #FAFAFA;"><p style="line-height: 30px;text-indent: 1em;">主治病症：</p></div>
+        <div style="width: 100%;background-color: #fff;">
+          <label class="item item-input" style="width: 98%;height: 100px;margin: auto;background-color: #fff !important;">
+            {{}}
+          </label>
+        </div>
+      </li>
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

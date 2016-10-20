@@ -1,0 +1,7 @@
+/**
+ * Medicalrec，用户病历
+ */
+appctrl.controller('MedicalrecCtrl', function($scope) {
+
+});
+

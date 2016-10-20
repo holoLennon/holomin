@@ -1,0 +1,20 @@
+<!--DoctorTypeList，医生科室列表-->
+<ion-view view-title="医生科室列表"  >
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <img src="res/img/ccc.jpg" width="100%"/>
+    <ion-list class="list">
+      <div style="width:100%;">
+        <span style="font-size: 16px;font-weight:400;line-height: 28px;color: #0099FF;padding-left: 12px;">按科室找医生</span>
+        <ul style="width:100%;border-top: 0.5px solid #ddd;">
+          <li ng-repeat="obj in list" ng-click="rx('#/tab/DoctorList/'+obj.id)" style="width:25%;float:left;border-right: 0.5px solid #ddd;border-bottom: 0.5px solid #ddd;text-align: center;">
+            <img src="res/img/ccc.jpg"  style="width:55px;height:55px;border-radius: 50%;margin-top: 5px;">
+            <p ng-bind="obj.channelName" style="font-size: 12px;font-weight: 400;"></p>
+          </li>
+        </ul>
+      </div>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

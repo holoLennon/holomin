@@ -1,0 +1,16 @@
+<!--drugstoreList 可选择的药店列表 -->
+<ion-view view-title="配送药店" cache-view="false">
+  <ion-content>
+    <div class="row" style="position: relative;">
+      <ion-list class="list">
+        <ion-item class="item-avatar item-text-wrap" bindonce collection-repeat="obj in list" collection-item-width="98%" collection-item-height="105px" style="padding-left: 10px;">
+          <h2 style="width: 90%">{{obj.cname}}</h2>
+          <p style="margin-top: 5px;width: 90%;">{{obj.addr}}</p>
+          <div style="position: absolute;top:22%;right: 5px;" >
+            <button ng-if="act==0" class="button icon ion-ios-checkmark-outline" ng-click="chooseThis(obj)" style="background:none;border: none;"></button>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-content>
+</ion-view>

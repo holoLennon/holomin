@@ -1,0 +1,30 @@
+<!--Wwwhome，手机页首页配置详细信息-->
+<ion-view view-title='服务'  class="allweb" style="background-color: #eeeeee">
+    <ul class="bar bar-subheader" style="background-color: #eee;border: none;">
+        <li class="row" style="width: 120%;margin-left: -10px;border: none;margin-top: 0px">
+            <a class="ion-b-c_01"></a>
+        </li>
+        <li style="margin-top: 5px;">
+          <ul>
+            <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a ng-click="rx('#/tab/Madingpage')" style="text-decoration: none;">
+                <img src="res/img/b_yixuezazhi.png" style="width:50%;margin-top: 6px;"/>
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">医学杂志</p>
+              </a>
+            </li>
+            <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a ng-href="#/tab/Suggestion"  style="text-decoration: none;">
+                <img src="res/img/b_tuwenzixun.png" style="width:50%;margin-top: 6px;"/>
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">图文咨询</p>
+              </a>
+            </li>
+            <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+              <a ng-click="rx('#/tab/phone')" style="text-decoration:none;border: none;">
+                <img src="res/img/b_kefu.png" style="width:50%;margin-top: 6px;"/>
+                <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">客服热线</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+    </ul>
+</ion-view>

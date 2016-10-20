@@ -1,0 +1,27 @@
+<!--PrescriptList，药方列表-->
+<ion-view view-title="药方列表"   cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+    <a class="button icon ion-ios-close-outline" style="background-color: #7E5335;border: none;" ng-click="change()" ng-if="act==0"></a>
+    <a class="button icon ion-ios-plus-outline" style="background-color: #7E5335;border: none;" ng-click="rx('#/tab/PrescriptCreate/0')" ng-if="act==0"></a>
+
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce  collection-repeat="obj in list"  collection-item-width="'100%'" collection-item-height="75px" style="padding-left: 10px;">
+        <ul style="width: 100%;">
+          <li class="fl" style="width: 70%;">
+            <span ng-click="rx('#/tab/PrescriptProductList/'+obj.id)" style="display: block;width: 100%;padding-top: 15px;">{{obj.myname}}</span>
+          </li>
+          <li class="fl" style="width: 30%;">
+            <button ng-if="act==1" class="button icon ion-ios-checkmark-outline" ng-click="chooseThis(obj)" style="background:none;border: none;"></button>
+            <button ng-if="act==0 && vm.delshow" class="button icon ion-ios-close-outline" ng-click="delPrescrip(obj)" style="background:none;border: none;"></button>
+          </li>
+        </ul>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

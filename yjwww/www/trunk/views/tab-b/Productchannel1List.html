@@ -1,0 +1,53 @@
+<!--ProductType2，商品类型详细，带2级孩子-->
+<ion-view view-title='分类' hide-nav-bar="true" class="allweb" cache-view='true'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row bar bar-header">
+    <div class="col col-90" style="height: 40px;">
+      <input style="height: 90%;width:100%;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="请输入药品名称" ng-model="searchData" >
+    </div>
+    <div class="col col-10">
+      <a ng-click="search()" style="text-decoration: none;">
+        <i class="ion-ios-search" style="font-size: 26px;margin-top:12px;opacity: 0.8;color: #fff;"></i>
+      </a>
+    </div>
+  </ion-header-bar>
+  <div id="main" class="h100" >
+    <ion-content class="has-tabs navig">
+      <div class="navigation">
+        <ul class="nav" >
+          <li ng-repeat="obj in list" ng-click="changeNavCat($index)" ng-class="{active : isSelected($index)}">{{obj.channelName}}</li>
+        </ul>
+      </div>
+    </ion-content>
+    <ion-content class="has-tabs home_nav">
+      <div class="nav_content">
+        <!-- 右列表 -->
+        <div ng-class="{'am-list':true, active: isSelected($index)}"  ng-repeat="obj in list" style="background-color: white;height:1600px;" >
+          <div ng-repeat="cat in obj.children">
+            <div class="item">
+              <span ng-bind="cat.channelName"></span>
+            </div>
+            <div style="margin-top: 5px;">
+              <ul style="width:100%;float:left;">
+                <li ng-repeat="cat2 in cat.children" style="width:33%;float:left;">
+                  <a class="item" ng-click="gotoUrlProductList(cat2)" style="border: none;clear:both;padding: 5px;">
+                    <ul style="clear:both;">
+                      <li style="text-align: center">
+                        <img ng-src="{{cat2.img}}" reset-img style="width: 70%;border-radius: 50%;">
+                      </li>
+                      <li style="font-size: 12px;text-align: center">
+                        <span ng-bind="cat2.channelName"></span>
+                      </li>
+                    </ul>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+  </div>
+</ion-view>

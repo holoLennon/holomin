@@ -1,0 +1,11 @@
+<ion-view view-title="付款方式" cache-view="false">
+  <ion-content>
+    <ion-radio ng-model="vm.choice" ng-value="0"><i class="icon ion-android-bus buss"></i>货到付款</ion-radio>
+    <ion-radio ng-model="vm.choice" ng-value="1"><i class="icon ion-android-walk ziti"></i>门店付款</ion-radio>
+    <div ng-if="vm.choice==0">
+      <span>收货地址:{{obj.userAddr}}</span><br>
+      <a href="#/tab/UserAddrList" style="background-color:#00B8EE;color: #fff;font-size: 16px;border-radius: 5px;">管理</a>
+    </div>
+    <button ng-click="save()">确认下单</button>
+  </ion-content>
+</ion-view>

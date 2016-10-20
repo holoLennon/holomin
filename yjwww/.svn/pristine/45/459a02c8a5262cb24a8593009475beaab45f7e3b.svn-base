@@ -1,0 +1,30 @@
+<!--MedicalrecHealth，病历之健康指标详细信息-->
+<ion-view view-title='以往记录' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+    <a ng-click="vm.isedit=true" style="color:#fff;font-weight:normal;font-size: 16px;line-height: 34px;">添加记录</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list"> <!--ng-if="obj"-->
+		<li class="item" style="border: none;">序号ID:{{obj.id}}</li>
+		<li class="item" style="border: none;">创建时间:{{obj.gmtCreateString}}</li>
+    <ul>
+      <li class="fl item" style="width:50%;border: none">身高:{{obj.height}}&nbsp;cm</li>
+      <li class="fl item" style="width:50%;border: none">体重:{{obj.weight}}&nbsp;kg</li>
+    </ul>
+    <ul>
+      <li class="fl item" style="width:50%;border: none">体温:{{obj.temperature}}&nbsp;℃</li>
+      <li class="fl item" style="width:50%;border: none">脉搏:{{obj.pulse}}&nbsp;次/分</li>
+    </ul>
+    <ul>
+      <li class="fl item" style="width:50%;border: none">收缩压:{{obj.systolicPre}}&nbsp;mmHg</li>
+      <li class="fl item" style="width:50%;border: none">舒张压:{{obj.diastolicPre}}&nbsp;mmHg</li>
+    </ul>
+    <li class="item" style="border: none;">空腹血糖:{{obj.bloodSugar}}&nbsp;mmol/l</li>
+    <li class="item" style="border: none;">早餐前2小时血糖:{{obj.bloodSugar1}}&nbsp;mmol/l</li>
+    <li class="item" style="border: none;">午餐前2小时血糖:{{obj.bloodSugar2}}&nbsp;mmol/l</li>
+    <li class="item" style="border: none;">糖化血红蛋白:{{obj.glyHemog}}&nbsp;%</li>
+	</ul>
+   <!-- <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>-->
+  </ion-content>
+</ion-view>

@@ -1,0 +1,68 @@
+/**
+ * Suggestion，意见建议详细
+ */
+appctrl.controller('SuggestionCtrl', function($scope, $rootScope, $log, $timeout,
+                                             $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                             $location, $state,
+                                             $cordovaNetwork, $cordovaGoogleAnalytics,
+                                             $stateParams,
+                                             ENV,CommonService,SuggestionService) {
+    $log.debug("enter Suggestion ctrl");
+
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Suggestion ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Suggestion ctrl afterEnter");
+        if (ctrlReinitMap.get('SuggestionCtrl')) {
+            ctrlReinitMap.remove('SuggestionCtrl');
+            $log.debug("Suggestion ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Suggestion ctrl init");
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug("Suggestion ctrl save");
+        $log.debug($scope.obj)
+        if($scope.obj.detail==null){
+            CommonService.alertm('请填写您的建议');
+            return;
+        }
+        if($scope.obj.detail=='test1'){
+            $log.debug("test:"+$scope.obj.detail);
+            $scope.obj.detail+=',这是测试';
+            return;
+        }
+        //个推获取cid
+        if($scope.obj.detail=='testgetuigetcid'){
+            $log.debug("test:个推获取cid:"+$scope.obj.detail);
+            getui.getCid(function(cid) {CommonService.alertm('cid='+cid);});
+            return;
+        }
+        SuggestionService.create($scope.obj).then(function (data) {
+            $log.debug("Suggestion ctrl save then");
+            $scope.obj=data;
+            CommonService.alertm('感谢您的建议，客服人员将在24小时内联系您。').then(function (res) {});
+            $location.path("/tab/Member");
+        });
+
+    };
+    $scope.init();
+    ctrlReinitMap.remove('SuggestionCtrl');
+});

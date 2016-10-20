@@ -1,0 +1,31 @@
+<!--Topic，专题详细信息-->
+<ion-view view-title='专题' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+		<li class="item">标题:{{obj.title}}</li>
+		<li class="item">图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">文1:{{obj.txt1}}</li>
+		<li class="item">图2</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">文2:{{obj.txt2}}</li>
+		<li class="item">图3</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img3}}' style="height:120px"></li>
+		<li class="item">文3:{{obj.txt3}}</li>
+		<li class="item">图4</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img4}}' style="height:120px"></li>
+		<li class="item">文4:{{obj.txt4}}</li>
+		<li class="item">图5</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img5}}' style="height:120px"></li>
+		<li class="item">文5:{{obj.txt5}}</li>
+		<li class="item">产品列表:{{obj.listTopicProduct}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

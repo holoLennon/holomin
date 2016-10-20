@@ -1,0 +1,69 @@
+<!--我的 my-->
+<ion-view view-title='我的' hide-nav-bar="true" class="allweb" style="background-color: #ffffff" cache-view="false">
+  <ion-header-bar class="bar-positive " style="height: 160px;border: none;">
+    <div style="width: 100%;height: 100%">
+      <div style="width: 100%;height: 20%;">
+        <a class="wo_dingwei" href="#/tab/aboutus" style="float:left;">大御医</a>
+      </div>
+      <div style="width: 100%;height: 70%">
+        <img reset_img="Mem"  ng-src='{{obj.img1}}' style="float:left;width:80px;height:80px;border-radius: 50%;margin-left: 5%;margin-top: 15px;"/>
+        <a class="wo_yonghuming" ng-if="obj.name!=null" style="font-size: 16px;float:left;">{{obj.name}}</a>
+       <!-- <p class="wo_healthy" ng-if="obj.name!=null" ng-click="gotoMemberFile()">
+          <i class="button" style="background-color: #f8f8f8;color: #008CAD;border:none;font-size: 16px;font-weight:normal;border-radius: 5px;line-height:24px !important;min-height:24px !important;">会员档案</i>
+        </p>-->
+        <button ng-if="obj.name==null"class="button button-positive" ng-click="login()" style="float:right;margin-right:2%;text-align:left;vertical-align:text-bottom;margin-top:50px;background-color: #f8f8f8;color: #7E5335;border:none;border-radius: 5px;line-height:24px !important;min-height:24px !important;" >登陆注册</button>
+      </div>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ul class="list">
+      <li class="row" style="width: 100%;height: 30px;border:none;margin-top: 110px;">
+        <a class="wo_alldingdan" style="width: 100%;background-color: white"  href="#/tab/OrderrList/all">
+          <p style=" text-indent: 1em;margin-top: 8px">我的订单</p>
+        </a>
+      </li>
+      <li class="row" style="margin-top: 10px;">
+        <div class="col col-50" style="border-top:1px solid #eee;border-right: 1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+          <a href="#/tab/OrderrList/orderrA" style="text-decoration: none;"><img src="res/img/wo_chulizhong.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">未完成</p></a>
+        </div>
+        <div class="col col-50" style="border-top:1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+          <a href="#/tab/OrderrList/orderrB" style="text-decoration: none;"><img src="res/img/wo_yiwancheng.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">已完成</p></a>
+        </div>
+      </li>
+   <!-- </ul>
+    <ul class="list" style="margin-left: 10px;margin-top: 5px;">-->
+      <!--<li class="row" ng-click="rx('#/tab/myresumeprescriptionlist')" style="width: 100%;height: 50px;border:none;margin-top: 10px;">
+        <i class="ion-ios-list" style="font-size: 28px;color: #7E5335;"></i>
+        <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">我的病历处方</span>
+      </li>-->
+      <li class="row" style="width: 100%;height: 40px;border:none;padding-left: 20px;margin-top: 10px;">
+        <a ng-if="obj.name!=null" href="#/tab/Editmember" style="text-decoration: none;color: #000;" >
+          <i class="ion-person-stalker" style="font-size: 28px;color: #7E5335;"></i>
+          <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">个人信息</span>
+        </a>
+        <a ng-if="obj.name==null" ng-click="login()" style="text-decoration: none;color: #000;" >
+          <i class="ion-person-stalker" style="font-size: 28px;color: #7E5335;"></i>
+          <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">个人信息</span>
+        </a>
+      </li>
+      <li class="row" style="width: 100%;height: 40px;border:none;margin-top:6px;padding-left: 20px;">
+        <a href="#/tab/Suggestion" style="text-decoration: none;color: #000;">
+          <i class="ion-person-stalker" style="font-size: 28px;color: #7E5335;"></i>
+          <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">问题反馈</span>
+        </a>
+      </li>
+      <!--<li class="row" ng-click="rx('#/tab/DrugstoreListMap')" style="width: 100%;height: 40px;border:none;margin-top:10px;">
+        <i class="ion-person-stalker" style="font-size: 28px;color: #7E5335;"></i>
+        <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">药店地址</span>
+      </li>-->
+      <li class="row" ng-click="jumpPage('aboutus')" style="width: 100%;height: 40px;border:none;margin-top:6px;padding-left: 20px;">
+        <i class="ion-person-stalker" style="font-size: 28px;color: #7E5335;"></i>
+        <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">关于我们</span>
+      </li>
+      <li class="row" ng-click="jumpPage('Shezhi')" style="width: 100%;height: 40px;border:none;margin-top:6px;padding-left: 20px;">
+        <i class="ion-ios-gear" style="font-size: 28px;color: #7E5335;"></i>
+        <span style="margin-left: 10px;font-size: 20px;font-weight: normal;padding-top: 4px;">设置</span>
+      </li>
+    </ul>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="common.css">
+    <title>Angular file upload sample</title>
+
+    <script src="../../www/lib/angular/angular.js"></script>
+    <script src="../../www/lib/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="upload.js"></script>
+
+</head>
+
+<body ng-app="fileUpload" ng-controller="MyCtrl">
+<h2>Angular file upload Demo</h2>
+<div class="upload-div">
+    <div class="upload-buttons">
+        <div id="editArea">
+            <div>
+                <fieldset>
+                    <legend>上传</legend>
+                    <div class="up-buttons">
+                        <div ngf-select ngf-drop ng-model="files" ngf-model-invalid="invalidFiles"
+                             ng-model-options="modelOptionsObj"
+                             ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                             ng-disabled="disabled" ngf-capture="capture"
+                             ngf-drag-over-class="dragOverClassObj"
+                             ngf-validate="validateObj"
+                             ngf-resize="resizeObj"
+                             ngf-resize-if="resizeIfFn($file, $width, $height)"
+                             ngf-dimensions="dimensionsFn($file, $width, $height)"
+                             ngf-duration="durationFn($file, $duration)"
+                             ngf-keep="keepDistinct ? 'distinct' : keep"
+                             ngf-fix-orientation="orientation"
+                             ngf-allow-dir="allowDir" class="drop-box" ngf-drop-available="dropAvailable">
+                            上传图片
+                        </div>
+                    </div>
+
+                    <div class="preview">
+                        <div>预览:</div>
+                        <img ngf-src="!files[0].$error && files[0]">
+                        <audio controls ngf-src="!files[0].$error && files[0]"></audio>
+                        <video controls ngf-src="!files[0].$error && files[0]"></video>
+                    </div>
+                </fieldset>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

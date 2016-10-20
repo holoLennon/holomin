@@ -1,0 +1,21 @@
+<!--MedicalrecRptList，病历之检查报告列表-->
+<ion-view view-title="检查报告列"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button" style="border-radius: 5px;" href="#/tab/MedicalrecRpt/0">添加</a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="'100%'" collection-item-height="100px">
+              <img src="res/img/medicalrecRpt.png" style="width: 60px;"/>
+              <h2>{{obj.myname}}</h2>
+              <span>检查报告序列ID:{{obj.id}}</span><br>
+              <span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+              <button ng-click="deleteRpt(obj)" style="background-color:#F29C9F;color: #fff;font-size: 16px;border-radius: 5px;">删除</button>
+              <button ng-click="rx('#/tab/MedicalrecRpt/'+obj.id)" style="background-color:#00B8EE;color: #fff;font-size: 16px;border-radius: 5px;">编辑</button>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

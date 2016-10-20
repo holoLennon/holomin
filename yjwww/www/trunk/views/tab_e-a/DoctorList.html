@@ -1,0 +1,28 @@
+<!--DoctorList，医生会员列表-->
+<ion-view view-title="医生列表" cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Doctor/{{obj.id}}" collection-item-width="'100%'" collection-item-height="160px" style="border-bottom: 3px solid #ddd;">
+        <img reset_img="Doc"  ng-src='{{obj.img1}}' style="float:left;width:80px;height:80px;border-radius: 50%;margin-top: 15px;"/>
+        <div style="margin-left: 5px;font-size: 14px;color: #A6A6A6;font-weight: normal;">
+          <span style="font-weight: normal;width:33%;font-size: 18px;color: #000;">{{obj.myname}}<span ng-if="obj.statusDutyString=='是'" style="color: #FE918C;margin-left: 10px;font-size: 14px;">（值班医生）</span></span><br>
+          <span class="fl" style="width:50%;line-height: 20px;">{{obj.productchannelIdString}}</span>
+          <span class="fl" style="width:50%;line-height: 20px;">{{obj.dlevelString}}</span>
+          <i class="ion-chevron-right" style="position: absolute;left:95%;top:50px;"></i>
+        </div>
+        <div class="fc item-text-wrap" style="margin-left: 5px;">
+          <span style="font-weight: normal;font-size: 14px;width: 90%;word-break:break-all;">{{obj.company}}</span>
+        </div>
+        <div style="line-height: 35px;border-top: 1px solid #ddd;margin-top: 8px;margin-left: 5px;">
+          <span class="fl" style="font-size: 14px;color: red;font-weight: normal;">咨询费用：¥{{obj.consultingFees}}元</span>
+        </div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show= "!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,22 @@
+<!--Manufacturer，药品生产厂家详细信息-->
+<ion-view view-title='药品生产厂家' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+		<li class="item">名称:{{obj.name}}</li>
+		<li class="item">图</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img}}' style="height:120px"></li>
+		<li class="item">营业执照号:{{obj.idbiz}}</li>
+		<li class="item">联系人:{{obj.contentname}}</li>
+		<li class="item">联系电话:{{obj.tele}}</li>
+		<li class="item">传真:{{obj.fax}}</li>
+		<li class="item">手机号:{{obj.mobile}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

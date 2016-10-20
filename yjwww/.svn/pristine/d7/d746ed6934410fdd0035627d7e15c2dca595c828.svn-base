@@ -1,0 +1,105 @@
+<!--Member，个人会员详细信息-->
+<ion-view view-title='个人会员' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">呢称:{{obj.name}}</li>
+		<li class="item">头像</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">年纪:{{obj.age}}</li>
+		<li class="item">用户性别:{{obj.usersexString}}</li>
+		<li class="item">证件类型:{{obj.idtypeString}}</li>
+		<li class="item">证件号码:{{obj.idnum}}</li>
+		<li class="item">姓名:{{obj.realname}}</li>
+		<li class="item">手机:{{obj.mobile}}</li>
+		<li class="item">邮编:{{obj.zip}}</li>
+		<li class="item">地址:{{obj.addr}}</li>
+		<li class="item">电子邮件:{{obj.email}}</li>
+		<li class="item">其它联系人姓名:{{obj.realname1}}</li>
+		<li class="item">其它联系人手机:{{obj.mobile1}}</li>
+		<li class="item">首推荐医生:{{obj.doctorIdString}}</li>
+		<li class="item">总处方数量:{{obj.countPrescription}}</li>
+		<li class="item">总消费金额:{{obj.countOrderr}}</li>
+		<li class="item">是否有新医患关系:{{obj.statusRelationString}}</li>
+		<li class="item">个推cid:{{obj.cidgt}}</li>
+		<li class="item">上个设备:{{obj.ilastdevString}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">用户ID:<input type="text" placeholder="用户ID"  ng-model="obj.id"></label>
+		<label class="item item-input">呢称:<input type="text" placeholder="呢称"  ng-model="obj.name"></label>
+        <label class="item item-input">头像:
+          <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 120px;"></label>
+		<label class="item item-input">年纪:<input type="text" placeholder="年纪"  ng-model="obj.age"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				用户性别:
+			</div>
+			<select  ng-model="obj.usersex">
+				<option ng-repeat="(key,val) in obj.usersexMap" value="{{key}}" ng-selected="val==obj.usersex">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				证件类型:
+			</div>
+			<select  ng-model="obj.idtype">
+				<option ng-repeat="(key,val) in obj.idtypeMap" value="{{key}}" ng-selected="val==obj.idtype">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">证件号码:<input type="text" placeholder="证件号码"  ng-model="obj.idnum"></label>
+		<label class="item item-input">姓名:<input type="text" placeholder="姓名"  ng-model="obj.realname"></label>
+		<label class="item item-input">手机:<input type="text" placeholder="手机"  ng-model="obj.mobile"></label>
+		<label class="item item-input">邮编:<input type="text" placeholder="邮编"  ng-model="obj.zip"></label>
+		<label class="item item-input">地址:<input type="text" placeholder="地址"  ng-model="obj.addr"></label>
+		<label class="item item-input">电子邮件:<input type="text" placeholder="电子邮件"  ng-model="obj.email"></label>
+		<label class="item item-input">其它联系人姓名:<input type="text" placeholder="其它联系人姓名"  ng-model="obj.realname1"></label>
+		<label class="item item-input">其它联系人手机:<input type="text" placeholder="其它联系人手机"  ng-model="obj.mobile1"></label>
+		<label class="item item-input">首推荐医生:<input type="text" placeholder="首推荐医生"  ng-model="obj.doctorId"></label>
+		<label class="item item-input">总处方数量:<input type="text" placeholder="总处方数量"  ng-model="obj.countPrescription"></label>
+		<label class="item item-input">总消费金额:<input type="text" placeholder="总消费金额"  ng-model="obj.countOrderr"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				是否有新医患关系:
+			</div>
+			<select  ng-model="obj.statusRelation">
+				<option ng-repeat="(key,val) in obj.statusRelationMap" value="{{key}}" ng-selected="val==obj.statusRelation">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">个推cid:<input type="text" placeholder="个推cid"  ng-model="obj.cidgt"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				上个设备:
+			</div>
+			<select  ng-model="obj.ilastdev">
+				<option ng-repeat="(key,val) in obj.ilastdevMap" value="{{key}}" ng-selected="val==obj.ilastdev">{{val}}</option>
+			</select>
+		</label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

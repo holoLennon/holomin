@@ -1,0 +1,20 @@
+<ion-view view-title="微信支付" hide-back-button="true">
+  <!--此页面包含支付账号的完善-->
+  <ion-content>
+    <!---正在支付---->
+    <div ng-if="payMessage == 0" style="text-align:center;width:100%;height:50px;line-height: 50px;">正在支付，请不要退出当前页面......</div>
+    <!-----支付成功----->
+    <div ng-if="payMessage == 1" style="color:#328706;text-align:center;width:100%;margin-top:100px;">
+            <span style="font-size:56px;">
+                <i class="icon ion-ios-checkmark-outline"></i><i style="font-size:25px;position: relative;top:-15px;left:5px;">支付成功</i>
+            </span>
+      <div class="row">
+        <div class="col">
+          <button class="button button-positive">返回首页</button>
+        </div>
+      </div>
+    </div>
+    <!-----支付失败？----->
+    <div ng-if="payMessage == 2" style=""></div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,18 @@
+<!--payPage，支付页面-->
+<ion-view view-title="支付界面" >
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+    <ion-content class="has-tabs has-header">
+      <div ng-if="vm.isedit==false">
+        <span>活动期间，支付0元！</span>
+        <a class="button">下一步</a>
+      </div>
+      <!--修改-->
+      <div ng-if="vm.isedit==true">
+        <span>支付成功！</span>
+        <a ng-click="vm.isedit=false;save()" class="button">进入聊天页</a>
+      </div>
+      <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

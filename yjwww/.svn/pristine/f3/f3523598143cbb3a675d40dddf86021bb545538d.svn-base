@@ -1,0 +1,65 @@
+/**
+ * Drugstore，实体药店详细
+ */
+appctrl.controller('DrugstoreCtrl', function($scope, $rootScope, $location, $log, Storage, ENV, CommonService, DrugstoreService) {
+    $log.debug("enter Drugstore ctrl");
+	/**参数*/
+    var id = $stateParams.id;
+    /**页面对象*/
+    $scope.vm={};
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Drugstore ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Drugstore ctrl afterEnter");
+        if (ctrlReinitMap.get('DrugstoreCtrl')) {
+            ctrlReinitMap.remove('DrugstoreCtrl');
+            $log.debug("Drugstore ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 结束后
+     */
+	$scope.$on('$destroy', function() {
+		$log.debug("Drugstore ctrl destroy");
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Drugstore ctrl init id="+id);
+		$scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Drugstore ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Drugstore);
+        }else{
+            $scope.obj=DrugstoreService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+		DrugstoreService.get(id).then(function (data) {
+			$log.debug("Drugstore ctrl get then");
+			$scope.obj=data;
+		});
+    };
+    $scope.init();
+    ctrlReinitMap.remove('DrugstoreCtrl');
+});

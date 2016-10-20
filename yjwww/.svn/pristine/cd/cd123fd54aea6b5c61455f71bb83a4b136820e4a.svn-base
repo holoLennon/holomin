@@ -1,0 +1,186 @@
+/**
+ * PrescriptList，药方列表
+ */
+appctrl.controller('PrescriptCreateCtrl', function($scope, $rootScope,$timeout,
+                                                   $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                                   $location, $state,$stateParams, $log,Storage,$ionicHistory,
+                                                   ENV,PrescriptService,zspecService,CommonService,ProductService) {
+  $log.debug("enter PrescriptCreate ctrl");
+  /**页码*/
+  $scope.page=_.clone(_Page);
+  $scope.isPaying = false;
+  $scope.obj={
+    title:""
+  };
+  /**页面显示的列表*/
+  $scope.list=[];
+  /**页面对象*/
+  $scope.vm={
+    delshow:false
+  };
+  $scope.listPrescriptProduct=[];
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("PrescriptCreate ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("PrescriptCreate ctrl afterEnter");
+    if (ctrlReinitMap.get('PrescriptCreateCtrl')) {
+      ctrlReinitMap.remove('PrescriptCreateCtrl');
+      $log.debug("PrescriptCreate ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    $log.debug("PrescriptCreate ctrl init ");
+
+  };
+  //开药笺的下拉框
+  $scope.popover = $ionicPopover.fromTemplateUrl('my-popover.html', {
+    scope: $scope
+  });
+  $ionicPopover.fromTemplateUrl('my-popover.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+  $scope.openPopover = function($event) {
+
+  };
+  /**
+   * 添加到我的常用药方
+   */
+  $scope.savePrescript= function () {
+    if($scope.obj.title==null||$scope.obj.title==undefined||$scope.obj.title==""){
+      CommonService.alertm("请输入药方名！");
+      return;
+    }
+    if($scope.listPrescriptProduct.length<1){
+      CommonService.alertm("请输入相应的药材！");
+      return;
+    }
+    if ($scope.isPaying) {
+      CommonService.alertm("正在添加，请稍等。");
+      return;
+    }
+    $scope.isPaying = true;
+    $scope.obj.obj1=JSON.stringify($scope.listPrescriptProduct);
+    zspecService.prescriptCreate($scope.obj).then(function(data) {
+      if(data.msg=="ok"){
+        CommonService.alertm("添加成功！").then(function(){
+          $ionicHistory.goBack();
+        })
+      }else{
+        $scope.init();
+      }
+
+    });
+  };
+  /**
+   * 给list上加数据
+   * @param data
+   */
+  $scope.addList=function(data){
+    angular.forEach(data, function (item) {
+      $scope.list.push(item);
+    });
+    if(data && data.length < $scope.page.pageSize){
+      $scope.page.hasNextPage=false;
+    }else{
+      $scope.page.hasNextPage=true;
+    }
+  };
+  /**
+   * 给listPrescriptProduct加数据
+   * @param data
+   */
+  $scope.addList2=function(data){
+    data.num=10;
+    $scope.listPrescriptProduct.push(data);
+  };
+  $scope.search=function(name,$event){
+    $scope.list=[];
+    if(name == "" || name == undefined || name == null){
+      $scope.page.where="";
+    }else{
+      $scope.page.where="commonname like '%"+name+"%'";
+    }
+    ProductService.first(null,$scope.page).then(function(data){
+      $scope.addList(data);
+      if(data.length>0){
+        $scope.popover.show($event);
+      }else{
+        CommonService.alertm('查无此药！');
+        $scope.list=[];
+      }
+    });
+  };
+  /**
+   * 购物车加1
+   * @param product
+   */
+  $scope.ppAdd=function(product) {
+    product.num++;
+  };
+  /**
+   * 购物车减1
+   * @param product
+   */
+  $scope.ppRemove=function(product){
+    if(product.num==1){
+      return;
+    }else {
+      product.num--;
+    }
+  };
+  /**
+   * 点击删除选中的药方产品
+   */
+  $scope.pProductDel=function(obj){
+    $scope.listPrescriptProduct.splice($scope.listPrescriptProduct.indexOf(obj), 1);
+  }
+  /**
+   * 选择了药方的药品，隐藏浮动框，把输入的内容清空，list也清空
+   * @param obj
+   */
+  $scope.choose=function(obj){
+    $scope.popover.hide();
+    $scope.list=[];
+    $scope.obj.productname="";
+    var prescriptproduct={
+      productId:obj.id,
+      title:obj.title,
+      num:obj.num
+    }
+    $scope.addList2(prescriptproduct);
+  };
+  $scope.init();
+  /**
+   * 上拉刷新
+   */
+  $scope.doRefresh = function () {
+    $scope.init();
+  };
+  /**
+   * 下拉加载更多查询
+   */
+  $scope.more=function(){
+    if(!$scope.page.hasNextPage){
+      return;
+    }
+    ProductService.more($scope.page).then(function (data) {
+      $log.debug("product ctrl more then");
+      $scope.addList(data);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  };
+  ctrlReinitMap.remove('PrescriptListCtrl');
+});

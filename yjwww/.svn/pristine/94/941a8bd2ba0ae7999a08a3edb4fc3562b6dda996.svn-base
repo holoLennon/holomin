@@ -1,0 +1,11 @@
+/**
+ * 配置文件，项目名称出现在这里及index.html中的<body ng-app>标签中
+ * 会员版
+ *
+ */
+/**客户端信息*/
+var CLIENT_INFO="clientInfo";
+console.log("Conf Done");
+
+
+

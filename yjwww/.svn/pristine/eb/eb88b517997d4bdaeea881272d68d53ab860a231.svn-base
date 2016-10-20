@@ -1,0 +1,109 @@
+<!--Orderr，订单详细信息-->
+<ion-view view-title='药笺详情' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <ul class="list" ng-if="(obj && vm.isedit==false && obj.iotypeString=='医生药笺')">
+      <div style="font-size: 16px;height: 25px;margin-top: 5px">
+        <a style="color: #707070;margin-left: 10px">患者信息</a>
+        <button class="fr" style="background-color:#CB5205;color: #fff;font-size: 16px;border-radius: 5px;margin-right: 15px;" ng-click="savePrescript(obj.id)">保存为药方</button>
+      </div>
+      <div ng-if="obj.status==2" class="item item-text-wrap" style="margin-top: 5px;">
+        <span style="color:#DA0E0E;font-weight: normal;font-size: 14px;width: 90%;">取药药店： {{obj.drugstoreIdDrugstoreObj.cname}}</span></br>
+      </div>
+      <ion-list class="list">
+        <div style="padding: 10px;">
+          <ul>
+            <li class="fl" style="margin-right: 25px;line-height: 30px;">姓名：{{obj.memberIdString}}</li>
+            <li class="fl" ng-if="obj.memberIdMemberObj.usersex==1" style="line-height: 30px;">性别：女</li>
+            <li class="fl" ng-if="obj.memberIdMemberObj.usersex==0" style="line-height: 30px;">性别：男</li>
+            <li class="fr" style="margin-right: 10px;line-height: 30px;">年龄：{{obj.memberIdMemberObj.age}}</li>
+            <li class="fc" style="border: none;line-height: 30px;">订单号：{{obj.sn}}</li>
+            <li style="border: none;line-height: 30px;">订单生成时间：{{obj.gmtCreateString}}</li>
+            <li style="border: none;line-height: 30px;">配药：</li>
+            <li>
+              <ul style="padding-left: 20px;">
+                <li ng-repeat="objd in obj.listorderrdetail" class="fl" style="margin-right: 20px;line-height: 30px;">{{objd.title}}</li>
+              </ul>
+              <br/>
+            </li>
+          </ul>
+          <div class="item item-input-wrapper fc" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;">诊断：<textarea row="3" style="height: 60px;width: 85%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.diagnose}}</textarea> </div>
+          <div class="item item-input-wrapper fc" style="height: 80px;font-size: 13px;text-indent: 1em;overflow: visible;">医生指导：<textarea row="3" style="height: 60px;width: 85%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{objd.otherdetail}}</textarea> </div>
+          <ul style="margin-top: 20px;">
+            <li class="fl" style="line-height: 30px;color: #FF3366;margin-left: 10px;">贴数：{{}}贴</li>
+            <li class="fr" style="line-height: 30px;color: #FF3366;margin-right: 10px;">总价：￥{{obj.sumprice}}元</li>
+          </ul>
+        </div>
+      </ion-list>
+    </ul>
+
+    <ul class="list" ng-if="obj && vm.isedit==false && obj.iotypeString=='用户自采购'">
+      <div style="font-size: 16px;height: 25px;margin-top: 5px">
+        <a style="color: #707070;margin-left: 10px">患者信息</a>
+      </div>
+      <label class="item item-input" style="border: none;text-indent: 0.5em;">姓 名：<span style="font-size: 12px">{{obj.memberIdString}}</span></label>
+      <label class="item item-input" style="border: none;text-indent: 0.5em;">年 龄：<span style="font-size: 12px">{{obj.memberIdMemberObj.age}}</span></label>
+
+      <div ng-if="obj.status==2" class="item item-input">
+        <span style="color:#DA0E0E;font-weight: normal;font-size: 14px;">取药药店： {{obj.drugstoreIdDrugstoreObj.cname}}</span></br>
+      </div>
+      <div style="font-size: 16px;height: 25px;margin-top: 5px">
+        <a style="color: #707070;margin-left: 10px">订单信息</a>
+      </div>
+      <ion-list class="list">
+        <ion-item collection-item-width="100%" style="background-color: #F4F4F4;">
+          <ul class="list">
+            <p style="font-size: 14px;margin-left: 10px;">
+              <span>订单号：{{obj.sn}}</span><br>
+              <span>{{obj.gmtCreateString}}下单</span>
+            </p>
+            <li style="background-color: #F4F4F4;margin-top: 0px;height: 25px">
+              <span style="margin-left: 10px;font-size: 14px;">订单状态：</span><span style="margin-left: 50%;font-size: 12px;color: #8c8c8c">{{obj.statusString}}</span>
+            </li>
+            <div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+            <ion-item ng-repeat="obj1 in obj.listorderrdetail" style="background-color: #F4F4F4;">
+              <li style="background-color: #F4F4F4">
+                <img ng-src="{{obj1.img1}}" reset-img style="height: 60px;margin-left: 10px;"/>
+                <div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -70px;background: none;margin-left: 80px">
+                  <span>{{obj1.title}}</span><br>数量：<span> {{obj1.num}}</span><br/>
+                  <span>单价： {{obj1.price}}</span><br/>
+                  <span style="color: #DA0E0E;">合计： {{obj1.sumprice}}</span><br/>
+                </div>
+              </li>
+            </ion-item>
+            <p style="font-size: 13px;margin-left: 10px;margin-top: 5px;"><span>商品小计</span></p>
+            <li style="background-color: #F4F4F4;font-size: 12px;color: #8c8c8c;height: 25px"><span style="margin-left: 10px;margin-top: 5px">商品数量： {{obj.productnums}}</span></li>
+            <div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+            <li style="background-color: #F4F4F4;font-size: 12px;color: #8c8c8c;height: 25px"><span style="margin-left: 10px ;color: #DA0E0E;">订单总金额： ￥{{obj.sumprice}}</span></li>
+          </ul>
+        </ion-item>
+      </ion-list>
+    </ul>
+    <!--修改-->
+    <ul class="list" ng-if="obj && vm.isedit==true">
+      <input type="hidden" ng-model="obj.memberId">
+      <div style="font-size: 16px;height: 25px;margin-top: 5px"><a style="color: #707070;margin-left: 10px">患者信息</a>
+      </div>
+      <label class="item item-input" style="border: none">姓 名：<span style="font-size: 14px;color: #707070">{{memberDoctorWatching.name}}</span></label>
+      <label class="item item-input" style="border: none">年 龄：<span style="font-size: 14px;color: #707070">{{memberDoctorWatching.age}}</span></label>
+      <label class="item item-input">过敏史： 否 </label>
+      <label class="item item-input" style="height: 100px">诊 断:<input type="text" placeholder="诊断" ng-model="obj.diagnose"></label>
+      <div style="font-size: 16px;height: 25px;margin-top: 5px"><a style="color: #707070;margin-left: 10px">药笺信息</a></div>
+    </ul>
+    <ion-list class="list" ng-if="obj && vm.isedit==true">
+      <ion-item class="item-avatar" bindonce collection-repeat="objd in listCart" collection-item-width="'100%'" collection-item-height="265px" style="border: none;margin-top: -20px">
+        <p style="margin-left: -60px">
+          <label class="item item-input" style="border: none;height: 40px">配 药：<span style="font-size: 14px;color: #707070">{{objd.title}}</span>
+            <button class="button icon ion-trash-a" ng-click="cartDel(objd.productId)" style="height: 20px;background: none;border: none;margin-left: 50px;margin-bottom: 5px"></button>
+          </label>
+          <label class="item item-input" style="height: 30px;border: none">数 量: <input type="text" placeholder="数量" ng-model="objd.num">{{objd.obj1.punitString}}</label>
+          <label class="item item-input" style="height: 60px">用法用量:<input type="text" placeholder="用法用量" ng-model="objd.usemount"></label>
+          <label class="item item-input">用药方法:<input type="text" placeholder="用药方法" ng-model="objd.usemethord"></label>
+          <label class="item item-input">医嘱:<input type="text" placeholder="医嘱" ng-model="objd.otherdetail"></label>
+        </p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

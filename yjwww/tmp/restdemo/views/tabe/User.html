@@ -1,0 +1,61 @@
+<!--User，账号信息修改详细信息-->
+<ion-view view-title='账号信息修改' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">修改时间:{{obj.gmtModifiedString}}</li>
+		<li class="item">状态:{{obj.statusString}}</li>
+		<li class="item">角色:{{obj.roleIdString}}</li>
+		<li class="item">账号:{{obj.username}}</li>
+		<li class="item">密码:{{obj.password}}</li>
+		<li class="item">昵称:{{obj.nickname}}</li>
+		<li class="item">隶属于:{{obj.userId}}</li>
+		<li class="item">微信openid:{{obj.openid}}</li>
+		<li class="item">类型对象:{{obj.userobj}}</li>
+		<li class="item">权限列表:{{obj.pmtmap}}</li>
+		<li class="item">拥有的对象:{{obj.objmap}}</li>
+		<li class="item">微信openidMd5:{{obj.openidmd5}}</li>
+		<li class="item">token:{{obj.token}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号:<input type="text" placeholder="序号"  ng-model="obj.id"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				状态:
+			</div>
+			<select  ng-model="obj.status">
+				<option ng-repeat="(key,val) in obj.statusMap" value="{{key}}" ng-selected="val==obj.status">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				角色:
+			</div>
+			<select  ng-model="obj.roleId">
+				<option ng-repeat="(key,val) in obj.roleIdMap" value="{{key}}" ng-selected="val==obj.roleId">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">账号:<input type="text" placeholder="账号"  ng-model="obj.username"></label>
+		<label class="item item-input">密码:<input type="text" placeholder="密码"  ng-model="obj.password"></label>
+		<label class="item item-input">昵称:<input type="text" placeholder="昵称"  ng-model="obj.nickname"></label>
+		<label class="item item-input">隶属于:<input type="text" placeholder="隶属于"  ng-model="obj.userId"></label>
+		<label class="item item-input">微信openid:<input type="text" placeholder="微信openid"  ng-model="obj.openid"></label>
+		<label class="item item-input">类型对象:<input type="text" placeholder="类型对象"  ng-model="obj.userobj"></label>
+		<label class="item item-input">权限列表:<input type="text" placeholder="权限列表"  ng-model="obj.pmtmap"></label>
+		<label class="item item-input">拥有的对象:<input type="text" placeholder="拥有的对象"  ng-model="obj.objmap"></label>
+		<label class="item item-input">微信openidMd5:<input type="text" placeholder="微信openidMd5"  ng-model="obj.openidmd5"></label>
+		<label class="item item-input">token:<input type="text" placeholder="token"  ng-model="obj.token"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

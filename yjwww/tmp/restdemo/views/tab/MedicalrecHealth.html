@@ -1,0 +1,24 @@
+<!--MedicalrecHealth，病历之健康指标详细信息-->
+<ion-view view-title='病历之健康指标' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">病历ID:{{obj.medicalrecIdString}}</li>
+		<li class="item">身高:{{obj.height}}</li>
+		<li class="item">体重:{{obj.weight}}</li>
+		<li class="item">体温:{{obj.temperature}}</li>
+		<li class="item">脉搏:{{obj.pulse}}</li>
+		<li class="item">收缩压:{{obj.systolicPre}}</li>
+		<li class="item">舒张压:{{obj.diastolicPre}}</li>
+		<li class="item">血糖:{{obj.bloodSugar}}</li>
+		<li class="item">早餐前2小时血糖:{{obj.bloodSugar1}}</li>
+		<li class="item">午餐前2小时血糖:{{obj.bloodSugar2}}</li>
+		<li class="item">糖化血红蛋白:{{obj.glyHemog}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

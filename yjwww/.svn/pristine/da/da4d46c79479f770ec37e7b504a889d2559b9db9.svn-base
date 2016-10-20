@@ -1,0 +1,56 @@
+﻿<!--Product，商品详细信息-->
+<ion-view view-title='商品' cache-view='false'>
+
+	<ion-nav-buttons side="right">
+	</ion-nav-buttons>
+	<ion-content class="has-header" >
+		<style type="text/css">
+			b { text-decoration: line-through; font-weight:100;}
+		</style>
+		<ul class="list" ng-if="obj" style=" list_style:none;background-color: #F5F5F5;width: 100%">
+			<li class="gund" style="background-color: white" >
+				<ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+					<ion-slide>
+						<div class="box blue">
+							<img reset-img ng-src='{{obj.img1}}' style="width:100% ">
+						</div>
+					</ion-slide>
+					<ion-slide>
+						<div class="box blue">
+							<img reset-img ng-src='{{obj.img2}}' style="width: 100%">
+						</div>
+					</ion-slide>
+          <ion-slide>
+            <div class="box blue">
+              <img reset-img ng-src='{{obj.img2}}' style="width: 100%">
+            </div>
+          </ion-slide>
+				</ion-slide-box>
+			</li>
+			<li class="item item-text-wrap" style="font-size: 20px;color: black;border: none">{{obj.commonname}}<br/><span style="font-size: 12px">
+				{{obj.productstyle}}</span></li>
+			<li class="item" style="font-size: 12px;color: #8c8c8c">
+				<span style="color: red;font-size: 16px">价格：￥{{obj.price }}元/{{obj.punitString}}</span><br>
+				<span><a style="border: none;color: #8c8c8c;" ng-href="tel:\\0571-85389727">电话客服：0571-85389727</a></span></br>
+			</li>
+			<div   style="font-size: 14px;color: #2F2F2F;background-color:#ffffff;padding:10px;font-style: normal;" >
+				<span ng-bind-html="obj.productExtTxt.txt" ></span>
+			</div>
+		</ul>
+		<div style="height: 55px"></div>
+	</ion-content>
+
+	<div class="bar bar-subfooter" style="background-color:white;width: 100%;height:23px;margin-bottom: 41px;">
+		<ion-item style="height: 70px;border: none;width: 100%"	>
+		<div style="margin-top: -13px;margin-left: 20px"><span style="color: red;font-size: 20px;">{{cartNum(obj)}}</span></div>
+		<div style="color: #808080;font-size: 13px;margin-left: 15px"><span>数量</span> </div>
+		<a class="button button-positive" ng-click="cartAdd(obj)" style="margin-top: -40px;margin-left: 32%;width:30%;background-color: #da0e0e;color: white;border: none;">
+			添加
+		</a>
+		<a class="button button-positive" ng-click="jumpPage('Cart')"  style="margin-top: -40px;margin-left: 3%;width:30%;background-color: #da0e0e;color: white;border: none;">
+			结算
+		</a>
+		</ion-item>
+	</div>
+</ion-view>
+

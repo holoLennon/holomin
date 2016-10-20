@@ -1,0 +1,11 @@
+-<ion-view view-title="我的资料" hide-nav-bar="true" class="allweb" style="background-color: #ffffff">
+	<div class="bar bar-header bar-positive" style="border: none">
+		<div class="title" style="width: 80px;margin: auto">我的资料</div>
+	</div>
+	<ion-content class="has-tabs has-header" style="margin-top: 190px">
+	<a href="#/tab/Product/0/{{360+1}}" auto-tab>{{11+22}}</a>
+		<br/><br/><br/>
+		<a href="#/tab/my" put-point="key2" ppid="3">{{111+222}}</a>
+		<button put-point="key1" ppid="{{ppp.id}}" ng-click ="nowtabs('D')">按钮{{33+44}}</button>
+	</ion-content>
+</ion-view>

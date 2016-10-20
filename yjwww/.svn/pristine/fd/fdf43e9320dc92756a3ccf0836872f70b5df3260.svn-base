@@ -1,0 +1,27 @@
+<!--ProductType，商品l类型-->
+<ion-view view-title="商品类型" cache-view='false' hide-nav-bar="true">
+    <div class="bar bar-header bar-positive row">
+        <div class="col col-20">
+            <a ng-click="fanhui()"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;margin-top: -3px;"/></a>
+        </div>
+        <div class="col col-60" style="text-align: center;color:#fff;padding-top: 10px;">
+            <div dynamic="obj.channelName"></div>
+        </div>
+    </div>
+    <ion-content class="has-header" >
+        <!--<ul class="list" ng-if="obj" style="padding: 0px;">
+            <img ng-src="{{obj.img}}" reset-img style="width: 100%;"/>
+        </ul>-->
+        <ion-item class="item-avatar item-text-wrap" bindonce collection-repeat="obj1 in obj.listproducttypelinkproduct"  ng-click="rx('#/tab/Product/'+obj1.productId)"  collection-item-width="100%" collection-item-height="100px">
+
+            <img ng-src="{{obj1.productIdProductObj.img1}}" reset-img style="margin-top: -10px;border-radius: 0px;width: 100%;"/>
+            <h2>{{obj1.productIdProductObj.commonname}}<span ng-if="obj1.productIdProductObj.itypeMi=='1' || obj1.productIdProductObj.itypeMiString=='医保类'" style="color: #FE918C;margin-left: 10px;font-size: 14px;">医保</span></h2>
+            <p>
+                <span>价格:{{obj1.productIdProductObj.price}}元</span><br>
+                <span>规格:{{obj1.productIdProductObj.productstyle}}</span>
+            </p>
+
+        </ion-item>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

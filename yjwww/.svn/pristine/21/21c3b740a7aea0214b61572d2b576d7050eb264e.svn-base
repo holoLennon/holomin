@@ -1,0 +1,110 @@
+<!--qualificationupload，上传认证资料-->
+<ion-view view-title='上传认证资料' cache-view="false" hide-nav-bar="true" class="allweb">
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="height: 100%;">
+      <a href="#/tab/my" style="text-decoration: none;"><i class="ion-chevron-left" style="font-size: 28px;color: #fff;"></i><span style="color: #fff;margin-left: 4px;position: absolute;line-height: 30px;font-weight: 400;">我的</span></a>
+    </div>
+    <div class="col col-80" style="height: 100%;text-align: left">
+      <span style="color: #fff;line-height: 30px;font-weight: 400;padding-left: 10%;">上传认证资料</span>
+    </div>
+    <!--<div class="col col-30" style="height:100%;">
+      <a ng-if="vm.isedit==false" class="fr button" style="border-radius: 5px;margin-top: -4px;margin-right: -3px;" ng-click="vm.isedit=true">编辑</a>
+      <a ng-if="vm.isedit==true" class="fr button button-balanced" style="border-radius: 5px;margin-top: -4px;margin-right: -3px;" ng-click="vm.isedit=false;save()">保存</a>
+      <a ng-if="vm.isedit==true" class="fr button button-dark" style="border-radius: 5px;margin-top: -4px;margin-right: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+    </div>-->
+  </ion-header-bar>
+  <ion-content class="has-header" >
+    <div ng-if="vm.isedit==true">
+      <span class="fl" style="margin-left: 20px;color: red;">审核中</span>
+      <button class="fr" style="margin-right: 20px;">编辑</button>
+    </div>
+    <ul class="list fc">
+      <label class="item item-input">1.上传照片：
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==1" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+        <div  ngf-select ngf-drop ng-model="vmfiles.files_img1" ngf-model-invalid="invalidFiles"
+              ng-model-options="modelOptionsObj"
+              ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+              ng-disabled="disabled" ngf-capture="capture"
+              ngf-drag-over-class="dragOverClassObj"
+              ngf-validate="validateObj"
+              ngf-resize="resizeObj"
+              ngf-resize-if="resizeIfFn($file, $width, $height)"
+              ngf-dimensions="dimensionsFn($file, $width, $height)"
+              ngf-duration="durationFn($file, $duration)"
+              ngf-keep="keepDistinct ? 'distinct' : keep"
+              ngf-fix-orientation="orientation"
+              ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+          <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+        </div>
+      </label>
+      <div style="height: 140px;text-align: center;">
+        <p style="color: red;">请上传白大褂证件照</p>
+        <img ng-src="{{obj.img1}}" style="height: 100px;">
+      </div>
+      <label class="item item-input">2.执业注册证：
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==2" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+        <div ngf-select ngf-drop ng-model="vmfiles.files_img2" ngf-model-invalid="invalidFiles"
+             ng-model-options="modelOptionsObj"
+             ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+             ng-disabled="disabled" ngf-capture="capture"
+             ngf-drag-over-class="dragOverClassObj"
+             ngf-validate="validateObj"
+             ngf-resize="resizeObj"
+             ngf-resize-if="resizeIfFn($file, $width, $height)"
+             ngf-dimensions="dimensionsFn($file, $width, $height)"
+             ngf-duration="durationFn($file, $duration)"
+             ngf-keep="keepDistinct ? 'distinct' : keep"
+             ngf-fix-orientation="orientation"
+             ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+          <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+        </div>
+      </label>
+      <div style="height: 140px;text-align: center;">
+        <p style="color: red;">*必须上传</p>
+        <img ng-src="{{obj.img2}}" style="height: 100px;">
+      </div>
+      <label class="item item-input">3.医师资格证：
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==3" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+        <div ngf-select ngf-drop ng-model="vmfiles.files_img3" ngf-model-invalid="invalidFiles"
+             ng-model-options="modelOptionsObj"
+             ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+             ng-disabled="disabled" ngf-capture="capture"
+             ngf-drag-over-class="dragOverClassObj"
+             ngf-validate="validateObj"
+             ngf-resize="resizeObj"
+             ngf-resize-if="resizeIfFn($file, $width, $height)"
+             ngf-dimensions="dimensionsFn($file, $width, $height)"
+             ngf-duration="durationFn($file, $duration)"
+             ngf-keep="keepDistinct ? 'distinct' : keep"
+             ngf-fix-orientation="orientation"
+             ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+          <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+        </div>
+      </label>
+      <div style="height: 140px;text-align: center;">
+        <p style="color: red;">*必须上传</p>
+        <img ng-src="{{obj.img3}}" style="height: 100px;">
+      </div>
+    <div class="item item-checkbox" style="padding-left: 16px;">
+      是否加入空中诊室
+      <span class="checkbox" style="left:150px;">
+        <input type="checkbox">
+      </span>
+    </div>
+    <div class="item" style="padding-left: 16px;">
+      <span class="fl" style="margin-top: 6px;">咨询费用：￥</span>
+      <input class="fl" type="number" style="width: 80px;margin-left: 10px;padding-left: 5px;">
+      <span class="fl" style="margin-left: 10px;margin-top: 6px;">/次</span>
+    </div>
+    <div style="text-align: center;">
+      <button class="button button-positive" style="width:48% ;background-color: #008cad;margin-top: 15px;" >确认提交</button>
+    </div>
+    </ul>
+    <div>
+      <span>已上传成功。请等待审核</span>
+      <button>确定</button>
+    </div>
+  </ion-content>
+</ion-view>
+
+

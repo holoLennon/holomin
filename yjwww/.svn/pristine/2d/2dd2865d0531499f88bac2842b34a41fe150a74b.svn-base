@@ -1,0 +1,35 @@
+// Ionic Starter App
+//H5版本
+var h5ver="1.2.4.5";
+var h5ver_tcm="1.2.4.6";
+/**
+ * 启动加载
+ */
+app.run(function($ionicPlatform, $rootScope, $state, $ionicLoading, $log,zspecService,Storage) {
+  $log.debug("app.run");
+  //如果是APP，启动个推
+  if (_ClientInfo.cli == 1 || _ClientInfo.cli == 2) {
+    //cid的回调
+    var callbackCid = function(cid) {
+      $log.debug("cid:" + cid);
+      var user = Storage.get(LOGINED_USER_ALL);
+      if (user != null) {
+        zspecService.putCid(cid);
+      }
+      Storage.set(GETUICID, cid);
+    };
+    //启动
+    document.addEventListener("deviceready", function() {
+      getui.init(callbackCid);
+    }, false);
+    //关闭后重新打开
+    document.addEventListener("resume", function() {
+      getui.getCid(callbackCid);
+    }, false);
+  }
+}).config(function($ionicConfigProvider){
+  if(_ClientInfo.cli == 2){
+    $ionicConfigProvider.views.swipeBackEnabled(false);
+  }
+});
+

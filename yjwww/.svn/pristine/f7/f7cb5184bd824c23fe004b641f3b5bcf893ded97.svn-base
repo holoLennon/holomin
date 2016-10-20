@@ -1,0 +1,49 @@
+appctrl.controller('tmpCtrl', function($scope, $rootScope, $log, $timeout,
+                                      $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                      $location, $state,
+                                      $cordovaNetwork, $cordovaGoogleAnalytics,
+                                      $stateParams,
+                                      ENV,CommonService,MemberService,Storage,$ionicHistory,Upload,$cordovaCapture) {
+  $log.debug("enter tmp ctrl");
+  var me;
+  $scope.obj={};
+  $scope.vm={};
+
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("tmp ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("tmp ctrl afterEnter");
+    if (ctrlReinitMap.get('tmpCtrl')) {
+      ctrlReinitMap.remove('tmpCtrl');
+      $log.debug("tmp ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+
+  };
+  $scope.captureAudio = function() {
+    $log.debug("captureAudio...");
+    var options = { limit: 1, duration: 30 };
+    $cordovaCapture.captureAudio(options).then(function(audioData) {
+      $log.debug("captureAudio...Success! Audio data is here");
+      // Success! Audio data is here
+    }, function(err) {
+      // An error occurred. Show a message to the user
+      $log.debug("captureAudio...An error occurred "+err);
+    });
+  }
+
+  $scope.init();
+  ctrlReinitMap.remove('tmpCtrl');
+});

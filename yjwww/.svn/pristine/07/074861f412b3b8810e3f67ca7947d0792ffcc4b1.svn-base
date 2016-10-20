@@ -1,0 +1,22 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="商品列表" cache-view='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="rx('#/tab/Product/1/'+obj.id)" collection-item-width="100%" collection-item-height="150px">
+                <img ng-src="{{obj.img1}}" reset-img style="max-width: 65px;max-height: 65px;border-radius: 0px;"/>
+                <h2 style="overflow: visible">{{obj.myname}}</h2>
+				        <span style="font-size:12px;color: #8c8c8c;width: 80%;">规格：{{obj.productstyle }}<!--<span ng-if="obj.itypeMi=='1' || obj.itypeMiString=='医保类'" style="color: #FE918C;margin-left: 10px;font-size: 14px;">医保</span>--></span>
+                <p>
+                  <span style="color: red;font-size: 14px">价格：￥{{obj.price}}</span><br>
+                  <span style="font-size: 12px;color: #8c8c8c;width: 80%;">主要功效:{{obj.intro}}</span>
+                </p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

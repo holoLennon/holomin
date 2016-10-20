@@ -1,0 +1,66 @@
+<!--DoctorTypeList，医生科室列表-->
+<ion-view view-title="医生科室列表"  >
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ul class="list">
+      <!--<li class="gund">
+        <ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+          <ion-slide>
+            <div class="box blue" >
+              <img src="res/img/tui1.png" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue">
+              <img src="res/img/tui2.png" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue">
+              <img src="res/img/tui3.png" width="100%">
+            </div>
+          </ion-slide>
+        </ion-slide-box>
+      </li>-->
+      <li class="row" style="background-color: #fff;">
+          <div class="col col-90" style="height:100%;margin-top: -5px;">
+            <input style="height: 30px;width:95%;margin-top: 3px;padding-left: 5px;border:0.5px solid #ddd; border-radius: 3px;" class="ion-beijing" type="text" placeholder="搜医生、搜病症" ng-model="searchDoctorType">
+          </div>
+          <div class="col col-10" ng-click="doSearchDoctorType(searchDoctorType)" style="height:40px;margin-top: -3px;width: 100%;">
+            <i class="ion-ios-search-strong" style="font-size: 24px;position: absolute;top:13px;left:88%;color: #000;"></i>
+          </div>
+      </li>
+      <li style="width:100%;">
+        <span style="font-size: 20px;font-weight:400;line-height: 34px;color: #F5B55D;padding-left: 12px;">按科室找医生</span>
+        <ul style="width:100%;border-top: 0.5px solid #ddd;">
+          <li ng-repeat="obj in list" ng-click="rx('#/tab/DoctorList/0/'+obj.id)" style="width:25%;float:left;border-right: 0.5px solid #ddd;border-bottom: 0.5px solid #ddd;text-align: center;">
+            <img ng-src="{{obj.img}}" reset-img style="height: 65px;padding-top: 5px;"/>
+          </li>
+        </ul>
+      </li>
+    </ul>
+        <!--<ion-list class="list">
+          <div style="width:100%;background-color: white;">
+            <div style="margin-top: 5px;">
+              <span style="font-size: 20px;font-weight:400;line-height: 34px;color: #F5B55D;padding-left: 12px;">按科室找医生</span>
+              <ul style="width:100%;float:left;">
+                <li ng-repeat="obj in list" style="width:25%;float:left;border-right: 0.5px solid #ddd;border-bottom: 0.5px solid #ddd;">
+                  <a class="item" ng-click="rx('#/tab/DoctorTypeLinkDoctor/'+obj.id)" style="border: none;clear:both;padding: 5px;">
+                    <ul style="clear:both;">
+                      <li style="text-align: center">
+                        <img src="res/img_tcm/typelogo.png"  style="width: 60%;border-radius: 50%;">
+                      </li>
+                      <li style="font-size: 12px;text-align: center">
+                        <span ng-bind="obj.channelName"></span>
+                      </li>
+                    </ul>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ion-list>-->
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

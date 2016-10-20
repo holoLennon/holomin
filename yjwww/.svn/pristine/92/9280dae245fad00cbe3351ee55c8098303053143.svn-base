@@ -1,0 +1,78 @@
+/**
+ * Wwwhome，手机页首页配置详细
+ */
+appctrl.controller('WwwhomeCtrl', function($scope, $rootScope,$location, $log,MemberdoctorService,Storage) {
+    $log.debug("enter Wwwhome ctrl");
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    /**对象*/
+    $scope.obj={};
+    /**搜索关键字*/
+    $scope.searchData='';
+    /**页码*/
+    $scope.member_id=0;
+    if(Storage.get(LOGINED_USER)!=null){
+      $scope.member_id=Storage.get(LOGINED_USER).id;
+    }
+    $scope.page=_.clone(_Page);
+   // $scope.page.where="member_id="+$scope.member_id;
+    /**给会员发消息的医生数量 */
+    $scope.msgnum=0;
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Wwwhome ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Wwwhome ctrl afterEnter");
+        if (ctrlReinitMap.get('WwwhomeCtrl')) {
+            ctrlReinitMap.remove('WwwhomeCtrl');
+            $log.debug("Wwwhome ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Wwwhome ctrl init"+$scope.member_id);
+      var clientInfo=Storage.get(CLIENT_INFO);
+      alert(1);
+      alert(clientInfo.token);
+      if(!clientInfo){
+        clientInfo=_.clone(_ClientInfo);
+      }
+      $scope.havaMessage();
+     };
+    $scope.havaMessage=function(){
+      if(Storage.get(LOGINED_USER)==null){
+        $log.debug("null");
+        return;
+      }
+      MemberdoctorService.first(null,$scope.page).then(function (data) {
+        $log.debug("MemberdoctorList ctrl query then"+data);
+        angular.forEach(data, function (item) {
+          if(item.mmsgnotread>0){
+            $scope.msgnum++;
+          }
+        });
+      });
+    }
+      /**
+     * 搜索
+     */
+    $scope.search=function(){
+        $log.debug("kw ="+$scope.searchData);
+        if(isblank($scope.searchData))
+            return;
+        $scope.rx('#/tab/ProductListSearch/'+$scope.searchData);
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('WwwhomeCtrl');
+});

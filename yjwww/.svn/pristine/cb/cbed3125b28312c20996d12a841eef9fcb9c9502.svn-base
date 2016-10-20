@@ -1,0 +1,25 @@
+<!--OrderrList，订单列表-->
+<ion-view view-title="订单列表" cache-view='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content >
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="rx('#/tab/Orderr/'+obj.id)"  collection-item-width="100%" collection-item-height="160px" style="border: none">
+                <img ng-src="{{obj.img1}}" reset-img  style="height: 80px;border-radius: 0;margin-left: 5px;"/>
+                <h2 style="margin-left: 20px">{{obj.title}}</h2>
+                <div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -18px;background: none;overflow: visible;">
+                    <span>会员： {{obj.memberIdMemberObj.name}}</span><br>
+                    <span>订单号： {{obj.sn}}</span><br>
+                    <span >支付状态：{{obj.statusString}}</span><br>
+                    <span style="">订单来源：{{obj.iotypeString}}</span><br>
+                    <span style="color: red">药品总额：￥{{obj.sumprice}}</span><br>
+                    <span>订单生成时间：{{obj.gmtCreateString}}</span>
+                </div>
+                <div style="background-color: #f5f6f5;height: 20px;width: 600px;margin-left: -50%;margin-top: -10px"></div>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

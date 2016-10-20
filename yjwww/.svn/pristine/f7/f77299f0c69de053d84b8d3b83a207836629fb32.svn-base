@@ -1,0 +1,69 @@
+<!--MedicalrecHealth，病历之健康指标详细信息-->
+<ion-view view-title='健康指标' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button" style="border-radius: 5px;" ng-click="vm.isedit=true">编辑</a>
+	  <a ng-if="vm.isedit==true" class="button button-dark" style="border-radius: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced" style="border-radius: 5px;" ng-click="vm.isedit=false;save()">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item" style="font-weight: normal;padding:5px;">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item" style="font-weight: normal;padding:5px;">病历ID:{{obj.medicalrecIdString}}</li>
+    <ul class="item">
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        身高:{{obj.height}}&nbsp;cm
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        体重:{{obj.weight}}&nbsp;kg
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        体温:{{obj.temperature}}&nbsp;℃
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        脉搏:{{obj.pulse}}&nbsp;次/分
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        收缩压:{{obj.systolicPre}}&nbsp;mmHg
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        舒张压:{{obj.diastolicPre}}&nbsp;mmHg
+      </li>
+      <li class="fc" style="font-weight: normal;padding:5px;">空腹血糖:{{obj.bloodSugar}}&nbsp;mmol/l</li>
+      <li class="fc" style="font-weight: normal;padding:5px;">早餐前2小时血糖:{{obj.bloodSugar1}}&nbsp;mmol/l</li>
+      <li class="fc" style="font-weight: normal;padding:5px;">午餐前2小时血糖:{{obj.bloodSugar2}}&nbsp;mmol/l</li>
+      <li class="fc" style="font-weight: normal;padding:5px;">糖化血红蛋白:{{obj.glyHemog}}&nbsp;%</li>
+    </ul>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+    <li class="item" style="font-weight: normal;padding:5px;">病历ID:{{obj.medicalrecId}}</li>
+    <ul class="item">
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        身高&nbsp;cm:<input type="number" style="width: 95%;" placeholder="身高"  ng-model="obj.height">
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        体重&nbsp;kg:<input type="number" style="width: 95%;" placeholder="体重"  ng-model="obj.weight">
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        体温&nbsp;℃:<input type="number" style="width: 95%;" placeholder="体温"  ng-model="obj.temperature">
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        脉搏&nbsp;次/分:<input type="number" style="width: 95%;" placeholder="脉搏"  ng-model="obj.pulse">
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        收缩压&nbsp;mmHg:<input type="number" style="width: 95%;" placeholder="收缩压"  ng-model="obj.systolicPre">
+      </li>
+      <li class="fl" style="width: 50%;font-weight: normal;padding:5px;">
+        舒张压&nbsp;mmHg:<input type="number" style="width: 95%;" placeholder="舒张压"  ng-model="obj.diastolicPre">
+      </li>
+      <li class="fc" style="font-weight: normal;padding:5px;">空腹血糖&nbsp;mmol/l:<input type="number" placeholder="血糖"  ng-model="obj.bloodSugar"></li>
+      <li class="fc" style="font-weight: normal;padding:5px;">早餐前2小时血糖&nbsp;mmol/l:<input type="number" placeholder="早餐前2小时血糖"  ng-model="obj.bloodSugar1"></li>
+      <li class="fc" style="font-weight: normal;padding:5px;">午餐前2小时血糖&nbsp;mmol/l:<input type="number" placeholder="午餐前2小时血糖"  ng-model="obj.bloodSugar2"></li>
+      <li class="fc" style="font-weight: normal;padding:5px;">糖化血红蛋白&nbsp;%:<input type="number" placeholder="糖化血红蛋白"  ng-model="obj.glyHemog"></li>
+    </ul>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

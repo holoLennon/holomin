@@ -1,0 +1,67 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="商品列表" hide-nav-bar="true" class="allweb" cache-view='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-25" style="height: 100%;">
+      <a href="#/tab/Wwwhome" style="text-decoration: none;"><i class="ion-chevron-left" style="font-size: 28px;color: #fff;"></i><span style="color: #fff;margin-left: 5px;position: absolute;line-height: 30px;font-weight: 400;">首页</span></a>
+    </div>
+     <div class="col col-55" style="height:100%;margin-left:-15px;">
+       <input style="height: 30px;width:100%;margin-top: -3px;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="请输入药品名称" ng-model="searchData" >
+     </div>
+     <div class="col col-10" style="height:100%;">
+       <a ng-click="search()" >
+         <i class="ion-ios-search" style="font-size: 24px;position: absolute;top:12px;opacity: 0.8;color: #fff;"></i>
+       </a>
+     </div>
+  </ion-header-bar>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar cart_list" bindonce collection-repeat="obj in list" collection-item-width="101%" collection-item-height="100px">
+        <img ng-src="{{obj.img1}}" reset-img class="cart_list_img"/>
+        <div>
+          <div class="cart_list_title">
+            <div class="cart_list_title_l" ng-click="rx('#/tab/Product/'+obj.id)">{{obj.commonname}}</div>
+            <div class="cart_list_title_r" ng-click="rx('#/tab/Product/'+obj.id)" style="font-size: 10px">单价：￥{{obj.price}}</div>
+          </div>
+          <div class="cart_list_title">
+            <div class="cart_list_title_2" ng-click="rx('#/tab/Product/'+obj.id)">规格：{{obj.punitString}}</div>
+          </div>
+          <div class="cart_list_oper">
+            <div class="cart_list_oper_num">
+              <span>数量：</span>
+              <button class="button button-positive button-outline button-remove" ng-click="cartRemove(obj.obj1)">
+                <i class="icon ion-ios-minus-outline"></i>
+              </button>
+              <span class="content_number">{{obj.num}}1111</span>
+              <button class="button button-positive button-outline button-add" ng-click="cartAdd(obj.obj1)">
+                <i class="icon ion-plus-circled"></i>
+              </button>
+            </div>
+            <div class="cart_list_oper_delete">
+              <button class="button button-delete" ng-click="rx('#/tab/Product/'+obj.id)">
+                <i class="ion-ios-arrow-right" style="font-size: 24px;"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </ion-item>
+    </ion-list>
+        <!--<ion-list class="list" style="border-bottom:2px solid #ddd;">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="rx('#/tab/Product/'+obj.id)" collection-item-width="100%" collection-item-height="100px">
+              <img ng-src="{{obj.img1}}" reset-img style="float:left;max-width: 55px;max-height: 55px;border-radius: 0px;margin-left: 10px;"/>
+              <div class="fl" style="margin-left: 10px;margin-top: 3px;width: 80%;font-weight: 400;">
+                <h2 style="line-height: 28px;">{{obj.commonname}}</h2>
+                <i class="ion-ios-arrow-right" style="font-size: 24px; position: absolute;top:35%;left:90%;"></i>
+                <p style="font-size: 14px;color: #8c8c8c">价格:{{obj.price }}元/{{obj.punitString}}</p>
+                <p style="font-size: 14px;color: #8c8c8c">功效:{{obj.intro }}</p>
+              </div>
+            </ion-item>
+        </ion-list>-->
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

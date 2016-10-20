@@ -1,0 +1,116 @@
+<!--qualificationupload，上传认证资料-->
+<ion-view view-title='上传认证资料' cache-view="false" hide-nav-bar="true" class="allweb">
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-30" style="height: 100%;">
+      <a href="#/tab/my" style="text-decoration: none;"><i class="ion-chevron-left" style="font-size: 28px;color: #fff;"></i><span style="color: #fff;margin-left: 4px;position: absolute;line-height: 30px;font-weight: 400;">我的</span></a>
+    </div>
+    <div class="col col-40" style="height: 100%;margin-left: auto;margin-right: auto;">
+      <span style="color: #fff;position: absolute;line-height: 30px;font-weight: 400;">上传认证资料</span>
+    </div>
+    <div class="col col-30" style="height:100%;">
+      <a ng-if="vm.isedit==false" class="fr button" style="border-radius: 5px;margin-top: -4px;margin-right: -3px;" ng-click="vm.isedit=true">编辑</a>
+      <a ng-if="vm.isedit==true" class="fr button button-balanced" style="border-radius: 5px;margin-top: -4px;margin-right: -3px;" ng-click="vm.isedit=false;save()">保存</a>
+      <a ng-if="vm.isedit==true" class="fr button button-dark" style="border-radius: 5px;margin-top: -4px;margin-right: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-header" >
+    <!--修改-->
+    <ul class="list">
+      <label class="item item-input">1.上传照片
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==1" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+        <div  ngf-select ngf-drop ng-model="files.files_img1" ngf-model-invalid="invalidFiles"
+             ng-model-options="modelOptionsObj"
+             ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+             ng-disabled="disabled" ngf-capture="capture"
+             ngf-drag-over-class="dragOverClassObj"
+             ngf-validate="validateObj"
+             ngf-resize="resizeObj"
+             ngf-resize-if="resizeIfFn($file, $width, $height)"
+             ngf-dimensions="dimensionsFn($file, $width, $height)"
+             ngf-duration="durationFn($file, $duration)"
+             ngf-keep="keepDistinct ? 'distinct' : keep"
+             ngf-fix-orientation="orientation"
+             ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+          <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+        </div>
+      </label>
+      <div style="height: 140px;text-align: center;">
+        <p>建议上传白大褂本人证件照</p>
+        <img ng-src="{{obj.img1}}" style="height: 100px;">
+      </div>
+      <label class="item item-input">2.上传身份证
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==2" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+        <div ngf-select ngf-drop ng-model="files.files_imgid" ngf-model-invalid="invalidFiles"
+             ng-model-options="modelOptionsObj"
+             ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+             ng-disabled="disabled" ngf-capture="capture"
+             ngf-drag-over-class="dragOverClassObj"
+             ngf-validate="validateObj"
+             ngf-resize="resizeObj"
+             ngf-resize-if="resizeIfFn($file, $width, $height)"
+             ngf-dimensions="dimensionsFn($file, $width, $height)"
+             ngf-duration="durationFn($file, $duration)"
+             ngf-keep="keepDistinct ? 'distinct' : keep"
+             ngf-fix-orientation="orientation"
+             ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+          <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+        </div>
+      </label>
+      <div style="height: 140px;text-align: center;">
+        <p>请上传身份证正面照片，个人信息必须清楚</p>
+        <img ng-src="{{obj.imgID}}" style="height: 100px;">
+      </div>
+      <label class="item item-input">3 上传资质证书
+        <br><i ng-if="progressPercentage>0 && progressPercentage<100&&file_num==3" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+      </label>
+      <ul style="width: 100%;">
+        <li style="width: 90%;margin-left: 5%;">
+          资质证书包括：工牌，职称证书，执业注册证，医师资格证，<i style="color:red;">请至少上传一种。</i>
+        </li>
+        <li class="fl" style="width: 100%;">
+          <label class="item item-input" style="height: 120px;">
+            <div ngf-select ngf-drop ng-model="files.files_imgreg" ngf-model-invalid="invalidFiles"
+                 ng-model-options="modelOptionsObj"
+                 ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                 ng-disabled="disabled" ngf-capture="capture"
+                 ngf-drag-over-class="dragOverClassObj"
+                 ngf-validate="validateObj"
+                 ngf-resize="resizeObj"
+                 ngf-resize-if="resizeIfFn($file, $width, $height)"
+                 ngf-dimensions="dimensionsFn($file, $width, $height)"
+                 ngf-duration="durationFn($file, $duration)"
+                 ngf-keep="keepDistinct ? 'distinct' : keep"
+                 ngf-fix-orientation="orientation"
+                 ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+              <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+            </div>
+            <img ng-src="{{obj.imgreg}}" style="height: 100px;">
+          </label>
+        </li>
+        <li class="fl" style="width: 100%;">
+          <label class="item item-input" style="height: 120px;">
+            <div ngf-select ngf-drop ng-model="files.files_imgqa" ngf-model-invalid="invalidFiles"
+                 ng-model-options="modelOptionsObj"
+                 ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                 ng-disabled="disabled" ngf-capture="capture"
+                 ngf-drag-over-class="dragOverClassObj"
+                 ngf-validate="validateObj"
+                 ngf-resize="resizeObj"
+                 ngf-resize-if="resizeIfFn($file, $width, $height)"
+                 ngf-dimensions="dimensionsFn($file, $width, $height)"
+                 ngf-duration="durationFn($file, $duration)"
+                 ngf-keep="keepDistinct ? 'distinct' : keep"
+                 ngf-fix-orientation="orientation"
+                 ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+              <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+            </div>
+            <img ng-src="{{obj.imgqa}}" style="height: 100px;">
+          </label>
+        </li>
+
+      </ul>
+    </ul>
+  </ion-content>
+</ion-view>
+
+

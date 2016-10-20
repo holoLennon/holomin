@@ -1,0 +1,15 @@
+<!--MedicalrecRpt，病历之检查报告详细信息-->
+<ion-view view-title='检查报告' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-tabs has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">化验单类型:{{obj.ttypeString}}</li>
+		<li class="item" ng-if="obj.img1!=null">化验单图片</li>
+		<li class="item" ng-if="obj.img1!=null" style="height:130px;text-align: center;"><a href="{{obj.img1}}"><img reset-img ng-src='{{obj.img1}}' style="height:100px;"></a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

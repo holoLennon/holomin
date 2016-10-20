@@ -1,0 +1,33 @@
+<!--MemberdoctorList，会员端 私人医生-->
+<ion-view view-title="私人医生" cache-view="false">
+  <ion-header-bar class="bar-positive " style="background-color: #008CAD;">
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="100%" collection-item-height="160px" style="padding-left:0px;">
+        <ul ng-click="jumpPage('DmmsgList/0/'+meuser.id+'/'+obj.doctorId)">
+          <li class="fl" style="margin-top: 2%;">
+            <img ng-if="obj.doctorIdDoctorObj.img1==null" src="res/img/yishengtouxiangfang.png" style="width: 50px;height: 50px;margin-left: 8px;margin-top: -8px;border-radius: 50%;"/>
+            <img ng-if="obj.doctorIdDoctorObj.img1!=null" ng-src="{{obj.doctorIdDoctorObj.img1}}" style="width: 50px;height: 50px;margin-left: 8px;margin-top: -8px;border-radius: 50%;"/>
+          </li>
+          <li class="fl" style="margin-left: 10px;">
+            <span style="color: #8c8c8c">{{obj.doctorIdString}}</span>
+            <span style="font-size: 10px;float:right;margin-right: 10%;"><span style="font-size: 16px" ng-if="obj.mmsgnotread>0" class="badge badge-assertive">{{obj.mmsgnotread}}</span></span><br><br>
+            <span style="font-size: 12px;color: #8c8c8c;clear:both;">性别：{{obj.doctorIdDoctorObj.usersexString}}</span></br>
+            <span style="font-size: 12px;color: #8c8c8c" >科室：{{obj.doctorIdDoctorObj.productchannelIdString}}</span></br>
+            <span style="font-size: 12px;color: #8c8c8c" >职称：{{obj.doctorIdDoctorObj.dlevelString}}</span><br/>
+            <span style="font-size: 12px;color: #8c8c8c" >工作单位：{{obj.doctorIdDoctorObj.company}}</span>
+          </li>
+        </ul>
+        <div class="button" ng-if="obj.statusDm==2" ng-click="cancelAttention(obj)" style="color:#fff;min-height:25px;line-height:25px;font-size: 13px;background-color: #3485c3; border: 0px;border-radius: 3px;margin-right: 5px;position: absolute;top:80px;left:73%;">取消关注</div>
+        <!--<span style="font-size: 12px;">-->
+        <!--<a style="border: none;color: #8c8c8c;" ng-href="tel:\\{{obj.doctorIdDoctorObj.mobile}}">电话:{{obj.doctorIdDoctorObj.mobile}}</a></br>-->
+        <!--<a style="border: none;color: #8c8c8c;" ng-href="tel:\\{{obj.doctorIdDoctorObj.tele}}">座机:{{obj.doctorIdDoctorObj.tele}}</a></br>-->
+        <!--</span></br>-->
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

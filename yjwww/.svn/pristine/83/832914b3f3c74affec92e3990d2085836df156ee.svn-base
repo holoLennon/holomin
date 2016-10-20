@@ -1,0 +1,121 @@
+<!--MedicalrecPage，病历之病史页面详细信息-->
+<ion-view view-title='病史页' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button" style="border-radius: 5px;" ng-click="vm.isedit=true">编辑</a>
+	  <a ng-if="vm.isedit==true" class="button button-dark" style="border-radius: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced" style="border-radius: 5px;" ng-click="vm.isedit=false;save()">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">患者:{{obj.medicalrecIdString}}</li>
+		<li class="item">医生:{{obj.doctorIdString}}</li>
+    <label class="item" style="border: none;height: 80px;width: 100%;">
+      <div class="fl"> 病历说明：</div>
+      <div class="fl" style="width: 70%;">
+        <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit" ng-model="obj.diagnose"></textarea>
+      </div>
+    </label>
+    <label class="item" style="border: none;height: 80px;width: 100%;">
+      <div class="fl"> 器械检查：</div>
+      <div class="fl" style="width: 70%;">
+        <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit" ng-model="obj.hickeyCheck"></textarea>
+      </div>
+    </label>
+    <div class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+      <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">病历照片</p>
+    </div>
+    <div style="width: 100%;background-color: #fff;">
+      <ul>
+        <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;margin-left:1%;text-align: center;background-color: #fff;">
+          <a href="{{obj.img1}}">
+            <img ng-if="obj.img1" ng-src="{{obj.img1}}" reset-img style="height: 50px;"/>
+          </a>
+        </li>
+        <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+          <a href="{{obj.img2}}">
+            <img ng-if="obj.img2" ng-src="{{obj.img2}}" reset-img style="height: 50px;"/>
+          </a>
+        </li>
+        <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+          <a href="{{obj.img3}}">
+            <img ng-if="obj.img3" ng-src="{{obj.img3}}" reset-img style="height: 50px;"/>
+          </a>
+        </li>
+      </ul>
+    </div>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+    <label class="item" style="border: none;height: 80px;width: 100%;">
+      <div class="fl"> 病人自述：</div>
+      <div class="fl" style="width: 70%;">
+        <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" placeholder="病人自述" ng-model="obj.diagnose"></textarea>
+      </div>
+    </label>
+    <label class="item" style="border: none;height: 80px;width: 100%;">
+      <div class="fl"> 器械检查：</div>
+      <div class="fl" style="width: 70%;">
+        <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" placeholder="报告列表" ng-model="obj.hickeyCheck"></textarea>
+      </div>
+    </label>
+        <label class="item item-input">病历照片1:
+          <div ngf-select ngf-drop ng-model="files.files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+    <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 100px;"></label>
+        <label class="item item-input">病历照片2:
+          <div ngf-select ngf-drop ng-model="files.files_img2" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+    <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img2}}" style="height: 100px;"></label>
+        <label class="item item-input">病历照片3:
+          <div ngf-select ngf-drop ng-model="files.files_img3" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+    <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img3}}" style="height: 100px;"></label>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

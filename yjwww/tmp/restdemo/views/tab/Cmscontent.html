@@ -1,0 +1,35 @@
+<!--Cmscontent，内容详细信息-->
+<ion-view view-title='内容' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">修改时间:{{obj.gmtModifiedString}}</li>
+		<li class="item">发布时间:{{obj.gmtReleaseString}}</li>
+		<li class="item">显示时间:{{obj.gmtShowString}}</li>
+		<li class="item">状态:{{obj.statusApplyPassRefuseString}}</li>
+		<li class="item">频道:{{obj.cmschannelIdString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">主标题:{{obj.title}}</li>
+		<li class="item">副标题:{{obj.title1}}</li>
+		<li class="item">肩标题:{{obj.title2}}</li>
+		<li class="item">作者:{{obj.author}}</li>
+		<li class="item"><a href='\"+{{obj.linkto}}+\"' target='_blank'>查看</a></li>
+		<li class="item">图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">图2</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">图3</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img3}}' style="height:120px"></li>
+		<li class="item">图4</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img4}}' style="height:120px"></li>
+		<li class="item">图5</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img5}}' style="height:120px"></li>
+		<li class="item">简介:{{obj.intro}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

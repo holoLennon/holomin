@@ -1,0 +1,52 @@
+<!--DoctorTypeList，医生科室列表-->
+<ion-view view-title="医生科室列表"  >
+	<ion-content class="has-tabs has-header">
+    <div class="row" style="background-color: #fff;">
+      <div class="col col-90" style="height:100%;margin-top: -5px;">
+        <input style="height: 30px;width:95%;margin-top: 3px;padding-left: 5px;border:0.5px solid #ddd; border-radius: 3px;" class="ion-beijing" type="text" placeholder="搜医生、搜病症" ng-model="searchDoctorType">
+      </div>
+      <div class="col col-10" style="height:100%;margin-top: -3px;">
+        <a ng-click="doSearchDoctorType(searchDoctorType)">
+          <i class="ion-ios-search-strong" style="font-size: 24px;position: absolute;top:13px;left:88%;color: #000;"></i>
+          <!--<img src="res/img/a_sosuo.png" style="height:22px;width:22px;margin-top:6px;opacity: 0.5;margin-left: -6px;color: #000;"/>-->
+        </a>
+      </div>
+      <div class="AMapArea" id="amap">
+        <div id="gaode_container_shopdrugstore" tabindex="0"></div>
+        <select required="" class="form-control" ng-model="province" ng-options="o as o.text for o in pcc" ng-change="city=province.children[0];county=city.children[0];" style="width:68px;height:30px;text-align:center;margin-left: 8px;margin-top: 15px;">
+        </select>
+        <select class="form-control" ng-model="city" ng-options="o as o.text for o in province.children" ng-change="county=city.children[1];" style="width:68px;height:30px;margin-left:4px;text-align:center;">
+        </select>
+        <select class="form-control" ng-model="county" ng-options="o as o.text for o in city.children" style="width:68px;height:30px;margin-left:4px;text-align:center;">
+        </select>
+        <button class="button-positive" ng-click="searchByCounty(county)" style="color:#fff;margin-left:8px;;margin-top: 8px;width:74px;height:32px;background-color: #3485c3; border: 0px;border-radius: 3px;">
+          查找
+        </button>
+      </div>
+    </div>
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+        <div style="width:100%;background-color: white;">
+          <div style="margin-top: 5px;">
+            <span style="font-size: 20px;font-weight:400;line-height: 34px;color: #F5B55D;padding-left: 12px;">按科室找医生</span>
+            <ul style="width:100%;float:left;">
+              <li ng-repeat="obj in list" style="width:25%;float:left;border-right: 0.5px solid #ddd;border-bottom: 0.5px solid #ddd;">
+                <a class="item" ng-click="rx('#/tab/DoctorList/'+obj.id)" style="border: none;clear:both;padding: 5px;">
+                  <ul style="clear:both;">
+                    <li style="text-align: center">
+                      <img src="res/img/typelogo.png"  style="width: 60%;border-radius: 50%;">
+                    </li>
+                    <li style="font-size: 12px;text-align: center">
+                      <span ng-bind="obj.channelName"></span>
+                    </li>
+                  </ul>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

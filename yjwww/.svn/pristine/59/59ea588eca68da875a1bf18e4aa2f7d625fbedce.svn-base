@@ -1,0 +1,137 @@
+/**
+ * DoctorList，医生会员列表 根据productchannelId查找医生列表版
+ */
+appctrl.controller('DoctorListCtrl', function($scope, $rootScope, $location,$stateParams, $log, Storage, ENV, CommonService, DoctorService,$ionicHistory) {
+    $log.debug("enter DoctorList ctrl");
+    /**页码*/
+    $scope.page=_.clone(_Page);
+  //0表示易健。1表示从易健。3表示易健搜索，2表示大御医搜索过来
+  var  fromto=$stateParams.fromto;
+  /**
+   * 参数
+   */
+  var productchannelId=$stateParams.productchannelId;
+    /**页面显示的列表*/
+    $scope.list=[];
+
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("DoctorList ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("DoctorList ctrl afterEnter");
+        if (ctrlReinitMap.get('DoctorListCtrl')) {
+            ctrlReinitMap.remove('DoctorListCtrl');
+            $log.debug("DoctorList ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+      if(fromto==='0'){
+        $log.debug("DoctorList ctrl init aaa");
+        $scope.page.orderstr = "pinyin asc";
+        $scope.page.where="itypeAir=0 and statusAir=1 and productchannelFamily="+productchannelId+" or productchannelFamily like '%,"+productchannelId+"'";
+        $scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+      }else if(fromto==='1'){
+        $log.debug("DoctorList ctrl init ");
+        $scope.page.where=" productchannelFamily="+productchannelId+" or productchannelFamily like '%,"+productchannelId+"'";
+        $scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+      }else if(fromto==='3'){
+        $log.debug("DoctorList ctrl init ");
+        $scope.page.where="itypeAir=0 and statusAir=1 and name like '%"+productchannelId+"%'";
+        $scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+      }else{
+        $log.debug("DoctorList ctrl init ");
+        $scope.page.where="name like '%"+productchannelId+"%' ";//Storage.get("DoctorList"+"QueryWhere")
+        $scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first2();
+      }
+    };
+  /**
+   * 根据搜索的医生姓名进行查询
+   */
+  $scope.first2=function(){
+    DoctorService.first(null,$scope.page).then(function (data) {
+      $log.debug("DoctorList ctrl query then");
+      if(data == "" || data == undefined || data == null){
+        CommonService.alertm("查无此医生！");
+        return;
+      }else{
+        $scope.addList(data);
+        $scope.$broadcast('scroll.refreshComplete');
+      }
+    });
+  };
+    /**
+     * 上拉刷新
+     */
+    $scope.doRefresh=function(){
+        $scope.init();
+    };
+    /**
+     * 给list上加数据
+     * @param data
+     */
+    $scope.addList=function(data){
+        angular.forEach(data, function (item) {
+            $scope.list.push(item);
+        });
+        if(data && data.length < $scope.page.pageSize){
+            $scope.page.hasNextPage=false;
+        }else{
+            $scope.page.hasNextPage=true;
+        }
+    };
+    /**
+     * 第一次查询
+     */
+    $scope.first=function(){
+        DoctorService.first(null,$scope.page).then(function (data) {
+            $log.debug("DoctorList ctrl query then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+    /**
+     * 下拉加载更多查询
+     */
+    $scope.more=function(){
+        $log.debug("DoctorList ctrl more=========");
+        if(!$scope.page.hasNextPage){
+            return;
+        }
+        DoctorService.more($scope.page).then(function (data) {
+            $log.debug("DoctorList ctrl more then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+    };
+  /**
+   * 返回
+   */
+  $scope.fanhui=function(){
+    $ionicHistory.goBack();
+  };
+    $scope.init();
+    ctrlReinitMap.remove('DoctorListCtrl');
+});

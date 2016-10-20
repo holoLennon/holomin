@@ -1,0 +1,61 @@
+<!--MedicalrecPageList，病历之病史页面列表-->
+<ion-view view-title="病历之病史列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button" style="border-radius: 5px;" href="#/tab/MedicalrecPage/0">添加病历</a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ul class="list">
+            <div bindonce ng-repeat="obj in list" href="#/tab/MedicalrecPage/{{obj.id}}" style="width: 100%">
+              <div class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+                <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">病历信息：{{obj.id}}</p>
+                <button style="background-color:#F29C9F;color: #fff;font-size: 10px;">删除该病历</button>
+              </div>
+              <div class="item" style="border: none;width: 100%;">
+                <div class="fl" style="line-height: 30px;"> 病历时间：</div>
+                <div class="fl" style="width: 77%;">
+                  <div class="item-note ago" am-time-ago="obj.gmtCreate"></div>
+                </div>
+              </div>
+              <div class="item" style="border: none;height: 80px;width: 100%;">
+                <div class="fl"> 病历说明：</div>
+                <div class="fl" style="width: 70%;">
+                  <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.diagnose"></textarea>
+                </div>
+              </div>
+              <div class="item" style="border: none;height: 80px;width: 100%;">
+                <div class="fl"> 器械检查：</div>
+                <div class="fl" style="width: 70%;">
+                  <textarea row="3" style="width: 100%;height: 60px;border-radius:5px;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-model="obj.hickeyCheck"></textarea>
+                </div>
+              </div>
+              <div class="row" style="width: 100%;background-color: #F2F2F2;height: 30px;border:none;">
+                <p style="text-indent: 0.5em;color: #909090;font-size: 16px;font-weight: normal;">病历照片</p>
+              </div>
+              <div style="width: 100%;background-color: #fff;">
+                <ul>
+                  <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;margin-left:1%;text-align: center;background-color: #fff;">
+                    <img ng-if="obj.img1" ng-src="{{obj.img1}}" reset-img style="height: 50px;"/>
+                  </li>
+                  <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+                    <img ng-if="obj.img2" ng-src="{{obj.img2}}" reset-img style="height: 50px;"/>
+                  </li>
+                  <li class="fl" style="height: 80px;border: 0.5px solid #ddd;width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+                    <img ng-if="obj.img3" ng-src="{{obj.img3}}" reset-img style="height: 50px;"/>
+                  </li>
+                </ul>
+              </div>
+
+              <!--<span>{{obj.myname}}</span>-->
+              <!--<span class="item-note ago" am-time-ago="obj.gmtCreate"></span><br>-->
+             <!-- <span>病历时间：{{obj.gmtCreateString}}</span><br>
+              <span>实验室及器械检查:{{obj.hickeyCheck}}</span><br>-->
+              <!--<span>病人自述:{{obj.selftell}}</span><br>
+              <span>病历说明:{{obj.diagnose}}</span><br>
+              <span>报告列表:{{obj.listMedicalrecRpt}}</span>-->
+            </div>
+        </ul>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

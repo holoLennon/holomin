@@ -1,0 +1,21 @@
+<!--MedicalrecRptList，病历之检查报告列表-->
+<ion-view view-title="检查报告列"  cache-view="false">
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="'100%'" collection-item-height="100px">
+              <img src="res/img/medicalrecRpt.png" style="width: 60px;"/>
+              <a href="#/tab/MedicalrecRpt/{{obj.id}}" style="color: #000;text-decoration: none;font-weight: normal;">
+                <span>检查报告序列ID:{{obj.id}}</span><br>
+                <span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+                <a href="#/tab/MedicalrecRpt/{{obj.id}}" class="ion-chevron-right" style="position: absolute;left:92%;top:35px;text-decoration: none;color: #444;"></a>
+              </a>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

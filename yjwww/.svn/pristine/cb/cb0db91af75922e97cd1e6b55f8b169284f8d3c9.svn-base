@@ -1,0 +1,88 @@
+<!--DmmsgList，会员端 医患聊天记录列表-->
+<ion-view view-title="医患聊天"   cache-view='false' hide-nav-bar="true">
+  <div class="bar bar-header bar-positive row">
+    <div class="col col-20">
+      <a href="#/tab/MemberdoctorList"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-20">
+    </div>
+    <div class="col col-60" style="text-align: left;color:#fff;padding-top: 6px;">
+      <div dynamic="obj1.doctorIdString"></div>
+    </div>
+  </div>
+    <ion-content class="has-tabs has-header" style="margin-bottom: 60px">
+        <div style="height: 10px"></div>
+        <div ng-if="obj.fromto==0" style="padding-bottom: 20px">
+            <div ng-repeat="obj in list" class="message-wrapper" on-hold="onMessageHold($event, $index, message)">
+                <!-- 医生接收消息-->
+                <div ng-if="obj.fromto==1" on-hold="onHold(obj)" >
+                      <img ng-if="vm.doctorImg==null" src="res/img/yishengtouxiangfang.png" class="profile-pic left"/>
+                    <img ng-if="vm.doctorImg!=null" ng-src="{{vm.doctorImg}}" class="profile-pic left"/>
+                    <div class="chat-bubble left">
+                        <div class="message" >
+                            <div dynamic="obj.msg | to_trusted"></div>
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" >{{obj.gmtCreateString}}</span>
+                        </div>
+                    </div>
+                </div>
+                <!--会员发送消息 -->
+                <div ng-if="obj.fromto==0" on-hold="onHold(obj)">
+                    <img ng-if="vm.memberImg==null" src="res/img/wo_touxiang.png" class="profile-pic right"/>
+                    <img ng-if="vm.memberImg!=null" src="{{vm.memberImg}}" class="profile-pic right"/>
+                    <div class="chat-bubble right">
+                        <div class="message">
+                            <div dynamic="obj.msg | to_trusted"></div>
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" >{{obj.gmtCreateString}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cf"></div>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-subfooter" style="height: 80px;margin-bottom: 10px;background-color: #fff;">
+      <br><i ng-if="progressPercentage>0 && progressPercentage<100" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+      <ul style="margin-top: 10px;">
+        <li class="fl" style="width:11%;">
+          <div class="up-buttons">
+            <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+                 ng-model-options="modelOptionsObj"
+                 ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                 ng-disabled="disabled" ngf-capture="capture"
+                 ngf-drag-over-class="dragOverClassObj"
+                 ngf-validate="validateObj"
+                 ngf-resize="resizeObj"
+                 ngf-resize-if="resizeIfFn($file, $width, $height)"
+                 ngf-dimensions="dimensionsFn($file, $width, $height)"
+                 ngf-duration="durationFn($file, $duration)"
+                 ngf-keep="keepDistinct ? 'distinct' : keep"
+                 ngf-fix-orientation="orientation"
+                 ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+              <button class="button button-clear button-icon icon ion-ios-camera-outline" style="padding-top: 5px;"></button>
+            </div>
+          </div>
+        </li>
+        <li class="fl" style="width:89%;">
+          <div class="item item-input-inset" style="margin-top: -5px;border: none;">
+            <label class="item-input-wrapper" style="margin:auto;margin-top: -2px;"><textarea row="1" style="height: 100%;width:100%;" placeholder="消息"  ng-model="obj.msg"></textarea></label>
+            <button class="button button-small" ng-click="save();" style="border: none;background-color: #008CAD;color: #fff;">发送</button>
+          </div>
+        </li>
+      </ul>
+
+        <!--<div class="item item-input-inset" style="margin-top: -25px;border: none">
+            <label class="item-input-wrapper">
+                <textarea row="1" style="height: 100%;width:100%;" placeholder="消息"  ng-model="obj.msg"></textarea>
+            </label>
+            <button class="button button-small" ng-click="save();" style="border: none;background-color: #008CAD;color: #fff;">
+              发送
+            </button>
+        </div>-->
+    </div>
+</ion-view>

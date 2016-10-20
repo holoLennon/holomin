@@ -1,0 +1,49 @@
+<!--UserAddr，用户的收货地址详细信息-->
+<ion-view view-title='用户的收货地址' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon" style="border-radius: 5px;" ng-click="vm.isedit=true">编辑</a>
+	  <a ng-if="vm.isedit==true" class="button button -dark icon" style="border-radius: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon" style="border-radius: 5px;" ng-click="vm.isedit=false;save(province)">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+    <li class="item" style="font-size: 15px;font-weight: normal;">消费者会员：{{obj.memberIdString}}</li>
+    <li class="item" style="font-size: 15px;font-weight: normal;">联系人：{{obj.manname}}</li>
+    <li class="item" style="font-size: 15px;font-weight: normal;">性别：{{obj.sexString}}</li>
+    <li class="item" style="font-size: 15px;font-weight: normal;">手机号：{{obj.mobile}}</li>
+    <li class="item" style="font-size: 15px;font-weight: normal;">所在地区：{{obj.areaidString}}</li>
+    <li class="item item-input-wrapper" style="height: 110px;font-weight: normal;font-size: 16px;text-indent: 0.5em;overflow: visible;">详细地址：<textarea row="3" style="height: 80px;width: 85%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.address}}</textarea> </li>
+
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">联系人:<input type="text" placeholder="联系人"  ng-model="obj.manname"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				性别:
+			</div>
+			<select  ng-model="obj.sex">
+				<option ng-repeat="(key,val) in obj.sexMap" value="{{key}}" ng-selected="val==obj.sex">{{val}}</option>
+			</select>
+		</label>
+    <label class="item item-input">手机号:<input type="text" placeholder="手机号"  ng-model="obj.mobile"></label>
+    <div class="AMapArea" id="amap">
+      <p style="font-size: 16px;font-weight: normal;text-indent: 1em;padding-top:10px;">所在地区</p>
+      <select required="" class="form-control" ng-model="vm.province" ng-options="o as o.text for o in pcc" ng-change="vm.city=vm.province.children[0];vm.county=vm.city.children[0];" style="font-size: 12px;width:68px;height:30px;margin-left:10px;margin-top: 3px;text-align: left;">
+      </select>
+      <select class="form-control" ng-model="vm.city" ng-options="o as o.text for o in vm.province.children" ng-change="vm.county=vm.city.children[1];" style="font-size: 12px;width:80px;height:30px;margin-left:1px;margin-top: 3px;text-align: left;">
+      </select>
+      <select class="form-control" ng-model="vm.county" ng-options="o as o.text for o in vm.city.children" style="font-size: 12px;;width:80px;height:30px;margin-left:1px;margin-top: 3px;text-align: left;">
+      </select>
+      <label class="item item-input item-input-wrapper" style="height: 110px;width: 95%;margin-left: 2%;font-size: 16px;overflow: visible;margin-top: 5px;">
+        详细地址：
+        <textarea style="height: 80px;width: 86%;border:0.5px #dddddd solid;margin-left: 10px;overflow: visible;background-color: #fff !important;" placeholder="详细地址"  ng-model="obj.address"></textarea></label>
+    </div>
+
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    <a class="button button-royal fl" ng-if="obj && vm.isedit==false" ng-click="setDefaultAdd()" style="font-weight:normal;color: #fff;line-height: 30px;min-height: 30px;border-radius: 5px;margin-left: 10px;">设置为默认地址</a>
+    <a class="button button-positive fr" ng-if="obj && vm.isedit==false" ng-click="setAdd()" style="font-weight:normal;color: #fff;line-height: 30px;min-height: 30px;border-radius: 5px;margin-right: 10px;">确认为收货地址</a>
+  </ion-content>
+</ion-view>

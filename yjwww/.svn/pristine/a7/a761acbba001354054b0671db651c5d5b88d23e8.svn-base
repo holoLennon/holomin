@@ -1,0 +1,16 @@
+<!--OrderrSnSearchhis，订单号搜索历史详细信息-->
+<ion-view view-title='订单号搜索历史' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">操作员:{{obj.operIdString}}</li>
+		<li class="item">取药点:{{obj.drugstoreIdString}}</li>
+		<li class="item">序列号:{{obj.sn}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

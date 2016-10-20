@@ -1,0 +1,74 @@
+<ion-view view-title="我的资料" hide-nav-bar="true" class="allweb" style="background-color: #eee;" cache-view="false">
+  <ion-header-bar class="bar bar-header bar-positive" style="border: none">
+		<div class="title" style="width: 80px;padding-top:4px;margin-left: auto;margin-right: auto;">我的资料</div>
+		<a class="ion-shezhi_b" ng-click="rx('#/tab/Shezhi')">设置</a>
+  </ion-header-bar>
+	<div class="login"  ng-click="login()" ng-if="!user" style="height: 80px;background: none">
+		<div class="login_info" style="margin-top: 80px;text-align: center;">
+      <p style="color: #8c8f96;font-weight: normal;">您还未登录，请登录查看信息</p>
+			<p>
+        <i class="button" style="background-color: #008CAD;color:#000;font-size: 16px;font-weight:normal;border-radius: 5px;line-height:24px !important;min-height:24px !important;">立即登录</i>
+      </p>
+		</div>
+	</div>
+	<div class="login"  ng-if="user" style="margin-top: 40px;text-align: center;">
+		<div class="login_info" style="background-color: #008cad;height: 150px;position: relative;">
+      <img reset_img="Doc"  ng-src='{{obj.img1}}' style="width:80px;height:80px;border-radius: 50%;float: left;margin-left: 5%;margin-top: 15px;"/>
+			<p style="font-size: 16px;color: white;float: left;margin-left: 8%;margin-top: 5%;">{{obj.myname}}</p>
+      <div style="position: absolute;top:60%;left: 60%;">
+        <i class="button" ng-click="rx('#/tab/qualificationupload/'+obj.id)" style="color: #008CAD;font-size: 16px;font-weight:normal;border-radius: 5px;line-height:24px !important;min-height:24px !important;">资质上传</i>
+      </div>
+		</div>
+	</div>
+
+  <ion-content class="has-tabs has-header" style="margin-top: 150px">
+    <ul>
+      <li><a style="font-size: 14px; color: #707070;margin-left: 10px">诊所服务</a></li>
+      <li style="margin-left: 2%;">
+        <ul style="width:100%;text-align: center" >
+          <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a ng-click="rx('#/tab/StatiDoctorMonthList')" style="text-decoration: none;">
+              <img src="res/img/b_shourujiesuan.png" style="width:50%;margin-top: 6px;"/>
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">订单汇总</p>
+            </a>
+          </li>
+          <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a ng-click="rx('#/tab/OrderrList/3/0')" style="text-decoration: none;">
+              <img src="res/img/b_wodedingdan.png" style="width:50%;margin-top: 6px;"/>
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">订单详情</p>
+            </a>
+          </li>
+          <li class="fl" style="width:32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a ng-click="rx('#/tab/Madingpage')" style="text-decoration: none;">
+              <img src="res/img/b_fabuhuati.png" style="width:50%;margin-top: 6px;" />
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">发布话题</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li><a style="font-size: 14px; color: #707070;margin-left: 10px">其他服务</a></li>
+      <li style="margin-left: 2%;">
+        <ul style="width:100%;">
+          <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a ng-click="rx('#/tab/DoctorQrcode/'+meuser.id)" style="text-decoration: none;">
+              <img src="res/img/b_erweima.png" style="width:50%;margin-top: 6px;"/>
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">我的二维码</p>
+            </a>
+          </li>
+          <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a ng-click="rx('#/tab/Madingpage')" style="text-decoration: none;">
+              <img src="res/img/b_gonggaozixun.png" style="width:50%;margin-top: 6px;"/>
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">公告咨询</p>
+            </a>
+          </li>
+          <li class="fl" style="width: 32%;margin: 1px;text-align: center;background-color: #fff;">
+            <a  ng-click="rx('#/tab/Editdoctor')" style="text-decoration: none;">
+              <img src="res/img/b_gerenxinxi.png" style="width:50%;margin-top: 6px;"/>
+              <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">个人信息</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    </ion-content>
+</ion-view>

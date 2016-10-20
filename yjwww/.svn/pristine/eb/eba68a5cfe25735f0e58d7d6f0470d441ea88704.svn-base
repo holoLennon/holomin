@@ -1,0 +1,37 @@
+<ion-view view-title="用户病历" cache-view='false' hide-nav-bar="true">
+  <div class="bar bar-header bar-positive row">
+    <div class="col col-20">
+      <a ng-click="fanhui()"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-55" style="text-align: center;color:#fff;margin-top: 3px;padding-top: 6px;">
+      <div>用户病历</div>
+    </div>
+    <div class="col col-25">
+      <div style="margin-top: 3px;margin-left: -20px;">
+        <button style="background-color: #008cad;border: none;color:#fff;font-size: 18px;margin-top: -8px;text-align: right;">添加病例</button>
+      </div>
+    </div>
+  </div>
+
+  <ion-content class="has-tabs has-header" style="margin-bottom: 60px">
+    <span>基本信息</span>
+    <label class="item item-input">姓名：<input type="text" placeholder="姓名"  ng-model="obj.name"></label>
+    <label class="item item-input">性别：
+      <form method="post">
+        <input type="radio" name="Sex" value="male" />男
+        <input type="radio" name="Sex" value="female" />女
+      </form>
+    </label>
+    <label class="item item-input">年龄：
+      <input type="text" placeholder="年龄"  ng-model="obj.age">
+    </label>
+    <label class="item item-input">过敏史：<input type="text" placeholder="过敏史"></label>
+    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;">家族史：<textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;">{{obj.diagnose}}</textarea></div>
+    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;">月经史：<textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;">{{obj.diagnose}}</textarea></div>
+    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;">婚育史：<textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;">{{obj.diagnose}}</textarea></div>
+    <span>现况主述</span>
+    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;"><textarea row="3" style="height: 60px;width: 70%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;">{{obj.diagnose}}</textarea></div>
+    <span>还未添加病例</span>
+  </ion-content>
+</ion-view>
+

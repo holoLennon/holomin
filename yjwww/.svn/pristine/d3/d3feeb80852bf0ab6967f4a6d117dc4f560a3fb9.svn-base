@@ -1,0 +1,22 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="商品列表" cache-view='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="rx('#/tab/Product/1/'+obj.id)" collection-item-width="100%" collection-item-height="100px">
+                <img ng-src="{{obj.img1}}" reset-img style="float:left;max-width: 55px;max-height: 55px;border-radius: 0px;margin-left: 1%;"/>
+              <div class="fl" style="margin-left: 10px;margin-top: 3px;width: 80%;font-weight: 400;">
+                  <h2 style="line-height: 28px;">{{obj.myname}}</h2>
+                  <p style="color: #FE918C;font-size: 14px;line-height: 20px;">{{obj.statusMaterialString}}</p>
+                  <p style="color: #191919;font-size: 14px;">主治：{{obj.intro}}</p>
+                </div>
+
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

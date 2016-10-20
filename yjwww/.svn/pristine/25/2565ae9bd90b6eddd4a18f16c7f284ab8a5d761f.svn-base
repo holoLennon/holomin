@@ -1,0 +1,21 @@
+<ion-view view-title="付款方式" cache-view="false">
+  <ion-content>
+    <ion-radio ng-model="vm.choice" ng-value="0" style="font-size: 16px;"><i class="icon ion-android-bus buss" style="margin-right: 5px;font-size: 20px;"></i>货到付款</ion-radio>
+    <div ng-if="vm.choice==0">
+      <div class="item item-text-wrap" style="width:100%;font-size: 16px;color: #8c8c8c;border: none;margin-top: 10px;background-color: #D4D4D4;height:100px;">
+        <span class="fl" style="font-size: 16px;color: black;word-break:break-all;overflow: visible;">收货地址:</span>
+        <a class="fr button" href="#/tab/UserAddrList" style="background-color:#00B8EE;color: #fff;font-size: 16px;border-radius: 5px;line-height:24px !important;min-height:24px !important;margin-top: -5px;">管理</a>
+        <span class="fc" style="word-break:break-all;color: black;">{{obj.userAddr}}</span><br>
+        <span>目前货到付款只支持浙江金华地区</span>
+      </div>
+    </div>
+    <ion-radio ng-model="vm.choice" ng-value="1" style="font-size: 16px;"><i class="icon ion-android-walk ziti" style="margin-right: 5px;font-size: 20px;"></i>门店付款</ion-radio>
+  </ion-content>
+  <div class="bar bar-subfooter" style="background-color:#f5f5f5 !important;width: 100%;margin-bottom: 10px;">
+    <ion-item style="height: 50px;border: none;width: 100%;background-color:#f5f5f5 !important;"	>
+      <a class="button button-positive" ng-click="save()"  style="margin-top: -15px;margin-left: 70%;width:30%;background-color: #da0e0e;color: white;border: none;">
+        确认下单
+      </a>
+    </ion-item>
+  </div>
+</ion-view>

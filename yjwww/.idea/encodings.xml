@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/www/trunk/views/pub/apay.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/pub/tmp.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab-a/payPage.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab-c/receiveWay.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab-d/Medicalrec.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab-d/Medicalrec.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab-d/memberFile.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_b-b/Medicalrec.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_b-b/Medicalrec.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_b-b/memberFile.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_b-b/memberFile.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_d-c/receiveWay.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/www/trunk/views/tab_e-a/put_token.js" charset="UTF-8" />
+  </component>
+</project>

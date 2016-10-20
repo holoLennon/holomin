@@ -1,0 +1,25 @@
+<!--MedicalrecPage，病历之病史页面详细信息-->
+<ion-view view-title='病历之病史页面' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">患者:{{obj.medicalrecIdString}}</li>
+		<li class="item">医生:{{obj.doctorIdString}}</li>
+		<li class="item">器械检查:{{obj.hickeyCheck}}</li>
+		<li class="item">病历照片1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">病历照片2</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">病历照片3</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img3}}' style="height:120px"></li>
+		<li class="item">病人自述:{{obj.selftell}}</li>
+		<li class="item">诊断:{{obj.diagnose}}</li>
+		<li class="item">报告列表:{{obj.listMedicalrecRpt}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

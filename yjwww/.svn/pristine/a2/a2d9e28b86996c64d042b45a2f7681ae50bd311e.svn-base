@@ -1,0 +1,69 @@
+<!--Orderr，订单详细信息-->
+<ion-view view-title='药笺' cache-view='false'>
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-header" >
+		<ul class="list" ng-if="obj && vm.isedit==false">
+			<div style="font-size: 16px;height: 25px;margin-top: 5px">
+				<div style="color:#008aec;margin-left: 10px">患者信息</div>
+			</div>
+			<label class="item item-input" style="border: none">姓  名：<span style="font-size: 12px">{{memberDoctorWatching.name}}</span></label>
+			<label class="item item-input" style="border: none">年  龄：<span style="font-size: 12px">{{memberDoctorWatching.age}}</span></label>
+			<input type="hidden" ng-model="obj.memberId">
+			<input type="hidden" ng-model="obj.doctorId">
+      <div style="font-size: 16px;height: 25px;margin-top: 5px">
+        <a style="color: #707070;margin-left: 10px" ng-click="rx('#/tab/OrderrList/1/'+meuser.id)">已开药笺，点击<button style="background-color: #BD9662;color: #fff;border-radius: 3px;">我的药笺</button>可查看</a>
+      </div>
+		</ul>
+		<!--修改-->
+		<ul class="list" ng-if="obj && vm.isedit==true">
+			<input type="hidden" ng-model="obj.memberId">
+			<div style="text-align:left;margin: 20px 5px 20px 5px;font-size: 14px;">
+				<label style="border: none">姓  名：<span style="font-size: 14px;color: #707070">{{memberDoctorWatching.name}}&nbsp;&nbsp;</span></label>
+				<label style="border: none">年  龄：<span style="font-size: 14px;color: #707070">{{memberDoctorWatching.age}}&nbsp;&nbsp;</span></label>
+				<!--<label >过敏史： 否 </label>-->
+			</div>
+      <div style="font-size: 16px;height: 25px;margin-top: 12px">
+        <a style="color: #707070;">诊断：</a>
+      </div>
+			<div class="item item-input-wrapper" style="height: 180px;width: 95%;margin-left: 3px;font-size: 12px;overflow: visible;">
+				<textarea style="height: 160px;width: 100%;border:0.5px #dddddd solid;overflow: visible;background-color: #fff !important;" placeholder="诊断"  ng-model="obj.diagnose"></textarea></div>
+      <div class="row" style="margin-top: 12px;background-color: #fff;">
+        <div class="col col-20" style="text-align: left;padding-top: 10px;">
+          <span style="font-size: 16px;">药店：</span>
+        </div>
+        <div class="col col-70">
+          <input style="height: 30px;width:100%;padding-left: 5px;border-radius: 3px;" type="text" placeholder="请选择药店"  ng-model="obj.productname" >
+        </div>
+        <div class="col col-10">
+          <i class="ion-ios-location-outline"ng-click="gotodrugstoreList()" style="font-size: 28px;color: #7E5335;width: 30px;margin-left: 5px;margin-top: 11px;"></i>
+        </div>
+      </div>
+		</ul>
+		<ion-list class="list" ng-if="obj && vm.isedit==true">
+			<ion-item class="item-avatar" bindonce collection-repeat="objd in listCart" collection-item-width="100%" collection-item-height="340px" style="border: none;margin-top: -20px;background-color: #F4F4F4;">
+				<div style="margin-left: -70px;">
+					<div class="item item-input-wrapper" style="border: none;height: 40px;">配 药<span style="margin-left: 30px;font-size: 14px;color: #707070">{{objd.title}}</span></div>
+					<div class="item item-input-wrapper" style="height: 30px;border: none;padding-bottom: 30px;">克  数
+						<button   ng-click="reduceNum(objd)" style="margin-left: 30px">-</button>
+						<input type="text" style="margin-left: 15px;width:40px;font-size: 16px;margin-top:-8px;" placeholder="克数"  ng-model="objd.num">
+						<button ng-click="addNum(objd)">+</button>
+						<span style="margin-left: 10px">{{objd.obj1.punitString}}</span>
+						<button class="button icon icon-right ion-ios-trash-outline" ng-click="cartDel(objd.productId)" style="height: 15px;background: none;border: none;margin-left: 20px;padding-bottom: 5px;"></button>
+					</div>
+          <div style="font-size: 16px;height: 25px;margin-top: 12px">
+            <a style="color: #707070;">特别嘱咐：</a>
+          </div>
+					<div class="item item-input-wrapper" style="height: 180px;text-indent: 1em;overflow: visible;"><textarea row="10" style="height: 160px;width: 100%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" placeholder="医生指导的用法用量说明"  ng-model="objd.otherdetail"></textarea></div>
+				</div>
+			</ion-item>
+		</ion-list>
+		<ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+	</ion-content>
+	<div class="bar bar-subfooter" style="bottom:55px;background-color: #F6F5F5;">
+		<h2 class="title"></h2>
+		<div ng-click="addNewProduct()" class="button button-icon icon ion-ios-download-outline" ng-if="obj && vm.isedit==true" style="color:green;">加 药</div>
+		<div ng-click="saveOrderr()" class="button button-icon icon ion-ios-paperplane-outline" ng-if="obj && vm.isedit==true">确 认</div>
+	</div>
+</ion-view>

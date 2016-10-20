@@ -1,0 +1,95 @@
+/**
+ * StatiDoctorMonthList，医生月统计列表
+ */
+appctrl.controller('StatiDoctorMonthListCtrl', function($scope, $rootScope,$timeout,
+                                           $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                           $location, $state,
+                                           $cordovaNetwork, $cordovaGoogleAnalytics,$log,Storage,
+                                           ENV,StatiDoctorMonthService) {
+    $log.debug("enter StatiDoctorMonthList ctrl");
+    /**页码*/
+    $scope.page=_.clone(_Page);
+    /**页面显示的列表*/
+    $scope.list=[];
+    $scope.user=Storage.get(LOGINED_USER_B);
+  $scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("StatiDoctorMonthList ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("StatiDoctorMonthList ctrl afterEnter");
+        if (ctrlReinitMap.get('StatiDoctorMonthListCtrl')) {
+            ctrlReinitMap.remove('StatiDoctorMonthListCtrl');
+            $log.debug("StatiDoctorMonthList ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("StatiDoctorMonthList ctrl init ");
+	      $scope.page.where="gmtStati ='"+firstDayOfLastMonth()+"' and doctorId ="+$scope.user.id;
+		    $scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+    };
+    /**
+     * 上拉刷新
+     */
+    $scope.doRefresh=function(){
+        $scope.init();
+    };
+    /**
+     * 给list上加数据
+     * @param data
+     */
+    $scope.addList=function(data){
+        angular.forEach(data, function (item) {
+            $scope.list.push(item);
+        });
+        if(data && data.length < $scope.page.pageSize){
+            $scope.page.hasNextPage=false;
+        }else{
+            $scope.page.hasNextPage=true;
+        }
+    };
+
+    /**
+     * 第一次查询
+     */
+    $scope.first=function(){
+        StatiDoctorMonthService.first(null,$scope.page).then(function (data) {
+            $log.debug("StatiDoctorMonthList ctrl query then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+
+    };
+
+    /**
+     * 下拉加载更多查询
+     */
+    $scope.more=function(){
+        $log.debug("StatiDoctorMonthList ctrl more=========");
+        if(!$scope.page.hasNextPage){
+            return;
+        }
+        StatiDoctorMonthService.more($scope.page).then(function (data) {
+            $log.debug("StatiDoctorMonthList ctrl more then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('StatiDoctorMonthListCtrl');
+});

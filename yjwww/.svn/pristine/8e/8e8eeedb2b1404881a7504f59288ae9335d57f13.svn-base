@@ -1,0 +1,86 @@
+<style>
+  input[required]:invalid, input:focus:invalid, textarea[required]:invalid, textarea:focus:invalid{box-shadow: none;}
+</style>
+<!--Editmember，会员密码修改-->
+<ion-view view-title="账号管理"  cache-view="false">
+  <ion-content style="margin-bottom:50px;">
+    <ul>
+      <label>
+        <label class="item item-input" style="border-radius: 0px;border:none;border-bottom:0.5px solid #ddd;">
+          <!--<img src="res/img/yishengtouxiang.png" style="max-width: 60px;max-height:60px;"/>-->
+          <img ng-if="obj.img1!=null" style="max-width:60px;max-height:60px;" ng-src='{{obj.img1}}'/>
+          <img ng-if="obj.img1==null" style="max-width:60px;max-height:60px;" src="res/img/touxiang.png"/>
+          <img ng-if="obj.img2!=null" style="max-width:60px;max-height:60px;" ng-src='{{obj.img2}}'/>
+              <span style="font-size: 10px;margin-top: 35px;margin-left:30%;text-alignt: right" >点击下方相机按钮上传图像
+                <br><i ng-if="progressPercentage>0 && progressPercentage<100" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+              </span>
+        </label>
+
+      </label>
+      <label class="item item-input">姓名：<input type="text" placeholder="姓名"  ng-model="obj.name"></label>
+      <label class="item item-input">年龄：<input type="text" placeholder="年龄"  ng-model="obj.age"></label>
+      <label>
+        <div class="item item-input item-select" style="width:150px;border:none;height: 80%;border-top: 0.5px solid #ddd;">
+          <div class="input-label">性别：
+            <select  ng-model="obj.usersex" style="background-color: #f4f4f4;color: #158ffe;">
+              <option ng-repeat="(key,val) in obj.usersexMap" value="{{key}}" ng-selected="val==obj.usersexString">{{val}}</option>
+            </select>
+          </div>
+        </div>
+      </label>
+      <label class="item item-input">手机：<input type="text" placeholder="手机"  ng-model="obj.mobile"></label>
+      <label class="item item-input">地址：<input type="text" placeholder="地址"  ng-model="obj.addr"></label>
+      <label class="item item-input">电子邮件：<input type="text" placeholder="电子邮件"  ng-model="obj.email"></label>
+    </ul>
+  </ion-content>
+  <div class="bar bar-subfooter" style="height: 35px;background-color: #F4F4F4;">
+    <ul style="width: 100%;height:100%;padding-bottom:5px;">
+      <li class="fr" style="width:15%;">
+        <div class="up-buttons" style="margin-top:-20px;">
+          <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+        </div>
+      </li>
+      <!--
+      <li class="fr" style="width:10%;">
+        <div class="up-buttons" style="margin-top:-20px;">
+          <div ngf-select ngf-drop ng-model="files_img2" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+        </div>
+      </li>
+      -->
+      <li class="fr" style="width: 85%;height:90%;">
+        <div style="text-align: center;">
+          <a ng-click="vm.isedit=false;save()" class="button button-positive"style="margin-top:-20px;width:48% ;background-color: #008cad;margin-left: 2px" >确定</a>
+          <button class="button button-positive" ng-click="jumpPage('User/'+obj.id)" style="margin-top:-20px;width:48% ;background-color: #008cad ;margin-left: 4px" >修改密码</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</ion-view>

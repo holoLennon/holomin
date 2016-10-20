@@ -1,0 +1,1 @@
+var test1="test1";var cmd_ORDERR_REC_GOODS="restOrderrRecGoods";var cmd_ORDERR_CONFIRM="restOrderrConfirm";var cmd_ORDERR_SEND="restOrderrSend";var cmd_ORDERR_CANCEL="restOrderrCancel";var cmd_ORDERR_PAY_WX="restOrderrPayWx";var cmd_MEMBER_CART_TO_ORDERR="memberCartToOrderr";

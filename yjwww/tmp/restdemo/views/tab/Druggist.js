@@ -1,0 +1,65 @@
+/**
+ * Druggist，药剂师详细
+ */
+appctrl.controller('DruggistCtrl', function($scope, $rootScope, $location, $log, Storage, ENV, CommonService, DruggistService) {
+    $log.debug("enter Druggist ctrl");
+	/**参数*/
+    var id = $stateParams.id;
+    /**页面对象*/
+    $scope.vm={};
+	/**对象*/
+	$scope.obj={};
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Druggist ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Druggist ctrl afterEnter");
+        if (ctrlReinitMap.get('DruggistCtrl')) {
+            ctrlReinitMap.remove('DruggistCtrl');
+            $log.debug("Druggist ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 结束后
+     */
+	$scope.$on('$destroy', function() {
+		$log.debug("Druggist ctrl destroy");
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Druggist ctrl init id="+id);
+		$scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Druggist ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Druggist);
+        }else{
+            $scope.obj=DruggistService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+		DruggistService.get(id).then(function (data) {
+			$log.debug("Druggist ctrl get then");
+			$scope.obj=data;
+		});
+    };
+    $scope.init();
+    ctrlReinitMap.remove('DruggistCtrl');
+});

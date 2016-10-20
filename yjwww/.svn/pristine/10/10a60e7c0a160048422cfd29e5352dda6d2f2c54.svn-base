@@ -1,0 +1,79 @@
+<!--myresumeprescription，我的简历处方之简历处方详细信息-->
+<style>
+  li input{
+    padding-left:5px;
+  }
+</style>
+<ion-view view-title='简历处方' cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+    <a ng-if="vm.isedit==false" class="button" style="border-radius: 5px;" ng-click="vm.isedit=true">编辑</a>
+    <a ng-if="vm.isedit==true" class="button button-dark" style="border-radius: 5px;" ng-click="vm.isedit=false;clickx()">关闭</a>
+    <a ng-if="vm.isedit==true" class="button button-balanced" style="border-radius: 5px;" ng-click="vm.isedit=false;save()">保存</a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+    <ul class="list" ng-if="obj && vm.isedit==false">
+      <ul class="item">
+        <li style="width: 95%;font-weight: normal;padding:5px;">姓名：{{obj.name}}</li>
+        <li style="width: 95%;font-weight: normal;padding:5px;">
+          病名：{{obj.illnessname}}
+        </li>
+        <li style="width: 95%;font-weight: normal;padding:5px;">
+          初诊时间：{{obj.initialvisittime}}
+        </li>
+        <li style="width: 95%;font-weight: normal;padding:5px;">主诉及病史：</li>
+        <li style="height:120px"><a href="{{obj.img}}"><img reset-img ng-src='{{obj.img}}' style="height:100px;margin: auto;"></a></li>
+        <li style="width: 95%;font-weight: normal;padding:5px;">
+          诊断及处方：{{obj.diagnosisandprescription}}
+        </li>
+        <li style="width: 95%;font-weight: normal;padding:5px;">
+          诊断效果：{{obj.diagnosticeffect}}
+        </li>
+      </ul>
+    </ul>
+    <!--修改-->
+    <ul class="list" ng-if="obj && vm.isedit==true">
+      <ul class="item">
+        <li style="font-weight: normal;padding:5px;">
+          姓名：<input type="text" style="width: 95%;" placeholder="姓名"  ng-model="obj.name">
+        </li>
+        <li style="font-weight: normal;padding:5px;">
+          病名：<input type="text" style="width: 95%;" placeholder="病名"  ng-model="obj.illnessname">
+        </li>
+        <li style="font-weight: normal;padding:5px;">
+          出诊时间：<input type="text" style="width: 95%;" placeholder="出诊时间  年/月/日"  ng-model="obj.initialvisittime">
+        </li>
+        <li style="font-weight: normal;padding:5px;">
+          <!--<input type="text" style="width: 95%;" placeholder="主诉及病史"  ng-model="obj.pulse">-->
+          <label class="item item-input">主诉及病史：
+            <br><i ng-if="progressPercentage>0 && progressPercentage<100" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</i>
+            <div ngf-select ngf-drop ng-model="files.files_img1" ngf-model-invalid="invalidFiles"
+                 ng-model-options="modelOptionsObj"
+                 ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                 ng-disabled="disabled" ngf-capture="capture"
+                 ngf-drag-over-class="dragOverClassObj"
+                 ngf-validate="validateObj"
+                 ngf-resize="resizeObj"
+                 ngf-resize-if="resizeIfFn($file, $width, $height)"
+                 ngf-dimensions="dimensionsFn($file, $width, $height)"
+                 ngf-duration="durationFn($file, $duration)"
+                 ngf-keep="keepDistinct ? 'distinct' : keep"
+                 ngf-fix-orientation="orientation"
+                 ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+              <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+            </div>
+          </label>
+          <label class="item item-input" style="height: 120px;"><a href="{{obj.img}}"><img ng-src="{{obj.img}}" style="height: 100px;margin-top: -8px;"></a></label>
+        </li>
+        <li style="font-weight: normal;padding:5px;">
+          诊断及处方：<input type="text" style="width: 95%;" placeholder="诊断及处方"  ng-model="obj.diagnosisandprescription">
+        </li>
+        <li style="font-weight: normal;padding:5px;">
+          诊断效果：<input type="text" style="width: 95%;" placeholder="诊断效果"  ng-model="obj.diagnosticeffect">
+        </li>
+      </ul>
+      <!--<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>-->
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

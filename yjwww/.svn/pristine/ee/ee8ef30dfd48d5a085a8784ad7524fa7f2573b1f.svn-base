@@ -1,0 +1,92 @@
+<!--Drugstore，实体药店详细信息-->
+<ion-view view-title='实体药店' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">地区:{{obj.areaidString}}</li>
+		<li class="item">药房名称:{{obj.cname}}</li>
+		<li class="item">药房地址:{{obj.addr}}</li>
+		<li class="item">药房电话:{{obj.tele}}</li>
+		<li class="item">药房性质:{{obj.attrString}}</li>
+		<li class="item">咨询药师姓名:{{obj.docname}}</li>
+		<li class="item">咨询药师电话:{{obj.doctele}}</li>
+		<li class="item">复核药师:{{obj.doccheck}}</li>
+		<li class="item">配药药师:{{obj.docmake}}</li>
+		<li class="item">药房咨询QQ:{{obj.docqq}}</li>
+		<li class="item">经度lng:{{obj.centerlng}}</li>
+		<li class="item">维度lat:{{obj.centerlat}}</li>
+		<li class="item">图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">图2</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号ID:<input type="text" placeholder="序号ID"  ng-model="obj.id"></label>
+		<label class="item item-input">地区:<input type="text" placeholder="地区"  ng-model="obj.areaid"></label>
+		<label class="item item-input">药房名称:<input type="text" placeholder="药房名称"  ng-model="obj.cname"></label>
+		<label class="item item-input">药房地址:<input type="text" placeholder="药房地址"  ng-model="obj.addr"></label>
+		<label class="item item-input">药房电话:<input type="text" placeholder="药房电话"  ng-model="obj.tele"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				药房性质:
+			</div>
+			<select  ng-model="obj.attr">
+				<option ng-repeat="(key,val) in obj.attrMap" value="{{key}}" ng-selected="val==obj.attr">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">咨询药师姓名:<input type="text" placeholder="咨询药师姓名"  ng-model="obj.docname"></label>
+		<label class="item item-input">咨询药师电话:<input type="text" placeholder="咨询药师电话"  ng-model="obj.doctele"></label>
+		<label class="item item-input">复核药师:<input type="text" placeholder="复核药师"  ng-model="obj.doccheck"></label>
+		<label class="item item-input">配药药师:<input type="text" placeholder="配药药师"  ng-model="obj.docmake"></label>
+		<label class="item item-input">药房咨询QQ:<input type="text" placeholder="药房咨询QQ"  ng-model="obj.docqq"></label>
+		<label class="item item-input">经度lng:<input type="text" placeholder="经度lng"  ng-model="obj.centerlng"></label>
+		<label class="item item-input">维度lat:<input type="text" placeholder="维度lat"  ng-model="obj.centerlat"></label>
+        <label class="item item-input">图1:
+          <div ngf-select ngf-drop ng-model="files_img1" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 120px;"></label>
+        <label class="item item-input">图2:
+          <div ngf-select ngf-drop ng-model="files_img2" ngf-model-invalid="invalidFiles"
+               ng-model-options="modelOptionsObj"
+               ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+               ng-disabled="disabled" ngf-capture="capture"
+               ngf-drag-over-class="dragOverClassObj"
+               ngf-validate="validateObj"
+               ngf-resize="resizeObj"
+               ngf-resize-if="resizeIfFn($file, $width, $height)"
+               ngf-dimensions="dimensionsFn($file, $width, $height)"
+               ngf-duration="durationFn($file, $duration)"
+               ngf-keep="keepDistinct ? 'distinct' : keep"
+               ngf-fix-orientation="orientation"
+               ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+            <button class="button button-clear button-icon icon ion-ios-camera-outline" style=""></button>
+          </div>
+		</label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img2}}" style="height: 120px;"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

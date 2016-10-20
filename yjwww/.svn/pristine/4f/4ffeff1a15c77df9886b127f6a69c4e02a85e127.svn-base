@@ -1,0 +1,30 @@
+<!--DoctorProductList，医生的药架列表-->
+<ion-view view-title="我的药架"  cache-view="false">
+	<ion-nav-buttons side="right">
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <div class="row" style="position: relative;">
+            <ion-list class="list">
+                <ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="98%" collection-item-height="150px" >
+                    <img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="border-radius:0px;height: 100px"/>
+                    <h2>{{obj.productIdProductObj.commonname}}</h2><br>
+                    <div ng-click="rx('#/tab/Product/0/'+obj.productId)">
+                        <span style="font-size: 14px;line-height: 25px" >规格:{{obj.productIdProductObj.productstyle}}</span><br>
+                        <span style="font-size: 14px;line-height: 25px" >价格:￥{{obj.productIdProductObj.price}}</span>
+                     </br>
+                        <span style="font-size: 14px;line-height: 25px" >{{obj.productIdProductObj.manufacturerIdString}}</span>
+                    </div>
+                    <div class="row" style="position: absolute;left:200px;top:97px;" ng-if="act!=1">
+                      <button class="button icon ion-ios-close-outline" style="margin-top: -30px;margin-left:40px;background:none;border: none;color: red;" ng-click="delDoctorProduct(obj.id)"></button>
+                    </div>
+                    <div class="row" style="position: absolute;left:200px;top:97px;" ng-if="act==1">
+                        <button class="button icon ion-ios-checkmark-outline" ng-click="chooseThis(obj)" style="background:none;border: none;margin-top: -30px;margin-left:40px;"></button>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </div>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

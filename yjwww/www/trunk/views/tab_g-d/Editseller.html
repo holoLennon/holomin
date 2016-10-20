@@ -1,0 +1,20 @@
+<style>
+    input[required]:invalid, input:focus:invalid, textarea[required]:invalid, textarea:focus:invalid{box-shadow: none;}
+</style>
+<!--Editseller，业务员个人信息修改-->
+<ion-view view-title="个人信息">
+    <ion-content>
+        <ul>
+            <label class="item item-input" style="background-color: #fff !important;overflow: visible;color: #808080;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名： <input type="text" placeholder="姓名"  ng-model="obj.name"  ng-readonly="!isedit" style="background-color: #fff !important;"><span class="fr" style="color: #ccc;font-size: 12px;margin-right: 20px;">不可修改</span></label>
+            <label class="item item-input" style="background-color: #fff !important;color: #808080;">身&nbsp;&nbsp;份&nbsp;&nbsp;证：
+              <input type="text" pattern="[0-9]{15}([0-9][0-9][0-9Xx])?" placeholder="请输入正确身份证号" ng-model="obj.idcard" style="background-color: #fff !important;"/>
+            </label>
+            <!--<label class="item item-input" style="background-color: #fff !important;color: #808080;">所在区域：<input type="text" placeholder="请输入所在区域" ng-model="obj.area" style="background-color: #fff !important;"/></label>-->
+        </ul>
+        <div style="text-align: center;margin-top: 15px;">
+            <button ng-click="vm.isedit=false;save()" class="button button-positive"style="width:48% ;margin: auto;border-radius: 8px;" >确定</button>
+            <button class="button button-positive" ng-click="rx('#/tab/Userinfo')"style="width:48% ;margin: auto;border-radius: 8px;" >修改密码</button>
+        </div>
+    </ion-content>
+</ion-view>
+

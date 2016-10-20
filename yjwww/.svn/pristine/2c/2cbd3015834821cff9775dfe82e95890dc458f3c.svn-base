@@ -1,0 +1,129 @@
+/**
+ * DoctorTypeLinkDoctor，医生科室包含医生详细
+ */
+appctrl.controller('DoctorTypeLinkDoctorCtrl', function($scope, $rootScope,$stateParams, $location, $log, Storage, ENV, CommonService, DoctorTypeLinkDoctorService) {
+    $log.debug("enter DoctorTypeLinkDoctor ctrl");
+	/**参数*/
+    var id = $stateParams.id;
+  /**页码*/
+  $scope.page=_.clone(_Page);
+  /**页面显示的列表*/
+  $scope.list=[];
+    /**页面对象*/
+    $scope.vm={};
+	/**对象*/
+	$scope.obj={};
+  $scope.searchDoctorType='';
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("DoctorTypeLinkDoctor ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("DoctorTypeLinkDoctor ctrl afterEnter");
+        if (ctrlReinitMap.get('DoctorTypeLinkDoctorCtrl')) {
+            ctrlReinitMap.remove('DoctorTypeLinkDoctorCtrl');
+            $log.debug("DoctorTypeLinkDoctor ctrl afterEnter init");
+            $scope.init();
+        }
+	});
+    /**
+     * 结束后
+     */
+	$scope.$on('$destroy', function() {
+		$log.debug("DoctorTypeLinkDoctor ctrl destroy");
+	});
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("DoctorTypeLinkDoctor ctrl init id="+id);
+      $scope.page.where="doctorTypeId="+id;
+      $scope.page.pageNo=1;
+      $scope.page.hasNextPage=false;
+      $scope.list=[];
+      $scope.first();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("DoctorTypeLinkDoctor ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_DoctorTypeLinkDoctor);
+        }else{
+            $scope.obj=DoctorTypeLinkDoctorService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+		DoctorTypeLinkDoctorService.get(id).then(function (data) {
+			$log.debug("DoctorTypeLinkDoctor ctrl get then");
+			$scope.obj=data;
+		});
+    };
+  /**
+   * 给list上加数据
+   * @param data
+   */
+  $scope.addList=function(data){
+    angular.forEach(data, function (item) {
+      $scope.list.push(item);
+    });
+    if(data && data.length < $scope.page.pageSize){
+      $scope.page.hasNextPage=false;
+    }else{
+      $scope.page.hasNextPage=true;
+    }
+  };
+  /**
+   * 搜索
+   */
+  $scope.doSearchDoctorType=function(searchDoctorType){
+    if(isblank(searchDoctorType)){
+      $scope.init();
+    }else{
+      $scope.page.where="name like '%"+searchDoctorType+"%' and doctorTypeId="+id;
+      $scope.page.pageNo=1;
+      $scope.page.hasNextPage=false;
+      $scope.list=[];
+      $scope.first2();
+    }
+
+  };
+  /**
+   * 第一次查询
+   */
+  $scope.first=function(){
+    DoctorTypeLinkDoctorService.first(null,$scope.page).then(function (data) {
+      $log.debug("DoctorTypeLinkDoctorService ctrl query then");
+      $scope.addList(data);
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+
+  };
+  /**
+   * 根据搜索的医生姓名进行查询
+   */
+  $scope.first2=function(){
+    DoctorTypeLinkDoctorService.first(null,$scope.page).then(function (data) {
+      $log.debug("DoctorList ctrl query then");
+      if(data == "" || data == undefined || data == null){
+        CommonService.alertm("查无此医生！");
+        return;
+      }else{
+        $scope.addList(data);
+        $scope.$broadcast('scroll.refreshComplete');
+      }
+    });
+  };
+    $scope.init();
+    ctrlReinitMap.remove('DoctorTypeLinkDoctorCtrl');
+});

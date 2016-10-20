@@ -1,0 +1,30 @@
+<!--MedicalrecPageList，病历之病史页面列表-->
+<ion-view view-title="病历之病史页面列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/MedicalrecPage/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/MedicalrecPage/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>序号:{{obj.id}}</span>
+				<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+				<span>患者:{{obj.medicalrecIdString}}</span>
+				<span>医生:{{obj.doctorIdString}}</span>
+				<span>器械检查:{{obj.hickeyCheck}}</span>
+				<span>病历照片1:{{obj.img1}}</span>
+				<span>病历照片2:{{obj.img2}}</span>
+				<span>病历照片3:{{obj.img3}}</span>
+				<span>病人自述:{{obj.selftell}}</span>
+				<span>诊断:{{obj.diagnose}}</span>
+				<span>报告列表:{{obj.listMedicalrecRpt}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

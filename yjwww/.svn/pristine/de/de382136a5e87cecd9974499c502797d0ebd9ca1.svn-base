@@ -1,0 +1,37 @@
+<!--UserAddrList，用户的收货地址列表-->
+<ion-view view-title="用户的收货地址列表" hide-nav-bar="true" cache-view='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+  <div class="bar bar-header bar-positive row">
+    <div class="col col-20">
+      <a ng-click="fanhui()"><img src="res/img/back1.png" style="height:32px;min-width: initial;margin-left: -10px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-60" style="text-align: center;color:#fff;margin-left: -10px;padding-left: -10px;padding-top: 9px;">
+      <div>用户的收货地址列表</div>
+    </div>
+    <div class="col col-20">
+      <a class="button icon" href="#/tab/UserAddr/0" style="border-radius: 5px;margin-top: -4px;">新增</a>
+    </div>
+  </div>
+  <ion-content class="has-tabs has-header">
+    <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+    <ion-list class="list">
+      <ion-item bindonce collection-repeat="obj in list"  href="#/tab/UserAddr/{{obj.id}}"  collection-item-width="'100%'" collection-item-height="70px">
+        <p>
+          <span style="color:red" ng-if="obj.id==vm.id">默认</span>
+          <span style="width: 95%;">{{obj.address}}</span><br>
+          <a class="ion-chevron-right" style="position: absolute;left:95%;top:30px;text-decoration: none;color: #000;"></a>
+          <p>
+            <span class="fl">{{obj.manname}}</span>
+            <span class="fl" style="margin-left: 5px;">{{obj.sexString}}</span>
+            <span class="fl" style="margin-left: 5px;">{{obj.mobile}}</span>
+            <a class="fr" ng-click="deleteUserAdd(obj)" style="font-weight: normal; background-color:#F29C9F;color: #008CAD;font-size: 12px;border-radius: 5px;padding-right: 3px;padding-left: 3px;">删除该地址</a>
+          </p>
+        </p>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

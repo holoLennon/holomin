@@ -1,0 +1,149 @@
+/**
+ * Suggestion，意见建议详细
+ */
+appctrl.controller('SuggestionCtrl', function($scope, $rootScope, $log, $timeout,
+                                              $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                              $location, $state,
+                                              $cordovaNetwork, $cordovaGoogleAnalytics,
+                                              $stateParams,
+                                              ENV,CommonService,SuggestionService,zspecService,Storage,WxService) {
+  console.log("enter Suggestion ctrl");
+
+  /**对象*/
+  $scope.obj={};
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    console.log("Suggestion ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    console.log("Suggestion ctrl afterEnter");
+    if (ctrlReinitMap.get('SuggestionCtrl')) {
+      ctrlReinitMap.remove('SuggestionCtrl');
+      console.log("Suggestion ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    console.log("Suggestion ctrl init");
+  };
+  /**
+   * 保存
+   */
+  $scope.save=function(){
+    console.log("Suggestion ctrl save");
+    if(isblank($scope.obj.detail)){
+      CommonService.alertm('请填写您的建议');
+      return;
+    }
+    //测试tmp
+    if($scope.obj.detail=='tmp'){
+       $location.path("/tab/tmp");
+      return;
+    }
+    //测试
+    if($scope.obj.detail=='test1'){
+      console.log("test:"+$scope.obj.detail);
+      $scope.obj.detail+=',测试,_ClientInfo.cli='+_ClientInfo.cli+",_ClientInfo.ver(appver)="+_ClientInfo.ver;
+      return;
+    }
+    //测试
+    if($scope.obj.detail=='test2'){
+      console.log("test2:"+$scope.obj.detail);
+      echo.hello('zmax',function(ret) {CommonService.alertm('test2.ret='+ret)});
+      return;
+    }
+
+    //个推获取cid
+    if($scope.obj.detail=='testgetuigetcid'){
+      console.log("test:个推获取cid:"+$scope.obj.detail);
+      getui.init(function(cid) {CommonService.alertm('cid='+cid);Storage.set(GETUICID, cid);});
+      return;
+    }
+    //个推上传cid
+    if($scope.obj.detail=='testgetuiputcid'){
+      console.log("testgetuiputcid");
+      var user = Storage.get(LOGINED_USER_ALL);
+      if (!user) {
+        CommonService.alertm('还没登录');
+        return;
+      }
+      //获取cid并且上传
+      getui.init(function(cid) {
+        Storage.set(GETUICID, cid);
+        zspecService.putCid(cid);
+      });
+      CommonService.alertm('usercid!=null!');
+      return;
+    }
+    //个推测试
+    if($scope.obj.detail=='pushtest'){
+      getui.init(function(cid) {CommonService.alertm('cid='+cid);Storage.set(GETUICID, cid);});
+      zspecService.pushTest(Storage.get(GETUICID),_ClientInfo.cli,5);
+      CommonService.alertm('推送中');
+      return;
+    }
+
+    //高德经纬Ios
+    if($scope.obj.detail=='testgaodeios'){
+      console.log("test:高德经纬ios:"+$scope.obj.detail);
+      if(maplocation){
+        maplocation.getGaoDeLocation(
+          function(jsonObj){
+            CommonService.alertm(',latitude='+jsonObj.latitude+',longitude='+jsonObj.longitude);
+          },
+          function(){
+            CommonService.alertm("iOS高德定位失败");
+          });
+      }
+      return;
+    }
+    //高德经纬And
+    if($scope.obj.detail=='testgaodeand'){
+      console.log("test:高德经纬And:"+$scope.obj.detail);
+      if(gaodeLocationService){
+        gaodeLocationService.getCurrentPosition(
+          /**
+           * 定位成功
+           * @param jsonObj {code:0,latitude:123.456,longitude:456.789};
+           */
+          function(jsonObj){
+            CommonService.alertm(',code='+jsonObj.code+',latitude='+jsonObj.latitude+',longitude='+jsonObj.longitude);
+          },
+          /**
+           * 失败
+           * @param jsonObj {code:0,errorInfo:'失败原因',errorDetail:'详细原因'}
+           */
+          function(jsonObj){
+            CommonService.alertm(',code='+jsonObj.code+',errorInfo='+jsonObj.errorInfo+',errorDetail='+jsonObj.errorDetail);
+          }
+        );
+      }
+      return;
+    }
+    if($scope.obj.detail=='testwxdingw'){
+      WxService.getLocation().then(function (lnglat) {
+        CommonService.alertm(',lnglat===='+lnglat);
+      });
+      return;
+    }
+
+
+    SuggestionService.create($scope.obj).then(function (data) {
+      console.log("Suggestion ctrl save then");
+      $scope.obj=data;
+      CommonService.alertm('感谢您的建议，客服人员将在24小时内联系您。').then(function (res) {});
+      $location.path("/tab/Member");
+    });
+
+  };
+  $scope.init();
+  ctrlReinitMap.remove('SuggestionCtrl');
+});

@@ -1,0 +1,49 @@
+appctrl.controller('putTokenCtrl', function($scope, $rootScope, $log,$stateParams,Storage,$location) {
+  $log.debug("enter tab ctrl");
+
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("tab ctrl beforeEnter");
+  });
+  var token = $stateParams.token;
+  var id = $stateParams.id;
+
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("tab ctrl afterEnter");
+    if (ctrlReinitMap.get('tabCtrl')) {
+      ctrlReinitMap.remove('tabCtrl');
+      $log.debug("tab ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  $scope.init=function(){
+    var clientInfo=window.localStorage.getItem(CLIENT_INFO);
+    $log.debug("token="+token);
+    alert(id);
+    alert(clientInfo.token);
+    $scope.user.id=id;
+    Storage.set(LOGINED_USER,$scope.user);
+    var clientInfo=Storage.get(CLIENT_INFO);
+    if(!clientInfo){
+      clientInfo=_.clone(_ClientInfo);
+    }
+    clientInfo.token=token;
+    Storage.set(CLIENT_INFO,clientInfo);
+    $scope.meuser=Storage.get(LOGINED_USER);
+    $rootScope.$broadcast('event.logined'); //通知其它人登录成功
+    $location.path("/tab/Wwwhome");
+  }
+
+
+
+  $scope.init();
+  ctrlReinitMap.remove('tabCtrl');
+});
+/**
+ * Created by zhf on 2016/9/20.
+ */

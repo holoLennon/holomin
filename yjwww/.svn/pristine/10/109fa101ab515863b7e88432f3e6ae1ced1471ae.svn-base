@@ -1,0 +1,76 @@
+<!--MemberOrderr，会员订单-->
+<ion-view view-title='订单' cache-view="false" hide-nav-bar="true" class="allweb">
+    <ion-nav-buttons side="right">
+        <h4></h4>
+    </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-50" style="height: 100%;">
+      <a ng-click="back()" style="text-decoration: none;"><i class="ion-chevron-left" style="font-size: 28px;color: #fff;"></i><span style="color: #fff;margin-left: 4px;position: absolute;line-height: 30px;font-weight: 400;">返回</span></a>
+    </div>
+    <div class="col col-50" style="height:100%;margin-left:-15px;">
+      <span style="color: #fff;margin-left: 4px;position: absolute;line-height: 30px;font-weight: 400;">订单</span>
+    </div>
+  </ion-header-bar>
+    <ion-content class="has-header" style="background: none">
+        <ul class="list" ng-if="obj && vm.isedit==false && obj.iotype=='2' " style="margin-top: 10px">
+
+            <p style="font-size: 14px;margin-left: 10px;">
+                <span>订单号：{{obj.sn}}</span><br>
+                <span>{{obj.gmtCreateString}}    下单</span><br>
+                <span ng-if="obj.userAddrId!=0">配送地址：{{obj.userAddrIdUserAddrObj.areaidString}}{{obj.userAddrIdUserAddrObj.address}}</span>
+            </p>
+            <li style="background-color: white;margin-top: -5px;height: 25px">
+                <span style="margin-left: 10px">订单状态：</span><span style="margin-left: 50%;font-size: 12px;color: #8c8c8c">{{obj.statusString}}</span>
+            </li>
+            <div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+            <ion-item   ng-repeat="obj1 in obj.listorderrdetail" style="padding: 5px;">
+                <li style="background-color: white">
+                    <img ng-src="{{obj1.img1}}" reset-img style="max-width:80px;max-height: 80px;"/>
+                    <div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -90px;background: none;margin-left: 80px">
+                        <span>{{obj1.title}}</span><br>
+                        数量：<span > {{obj1.num}}</span><br/>
+                        <span  >单价： {{obj1.price}}</span><br/>
+                        <span style="color: #DA0E0E;" >合计： {{obj1.sumprice}}</span><br/>
+                    </div>
+                </li>
+            </ion-item>
+            <p style="font-size: 13px;margin-left: 10px;">
+                <span>商品小计</span>
+            </p>
+            <li style="background-color: white;font-size: 12px;color: #8c8c8c;height: 25px">
+                <span style="margin-left: 10px;margin-top: 5px">商品数量： {{obj.productnums}}</span>
+            </li>
+            <div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+            <li style="background-color: white;font-size: 12px;color: #8c8c8c;height: 25px">
+                <span style="margin-left: 10px;color: #DA0E0E;">订单总金额： ￥{{obj.sumprice}}</span>
+            </li>
+            <li style="background-color: white;font-size: 14px;color: #8c8c8c;height: 25px;" ng-if="obj.gmtPay==null">
+                <span style="margin-left: 75%"><a ng-click="rx('#/tab/DrugstoreListMap')" style="color:#DA0E0E !important;" >附近药店</a></span>
+            </li>
+        </ul>
+        <ul class="list" ng-if="obj && vm.isedit==false  && obj.iotypeString=='医生药笺'" style="margin-top: 10px">
+            <div style="font-size: 16px;height: 25px;margin-top: 5px">
+              <ul>
+                <li class="fl"><a style="color: #707070;margin-left: 10px;">药笺信息</a></li>
+                <li class="fr"><a ng-click="rx('#/tab/DrugstoreListMap')" style="color:#DA0E0E !important;text-align:right;margin-right: 10px;" >附近药店</a></li>
+              </ul>
+            </div>
+            <ion-list class="list">
+                <ion-item bindonce collection-repeat="objd in obj.listorderrdetail"  collection-item-width="100%"  style="border: none;background-color: #F4F4F4;">
+                    <div class="item item-input-wrapper" style="border: none;height: 40px;font-size: 13px;color:#DA0E0E !important;"> 订单号：<span style="font-size: 13px">{{obj.sn}}</span></div>
+                    <div class="item item-input-wrapper" style="border: none;height: 40px;font-size: 13px;"> 配药：<span style="font-size: 13px" ng-readonly="!isedit">{{objd.title}}</span></div>
+                    <div class="item item-input-wrapper" style="border: none;height: 40px;font-size: 13px;"> 数量： <span style="font-size: 13px;margin-right: 10%;" ng-readonly="!isedit">{{objd.num}}</span>单    价： <span style="font-size: 13px;margin-right: 10%;">{{objd.price}}</span>总    价： <span style="font-size: 13px;">{{objd.sumprice}}</span></div>
+                    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 3em;overflow: visible;">诊断：<textarea row="3" style="height: 60px;width: 85%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{obj.diagnose}}</textarea> </div>
+                    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;overflow: visible;">说明书指导：<textarea row="3" style="height: 60px;width: 85%;border:0.5px #ddd solid;padding: 5px;overflow: visible;background-color: #fff !important;" ng-readonly="!isedit">{{objd.usemount}}</textarea> </div>
+                    <div class="item item-input-wrapper" style="height: 80px;font-size: 13px;text-indent: 1em;overflow: visible;">医生指导：<textarea row="3" style="height: 60px;width: 85%;border:0.5px #ddd solid;padding: 5px;background-color: #fff !important;" ng-readonly="!isedit">{{objd.otherdetail}}</textarea> </div>
+                </ion-item>
+            </ion-list>
+        </ul>
+        <div ng-if="obj && vm.isedit==false  && obj.iotypeString=='医生药笺'&&obj.itypeCarriage==0" style="height: 120px;">
+          <span style="margin-left: 10px;margin-top: 5px ;border: none;height: 40px;font-size: 13px;color:#DA0E0E !important;">联系人： {{obj.userAddrIdUserAddrObj.manname}}</span><br>
+          <span style="margin-left: 10px;margin-top: 5px;border: none;height: 40px;font-size: 13px;color:#DA0E0E !important;">联系电话： {{obj.userAddrIdUserAddrObj.mobile}}</span><br>
+          <span style="margin-left: 10px;margin-top: 5px;border: none;height: 40px;font-size: 13px;color:#DA0E0E !important;">配送地址： {{obj.userAddrIdUserAddrObj.areaidString+obj.userAddrIdUserAddrObj.address}}</span>
+        </div>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

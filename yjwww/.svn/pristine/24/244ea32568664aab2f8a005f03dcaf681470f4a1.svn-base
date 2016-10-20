@@ -1,0 +1,161 @@
+/**
+ * OrderrList，订单列表
+ */
+appctrl.controller('OrderrListCtrl', function($scope, $rootScope,$timeout,
+                                              $ionicTabsDelegate, $ionicPopover, $ionicPopup, $ionicModal, $ionicLoading,
+                                              $location, $state, $stateParams,
+                                              $cordovaNetwork, $cordovaGoogleAnalytics,$log,CommonService,
+                                              ENV,OrderrService,OrderrdetailService, Storage) {
+  $log.debug("enter OrderrList Ctrl");
+  $scope.status = $stateParams.status;
+  $scope.listDiscartreason = [
+    {id: 1, value: '地址无法配送'},
+    {id: 2, value: '联系不上用户'},
+    {id: 3, value: '不肯押押金'},
+    {id: 4, value: '重复订单'},
+    {id: 5, value: '假订单'},
+    {id: -1, value: '其他'}
+  ];
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("OrderrList Ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("OrderrList Ctrl afterEnter");
+  });
+
+  /**
+   * 打开登录窗口
+   */
+  $scope.login=function(){
+    $rootScope.$broadcast('event.NeedLoginException','OrderrList');
+  };
+
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    var logineduser = Storage.get(LOGINED_USER);
+    if (logineduser == null) {
+      $location.path("/tab/my");
+      $rootScope.$broadcast('event.NeedLoginException');
+      return;
+    }
+    $scope.user = logineduser;
+    $scope.list = [];
+    $scope.page = OrderrService.getPage();
+    $scope.page.orderstr = "gmtCreate desc";
+    $scope.page.pageNo = 1;
+    $scope.page.hasNextPage = false;
+    //$scope.first();
+    //A未完成购买订单 B已完成购买订单
+    //C未完成药笺订单 D已完成药笺订单
+    if ($scope.status == 'orderrA')
+      $scope.first("status  = 0  " );
+    else if ($scope.status == 'orderrC')
+      $scope.first("status  = 0  and  iotype=0" );
+    else if ($scope.status == 'orderrB')
+      $scope.first("status  = 2 ");
+    else if ($scope.status == 'orderrD')
+      $scope.first("status  = 2 and  iotype=0");
+    else if ($scope.status == 'all'){
+      $scope.first("iotype=2");
+    }
+    else if ($scope.status == 'all2'){
+      $scope.first("iotype=0");
+    }
+  };
+  /**
+   * 上拉刷新
+   */
+  $scope.doRefresh=function(){
+    $scope.init();
+  };
+  /**
+   * 给list上加数据
+   * @param data
+   */
+  $scope.addList=function(data){
+    $log.debug(data);
+    angular.forEach(data, function (item) {
+      $scope.list.push(item);
+    });
+    if (data && data.length < $scope.page.pageSize) {
+      $scope.page.hasNextPage=false;
+    } else {
+      $scope.page.hasNextPage=true;
+    }
+    if($scope.list.length<1){
+      CommonService.alertm('您还没有订单');
+    }
+  };
+
+  /**
+   * 查询
+   */
+  $scope.first=function(where){
+    $log.debug("OrderrList first "+where);
+    OrderrService.first(where).then(function (data) {
+      $log.debug("OrderrList query then");
+      $scope.addList(data);
+      $log.debug('请求列表');
+      $log.debug(data);
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+
+  };
+  /**
+   * 下拉加载更多
+   */
+  $scope.more=function(){
+    $log.debug("OrderrList more=========");
+    if(!$scope.page.hasNextPage){
+      return;
+    }
+    OrderrService.more().then(function (data) {
+      $log.debug("OrderrList more then");
+      $scope.addList(data);
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  };
+  $scope.delOrderr= function (obj) {
+    obj.status=-1;
+    obj.statusgoods=-1;
+    OrderrService.update(obj).then(function() {
+      CommonService.alertm("订单已经放弃");
+      $scope.init();
+    });
+  }
+  $scope.init();
+
+  /**
+   * 转换时间格式
+   * [2015-12-22 15:00:00] 转换成 [今天 15:00-16:00] 格式
+   */
+  $scope.transformTime = function(gmtWantsend) {
+    if (gmtWantsend == null) {
+      return '';
+    }
+    var nowDay = new Date().getDate();
+    var gmtWantsendDate = new Date(gmtWantsend);
+    var gmtWantsendDay = gmtWantsendDate.getDate();
+    var hours = gmtWantsendDate.getHours();
+
+    var day = '';
+    if(gmtWantsendDay - nowDay == 0) {
+      day = '今天';
+    } else if (gmtWantsendDay - nowDay == 1) {
+      day = '明天';
+    } else if (gmtWantsendDay - nowDay == 2) {
+      day = '后天';
+    } else {
+      day = gmtWantsendDate.getFullYear() + '-'+ (gmtWantsendDate.getMonth() + 1) + '-' + gmtWantsendDate.getUTCDate();
+    }
+    return day +" " + hours + ":00" + '-' + (hours + 1) + ":00";
+  };
+});

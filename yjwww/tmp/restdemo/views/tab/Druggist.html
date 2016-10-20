@@ -1,0 +1,28 @@
+<!--Druggist，药剂师详细信息-->
+<ion-view view-title='药剂师' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">执照号码:{{obj.licenseno}}</li>
+		<li class="item">执照照片</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">头像</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">姓名:{{obj.name}}</li>
+		<li class="item">职称:{{obj.dlevelString}}</li>
+		<li class="item">用户性别:{{obj.usersexString}}</li>
+		<li class="item">证件类型:{{obj.idtypeString}}</li>
+		<li class="item">证件号码:{{obj.idnum}}</li>
+		<li class="item">邮编:{{obj.zip}}</li>
+		<li class="item">地址:{{obj.addr}}</li>
+		<li class="item">工作单位:{{obj.company}}</li>
+		<li class="item">手机:{{obj.mobile}}</li>
+		<li class="item">座机:{{obj.tele}}</li>
+		<li class="item">电子邮件:{{obj.email}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,78 @@
+<!--我的 my-->
+<ion-view view-title='我的' hide-nav-bar="true" class="allweb" style="background-color: #ffffff">
+  <ion-header-bar class="bar-positive " style="height: 150px;border: none;">
+    <div style="width: 100%;height: 100%">
+      <div style="width: 100%;height: 20%;">
+        <a class="wo_dingwei" href="#/tab/Yijian" style="float:left;">易健</a>
+        <a class="wo_shezhi" href="#/tab/Shezhi" style="float:right;">设置</a>
+      </div>
+      <div style="width: 100%;height: 70%">
+        <!--<a class="wo_touxiang" style="float:left;"></a>-->
+        <img ng-if="obj.img1!=null" style="float:left;width:80px;height:80px;border-radius: 50%;margin-left: 5%;margin-top: 15px;" ng-src='{{obj.img1}}'/>
+        <img ng-if="obj.img1==null" style="float:left;width:80px;height:80px;border-radius: 50%;margin-left: 5%;margin-top: 15px;" src="res/img/touxiang.png"/>
+        <a class="wo_yonghuming" ng-if="obj.name!=null" style="font-size: 16px;float:left;">{{obj.name}}</a>
+        <a class="wo_healthy" ng-if="obj.name!=null" href="#/tab/HealthyList">会员档案</a>
+        <button ng-if="obj.name==null"class="button button-positive" ng-click="login()" style="float:right;text-align:left;vertical-align:text-bottom;margin-top:50px;background-color: #008cad;" >登陆注册</button>
+      </div>
+    </div>
+  </ion-header-bar>
+    <ion-content class="has-tabs has-header">
+        <ul class="list">
+            <li class="row" style="width: 100%;height: 30px;border:none;margin-top: 100px;">
+                <a class="wo_alldingdan" style="width: 100%;background-color: white"  href="#/tab/OrderrList/all">
+                    <p style=" text-indent: 1em;margin-top: 8px">购买订单</p>
+                </a>
+            </li>
+            <li class="row" style="margin-top: 10px;">
+                <div class="col col-50" style="border-top:1px solid #eee;border-right: 1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+                    <a href="#/tab/OrderrList/orderrA" style="text-decoration: none;"><img src="res/img/wo_chulizhong.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">未完成</p></a>
+                </div>
+                <div class="col col-50" style="border-top:1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+                    <a href="#/tab/OrderrList/orderrB" style="text-decoration: none;"><img src="res/img/wo_yiwancheng.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">已完成</p></a>
+                </div>
+            </li>
+            <li class="row" style="width: 100%;height: 30px;border:none;">
+                <a class="wo_alldingdan" style="width: 100%;background-color: white"  href="#/tab/OrderrList/all2">
+                    <p style="text-indent: 1em;margin-top: 8px">药笺订单</p>
+                </a>
+            </li>
+            <li class="row" style="margin-top: 1px;">
+                <div class="col col-50" style="border-top: 1px solid #eee;border-right: 1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+                    <a href="#/tab/OrderrList/orderrC" style="text-decoration: none;"><img src="res/img/wo_yjchulizhong.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">未完成</p></a>
+                </div>
+                <div class="col col-50" style="border-top: 1px solid #eee;border-bottom: 1px solid #ccc;text-align: center;">
+                    <a href="#/tab/OrderrList/orderrD" style="text-decoration: none;"><img src="res/img/wo_yjwancheng.png" style="width: 30%;margin-top: 6px;"/><p style="color: #4d4d4d;font-weight: normal;">已完成</p></a>
+                </div>
+            </li>
+          <li class="row" style="width: 100%;height: 30px;border:none;">
+            <a class="wo_alldingdan" style="width: 100%;background-color: white">
+              <p style="margin-top: 8px;text-indent: 1em;">服务</p>
+            </a>
+          </li>
+            <li class="row" style="margin-top: 1px">
+                <div class="col col-33" style="text-align: center;border-top: 1px solid #eee;border-bottom:1px solid #ccc;">
+                    <a href="#/tab/Suggestion" style="text-decoration: none;">
+                      <img src="res/img/wo_shiyongfankui.png" style="width: 50%;margin-top: 6px;"/>
+                      <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">使用反馈</p>
+                    </a>
+                </div>
+                <div class="col col-33" style="text-align: center;border-top: 1px solid #eee;border-bottom:1px solid #ccc;border-left:1px solid #eee;border-right: 1px solid #eee;">
+                    <a ng-click="rx('#/tab/DrugstoreListMap')" style="text-decoration: none;" >
+                      <img src="res/img/wo_yaodiandizhi.png" style="width: 50%;margin-top: 6px;"/>
+                      <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">药店地址</p>
+                    </a>
+                </div>
+                <div class="col col-34" style="text-align: center;border-top: 1px solid #eee;border-bottom:1px solid #ccc;">
+                    <a ng-if="obj.name!=null" href="#/tab/Editmember" style="text-decoration: none;" >
+                      <img src="res/img/wo_zhanghaoguanli.png" style="width: 50%;margin-top: 6px;"/>
+                      <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">账号管理</p>
+                    </a>
+                    <a ng-if="obj.name==null" ng-click="login()" style="text-decoration: none;">
+                      <img src="res/img/wo_zhanghaoguanli.png"  style="width: 50%;margin-top: 6px;"/>
+                      <p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">账号管理</p>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </ion-content>
+</ion-view>

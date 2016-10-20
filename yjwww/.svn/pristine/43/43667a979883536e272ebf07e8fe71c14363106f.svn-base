@@ -1,0 +1,152 @@
+<!--Wwwhome，手机页首页配置详细信息-->
+<ion-view view-title='首页' hide-nav-bar="true" class="allweb" cache-view='false'>
+  <ion-nav-buttons side="right">
+    <h4></h4>
+  </ion-nav-buttons>
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="height: 100%;">
+      <a href="#/tab/Wwwhome"><img src="res/img/icon-06.png" style="height:30px;width:30px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-70" style="height:100%;margin-left:-15px;">
+      <input style="height: 30px;width:100%;margin-top: -3px;padding-left: 5px;border-radius: 3px;" class="ion-beijing" type="text" placeholder="请输入药品名称" ng-model="searchData" >
+    </div>
+    <div class="col col-10" ng-click="search()" style="height:100%;">
+      <i class="ion-ios-search" style="font-size: 26px;margin-top:12px;opacity: 0.8;color: #fff;"></i>
+    </div>
+    <!--<div class="col col-10" style="height: 100%;">
+      <a class="fr" href="#/tab/Madingpage" style="margin-right: -5px;"><img src="res/img/a_xiaoxi.png" style="height:25px;width:25px;"/></a>
+    </div>-->
+  </ion-header-bar>
+
+  <ion-content class="has-tabs has-header">
+    <ul class="list" ng-if="obj && vm.isedit==false">
+      <li class="gund" >
+        <ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+          <ion-slide>
+            <div class="box blue">
+              <img src="res/img/topic16.jpg" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/13')">
+              <img src="res/img/topic13.jpg" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/14')">
+              <img src="res/img/topic14.jpg" width="100%">
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div class="box blue" ng-click="jumpPage('Topic/15')">
+              <img src="res/img/topic15.jpg" width="100%">
+            </div>
+          </ion-slide>
+        </ion-slide-box>
+      </li>
+      <li class="row" style="width: 100%;">
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/Freefinddrug" style="text-decoration: none;"><img src="res/img/qingsongzhaoyao.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">轻松找药</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/DruggistList" style="text-decoration: none;"><img src="res/img/yaoshizixun.png" style="width:70%"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">药师咨询</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/doctorTypeList" style="text-decoration: none;"><img src="res/img/kongzhongzhenshi.png" style="width:70%"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">空中诊室</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/MemberdoctorList" style="text-decoration: none;"><img ng-if="msgnum==0"src="res/img/sirenyisheng.png" style="width:70%"/><img ng-if="msgnum>0" src="res/img/sirenyishengnew.png" style="width:70%"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">私人医生</p></a>
+        </div>
+      </li>
+      <li class="row">
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/ProductType/man" style="text-decoration: none;"><img src="res/img/nanxing.png"   style="width:70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">男性</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/ProductType/woman" style="text-decoration: none;"><img src="res/img/nvxing.png"  style="width:70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">女性</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/ProductType/oldman" style="text-decoration: none;"><img src="res/img/laoren.png"  style="width:70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">老人</p></a>
+        </div>
+        <div class="col col-25" style="text-align: center;">
+          <a href="#/tab/ProductType/child" style="text-decoration: none;"><img src="res/img/ertong.png"  style="width:70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">儿童</p></a>
+        </div>
+      </li>
+      <li class="item row" style="height:100px;border: none">
+        <div class="col"><a href="#/tab/Topic/1"><img src='res/img/shouye_09.jpg' style=";width: 100%;position:absolute; right:0%;top:0%;"></a></div>
+      </li>
+      <li class="row" style="margin-top:10px;border-top: 0.5px solid #ddd;">
+        <div class="col" style="padding-top: 10px;"><b style="border:1px solid #007EA3;height:7px;margin-left: 5px;margin-right: 4px;"></b>热门分类</div>
+      </li>
+      <li class="row" style="margin-top: -10px">
+        <div class="col col-50">
+          <a href="#/tab/ProductType/NewProduct"><img src="res/img/shouye_zhongxiyaopin.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50">
+          <a href="#/tab/ProductType/yiliaoqixie"><img src="res/img/shouye_yiliaoqixie.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <li class="row" style="">
+        <div class="col col-50">
+          <a href="#/tab/ProductType/zibubaojian"><img src="res/img/shouye_zibubaojian.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50">
+          <a href="#/tab/ProductType/guoyao"><img src="res/img/shouye_weishengsu.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <li class="row" style="margin-top:10px; border-top: 0.5px solid #ddd;">
+        <div class="col" style="padding-top: 10px;"><b style="border:1px solid #007EA3;height:7px;margin-left: 5px;margin-right: 4px;"></b>健康资讯</div>
+      </li>
+      <li class="row" style="margin-top:5px;padding:0px;" >
+        <div class="col col-50" style="padding: 1px;">
+          <a href="#/tab/Topic/2"><img src="res/img/yangshen1.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50" style="padding: 1px;">
+          <a href="#/tab/Topic/3"><img src="res/img/qianyan1.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <li class="row" style="margin-top: 0.05rem;padding: 0px;">
+        <div class="col col-50" style="padding: 1px;">
+          <a href="#/tab/Topic/4"><img src="res/img/muyin1.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50" style="padding: 1px;">
+          <a href="#/tab/Topic/5"><img src="res/img/manxin1.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <!--<li class="row">
+                <div class="col" style="width: 100%;height: 8px;background-color: #eeeeee;margin-top: -40px"></div>
+            </li>-->
+      <li class="row" style="margin-top:10px;border-top: 0.5px solid #ddd;">
+        <div class="col" style="padding-top: 10px;"><b style="border:1px solid #007EA3;height:7px;margin-left: 5px;margin-right: 4px;"></b>品牌窗口</div>
+      </li>
+      <li class="row" style="">
+        <div class="col col-50">
+          <a href="#/tab/Topic/6"><img src="res/img/shouye_tongrentang.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50">
+          <a href="#/tab/Topic/7"><img src="res/img/shouye_pianzaihuang.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <li class="row" style="">
+        <div class="col col-50">
+          <a href="#/tab/Topic/8"><img src="res/img/shouye_chenliji.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50">
+          <a href="#/tab/Topic/9"><img src="res/img/shouye_jianming.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+      <li class="row" style="margin-top:10px;border-top: 0.5px solid #ddd;">
+        <div class="col" style="padding-top: 10px;"><b style="border:1px solid #007EA3;height:7px;margin-left: 5px;margin-right: 4px;"></b>私人预订</div>
+      </li>
+      <li class="row" style="height: 50px;" >
+        <div class="col col-50" style="padding:1px;" >
+          <a href="#/tab/DrugSuggestion"><img src="res/img/booking_drugs.jpg" style="width:100%"/></a>
+        </div>
+        <div class="col col-50"  style="padding:1px;" >
+          <a href="#/tab/DoctorSuggestion"><img src="res/img/appointment_doctor.jpg" style="width:100%"/></a>
+        </div>
+      </li>
+    </ul>
+    <div style="height: 10px;border: none"></div>
+  </ion-content>
+</ion-view>

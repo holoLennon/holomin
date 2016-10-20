@@ -1,0 +1,90 @@
+<!--<style>
+    input[required]:invalid, input:focus:invalid, textarea[required]:invalid, textarea:focus:invalid{box-shadow: none;}
+</style>-->
+<!--EditDoctorInformationr，业务员进行医生信息的完善-->
+<ion-view  view-title="医生信息完善" cache-view="false">
+    <ion-content>
+        <ul>
+            <label class="item item-input" style="border-radius: 0px;border:none;border-bottom:0.5px solid #ddd;">
+                <div>
+                    <img ng-if="obj.obj4==1 && obj.img1==null" src="res/img/yishengtouxiang.png" style="width: 60px;height:60px;border-radius: 50%"/>
+                    <img ng-if="obj.img1!=null" style="width: 60px;height:60px;border-radius: 50%" ng-src='{{obj.img1}}'/>
+                </div>
+                <div ng-if="obj.obj4!=1 && obj.img1==null">
+                    <img src="res/img/yishengtouxiang.png" style="width: 60px;height:60px;border-radius: 50%"/>
+                </div>
+                <input type="text" placeholder="姓名"  ng-model="obj.name" style="padding-left: 15px;">
+            </label>
+            <label class="item item-input" style="height:0.5px;border:none;border-bottom:0.5px solid #ddd;"></label>
+            <label>
+                <div class="item item-input item-select" style="width:180px;border:none;height: 80%;border-top: 0.5px solid #ddd;">
+                    <div class="input-label">性别：
+                        <select  ng-model="obj.usersex" style="background-color: #f4f4f4;color: #000;">
+                            <option ng-repeat="(key,val) in obj.usersexMap" value="{{key}}" ng-selected="val==obj.usersexString">{{val}}</option>
+                        </select>
+                    </div>
+                </div>
+            </label>
+            <label class="item item-input" style="height:0.5px;border:none;border-bottom:0.5px solid #ddd;"></label>
+            <label>
+                <div class="item item-input item-select" style="width:220px;border:none;height: 80%;border-top: 0.5px solid #ddd;">
+                    <div class="input-label">职称：
+                        <select  ng-model="obj.dlevel" style="background-color: #f4f4f4;color: #000;">
+                            <option ng-repeat="(key,val) in obj.dlevelMap" value="{{key}}" ng-selected="val==obj.dlevelString">{{val}}</option>
+                        </select>
+                    </div>
+                </div>
+            </label>
+            <label class="item item-input">
+                所属单位：<input type="text" placeholder="单位"  ng-model="obj.company" style="padding-left: 15px;">
+            </label>
+            <div class="item item-input" style="line-height: 40px;">科室：
+              <select required="" class="form-control" ng-model="obj.ks1" ng-options="o as o.channelName for o in obj.obj1" ng-change="obj.productchannelIdProductchannelObj=obj.ks1.children[0];"  style="font-size: 14px;width:110px;margin-left:8px;text-align: left;background-color:#f4f4f4;">
+              </select>
+              <select class="form-control" ng-model="obj.productchannelIdProductchannelObj" ng-options="o as o.channelName for o in obj.ks1.children" ng-change="makeProductchannelId();" style="font-size: 14px;width:110px;text-align: left;background-color:#f4f4f4;margin-left: 5px;">
+              </select>
+            </div>
+            <label class="item item-input">
+                手机号码：<input type="text" placeholder="手机号码"  ng-model="obj.mobile" style="padding-left:15px;">
+            </label>
+            <label class="item item-input" style="border-bottom: none;">
+                资格证照片：
+              <span style="font-size: 12px;">(点击右下角相机按钮上传)<br>
+                <span ng-if="progressPercentage<100" style="width:100%;height:20px;background-color: #f5f5f5;">图片上传中{{progressPercentage}}%...</span>
+              </span>
+            </label>
+            <label class="item item-input" style="max-height:200px;max-width:95%;margin:auto;padding-bottom: 15px;border:none;">
+                <img style="width:100%;" ng-src='{{obj.imgqa}}'/>
+            </label>
+        </ul>
+        <br/><br/><br/>
+    </ion-content>
+    <div class="bar bar-subfooter" style="height: 45px;margin-bottom: 10px;background-color: #fff;">
+        <ul style="width: 100%;height:100%;padding-bottom:5px;padding-top:5px; ">
+            <li class="fr" style="width:15%;">
+                <div class="up-buttons">
+                    <div ngf-select ngf-drop ng-model="files" ngf-model-invalid="invalidFiles"
+                         ng-model-options="modelOptionsObj"
+                         ngf-multiple="multiple" ngf-pattern="pattern" ngf-accept="acceptSelect"
+                         ng-disabled="disabled" ngf-capture="capture"
+                         ngf-drag-over-class="dragOverClassObj"
+                         ngf-validate="validateObj"
+                         ngf-resize="resizeObj"
+                         ngf-resize-if="resizeIfFn($file, $width, $height)"
+                         ngf-dimensions="dimensionsFn($file, $width, $height)"
+                         ngf-duration="durationFn($file, $duration)"
+                         ngf-keep="keepDistinct ? 'distinct' : keep"
+                         ngf-fix-orientation="orientation"
+                         ngf-allow-dir="allowDir" ngf-drop-available="dropAvailable">
+                        <button class="button button-clear button-icon icon ion-ios-camera-outline" style="width:120%;margin-top: -5px; "></button>
+                    </div>
+                </div>
+            </li>
+            <li class="fr" style="width: 85%;height:90%;">
+                <div style="text-align: center;">
+                    <button ng-click="vm.isedit=false;save()" class="button button-positive" style="border-radius:6px;width:92%;background-color: #008cad;margin-top: -5px;">确认修改</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+</ion-view>

@@ -1,0 +1,24 @@
+<!--drugstoreList 可选择的药店列表 -->
+<ion-view view-title="配送药店" cache-view="false">
+  <ion-content>
+    <div class="row" style="position: relative;">
+      <div class="row" style="background-color: #fff;">
+        <div class="col col-90" style="height:100%;margin-top: -5px;">
+          <input style="height: 30px;width:95%;margin-top: 3px;padding-left: 5px;border:0.5px solid #ddd; border-radius: 3px;" class="ion-beijing" type="text" placeholder="搜索药店" ng-model="searchDoctorType">
+        </div>
+        <div class="col col-10" ng-click="" style="height:40px;width: 100%;">
+          <i class="ion-ios-search-strong" style="font-size: 24px;position: absolute;top:17px;left:88%;color: #000;"></i>
+        </div>
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-avatar item-text-wrap" bindonce collection-repeat="obj in list" collection-item-width="98%" collection-item-height="105px" style="padding-left: 10px;">
+          <h2 style="width: 90%;">{{obj.cname}}</h2>
+          <p style="margin-top: 5px;width: 90%;">{{obj.addr}}</p>
+          <div style="position: absolute;top:22%;right: 5px;" >
+            <button ng-if="act==0" class="button icon ion-ios-checkmark-outline" ng-click="chooseThis(obj)" style="background:none;border: none;"></button>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-content>
+</ion-view>

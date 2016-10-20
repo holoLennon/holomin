@@ -1,0 +1,13 @@
+<ion-view view-title="上月总销售">
+	<ion-content has-bouncing="false"><!--内容不会向下拖出上面的空白-->
+    <ion-list class="list">
+      <ion-item class="item-avatar" bindonce collection-repeat="obj in list"  ng-click="rx('#/tab/OrderrList/4/0')" collection-item-width="100%" collection-item-height="60px" style="border: none;border-bottom: 2px solid #ddd;padding-left: 2em;">
+          <div>
+            <h2 class="bargin_tit">上月总利润</h2>
+            <h2 class="bargin_tit">共{{obj.memberOrderrSumprice+obj.doctorOrderrSumprice+obj.askSumprice}}元</h2>
+            <i class="ion-chevron-right" style="position: absolute;left:90%;top:30px;color: #444;"></i>
+          </div>
+      </ion-item>
+    </ion-list>
+	</ion-content>
+</ion-view>

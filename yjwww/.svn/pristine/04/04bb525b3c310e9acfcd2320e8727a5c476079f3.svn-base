@@ -1,0 +1,14 @@
+<!--Userinfo，账号信息修改详细信息-->
+<style>
+  input[required]:invalid, input:focus:invalid, textarea[required]:invalid, textarea:focus:invalid{box-shadow: none;}
+</style>
+<ion-view view-title="密码修改"  cache-view="false">
+  <ion-content>
+    <ul>
+      <label class="item item-input">账号:<input type="text" placeholder="账号"  ng-model="obj.username"></label>
+      <label class="item item-input" >密码:<input id="password" name="password" type="password" placeholder="请输入新密码" ng-model="obj.password" /></label>
+      <li class="item" style="border: none;background: none;margin-top: 60%"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced" style="background-color: #008cad"></i>保存</a></li>
+    </ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

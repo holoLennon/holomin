@@ -1,0 +1,59 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表 Home-->
+<ion-view view-title="首页" hide-nav-bar="true" class="allweb" style="background-color: #fff;">
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="padding-bottom: 1em;margin-bottom: 1em;">
+      <a class="fl"><img src="res/img_tcm/logo-b.png" style="width:30px;height: 30px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-60" style="text-align: center;margin:auto;">
+      <a class="fc" style="color: #fff;padding-top: 6px;">首页</a>
+    </div>
+    <div class="col col-20">
+      <a class="fr" ng-click="rx('#/tab/DoctorQrcode/'+meuser.id)"><img src="res/img/icon_nav_saoma.png" style="width:30px;height: 30px;margin-top: -3px;"/></a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <div class="gund" >
+      <ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+        <ion-slide>
+          <div class="box blue">
+            <img src="res/img_tcm/tui1.png" width="100%">
+          </div>
+        </ion-slide>
+        <ion-slide>
+          <div class="box blue">
+            <img src="res/img_tcm/tui2.png" width="100%">
+          </div>
+        </ion-slide>
+        <ion-slide>
+          <div class="box blue">
+            <img src="res/img_tcm/tui3.png" width="100%">
+          </div>
+        </ion-slide>
+      </ion-slide-box>
+    </div>
+    <ul style="background-color: #fff;margin-top: 6px;">
+      <li class="row">
+        <div class="col col-33" style="text-align: center;">
+          <a href="#/tab/RA_MemberDoctorList" style="text-decoration: none;"><img ng-if="dmsgnum>0" src="res/img_tcm/zhenshizuozhen_bnew.png" style="width: 70%;"/><img  src="res/img_tcm/zhenshizuozhen_b.png" style="width: 65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">诊室坐诊</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/ProductListSearch')" style="text-decoration: none;"><img src="res/img_tcm/yaopinfuwu_b.png" style="width: 65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">药品服务</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/DoctorProductList/0')" style="text-decoration: none;"><img src="res/img_tcm/woyaofang_b.png" style="width: 65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">医生药架</p></a>
+        </div>
+      </li>
+      <li class="row">
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/DoctorQrcode/'+meuser.id)" style="text-decoration: none;"><img src="res/img_tcm/saomaqu_b.png"   style="width:65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">扫码区</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/OrderrList/1/'+meuser.id)" style="text-decoration: none;"><img src="res/img_tcm/woyaojian_b.png" style="width:65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">已开药笺</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/PrescriptList/0')" style="text-decoration: none;"><img src="res/img_tcm/wodingdan_b.png"   style="width:65%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 20px;">常用药方</p></a>
+        </div>
+      </li>
+    </ul>
+    </ion-content>
+</ion-view>

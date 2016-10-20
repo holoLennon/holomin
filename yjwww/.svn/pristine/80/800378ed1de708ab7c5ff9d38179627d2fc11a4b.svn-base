@@ -1,0 +1,11 @@
+<!--PrescriptProduct，药方产品详细信息-->
+<ion-view view-title='药方产品' cache-view='false'>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj" style="font-size: 20px;margin-top: 10px;">
+		<label class="item item-input">商品名:{{obj.title}}</label>
+		<label class="item item-input">数量:<input type="text" placeholder="数量"  ng-model="obj.num"></label>
+		<li style="width: 200px;margin-left: auto;margin-right: auto;"><a ng-click="save()" class="button button-full button-balanced" style="background-color: #7E5335;border: none;">保存</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,68 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表 Home-->
+<ion-view view-title="首页" hide-nav-bar="true" class="allweb" style="background-color: #fff;">
+  <ion-header-bar class="bar-positive row">
+    <div class="col col-20" style="padding-bottom: 1em;margin-bottom: 1em;">
+      <a class="fl"><img src="res/img/icon-06.png" style="width:30px;height: 30px;margin-top: -3px;"/></a>
+    </div>
+    <div class="col col-60" style="text-align: center;padding-top: 8px;">
+      <a class="fc" style="color: #fff;">首页</a>
+    </div>
+    <div class="col col-20">
+      <a class="fr" ng-click="rx('#/tab/DoctorQrcode/'+meuser.id)"><img src="res/img/icon_nav_saoma.png" style="width:30px;height: 30px;margin-top: -3px;"/></a>
+    </div>
+  </ion-header-bar>
+  <ion-content class="has-tabs has-header">
+    <ul style="background-color: #fff;margin-top: 6px;">
+      <li class="row">
+        <div class="col col-33" style="text-align: center;">
+          <a href="#/tab/RA_MemberDoctorList" style="text-decoration: none;"><img ng-if="dmsgnum>0" src="res/img/zhenshizuozhennew.png" style="width: 70%;"/><img ng-if="dmsgnum==0" src="res/img/zhenshizuozhen.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">诊室坐诊</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/ProductTypeList')" style="text-decoration: none;"><img src="res/img/yaopinfuwu.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">药品服务</p></a>
+        </div>
+        <div class="col col-34" style="text-align: center;">
+          <a ng-click="rx('#/tab/Madingpage')" style="text-decoration: none;"><img src="res/img/xueshujiaoliu.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">学术交流</p></a>
+        </div>
+      </li>
+      <li class="row">
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/DoctorProductList/0')" style="text-decoration: none;"><img src="res/img/woyaofang.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">我的药房</p></a>
+        </div>
+        <div class="col col-33" style="text-align: center;">
+          <a ng-click="rx('#/tab/OrderrList/1/'+meuser.id)" style="text-decoration: none;"><img src="res/img/woyaojian.png" style="width:70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">已开药笺</p></a>
+        </div>
+        <div class="col col-34" style="text-align: center;">
+          <a ng-click="rx('#/tab/OrderrList/2/'+meuser.id)" style="text-decoration: none;"><img src="res/img/wodingdan.png" style="width: 70%;"/><p style="color: #4d4d4d;font-weight: normal;font-size: 12px;">会员自购</p></a>
+        </div>
+      </li>
+      <li class="row" style="background-color: #fff;padding:0;margin: 0;">
+        <div class="col" style="padding:0;margin: 0;"><img src="res/img/xinyaotuijian.jpg" width="100%"/></div>
+      </li>
+    </ul>
+    <div>
+      <div class="AMapArea" id="amap">
+        <div id="gaode_container_shopdrugstore" tabindex="0"></div>
+        <select required="" class="form-control" ng-model="province" ng-options="o as o.text for o in pcc" ng-change="city=province.children[0];county=city.children[0];" style="font-size: 12px;;width:68px;height:30px;margin-left:7px;margin-top: 15px;text-align: left;">
+        </select>
+        <select class="form-control" ng-model="city" ng-options="o as o.text for o in province.children" ng-change="county=city.children[1];" style="font-size: 12px;width:80px;height:30px;margin-left:1px;margin-top: 15px;text-align: left;">
+        </select>
+        <select class="form-control" ng-model="county" ng-options="o as o.text for o in city.children" style="font-size: 12px;;width:80px;height:30px;margin-left:1px;margin-top: 15px;text-align: left;">
+        </select>
+        <button class=" button-positive" ng-click="searchByCounty(county,city,province)" style="border-radius:2px;margin-left:6px;margin-top:5px;width:60px;height:32px;color:#fff;background-color: #2692ca; border: 0px;">查找</button>
+      </div>
+    </div>
+    <ion-list class="list">
+      <ion-item class="item-avatar item-text-wrap" bindonce collection-repeat="obj in list" ng-click="rx('#/tab/Product/1/'+obj.id)" collection-item-width="100%" collection-item-height="150px">
+        <img ng-src="{{obj.img1}}" reset-img style="height: 60px"/>
+        <h2 style="overflow: visible">{{obj.myname}}</h2>
+        <span style="font-size: 12px;color: #8c8c8c;width: 80%;"> 规格： {{obj.productstyle}}<!--<span ng-if="obj.itypeMiString=='医保类' || obj.itypeMi=='1'" style="color: #FE918C;margin-left: 10px;font-size: 14px;">医保</span>--></span>
+        <p>
+          <span style="color: red;font-size: 14px">价格：￥{{obj.price}}</span><br>
+          <span style="font-size: 12px;color: #8c8c8c;width: 80%;">主要功效:{{obj.intro}}</span>
+        </p>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+  <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+</ion-view>

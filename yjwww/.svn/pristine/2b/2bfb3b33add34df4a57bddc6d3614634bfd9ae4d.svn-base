@@ -1,0 +1,180 @@
+/**
+ * User，账号信息修改详细
+ */
+appctrl.controller('myresumeprescriptionlistCtrl', function($scope, $rootScope, $log, $timeout,
+                                                       $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                                       $location, $state,
+                                                       $cordovaNetwork, $cordovaGoogleAnalytics,
+                                                       $stateParams,$ionicHistory,
+                                                       ENV,CommonService,MemberService,Upload,Storage) {
+  $log.debug("enter Doctor ctrl");
+  /**参数*/
+  /**页面显示的列表*/
+  /**页码*/
+  $scope.page=_.clone(_Page);
+  var id = $stateParams.id;
+  $scope.list=[];
+  $scope.obj={};
+  $scope.yyk=$scope;
+  var uprooturl="http://yijian.zjjnyd.com/yijian/rest";
+
+
+  /**
+   * 进入前
+   */
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $log.debug("Member ctrl beforeEnter");
+  });
+  /**
+   * 进入后
+   */
+  $scope.$on('$ionicView.afterEnter', function() {
+    $log.debug("Member ctrl afterEnter");
+    if (ctrlReinitMap.get('myresumeprescriptionlistCtrl')) {
+      ctrlReinitMap.remove('myresumeprescriptionlistCtrl');
+      $log.debug("myresumeprescriptionlist ctrl afterEnter init");
+      $scope.init();
+    }
+  });
+  /**
+   * 初始化
+   */
+  $scope.init=function(){
+    $scope.get();
+  };
+
+  /**
+   * 获取网络对象
+   */
+  $scope.get=function(){
+    if(!id)
+      return;
+    DoctorService.get(id).then(function (data) {
+      $log.debug("MemberService ctrl get then");
+      $scope.obj=data;
+      //   $scope.dataProcessing(data);
+    });
+  };
+  /**
+   * 图片上传结束
+   */
+  $scope.uploadsave=function(){
+    $log.debug("Member ctrl get id="+id);
+    $log.debug($scope.obj);
+    if(isblank0(id)) {
+
+    }else{
+      DoctorService.update($scope.obj).then(function (data) {
+        $log.debug("Member ctrl update then");
+        CommonService.alertm("上传成功");
+      });
+    }
+  };
+  /**
+   * 保存
+   */
+  $scope.save=function(){
+    $log.debug("Member ctrl get id="+id);
+
+    $log.debug($scope.obj)
+    if(isblank0(id)) {
+      return;
+    }else{
+      DoctorService.update($scope.obj).then(function (data) {
+        $log.debug("Member ctrl update then");
+        CommonService.alertm("修改成功");
+
+      });
+    }
+  };
+  /**上传进度 %*/
+  $scope.progressPercentage =0;
+  /**错误信息*/
+  $scope.errorMsg = null;
+  /*上传图片*/
+  $scope.upload = function(file, imgfield) {
+    var clientInfo=Storage.get(CLIENT_INFO);
+    var token=(clientInfo)?clientInfo.token:'';
+    token =urlValueTranslation(token);
+    file.upload = Upload.upload({
+      url: restbase+'/upload',
+      resumeSizeUrl: restbase+'/upload?name=' + encodeURIComponent(file.name)+"&token="+token,
+      // url: uprooturl+'/upload' + $scope.getReqParams(),
+      //  resumeSizeUrl: imgfield ? uprooturl+'/upload?name=' + encodeURIComponent(file.name) : null+"&token="+token,
+      resumeChunkSize: imgfield ? $scope.chunkSize : null,
+      headers: {
+        'optional-header': 'header-value'
+      },
+      data: {username: $scope.username},
+      file: file
+    }).progress(function (evt) {
+      //进度条
+      $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      $scope.progressPercentage = ($scope.progressPercentage>100)?100:$scope.progressPercentage;
+    }).success(function (data) {
+      angular.forEach(data.result, function (item) {
+        if(item.fieldName=='url'){
+          if(item.value!=null){
+            $scope.obj[imgfield]=wbase+item.value;
+            $scope.uploadsave()
+          }
+        }
+      });
+    })
+
+    file.upload.then(function (response) {
+      $timeout(function () {
+        file.result = response.data;
+      });
+    }, function (response) {
+      if (response.status > 0)
+        $scope.errorMsg = response.status + ': ' + response.data;
+    }, function (evt) {
+      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    });
+    file.upload.xhr(function (xhr) {
+
+    });
+  };
+  /**
+   * 如果"files_img1"这个控件发生改变，则进行上传
+   */
+  $scope.files=$scope;
+  $scope.$watch('files.files_img1', function (files) {
+    $log.debug("yykfile="+JSON.stringify(files));
+    $scope.file_num =1;
+    if (files != null) {
+      if (!angular.isArray(files)) {
+        $timeout(function () {
+          $scope.files_img1 = files = [files];
+        });
+        return;
+      }
+      for (var i = 0; i < files.length; i++) {
+        Upload.imageDimensions(files[i]).then(function (d) {
+          $scope.d = d;
+          console.log(d);
+        });
+        $scope.errorMsg = null;
+        (function (f) {
+          $scope.upload(f, 'img1');
+        })(files[i]);
+      }
+    }
+  });
+  $scope.isResumeSupported = Upload.isResumeSupported();
+  $scope.chunkSize = 100000;
+  $scope.success_action_redirect = $scope.success_action_redirect || window.location.protocol + '//' + window.location.host;
+  $scope.jsonPolicy = $scope.jsonPolicy || '{\n  "expiration": "2020-01-01T00:00:00Z",\n  "conditions": [\n    {"bucket": "angular-file-upload"},\n    ["starts-with", "$key", ""],\n    {"acl": "private"},\n    ["starts-with", "$Content-Type", ""],\n    ["starts-with", "$filename", ""],\n    ["content-length-range", 0, 524288000]\n  ]\n}';
+  $scope.acl = $scope.acl || 'private';
+
+  $scope.getReqParams = function () {
+    return $scope.generateErrorOnServer ? '?errorCode=' + $scope.serverErrorCode +
+    '&errorMessage=' + $scope.serverErrorMsg : '';
+  };
+
+  $scope.modelOptionsObj = {};
+
+  $scope.init();
+  ctrlReinitMap.remove('myresumeprescriptionlistCtrl');
+});

@@ -1,0 +1,1 @@
+var _WaJsapiPaymentParam={appid:"",timestamp1:0,noncestr:"",package1:"",signtype:"MD5",paysign:""};var _Page={where:"",pageNo:1,pageSize:DEFPAGESIZE,hasNextPage:true,cmd:""};var selectAddr={memberId:null,watersiteId:null,itype:null,lng:null,lat:null,poi:null,address:null,manname:null,mobile:null,township:null,type:null,obj3:null};
