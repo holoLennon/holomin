@@ -1,0 +1,35 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/ProductTypeLinkProduct/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${productTypeLinkProduct.id}" />
+	<@z.pmt key="42.ProductTypeLinkProduct.productId">
+				<@p.searchforid label="db.ProductTypeLinkProduct.productId" nameid="productId" value="${productTypeLinkProduct.productId}" stringvalue="${productTypeLinkProduct.productIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.ProductTypeLinkProduct.productTypeId">
+				<@p.selecttree  label="db.ProductTypeLinkProduct.productTypeId" nameid="productTypeId" url="${base}/user/ProductType/tree.html" multiple="" headerKey="${productTypeLinkProduct.productTypeId}" headerValue="${productTypeLinkProduct.productTypeIdString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.ProductTypeLinkProduct.priority">
+				<@p.textnumber label="db.ProductTypeLinkProduct.priority" nameid="priority"  value="${productTypeLinkProduct.priority}" help="数字越小排名越前" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.ProductTypeLinkProduct.statusValidOrNot">
+				<@p.radio label="db.ProductTypeLinkProduct.statusValidOrNot" nameid="statusValidOrNot" value="${productTypeLinkProduct.statusValidOrNot}" help="" list=productTypeLinkProduct.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

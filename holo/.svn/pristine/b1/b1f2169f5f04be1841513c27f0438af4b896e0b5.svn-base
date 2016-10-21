@@ -1,0 +1,119 @@
+/**
+ * 特别的网络服务
+ */
+appservice
+    .service('zspecService', function($resource, $rootScope,$q,$http,$log,ENV) {
+        $log.debug("zspecService in");
+        //列表
+        var list;
+		//当前的对象
+        var obj;
+		//页码信息
+        var page = {
+            where: '', //条件
+            pageNo: 1, //第几页，从1开始
+            pageSize:DEFPAGESIZE, //每页多少数量
+            hasNextPage: true //是否还有下一页
+        };
+        var thislist=[]; //这次取到的数据
+
+        return {
+            /**
+             * 请求验证码
+             */
+            requestCode: function(mobile) {
+                var url = ENV.api + "/requestCode";
+                var deferred = $q.defer();
+                $http({
+                    method: 'GET',
+                    url: url,
+                    params: {mobile: mobile}
+                }).success(function() {
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            },
+            /**
+             * 短信验证注册登陆
+             */
+            dologinbysms: function(user) {
+                var url = ENV.api + "/dologinbysms";
+                var deferred = $q.defer();
+                $http({
+                    method: 'GET',
+                    url: url,
+                    params: {username: user.username, password: user.password, roleId: user.roleId, code: user.code}
+                }).success(function(data) {
+                    deferred.resolve(data);
+                });
+                return deferred.promise;
+            },
+            /**
+             * 重置密码为111111
+             */
+            resetPwd: function(mobile) {
+                var url = ENV.api + "/resetPwd";
+                var deferred = $q.defer();
+                $http({
+                    method: 'GET',
+                    url: url,
+                    params: {mobile: mobile}
+                }).success(function() {
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            },
+            /**
+             * 购物车转订单
+             * @param orderr 要被创建的对象
+             * @param _page 页码对象，如果为空使用全局页码对象
+             */
+            memberCartToOrderr: function(orderr,_page) {
+                var thispage=page;
+                if(_page)thispage=_page;
+                var tmpparam=_.omit(orderr, function(value, key, object) {
+                    return _.isObject(value) || _.isArray(value)
+                        || key.indexOf("String") != -1 || key.indexOf("gmt") != -1
+                        ;
+                });
+                tmpparam=_.extend(tmpparam, {cmd: thispage.cmd});
+                $log.debug("OrderrService create");
+                $log.debug(tmpparam);
+                var deferred = $q.defer();
+                var url =ENV.api+"/Orderr/memberCartToOrderr";
+                $http({
+                    method: 'POST',
+                    url: url,
+                    params: tmpparam
+                }).success(
+                    function (data, status, header, config) {
+                        list= _.union(list,data);
+                        deferred.resolve(data);
+                    }
+                );
+                return deferred.promise;
+            },
+            /**
+            * 删除云药架
+             * @param id
+             * @returns {*}
+             */
+            delDoctorProduct: function(id) {
+                var deferred = $q.defer();
+                var url =ENV.api+"/DoctorProduct/del/"+id;
+                $http({
+                    method: 'GET',
+                    url: url,
+                    params: {id:id}
+                }).success(
+                    function (data, status, header, config) {
+                        deferred.resolve(data);
+                    }
+                );
+                return deferred.promise;
+            }
+
+
+
+        };
+    })

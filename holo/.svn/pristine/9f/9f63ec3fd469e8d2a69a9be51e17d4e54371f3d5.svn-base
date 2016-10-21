@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    [#import "${tbase}/include/zmax.html" as z]
+    [#include "${tbase}/include/html_head.html"/]
+    [@z.title name="首页" /]
+</head>
+<script type="text/javascript">
+    $(function(){
+//调用漂浮插件
+        $("body").floatAd({
+            imgSrc : 'http://www.zjsc.org.cn/zjsc/ru/mb2/upload/2014120999.jpg',
+            url : "http://www.zjsc.org.cn/zjsc/c/yjdt/201412/153.htm"
+        });
+    })
+</script>
+<!--本会-->
+[#assign aboutid=2]
+[#assign abouturl="c/about/index.htm"]
+<!--促进会大事记-->
+[#assign policyid=36]
+[#assign policyurl="c/dashiji/index.htm"]
+<!--新闻报道-->
+[#assign newsid=9]
+[#assign newsurl="c/news/index.htm"]
+<!--37 会员风采 hyfc-->
+[#assign cid_hyfc=37]
+[#assign cid_hyfc_url="c/hyfc/index.htm"]
+<!--智慧城市大事记-->
+[#assign dsj1id=38]
+[#assign dsj1url="c/zhcsdsj/index.htm"]
+<!--促进会大事记-->
+[#assign dsj2id=36]
+[#assign dsj2url="c/daishiji/index.htm"]
+<!--36 促进会大事记 daishiji-->
+[#assign cid_daishiji=36]
+[#assign cid_daishiji_url="c/daishiji/index.htm"]
+<!--43 服务 活动培训 10 hdpx -->
+[#assign cid_hdpx=42]
+[#assign cid_hdpx_url="c/zwhd/index.htm"]
+<!--19 建设频道 政策方针 2 zhengcefangzhen  -->
+[#assign cid_zhengcefangzhen=19]
+[#assign cid_zhengcefangzhen_url="c/zhengcefangzhen/index.htm"]
+<!--21 建设频道 行业动态 4 hangyedongtai   -->
+[#assign cid_hangyedongtai=21]
+[#assign cid_hangyedongtai_url="c/hangyedongtai/index.htm"]
+<!--28 专家 专家观点 2 zhuanjiaguandian -->
+[#assign cid_zhuanjiaguandian=28]
+[#assign cid_zhuanjiaguandian_url="c/zhuanjiaguandian/index.htm"]
+<body>
+<div class="container">
+    [#include "${tbase}/include/页头导航栏.html"/]
+    <div class="gg">
+        <span>最新公告：</span> [@zcmsList dbname="Content" where="channelId=8"
+        order="priority" pageSize="3"] [#list list as obj] <a
+            href="${base}${obj.url}">${obj.title}</a>| [/#list] [/@zcmsList]
+    </div>
+
+
+    <div class="main_mid1">
+        <div class="main_left1">
+            <div class="main_left1_bt">
+                <div class="main_left1_bt1">智慧浙江建设</div>
+                <div class="more1">
+                    <a href="${base}/${abouturl}"><img src="${ures}/images/index2_08.jpg"
+                                                       width="63" height="33" /> </a>
+                </div>
+            </div>
+            <div class="main_left1_nr">
+                <div class="main_left1_nr1">——支撑“智慧浙江”全面建设</div>
+                <div class="main_left1_nr2">
+                    <p style="text-indent: 2em;">随着新一代信息技术的迅速发展和深入应用，城市智慧化成为当今世界城市发展的重要趋势和基本特征，成为现代城市发展的新模式。</p>
+                </div>
+                <div class="main_left1_nr3">
+                    [@zcmsList dbname="Content" where="channelId=${aboutid}"
+                    order="priority" pageSize="4"] [#list list as obj]
+                    <div class="item">
+                        <a href="${base}${obj.url}">${obj.title}</a>
+                    </div>
+                    [/#list] [/@zcmsList]
+                </div>
+            </div>
+        </div>
+
+        <div class="main_right1">
+            <div class="main_right1_bt">
+                <div class="main_left1_bt1">新闻中心</div>
+                <div class="more2">
+                    <a href="${base}/${newsurl}"><img src="${ures}/images/index2_20.jpg"
+                                                      width="41" height="11" /> </a>
+                </div>
+            </div>
+            <div class="main_right1_nr">
+                <div class="main_right1_nr_tp">
+                    <iframe src="${ures}/htm/new_tp.htm" width="238" height="206"
+                            marginheight="0" marginwidth="0" scrolling="no" frameborder="0"></iframe>
+                </div>
+                <div class="main_right1_nr_new">
+                    <ul>
+                        [@zcmsList dbname="Content" where="channelId=${newsid}" order="priority desc,id desc" pageSize="7"]
+                        [#list list as obj]
+                        <li><a href="${base}${obj.url}">[#if obj.title?length gte 28]${obj.title?substring(0,25)}...[#else]${obj.title}[/#if]</a></li>
+                        [/#list]
+                        [/@zcmsList]
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="main_left">
+            <div class="main_left2">
+                <div class="main_left2_bt">
+                    <div class="main_left1_bt1">
+                        <a href="${base}/${cid_hdpx_url}">活动培训</a>
+                    </div>
+                </div>
+                <div class="main_left2_nr">
+                    <ul>
+                        [@zcmsList dbname="Content" where="channelId=${cid_hdpx}" order="priority" pageSize="7"]
+                        [#list list as obj]
+                        <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                        [/#list]
+                        [/@zcmsList]
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="main_right">
+            <div class="main_right2">
+                [#assign obj=null]
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="${base}/${cid_zhengcefangzhen_url}">政策方针</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            [@zcmsList dbname="Content" where="channelId=${cid_zhengcefangzhen}" order="priority" pageSize="7"]
+                            [#list list as obj]
+                            <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                            [/#list]
+                            [/@zcmsList]
+                        </ul>
+                    </div>
+                </div>
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="${base}/${cid_hangyedongtai_url}">行业动态</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            [@zcmsList dbname="Content" where="channelId=${cid_hangyedongtai}" order="priority" pageSize="7"]
+                            [#list list as obj]
+                            <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                            [/#list]
+                            [/@zcmsList]
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main_banner">
+            <img src="http://www.zjsc.org.cn/zjsc/ru/mb2/images/banner5.jpg" />
+        </div>
+
+        <div class="main_left">
+            <div class="main_left2">
+                <div class="main_left2_bt">
+                    <div class="main_left1_bt1">
+                        <a href="${base}/${cid_daishiji_url}">促进会大事记</a>
+                    </div>
+                </div>
+                <div class="main_left2_nr">
+                    <ul>
+                        [@zcmsList dbname="Content" where="channelId=${cid_daishiji}" order="priority" pageSize="7"]
+                        [#list list as obj]
+                        <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                        [/#list]
+                        [/@zcmsList]
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="main_right">
+            <div class="main_right2">
+                [#assign obj=null]
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="${base}/${cid_zhuanjiaguandian_url}">专家观点</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            [@zcmsList dbname="Content" where="channelId=${cid_zhuanjiaguandian}" order="priority" pageSize="7"]
+                            [#list list as obj]
+                            <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                            [/#list]
+                            [/@zcmsList]
+                        </ul>
+                    </div>
+                </div>
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="${base}/${cid_hyfc_url}">会员风采</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            [@zcmsList dbname="Content" where="channelId=${cid_hyfc}" order="priority" pageSize="7"]
+                            [#list list as obj]
+                            <li><a href="${base}${obj.url}">[#if obj.title?length gte 26]${obj.title?substring(0,23)}...[#else]${obj.title}[/#if]</a></li>
+                            [/#list]
+                            [/@zcmsList]
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main_banner">
+            <div class="main_banner_bt1">
+                友情链接
+            </div>
+            <div class="main_banner_nr">
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >政府部门</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >智慧城市</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >会员单位</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >交流合作</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+[#include "${tbase}/include/页脚信息栏.html"/]
+</body>
+</html>
+
+[#--切断文本，加上...--]
+[#function pfCutTxt src len add]
+[#if src?length gte len]
+[#return src?substring(0,len-add?length)+add ]
+[/#if]
+[#return src]
+[/#function]

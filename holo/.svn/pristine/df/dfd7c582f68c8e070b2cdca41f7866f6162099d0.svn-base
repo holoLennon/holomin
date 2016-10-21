@@ -1,0 +1,390 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.spec;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.conf.Prop;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+import com.zmax.conf.AttrStatic;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+
+
+
+
+
+
+/**
+ * 和关系相关的Service
+ * @author zmax
+ *
+ */
+@Service
+public class SpecRelationService {
+
+	private static final Logger logger = Logger.getLogger(SpecRelationService.class);
+
+	@Autowired
+	Prop prop;
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+
+	@Autowired
+	MemberdoctorService memberdoctorService;
+
+	@Autowired
+	WxouserService wxouserService;		
+	@Autowired
+	WxrService wxrService;	
+	@Autowired
+	WxrbService wxrbService;	
+
+	/**
+	 * doctor's Seller 医生的业务员
+	 * 医生与业务员关系绑定.
+	 * 后台体现：管理员修改微信用户，在平台ID中绑定了医生用户号
+	 * @param user User doctor所指向的User
+	 */
+	public void doctor1sSeller(User user) throws Exception{
+		if(user==null||user.getRoleId()==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:user==null||user.getRoleId()==null");
+			return;
+		}
+
+		if(AttrStatic.ROLE_DOCTOR!=user.getRoleId().intValue())
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:AttrStatic.ROLE_DOCTOR!=user.getRoleId().intValue()");
+			return;
+		}
+		Doctor doctor=doctorService.get(null, user.getId());
+		if(doctor==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:doctor==null");
+			return;
+		}
+		if(!StringUtilz.integerNullOr0(doctor.getSellerId()))
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:!StringUtilz.integerNullOr0(doctor.getSellerId())");
+			return;
+		}
+		String openid=user.getOpenid();
+		if(StringUtils.isBlank(openid))		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(openid)");
+			return;
+		}
+		//从Wxr中找
+		Wxr wxr=wxrService.get(null, openid);
+		if(wxr==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:wxr==null");
+			return;
+		}
+		if(StringUtils.isBlank(wxr.getParentid())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(wxr.getParentid())");
+			return;
+		}
+		Wxr pwxr=wxrService.get(null, wxr.getParentid());
+		if(pwxr==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:pwxr==null");
+			return;
+		}
+		if(StringUtilz.integerNullOr0(pwxr.getUserId())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtilz.integerNullOr0(pwxr.getUserId())");
+			return;
+		}
+		doctor.setSellerId(pwxr.getUserId());
+		doctorService.update(null, doctor);
+	}	
+	/**
+	 * member's Doctor 会员的医生-医患关系
+	 * 患者与医生关系绑定.
+	 * 触发：用户注册后
+	 * 后台体现：管理员修改微信用户，在平台ID中绑定了医生用户号
+	 * @param user User member所指向的User
+	 */
+	public void member1sDoctorReg(User user) throws Exception{
+		if(user==null||user.getRoleId()==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:user==null||user.getRoleId()==null");
+			return;
+		}
+		if(AttrStatic.ROLE_MEMBER!=user.getRoleId().intValue())
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:AttrStatic.ROLE_MEMBER!=user.getRoleId().intValue()");
+			return;
+		}
+		Member member=memberService.get(null, user.getId());
+		if(member==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:member==null");
+			return;
+		}
+		String openid=user.getOpenid();
+		if(StringUtils.isBlank(openid)){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(openid)");
+			return;
+		}
+		//首推
+		if(StringUtilz.integerNullOr0(member.getDoctorId()))
+			firstRecommend(openid, member);
+		//非首推
+		recommendNotFirst(openid, member);
+
+	}
+
+	/**
+	 * member's Doctor 会员的医生-医患关系
+	 * 医生与业务员关系绑定.
+	 * 触发：用户扫医生码后
+	 * @param openid member的openid
+	 * @return
+	 * @throws Exception
+	 */
+	public void member1sDoctorScan(String openid) throws Exception{
+		if(StringUtils.isBlank(openid))
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(openid)");
+			return;
+		}
+		Wxouser wxouser=wxouserService.get(null, openid);
+		if(wxouser==null || wxouser.getUserId()==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:wxouser==null || wxouser.getUserId()==null");
+			return;
+		}
+		User user=userService.get(null, wxouser.getUserId());
+		if(user==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:user==null");
+			return;
+		}
+		if(AttrStatic.ROLE_MEMBER!=user.getRoleId().intValue())
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:AttrStatic.ROLE_MEMBER!=user.getRoleId().intValue()");
+			return;
+		}
+		Member member=memberService.get(null, user.getId());
+		if(member==null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:member==null");
+			return;
+		}
+		//首推
+		if(StringUtilz.integerNullOr0(member.getDoctorId()))
+			firstRecommend(openid, member);
+		//非首推
+		recommendNotFirst(openid, member);
+	}
+	/**
+	 * 根据openid和会员，找首推医生
+	 * @param openid
+	 * @param member
+	 * @return 最后用户首推荐医生情况 -1未知情况 0用户没有推荐医生 1用户有推荐医生了
+	 * @throws Exception
+	 */
+	private int firstRecommend(String openid,Member member) throws Exception{
+		if(member==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:member==null");			
+			return -1;
+		}
+
+		//如果患者已经有首推医生，就不做了
+		if(!StringUtilz.integerNullOr0(member.getDoctorId())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:!StringUtilz.integerNullOr0(member.getDoctorId())");
+			return 1;
+		}
+		//找自己的wxr
+		Wxr wxr=wxrService.get(null, openid);
+		if(wxr==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:wxr==null");
+			return 0;
+		}
+
+		if(StringUtils.isBlank(wxr.getParentid())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(wxr.getParentid())");
+			return 0;
+		}
+		//找父亲的wxr
+		Wxr pwxr=wxrService.get(null, wxr.getParentid());
+		if(pwxr==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:pwxr==null");
+			return 0;
+		}
+
+		if(StringUtilz.integerNullOr0(pwxr.getUserId())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtilz.integerNullOr0(pwxr.getUserId())");
+			return 0;
+		}
+
+		User puser=userService.get(null, pwxr.getUserId());
+		if(puser==null || puser.getRoleId()==null || puser.getRoleId().intValue()!=AttrStatic.ROLE_DOCTOR){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:puser==null || puser.getRoleId()==null || puser.getRoleId().intValue()!=AttrStatic.ROLE_DOCTOR");
+			//父亲不是个医生
+			return 0;
+		}
+
+		member.setDoctorId(pwxr.getUserId());
+		memberService.update(null, member);
+		Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{member.getId(),pwxr.getUserId()});
+		if(memberdoctor==null){
+			memberdoctor = new Memberdoctor(
+					1 , //Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+					1 , //Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+					member.getId() , //Integer 患者 default=0  
+					member.getDoctorId() , //Integer 医生 default=0  
+					0 , //Integer 处方数量 default=0  
+					0.0 , //Double 消费金额 default=0.0  
+					0 , //Integer 会员未读消息 default=0  
+					0 , //Integer 医生未读消息 default=0  
+					null
+					);
+			memberdoctorService.saveCreate(null, new Memberdoctor(), memberdoctor, null, null, true, true);
+		}
+		return 1;
+	}
+	/**
+	 * 创建非首推医患关系
+	 * @param openid
+	 * @param member
+	 * @return
+	 * @throws Exception
+	 */
+	private int recommendNotFirst(String openid,Member member) throws Exception{
+		if(member==null){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:member==null");
+			return -1;
+		}
+
+		//找自己的wxrb列表openid 		popenid 		status
+
+		List<Wxrb> list=wxrbService.listfind(null, null, "status=0 and openid=?", null, new Object[]{openid});
+		if(StringUtilz.isblank(list)){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtilz.isblank(list)");
+			return 0;
+		}
+
+		for (Wxrb wxrb : list) {
+			//找父亲的wxr
+			Wxr pwxr=wxrService.get(null, wxrb.getPopenid());
+			if(pwxr==null){
+				if(logger.isDebugEnabled())
+					logger.debug("err:continue:pwxr==null");
+				continue;
+			}
+
+			if(StringUtilz.integerNullOr0(pwxr.getUserId())){
+				if(logger.isDebugEnabled())
+					logger.debug("err:continue:StringUtilz.integerNullOr0(pwxr.getUserId())");
+				continue;
+			}
+
+			User puser=userService.get(null, pwxr.getUserId());
+			if(puser==null || puser.getRoleId()==null || puser.getRoleId().intValue()!=AttrStatic.ROLE_DOCTOR){
+				if(logger.isDebugEnabled())
+					logger.debug("err:continue:puser==null || puser.getRoleId()==null || puser.getRoleId().intValue()!=AttrStatic.ROLE_DOCTOR");
+				//父亲不是个医生
+				continue;
+			}
+			Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{member.getId(),pwxr.getUserId()});
+			if(memberdoctor==null){
+				memberdoctor = new Memberdoctor(
+						1 , //Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+						0 , //Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+						member.getId() , //Integer 患者 default=0  
+						pwxr.getUserId() , //Integer 医生 default=0  
+						0 , //Integer 处方数量 default=0  
+						0.0 , //Double 消费金额 default=0.0  
+						0 , //Integer 会员未读消息 default=0  
+						0 , //Integer 医生未读消息 default=0  
+						null
+						);
+				memberdoctorService.saveCreate(null, new Memberdoctor(), memberdoctor, null, null, true, true);
+			}
+			wxrb.setStatus(1);
+			wxrbService.update(null, wxrb);
+		}
+
+
+		return 1;
+	}
+	
+	/**
+	 * 检查被扫码的用户是不是医生
+	 * @param wxr Wxr
+	 * @return
+	 */
+	public boolean isQrUserDoctor(Wxr wxr) {
+		if(StringUtils.isBlank(wxr.getParentid())){
+			if(logger.isDebugEnabled())
+				logger.debug("binderr:StringUtils.isBlank(me.getParentid())");
+			return false;
+		}
+		User father=(User)userService.getFirst(null, null, "openid=?", null, new Object[]{wxr.getParentid()});
+		if(father==null||father.getRoleId()==null){
+			if(logger.isDebugEnabled())
+				logger.debug("父用户信息不全");
+			return false;
+		}
+		if(father.getRoleId()==AttrStatic.ROLE_DOCTOR){
+			return true;
+			// prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/memberreg/reg.html";
+		}
+		return false;
+	}
+}

@@ -1,0 +1,23 @@
+/**
+ * Created by Administrator on 2015/3/20.
+ */
+/**
+ * 注册页面ca 密码
+ */
+appctrl.controller('regcaCtrl', function ($scope,$ionicModal, $timeout, $ionicPopup, $stateParams, $location, $sce, $http, $rootScope, Storage) {
+    $scope.user=Storage.get(REG_USER);
+    $scope.user.repwd='';
+    /**下一步*/
+    $scope.regcaCommit = function (){
+        if(!checkPwd($scope.user.password,$scope.user.repwd)){
+            $scope.alertm("密码为空或不一致");
+            return;
+        }
+        Storage.set(REG_USER,$scope.user);
+        $location.path("/tab/regcb");
+    };
+});
+
+
+
+

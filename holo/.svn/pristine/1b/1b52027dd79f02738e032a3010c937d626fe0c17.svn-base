@@ -1,0 +1,682 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 医患聊天记录
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "dmmsg")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Dmmsg extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "医患聊天记录";
+
+	//date formats
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**是否读过 Integer default=0  map={'0':'未读','1':'已读'}*/
+	@Max(999L)
+	
+	private Integer readed = 0;
+	/**发送接收 Integer default=0  map={'0':'患者发给医生','1':'医生发给患者'}*/
+	@Max(999L)
+	
+	private Integer fromto = 0;
+	/**会员 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer memberId = 0;
+	/**医生 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer doctorId = 0;
+	/**产品 Integer default=0 如果为空表示全科咨询 */
+	@Max(99999999999L)
+	
+	private Integer productId = 0;
+	/**消息内容 String   */
+	@Length(max=400)
+	
+	private String msg;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Dmmsg _this){
+		_this.gmtCreate=new Date();
+		_this.readed=0;
+		_this.fromto=0;
+		_this.memberId=0;
+		_this.doctorId=0;
+		_this.productId=0;
+	}
+	public Dmmsg(){
+		makedefault(this);
+	}
+	public Dmmsg(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param readed Integer 是否读过 default=0  {'0':'未读','1':'已读'}
+	 * @param fromto Integer 发送接收 default=0  {'0':'患者发给医生','1':'医生发给患者'}
+	 * @param memberId Integer 会员 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param productId Integer 产品 default=0 如果为空表示全科咨询 
+	 * @param msg String 消息内容   
+	* @param notuse String 没用
+	 */
+	public Dmmsg(Integer readed ,Integer fromto ,Integer memberId ,Integer doctorId ,Integer productId ,String msg ,String notuse) {
+		super();
+		this.readed = readed;
+		this.fromto = fromto;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.productId = productId;
+		this.msg = msg;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param readed Integer 是否读过 default=0  {'0':'未读','1':'已读'}
+	 * @param fromto Integer 发送接收 default=0  {'0':'患者发给医生','1':'医生发给患者'}
+	 * @param memberId Integer 会员 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param productId Integer 产品 default=0 如果为空表示全科咨询 
+	 * @param msg String 消息内容   
+	* @param notuse String 没用
+	 */
+	public Dmmsg(Integer id ,Integer readed ,Integer fromto ,Integer memberId ,Integer doctorId ,Integer productId ,String msg ,String notuse) {
+		super();
+		this.id = id;
+		this.gmtCreate = new Date();
+		this.readed = readed;
+		this.fromto = fromto;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.productId = productId;
+		this.msg = msg;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param gmtCreate Date 创建时间   
+	 * @param readed Integer 是否读过 default=0  {'0':'未读','1':'已读'}
+	 * @param fromto Integer 发送接收 default=0  {'0':'患者发给医生','1':'医生发给患者'}
+	 * @param memberId Integer 会员 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param productId Integer 产品 default=0 如果为空表示全科咨询 
+	 * @param msg String 消息内容   
+	* @param notuse String 没用
+	 */
+	public Dmmsg(Integer id ,Date gmtCreate ,Integer readed ,Integer fromto ,Integer memberId ,Integer doctorId ,Integer productId ,String msg ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.gmtCreate = gmtCreate;
+		this.readed = readed;
+		this.fromto = fromto;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.productId = productId;
+		this.msg = msg;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取是否读过  {'0':'未读','1':'已读'}*/
+	
+
+	@Column(name = "readed", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getReaded() {
+		return this.readed;
+	}
+	/**设置是否读过  {'0':'未读','1':'已读'}*/
+
+	public void setReaded(Integer value) {
+		this.readed = value;
+	}
+	/**获取发送接收  {'0':'患者发给医生','1':'医生发给患者'}*/
+	
+
+	@Column(name = "fromto", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getFromto() {
+		return this.fromto;
+	}
+	/**设置发送接收  {'0':'患者发给医生','1':'医生发给患者'}*/
+
+	public void setFromto(Integer value) {
+		this.fromto = value;
+	}
+	/**获取会员  */
+	
+
+	@Column(name = "member_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getMemberId() {
+		return this.memberId;
+	}
+	/**设置会员  */
+
+	public void setMemberId(Integer value) {
+		this.memberId = value;
+	}
+	/**获取医生  */
+	
+
+	@Column(name = "doctor_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDoctorId() {
+		return this.doctorId;
+	}
+	/**设置医生  */
+
+	public void setDoctorId(Integer value) {
+		this.doctorId = value;
+	}
+	/**获取产品 如果为空表示全科咨询 */
+	
+
+	@Column(name = "product_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductId() {
+		return this.productId;
+	}
+	/**设置产品 如果为空表示全科咨询 */
+
+	public void setProductId(Integer value) {
+		this.productId = value;
+	}
+	/**获取消息内容  */
+	
+
+	@Column(name = "msg", unique = false, nullable = true, insertable = true, updatable = true, length = 400)
+	public String getMsg() {
+		return this.msg;
+	}
+	/**设置消息内容  */
+
+	public void setMsg(String value) {
+		this.msg = value;
+	}
+	/**创建时间String*/
+	private String gmtCreateString;
+	/**获取创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**是否读过String*/
+	private String readedString;
+	/**获取是否读过String*/
+	@Transient
+	
+	public String getReadedString() {
+		return readedString;
+	}
+	/**设置是否读过String*/
+	public void setReadedString(String value) {
+		this.readedString=value;
+	}
+	/**是否读过Map*/
+	private Map<String, Object> readedMap;
+	/**获取是否读过Map*/
+	@Transient
+	
+	public Map<String, Object> getReadedMap() {
+		return readedMap;
+	}
+	/**设置是否读过Map*/
+	public void setReadedMap(Map<String, Object> value) {
+		this.readedMap=value;
+	}
+	/**发送接收String*/
+	private String fromtoString;
+	/**获取发送接收String*/
+	@Transient
+	
+	public String getFromtoString() {
+		return fromtoString;
+	}
+	/**设置发送接收String*/
+	public void setFromtoString(String value) {
+		this.fromtoString=value;
+	}
+	/**发送接收Map*/
+	private Map<String, Object> fromtoMap;
+	/**获取发送接收Map*/
+	@Transient
+	
+	public Map<String, Object> getFromtoMap() {
+		return fromtoMap;
+	}
+	/**设置发送接收Map*/
+	public void setFromtoMap(Map<String, Object> value) {
+		this.fromtoMap=value;
+	}
+	/**会员String*/
+	private String memberIdString;
+	/**获取会员String*/
+	@Transient
+	
+	public String getMemberIdString() {
+		return memberIdString;
+	}
+	/**设置会员String*/
+	public void setMemberIdString(String value) {
+		this.memberIdString=value;
+	}
+	/**Member - memberIdMemberObj*/
+	private Member memberIdMemberObj;
+	/**获取 Member - memberIdMemberObj*/
+	@Transient
+	
+	public Member getMemberIdMemberObj() {
+		return memberIdMemberObj;
+	}
+	/**设置 Member - 会员Obj*/
+	public void setMemberIdMemberObj(Member value) {
+		this.memberIdMemberObj=value;
+	}
+	/**会员Stringid*/
+	private String memberIdStringid;
+	/**获取会员Stringid*/
+	@Transient
+	
+	public String getMemberIdStringid() {
+		return memberIdStringid;
+	}
+	/**设置会员Stringid*/
+	public void setMemberIdStringid(String value) {
+		this.memberIdStringid=value;
+	}
+	/**医生String*/
+	private String doctorIdString;
+	/**获取医生String*/
+	@Transient
+	
+	public String getDoctorIdString() {
+		return doctorIdString;
+	}
+	/**设置医生String*/
+	public void setDoctorIdString(String value) {
+		this.doctorIdString=value;
+	}
+	/**Doctor - doctorIdDoctorObj*/
+	private Doctor doctorIdDoctorObj;
+	/**获取 Doctor - doctorIdDoctorObj*/
+	@Transient
+	
+	public Doctor getDoctorIdDoctorObj() {
+		return doctorIdDoctorObj;
+	}
+	/**设置 Doctor - 医生Obj*/
+	public void setDoctorIdDoctorObj(Doctor value) {
+		this.doctorIdDoctorObj=value;
+	}
+	/**医生Stringid*/
+	private String doctorIdStringid;
+	/**获取医生Stringid*/
+	@Transient
+	
+	public String getDoctorIdStringid() {
+		return doctorIdStringid;
+	}
+	/**设置医生Stringid*/
+	public void setDoctorIdStringid(String value) {
+		this.doctorIdStringid=value;
+	}
+	/**产品String*/
+	private String productIdString;
+	/**获取产品String*/
+	@Transient
+	
+	public String getProductIdString() {
+		return productIdString;
+	}
+	/**设置产品String*/
+	public void setProductIdString(String value) {
+		this.productIdString=value;
+	}
+	/**Product - productIdProductObj*/
+	private Product productIdProductObj;
+	/**获取 Product - productIdProductObj*/
+	@Transient
+	
+	public Product getProductIdProductObj() {
+		return productIdProductObj;
+	}
+	/**设置 Product - 产品Obj*/
+	public void setProductIdProductObj(Product value) {
+		this.productIdProductObj=value;
+	}
+	/**产品Stringid*/
+	private String productIdStringid;
+	/**获取产品Stringid*/
+	@Transient
+	
+	public String getProductIdStringid() {
+		return productIdStringid;
+	}
+	/**设置产品Stringid*/
+	public void setProductIdStringid(String value) {
+		this.productIdStringid=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.readedMap=null;
+		this.fromtoMap=null;
+		this.memberIdMemberObj=null; //Member
+		this.doctorIdDoctorObj=null; //Doctor
+		this.productIdProductObj=null; //Product
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getGmtCreate())
+			.append(getReaded())
+			.append(getFromto())
+			.append(getMemberId())
+			.append(getDoctorId())
+			.append(getProductId())
+			.append(getMsg())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Dmmsg == false) return false;
+		if(this == obj) return true;
+		Dmmsg other = (Dmmsg)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",Readed:",getReaded())
+			.append(",Fromto:",getFromto())
+			.append(",MemberId:",getMemberId())
+			.append(",DoctorId:",getDoctorId())
+			.append(",ProductId:",getProductId())
+			.append(",Msg:",getMsg())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","readedString","readedMap","fromtoString","fromtoMap","memberIdString","memberIdMemberObj","memberIdStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","productIdString","productIdProductObj","productIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","readedString","readedMap","fromtoString","fromtoMap","memberIdString","memberIdMemberObj","memberIdStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","productIdString","productIdProductObj","productIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 医患聊天记录
+Dmmsg dmmsg = new Dmmsg(
+	readed , //Integer 是否读过 default=0  {'0':'未读','1':'已读'}
+	fromto , //Integer 发送接收 default=0  {'0':'患者发给医生','1':'医生发给患者'}
+	memberId , //Integer 会员 default=0  
+	doctorId , //Integer 医生 default=0  
+	productId , //Integer 产品 default=0 如果为空表示全科咨询 
+	msg , //String 消息内容   
+	null
+);
+*/
+}

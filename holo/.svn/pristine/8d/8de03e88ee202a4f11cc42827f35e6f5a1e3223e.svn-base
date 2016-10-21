@@ -1,0 +1,96 @@
+<!--Orderr，订单详细信息-->
+<ion-view view-title='订单' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">支付时间:{{obj.gmtPayString}}</li>
+		<li class="item">开单类型:{{obj.iotypeString}}</li>
+		<li class="item">支付状态:{{obj.statusString}}</li>
+		<li class="item">收发货状态:{{obj.statusgoodsString}}</li>
+		<li class="item">提货方式:{{obj.statusCarriageTypeString}}</li>
+		<li class="item">序列号:{{obj.sn}}</li>
+		<li class="item">会员:{{obj.memberIdString}}</li>
+		<li class="item">总价:{{obj.sumprice}}</li>
+		<li class="item">商品名:{{obj.title}}</li>
+		<li class="item">图1</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">取药点:{{obj.drugstoreIdString}}</li>
+		<li class="item">复核药师:{{obj.doccheck}}</li>
+		<li class="item">配药药师:{{obj.docmake}}</li>
+		<li class="item">开药医生:{{obj.doctorWrString}}</li>
+		<li class="item">首推荐医生:{{obj.doctorIdString}}</li>
+		<li class="item">所属业务员:{{obj.sellerIdString}}</li>
+		<li class="item">取药操作员:{{obj.operIdString}}</li>
+		<li class="item">商品数量:{{obj.productnums}}</li>
+		<li class="item">诊断:{{obj.diagnose}}</li>
+		<li class="item">可用优惠券数量:{{obj.pomotionticketnums}}</li>
+		<li class="item">订单详细列表:{{obj.listorderrdetail}}</li>
+		<li class="item">微信支付H5对象:{{obj.paywxh5}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号ID:<input type="text" placeholder="序号ID"  ng-model="obj.id"></label>
+		<label class="item item-input"><span class="input-label">支付时间:</span><input type="datetime" ng-model="obj.gmtPay"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				开单类型:
+			</div>
+			<select  ng-model="obj.iotype">
+				<option ng-repeat="(key,val) in obj.iotypeMap" value="{{key}}" ng-selected="val==obj.iotype">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				支付状态:
+			</div>
+			<select  ng-model="obj.status">
+				<option ng-repeat="(key,val) in obj.statusMap" value="{{key}}" ng-selected="val==obj.status">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				收发货状态:
+			</div>
+			<select  ng-model="obj.statusgoods">
+				<option ng-repeat="(key,val) in obj.statusgoodsMap" value="{{key}}" ng-selected="val==obj.statusgoods">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				提货方式:
+			</div>
+			<select  ng-model="obj.statusCarriageType">
+				<option ng-repeat="(key,val) in obj.statusCarriageTypeMap" value="{{key}}" ng-selected="val==obj.statusCarriageType">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">序列号:<input type="text" placeholder="序列号"  ng-model="obj.sn"></label>
+		<label class="item item-input">会员:<input type="text" placeholder="会员"  ng-model="obj.memberId"></label>
+		<label class="item item-input">总价:<input type="text" placeholder="总价"  ng-model="obj.sumprice"></label>
+		<label class="item item-input">商品名:<input type="text" placeholder="商品名"  ng-model="obj.title"></label>
+        <label class="item item-input">图1:<input type="file" file-model="fileimg1"/><input type="hidden" ng-model="obj.img1"><button class="button icon ion-ios-upload" ng-click="upload(fileimg1,'img1')"></button></label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 120px;"></label>
+		<label class="item item-input">取药点:<input type="text" placeholder="取药点"  ng-model="obj.drugstoreId"></label>
+		<label class="item item-input">复核药师:<input type="text" placeholder="复核药师"  ng-model="obj.doccheck"></label>
+		<label class="item item-input">配药药师:<input type="text" placeholder="配药药师"  ng-model="obj.docmake"></label>
+		<label class="item item-input">开药医生:<input type="text" placeholder="开药医生"  ng-model="obj.doctorWr"></label>
+		<label class="item item-input">首推荐医生:<input type="text" placeholder="首推荐医生"  ng-model="obj.doctorId"></label>
+		<label class="item item-input">所属业务员:<input type="text" placeholder="所属业务员"  ng-model="obj.sellerId"></label>
+		<label class="item item-input">取药操作员:<input type="text" placeholder="取药操作员"  ng-model="obj.operId"></label>
+		<label class="item item-input">商品数量:<input type="text" placeholder="商品数量"  ng-model="obj.productnums"></label>
+		<label class="item item-input">诊断:<input type="text" placeholder="诊断"  ng-model="obj.diagnose"></label>
+		<label class="item item-input">可用优惠券数量:<input type="text" placeholder="可用优惠券数量"  ng-model="obj.pomotionticketnums"></label>
+		<label class="item item-input">订单详细列表:<input type="text" placeholder="订单详细列表"  ng-model="obj.listorderrdetail"></label>
+		<label class="item item-input">微信支付H5对象:<input type="text" placeholder="微信支付H5对象"  ng-model="obj.paywxh5"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

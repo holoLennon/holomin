@@ -1,0 +1,65 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Topic/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${topic.id}" />
+	<@z.pmt key="42.Topic.statusValidOrNot">
+				<@p.radio label="db.Topic.statusValidOrNot" nameid="statusValidOrNot" value="${topic.statusValidOrNot}" help="" list=topic.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.title">
+				<@p.text label="db.Topic.title" nameid="title"  value="${topic.title}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Topic.img1">
+					<@p.ckfimg label="db.Topic.img1" nameid="img1"  value="${topic.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.txt1">
+				<@p.textarea label="db.Topic.txt1" nameid="txt1" value="${topic.txt1}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.img2">
+					<@p.ckfimg label="db.Topic.img2" nameid="img2"  value="${topic.img2}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.txt2">
+				<@p.textarea label="db.Topic.txt2" nameid="txt2" value="${topic.txt2}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.img3">
+					<@p.ckfimg label="db.Topic.img3" nameid="img3"  value="${topic.img3}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.txt3">
+				<@p.textarea label="db.Topic.txt3" nameid="txt3" value="${topic.txt3}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.img4">
+					<@p.ckfimg label="db.Topic.img4" nameid="img4"  value="${topic.img4}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.txt4">
+				<@p.textarea label="db.Topic.txt4" nameid="txt4" value="${topic.txt4}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.img5">
+					<@p.ckfimg label="db.Topic.img5" nameid="img5"  value="${topic.img5}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Topic.txt5">
+				<@p.textarea label="db.Topic.txt5" nameid="txt5" value="${topic.txt5}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

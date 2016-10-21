@@ -1,0 +1,48 @@
+<!--MemberdoctorList，医患关系列表-->
+<ion-view view-title="患者列表" cache-view='false' hide-tabs='false'>
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <!--<ion-list class="list">-->
+            <!--<ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="goUrlDmmsgList(obj);" collection-item-width="'100%'" collection-item-height="65px">-->
+                <!--<img ng-src="{{obj.img1}}" reset-img />-->
+                <!--<h2>{{obj.myname}}</h2>-->
+                <!--<p>-->
+				<!--<span>序号ID:{{obj.id}}</span>-->
+				<!--<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>-->
+				<!--<span class="item-note ago" am-time-ago="obj.gmtModified"></span>-->
+				<!--<span>关系:{{obj.statusDmString}}</span>-->
+				<!--<span>是否为首推:{{obj.itypeFirstString}}</span>-->
+				<!--<span>医生类型:{{obj.itype}}</span>-->
+				<!--<span>患者:{{obj.memberIdString}}</span>-->
+				<!--<span>医生:{{obj.doctorIdString}}</span>-->
+				<!--<span>处方数量:{{obj.countPrescription}}</span>-->
+				<!--<span>消费金额:{{obj.countOrderr}}</span>-->
+				<!--<span>会员姓名:{{obj.mname}}</span>-->
+				<!--<span>医生姓名:{{obj.dname}}</span>-->
+				<!--<span>医科目录:{{obj.productchannelId}}</span>-->
+				<!--<span>会员未读消息:{{obj.mmsgnotread}}</span>-->
+				<!--<span>医生未读消息:{{obj.dmsgnotread}}</span>-->
+				<!--</p>-->
+            <!--</ion-item>-->
+        <!--</ion-list>-->
+		<ion-list class="list">
+			<ion-item class="item-avatar" bindonce collection-repeat="obj in list" ng-click="goUrlDmmsgList(obj);" collection-item-width="'100%'" collection-item-height="70px">
+			<!--<ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/DmmsgList/0/{{meuser.id}}/{{obj.id}}" collection-item-width="'100%'" collection-item-height="150px">-->
+				<!--<img ng-src="{{obj.memberIdMemberObj.img1}}" reset-img style="max-width: 50px;max-height: 50px;margin-top: -5px"/>-->
+				<img src="res/img/yishengtouxiangfang.png" style="max-width: 50px;max-height: 50px;margin-top: -5px"/>
+				<h2 style="margin-left: 10px">{{obj.memberIdMemberObj.myname}}</h2>
+				<p style="margin-top: 5px;margin-left: 10px">
+					<!--<span>关系:{{obj.statusDmString}}</span>-->
+					<span style="font-size: 10px;margin-left: 80%;">未读消息:{{obj.dmsgnotread}}</span><br>
+				</p>
+			</ion-item>
+
+		</ion-list>
+
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

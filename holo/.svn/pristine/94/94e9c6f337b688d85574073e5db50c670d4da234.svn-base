@@ -1,0 +1,98 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/AlipayPaynotify/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${alipayPaynotify.id}" />
+	<@z.pmt key="42.AlipayPaynotify.notifyTime">
+				<@p.text label="db.AlipayPaynotify.notifyTime" nameid="notifyTime"  value="${alipayPaynotify.notifyTime}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.notifyType">
+				<@p.text label="db.AlipayPaynotify.notifyType" nameid="notifyType"  value="${alipayPaynotify.notifyType}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.notifyId">
+				<@p.text label="db.AlipayPaynotify.notifyId" nameid="notifyId"  value="${alipayPaynotify.notifyId}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.signType">
+				<@p.text label="db.AlipayPaynotify.signType" nameid="signType"  value="${alipayPaynotify.signType}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.sign">
+				<@p.text label="db.AlipayPaynotify.sign" nameid="sign"  value="${alipayPaynotify.sign}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.outTradeNo">
+				<@p.text label="db.AlipayPaynotify.outTradeNo" nameid="outTradeNo"  value="${alipayPaynotify.outTradeNo}" help="" dataoptions="validType:['length[0,64]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.subject">
+				<@p.text label="db.AlipayPaynotify.subject" nameid="subject"  value="${alipayPaynotify.subject}" help="" dataoptions="validType:['length[0,128]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.paymentType">
+				<@p.text label="db.AlipayPaynotify.paymentType" nameid="paymentType"  value="${alipayPaynotify.paymentType}" help="" dataoptions="validType:['length[0,4]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.tradeNo">
+				<@p.text label="db.AlipayPaynotify.tradeNo" nameid="tradeNo"  value="${alipayPaynotify.tradeNo}" help="" dataoptions="validType:['length[0,64]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.tradeStatus">
+				<@p.text label="db.AlipayPaynotify.tradeStatus" nameid="tradeStatus"  value="${alipayPaynotify.tradeStatus}" help="WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。 " dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.sellerId">
+				<@p.text label="db.AlipayPaynotify.sellerId" nameid="sellerId"  value="${alipayPaynotify.sellerId}" help="" dataoptions="validType:['length[0,30]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.sellerEmail">
+				<@p.text label="db.AlipayPaynotify.sellerEmail" nameid="sellerEmail"  value="${alipayPaynotify.sellerEmail}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.buyerId">
+				<@p.text label="db.AlipayPaynotify.buyerId" nameid="buyerId"  value="${alipayPaynotify.buyerId}" help="" dataoptions="validType:['length[0,30]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.buyerEmail">
+				<@p.text label="db.AlipayPaynotify.buyerEmail" nameid="buyerEmail"  value="${alipayPaynotify.buyerEmail}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.totalFee">
+				<@p.textnumber label="db.AlipayPaynotify.totalFee" nameid="totalFee"  value="${alipayPaynotify.totalFee}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.quantity">
+				<@p.textnumber label="db.AlipayPaynotify.quantity" nameid="quantity"  value="${alipayPaynotify.quantity}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.price">
+				<@p.textnumber label="db.AlipayPaynotify.price" nameid="price"  value="${alipayPaynotify.price}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.body">
+				<@p.textarea label="db.AlipayPaynotify.body" nameid="body" value="${alipayPaynotify.body}" help="" dataoptions="validType:['length[0,512]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.gmtCreate">
+				<@p.text label="db.AlipayPaynotify.gmtCreate" nameid="gmtCreate"  value="${alipayPaynotify.gmtCreate}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.gmtPayment">
+				<@p.text label="db.AlipayPaynotify.gmtPayment" nameid="gmtPayment"  value="${alipayPaynotify.gmtPayment}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.isTotalFeeAdjust">
+				<@p.text label="db.AlipayPaynotify.isTotalFeeAdjust" nameid="isTotalFeeAdjust"  value="${alipayPaynotify.isTotalFeeAdjust}" help="" dataoptions="validType:['length[0,1]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.useCoupon">
+				<@p.text label="db.AlipayPaynotify.useCoupon" nameid="useCoupon"  value="${alipayPaynotify.useCoupon}" help="" dataoptions="validType:['length[0,1]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.discount">
+				<@p.text label="db.AlipayPaynotify.discount" nameid="discount"  value="${alipayPaynotify.discount}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.refundStatus">
+				<@p.text label="db.AlipayPaynotify.refundStatus" nameid="refundStatus"  value="${alipayPaynotify.refundStatus}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.AlipayPaynotify.gmtRefund">
+				<@p.text label="db.AlipayPaynotify.gmtRefund" nameid="gmtRefund"  value="${alipayPaynotify.gmtRefund}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

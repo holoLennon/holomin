@@ -1,0 +1,172 @@
+/**
+ * DmmsgList，医患聊天记录列表
+ */
+appctrl.controller('DmmsgListCtrl', function($scope, $rootScope,$timeout,
+                                           $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                           $location, $state,$stateParams,$ionicScrollDelegate,
+                                           $cordovaNetwork, $cordovaGoogleAnalytics,$log,Storage,
+                                           ENV,DmmsgService) {
+    $log.debug("enter DmmsgList ctrl");
+    /**参数*/
+    var fromto = $stateParams.fromto;
+    var memberId = $stateParams.memberId;
+    var doctorId = $stateParams.doctorId;
+    /**页码*/
+    $scope.page=_.clone(_Page);
+    /**页面显示的列表*/
+    $scope.list=[];
+    $scope.obj={};
+    /**
+     * 达到页面底部
+     */
+    $scope.scrollBottom = function() {
+        $ionicScrollDelegate.scrollBottom();
+    };
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("DmmsgList ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("DmmsgList ctrl afterEnter");
+        if (ctrlReinitMap.get('DmmsgListCtrl')) {
+            ctrlReinitMap.remove('DmmsgListCtrl');
+            $log.debug("DmmsgList ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("DmmsgList ctrl init ");
+        $scope.page.where="memberId="+memberId+" and doctorId="+doctorId;//Storage.get("DmmsgList"+"QueryWhere");
+		$scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+        $scope.newDmmsg();
+    };
+    /**
+     * 上拉刷新
+     */
+    $scope.doRefresh=function(){
+        $scope.init();
+    };
+    /**
+     * 给list上加数据
+     * @param data
+     */
+    $scope.addList=function(data){
+        angular.forEach(data, function (item) {
+            $scope.list.push(item);
+        });
+        if(data && data.length < $scope.page.pageSize){
+            $scope.page.hasNextPage=false;
+        }else{
+            $scope.page.hasNextPage=true;
+        }
+    };
+    /**
+     * item高度自适应
+
+
+    */
+    /**
+     * 第一次查询
+     */
+    $scope.first=function(){
+        DmmsgService.first(null,$scope.page).then(function (data) {
+            $log.debug("DmmsgList ctrl query then");
+            $scope.addList(data);
+            $scope.list= _.sortBy($scope.list,
+                function(data) {
+                    return data.gmtCreateString;
+                });
+            $scope.scrollBottom();
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+
+    /**
+     * 下拉加载更多查询
+     */
+    $scope.more=function(){
+        $log.debug("DmmsgList ctrl more=========");
+        if(!$scope.page.hasNextPage){
+            return;
+        }
+        DmmsgService.more($scope.page).then(function (data) {
+            $log.debug("DmmsgList ctrl more then");
+            $scope.addList(data);
+            $scope.list= _.sortBy($scope.list,
+                function(data) {
+                    return data.gmtCreateString;
+                });
+            $scope.scrollBottom();
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+    };
+
+    /**
+     * 创建一个新的空的聊天消息
+     */
+    $scope.newDmmsg=function(){
+        $scope.obj=_.clone(_Dmmsg);
+        $scope.obj.fromto=fromto;//Integer 发送接收
+        $scope.obj.memberId=memberId; //Integer 会员
+        $scope.obj.doctorId=doctorId; //Integer 医生
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug($scope.obj);
+        DmmsgService.create($scope.obj).then(function (data) {
+            $log.debug("Dmmsg ctrl save then");
+            $scope.list.push(data);
+            $scope.scrollBottom();
+            $scope.newDmmsg();
+        });
+    };
+    //开药笺的下拉框
+    $scope.popover = $ionicPopover.fromTemplateUrl('my-popover.html', {
+        scope: $scope
+    });
+
+    // .fromTemplateUrl() 方法
+    $ionicPopover.fromTemplateUrl('my-popover.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.popover = popover;
+    });
+
+
+    $scope.openPopover = function($event) {
+        $scope.popover.show($event);
+    };
+    $scope.closePopover = function() {
+        $scope.popover.hide();
+    };
+    //// 清除浮动框
+    //$scope.$on('$destroy', function() {
+    //    $scope.popover.remove();
+    //});
+    //// 在隐藏浮动框后执行
+    //$scope.$on('popover.hidden', function() {
+    //    // 执行代码
+    //});
+    //// 移除浮动框后执行
+    //$scope.$on('popover.removed', function() {
+    //    // 执行代码
+    //});
+    $scope.init();
+    ctrlReinitMap.remove('DmmsgListCtrl');
+
+
+});

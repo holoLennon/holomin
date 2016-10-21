@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>zeshop</title>
+<meta http-equiv="keywords" content="zeshop"/>
+<meta http-equiv="description" content="zeshop"/>
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0;">
+<script type="text/javascript" src="../js/jquery-1.8.3.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/jquery.validate/jquery.validate.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/jquery.validate/jquery.metadata.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/jquery.validate/jquery.validate.ext.js" charset="utf-8"></script>
+
+
+<script type="text/javascript" src="../js/initJqm.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/jqm/jquery.mobile-1.3.2.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="../js/extJqm.js" charset="utf-8"></script>
+
+<link href="../js/jqm/jquery.mobile-1.3.2.min.css" rel="stylesheet" />
+
+</head>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$("#frmLogin").validate({
+		/* 重写错误显示消息方法,以alert方式弹出错误消息 */
+		showErrors: function(errorMap, errorList) {
+			var msg = "";
+			$.each( errorList, function(i,v){
+			  msg += (v.message+"\r\n");
+			});
+			if(msg!="") {
+		        $("#message").css("color", "#ff0000");
+		        $("#message").text(msg);
+			}
+        },
+        /* 失去焦点时不验证 */ 
+        onfocusout: false
+	});
+    $("#btnLogin").click(function(e){
+    	if(!$("#frmLogin").valid())
+    		return;
+    	showLoading();
+        $.ajax({
+            type: "POST",
+            url: "/zeshop/user/login.html",
+            cache: false,
+            data: $("#frmLogin").serialize(),
+            success: onSuccessLogin
+        });
+        e.preventDefault();
+    });
+}); 
+function onSuccessLogin(data,status) {
+	hideLoading();
+    data = $.parseJSON(data)
+    //data = $.trim(data);
+    if(data.success) {
+    	//alert(data.msg);
+        //成功，进入新页面
+        $.mobile.changePage("/zeshop/ru/c1/Site/0/index.htm");
+    } else {
+        $("#message").css("color", "#ff0000");
+        $("#message").text(data.msg);
+    }
+} 
+
+</script>
+
+<body> 
+
+<div id="loginpage" data-role="page" data-theme="b">
+	<div data-role="header">
+		<h1>用户登录</h1>
+	</div>
+
+	<div data-role="content">
+		<div id="message"></div>
+	  <form id="frmLogin" >
+		<p>	
+	    <label for="username">账号:</label>
+	    <input type="text" name="username" id="username" value="" placeholder="用户名" data-theme="d" class="{required:true}"/>
+	    </p>
+		<p>	
+	    <label for="text">密码:</label>
+	    <input type="password" name="password" id="password" value="" placeholder="密码" data-theme="d" class="required"/>
+	    </p>
+	    <p>
+		<a href="#" id="btnLogin" data-role="button" data-theme="e" >登录 </a> 
+		<input value="重填" type="reset" data-icon="delete" data-theme="b"> 		
+		<a href="#regpage" data-role="button" data-icon="plus" data-theme="c" >免费注册</a>  
+	    </p>
+	  </form>	
+	</div>
+</div>
+
+<div id="regpage" data-role="page" data-theme="b">
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#frmReg").validate({
+		/* 重写错误显示消息方法,以alert方式弹出错误消息 */
+		showErrors: function(errorMap, errorList) {
+			var msg = "";
+			$.each( errorList, function(i,v){
+			  msg += (v.message+"\r\n");
+			});
+			if(msg!="") {
+		        $("#messageReg").css("color", "#ff0000");
+		        $("#messageReg").text(msg);
+			}
+        },
+        /* 失去焦点时不验证 */ 
+        onfocusout: false
+	});		
+    $("#btnReg").click(function(e){
+    	if(!$("#frmReg").valid())
+    		return;
+        $.ajax({
+            type: "POST",
+            url: "/zeshop/user/User/create.html",
+            cache: false,
+            data: $("#frmReg").serialize(),
+            success: onSuccessReg
+        });
+        e.preventDefault();
+    });
+}); 
+function onSuccessReg(data,status) {
+	hideLoading();
+    data = $.parseJSON(data)
+    //data = $.trim(data);
+    if(data.success) {
+    	//alert(data.msg);
+        //成功，进入新页面
+        $.mobile.changePage("/zeshop/ru/c1/Site/0/index.htm");
+    } else {
+        $("#messageReg").css("color", "#ff0000");
+        $("#messageReg").text(data.msg);
+    }
+} 
+</script>
+	<div data-role="header">
+		<h1>用户注册</h1>
+	</div>
+
+	<div data-role="content">
+		<div id="messageReg"></div>
+	  <form id="frmReg" >
+		<p>	
+	    <label for="username">账号:</label>
+	    <input type="text" name="username" id="username" value="" placeholder="用户名" data-theme="d" class="required""/>
+	    </p>
+		<p>	
+	    <label for="text">密码:</label>
+	    <input type="password" name="password" id="password" value="" placeholder="密码" data-theme="d" class="required"/>
+	    </p>
+		<p>	
+	    <label for="text">重复密码:</label>
+	    <input type="password" name="password" id="password" value="" placeholder="密码" data-theme="d" class="required" equalTo="#password"/>
+	    </p>
+	    <p>
+		<input value="注册" id="btnReg" type=submit data-icon="check" data-theme="e" > 	
+		<input value="重填" type="reset" data-icon="delete" data-theme="b"> 	  
+		<a href="#loginpage" data-role="button" data-icon="arrow-l" data-theme="c" >返回登录页</a>    
+ 
+	    </p>
+	  </form>	
+	</div>
+</div>
+</body>
+</html>
+

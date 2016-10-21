@@ -1,0 +1,622 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 业务员销售统计
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "seller_count")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class SellerCount extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "业务员销售统计";
+
+	//date formats
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	public static final String FORMAT_GMT_COUNT = DATE_FORMAT;
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**被统计日或月 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCount;
+	/**类型 Integer default=0  map={'0':'日统计','1':'月统计'}*/
+	@Max(999L)
+	
+	private Integer itype = 0;
+	/**业务员 Integer   */
+	@Max(99999999999L)
+	
+	private Integer sellerId;
+	/**直接销售金额 Double default=0.00 正数是收入，负数是支出 */
+	
+	
+	private Double mmoney;
+	/**下属团队销售金额 Double default=0.00 正数是收入，负数是支出 */
+	
+	
+	private Double mmoneyteam;
+	/**总销售金额 Double default=0.0 直接+团队 */
+	
+	
+	private Double mmoneyall;
+	/**备注 String   */
+	@Length(max=50)
+	
+	private String cmemo;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(SellerCount _this){
+		_this.gmtCreate=new Date();
+		_this.itype=0;
+		_this.mmoney=0.00;
+		_this.mmoneyteam=0.00;
+		_this.mmoneyall=0.0;
+	}
+	public SellerCount(){
+		makedefault(this);
+	}
+	public SellerCount(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param gmtCount Date 被统计日或月   
+	 * @param itype Integer 类型 default=0  {'0':'日统计','1':'月统计'}
+	 * @param sellerId Integer 业务员   
+	 * @param mmoney Double 直接销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyteam Double 下属团队销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyall Double 总销售金额 default=0.0 直接+团队 
+	 * @param cmemo String 备注   
+	* @param notuse String 没用
+	 */
+	public SellerCount(Date gmtCount ,Integer itype ,Integer sellerId ,Double mmoney ,Double mmoneyteam ,Double mmoneyall ,String cmemo ,String notuse) {
+		super();
+		this.gmtCount = gmtCount;
+		this.itype = itype;
+		this.sellerId = sellerId;
+		this.mmoney = mmoney;
+		this.mmoneyteam = mmoneyteam;
+		this.mmoneyall = mmoneyall;
+		this.cmemo = cmemo;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param gmtCount Date 被统计日或月   
+	 * @param itype Integer 类型 default=0  {'0':'日统计','1':'月统计'}
+	 * @param sellerId Integer 业务员   
+	 * @param mmoney Double 直接销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyteam Double 下属团队销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyall Double 总销售金额 default=0.0 直接+团队 
+	 * @param cmemo String 备注   
+	* @param notuse String 没用
+	 */
+	public SellerCount(Integer id ,Date gmtCount ,Integer itype ,Integer sellerId ,Double mmoney ,Double mmoneyteam ,Double mmoneyall ,String cmemo ,String notuse) {
+		super();
+		this.id = id;
+		this.gmtCreate = new Date();
+		this.gmtCount = gmtCount;
+		this.itype = itype;
+		this.sellerId = sellerId;
+		this.mmoney = mmoney;
+		this.mmoneyteam = mmoneyteam;
+		this.mmoneyall = mmoneyall;
+		this.cmemo = cmemo;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param gmtCreate Date 创建时间   
+	 * @param gmtCount Date 被统计日或月   
+	 * @param itype Integer 类型 default=0  {'0':'日统计','1':'月统计'}
+	 * @param sellerId Integer 业务员   
+	 * @param mmoney Double 直接销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyteam Double 下属团队销售金额 default=0.00 正数是收入，负数是支出 
+	 * @param mmoneyall Double 总销售金额 default=0.0 直接+团队 
+	 * @param cmemo String 备注   
+	* @param notuse String 没用
+	 */
+	public SellerCount(Integer id ,Date gmtCreate ,Date gmtCount ,Integer itype ,Integer sellerId ,Double mmoney ,Double mmoneyteam ,Double mmoneyall ,String cmemo ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.gmtCreate = gmtCreate;
+		this.gmtCount = gmtCount;
+		this.itype = itype;
+		this.sellerId = sellerId;
+		this.mmoney = mmoney;
+		this.mmoneyteam = mmoneyteam;
+		this.mmoneyall = mmoneyall;
+		this.cmemo = cmemo;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取被统计日或月  */
+	
+
+	@Column(name = "gmt_count", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCount() {
+		return this.gmtCount;
+	}
+	/**设置被统计日或月  */
+
+	public void setGmtCount(Date value) {
+		this.gmtCount = value;
+	}
+	/**获取类型  {'0':'日统计','1':'月统计'}*/
+	
+
+	@Column(name = "itype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getItype() {
+		return this.itype;
+	}
+	/**设置类型  {'0':'日统计','1':'月统计'}*/
+
+	public void setItype(Integer value) {
+		this.itype = value;
+	}
+	/**获取业务员  */
+	
+
+	@Column(name = "seller_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getSellerId() {
+		return this.sellerId;
+	}
+	/**设置业务员  */
+
+	public void setSellerId(Integer value) {
+		this.sellerId = value;
+	}
+	/**获取直接销售金额 正数是收入，负数是支出 */
+	
+
+	@Column(name = "mmoney", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getMmoney() {
+		return this.mmoney;
+	}
+	/**设置直接销售金额 正数是收入，负数是支出 */
+
+	public void setMmoney(Double value) {
+		this.mmoney = value;
+	}
+	/**获取下属团队销售金额 正数是收入，负数是支出 */
+	
+
+	@Column(name = "mmoneyteam", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getMmoneyteam() {
+		return this.mmoneyteam;
+	}
+	/**设置下属团队销售金额 正数是收入，负数是支出 */
+
+	public void setMmoneyteam(Double value) {
+		this.mmoneyteam = value;
+	}
+	/**获取总销售金额 直接+团队 */
+	
+
+	@Column(name = "mmoneyall", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getMmoneyall() {
+		return this.mmoneyall;
+	}
+	/**设置总销售金额 直接+团队 */
+
+	public void setMmoneyall(Double value) {
+		this.mmoneyall = value;
+	}
+	/**获取备注  */
+	
+
+	@Column(name = "cmemo", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getCmemo() {
+		return this.cmemo;
+	}
+	/**设置备注  */
+
+	public void setCmemo(String value) {
+		this.cmemo = value;
+	}
+	/**创建时间String*/
+	private String gmtCreateString;
+	/**获取创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**被统计日或月String*/
+	private String gmtCountString;
+	/**获取被统计日或月String*/
+	@Transient
+	
+	public String getGmtCountString() {
+		if(gmtCountString==null && gmtCount!=null)
+			gmtCountString=new SimpleDateFormat(DATE_FORMAT).format(gmtCount);
+		return gmtCountString;
+	}
+	/**设置被统计日或月String*/
+	public void setGmtCountString(String value) {
+		this.gmtCountString=value;
+	}
+	/**类型String*/
+	private String itypeString;
+	/**获取类型String*/
+	@Transient
+	
+	public String getItypeString() {
+		return itypeString;
+	}
+	/**设置类型String*/
+	public void setItypeString(String value) {
+		this.itypeString=value;
+	}
+	/**类型Map*/
+	private Map<String, Object> itypeMap;
+	/**获取类型Map*/
+	@Transient
+	
+	public Map<String, Object> getItypeMap() {
+		return itypeMap;
+	}
+	/**设置类型Map*/
+	public void setItypeMap(Map<String, Object> value) {
+		this.itypeMap=value;
+	}
+	/**业务员String*/
+	private String sellerIdString;
+	/**获取业务员String*/
+	@Transient
+	
+	public String getSellerIdString() {
+		return sellerIdString;
+	}
+	/**设置业务员String*/
+	public void setSellerIdString(String value) {
+		this.sellerIdString=value;
+	}
+	/**Seller - sellerIdSellerObj*/
+	private Seller sellerIdSellerObj;
+	/**获取 Seller - sellerIdSellerObj*/
+	@Transient
+	
+	public Seller getSellerIdSellerObj() {
+		return sellerIdSellerObj;
+	}
+	/**设置 Seller - 业务员Obj*/
+	public void setSellerIdSellerObj(Seller value) {
+		this.sellerIdSellerObj=value;
+	}
+	/**业务员Stringid*/
+	private String sellerIdStringid;
+	/**获取业务员Stringid*/
+	@Transient
+	
+	public String getSellerIdStringid() {
+		return sellerIdStringid;
+	}
+	/**设置业务员Stringid*/
+	public void setSellerIdStringid(String value) {
+		this.sellerIdStringid=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.itypeMap=null;
+		this.sellerIdSellerObj=null; //Seller
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getGmtCreate())
+			.append(getGmtCount())
+			.append(getItype())
+			.append(getSellerId())
+			.append(getMmoney())
+			.append(getMmoneyteam())
+			.append(getMmoneyall())
+			.append(getCmemo())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof SellerCount == false) return false;
+		if(this == obj) return true;
+		SellerCount other = (SellerCount)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",GmtCount:",getGmtCount())
+			.append(",Itype:",getItype())
+			.append(",SellerId:",getSellerId())
+			.append(",Mmoney:",getMmoney())
+			.append(",Mmoneyteam:",getMmoneyteam())
+			.append(",Mmoneyall:",getMmoneyall())
+			.append(",Cmemo:",getCmemo())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtCountString","itypeString","itypeMap","sellerIdString","sellerIdSellerObj","sellerIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtCountString","itypeString","itypeMap","sellerIdString","sellerIdSellerObj","sellerIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 业务员销售统计
+SellerCount sellerCount = new SellerCount(
+	gmtCount , //Date 被统计日或月   
+	itype , //Integer 类型 default=0  {'0':'日统计','1':'月统计'}
+	sellerId , //Integer 业务员   
+	mmoney , //Double 直接销售金额 default=0.00 正数是收入，负数是支出 
+	mmoneyteam , //Double 下属团队销售金额 default=0.00 正数是收入，负数是支出 
+	mmoneyall , //Double 总销售金额 default=0.0 直接+团队 
+	cmemo , //String 备注   
+	null
+);
+*/
+}

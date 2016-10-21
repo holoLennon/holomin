@@ -1,0 +1,52 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/OrderrdetailFinished/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.OrderrdetailFinished.orderrId">
+				<@p.searchforid label="db.OrderrdetailFinished.orderrId" nameid="orderrId" value="${orderrdetailFinished.orderrId}" stringvalue="${orderrdetailFinished.orderrIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Orderr/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.statusgoods">
+				<@p.radio label="db.OrderrdetailFinished.statusgoods" nameid="statusgoods" value="${orderrdetailFinished.statusgoods}" help="" list=orderrdetailFinished.statusgoodsMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.statuscount">
+				<@p.radio label="db.OrderrdetailFinished.statuscount" nameid="statuscount" value="${orderrdetailFinished.statuscount}" help="" list=orderrdetailFinished.statuscountMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.productId">
+				<@p.searchforid label="db.OrderrdetailFinished.productId" nameid="productId" value="${orderrdetailFinished.productId}" stringvalue="${orderrdetailFinished.productIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.price">
+				<@p.textnumber label="db.OrderrdetailFinished.price" nameid="price"  value="${orderrdetailFinished.price}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.num">
+				<@p.textnumber label="db.OrderrdetailFinished.num" nameid="num"  value="${orderrdetailFinished.num}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.usemethord">
+				<@p.text label="db.OrderrdetailFinished.usemethord" nameid="usemethord"  value="${orderrdetailFinished.usemethord}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.otherdetail">
+				<@p.text label="db.OrderrdetailFinished.otherdetail" nameid="otherdetail"  value="${orderrdetailFinished.otherdetail}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.OrderrdetailFinished.usemount">
+				<@p.text label="db.OrderrdetailFinished.usemount" nameid="usemount"  value="${orderrdetailFinished.usemount}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+</div>
+

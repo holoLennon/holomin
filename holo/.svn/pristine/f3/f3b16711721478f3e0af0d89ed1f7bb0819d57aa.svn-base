@@ -1,0 +1,67 @@
+<!--CartList，购物车列表-->
+<ion-view view-title="购物车" cache-view="false"  hide-tabs="false ">
+
+    </ion-nav-buttons>
+    <!-- 判断有没有商品 -->
+    <!-- 没有商品 -->
+    <div ng-if="!listCart || listCart.length == 0">
+        <ion-content class="has-tabs has-header">
+            <div class="page-result-wrap">
+                <div class="page-result-pic">
+                    <img src="res/img/gouwuche3.png">
+                </div>
+                <div class="page-result-brief">
+                    购物车里空空的耶，快去逛逛吧~~~
+                </div>
+                <div>
+                    <a class="button page-result-button" ng-href="#/tab/ProductTypeList">去逛逛</a>
+                </div>
+            </div>
+        </ion-content>
+    </div>
+    <!-- 有商品 -->
+    <div ng-if="listCart && listCart.length > 0">
+        <ion-content class="has-tabs has-header">
+            <ion-list class="list">
+                <ion-item class="item-avatar cart_list" bindonce collection-repeat="obj in listCart" collection-item-width="101%" collection-item-height="100px">
+                    <img ng-src="{{obj.obj1.img1}}" reset-img class="cart_list_img"/>
+                    <div>
+                        <div class="cart_list_title">
+                            <div class="cart_list_title_l">{{obj.obj1.title}}</div>
+                            <div class="cart_list_title_r" style="font-size: 10px">单价：￥{{obj.obj1.price}}</div>
+                        </div>
+                        <div class="cart_list_title">
+                            <div class="cart_list_title_2">规格：{{obj.obj1.productstyle}}</div>
+                        </div>
+                        <div class="cart_list_oper">
+                            <div class="cart_list_oper_num">
+                                <button class="button button-positive button-outline button-remove" ng-click="cartRemove(obj.obj1)">
+                                    <i class="icon ion-ios-minus-outline"></i>
+                                </button>
+                                <span class="content_number">{{obj.num}}</span>
+                                <button class="button button-positive button-outline button-add" ng-click="cartAdd(obj.obj1)">
+                                    <i class="icon ion-plus-circled"></i>
+                                </button>
+                            </div>
+                            <div class="cart_list_oper_delete">
+                                <button class="button button-delete" ng-click="cartDel(obj.obj1.id)">
+                                    <i class="icon ion-ios-trash-outline"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+        <div class="bar bar-subfooter" style="margin-bottom: 41px;border: none;background-color:#f5f5f5 !important;">
+            <ion-item style="height: 70px;border: none;background-color:#f5f5f5 !important;position:relative;top:1.5em">
+                <div style="color: #da0e0e;" >合计：￥<span>{{cartPrice}}</span></div>
+                <div style="color: #808080;font-size: 12px;"></div>
+                <div style="color: #808080;font-size: 12px;"></div>
+                <a class="button" href="#/tab/Orderr_a/0" style="margin-top:-25px;margin-left: 80%;background-color: #da0e0e;color: white;border: none;">
+                    确认下单
+                </a>
+            </ion-item>
+        </div>
+    </div>
+</ion-view>

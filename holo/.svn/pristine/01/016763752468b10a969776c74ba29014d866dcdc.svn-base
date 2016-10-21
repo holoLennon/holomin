@@ -1,0 +1,121 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.OrderrFinished.id">
+		<tr><th>序号ID</th><td>
+		${orderrFinished.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${orderrFinished.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.gmtPay">
+		<tr><th>支付时间</th><td>
+		${orderrFinished.gmtPayString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.iotype">
+		<tr><th>开单类型</th><td>
+		${orderrFinished.iotypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.status">
+		<tr><th>支付状态</th><td>
+		${orderrFinished.statusString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.statusgoods">
+		<tr><th>收发货状态</th><td>
+		${orderrFinished.statusgoodsString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.statusCarriageType">
+		<tr><th>提货方式</th><td>
+		${orderrFinished.statusCarriageTypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.sn">
+		<tr><th>序列号</th><td>
+		${orderrFinished.sn}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.memberId">
+		<tr><th>会员</th><td>
+		${orderrFinished.memberIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.sumprice">
+		<tr><th>总价</th><td>
+		${orderrFinished.sumprice}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.title">
+		<tr><th>商品名</th><td>
+		${orderrFinished.title}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.img1">
+		<tr><th>图1</th><td>
+		${orderrFinished.img1}
+		<br/><img src="${orderrFinished.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.drugstoreId">
+		<tr><th>取药点</th><td>
+		${orderrFinished.drugstoreIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.doccheck">
+		<tr><th>复核药师</th><td>
+		${orderrFinished.doccheck}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.docmake">
+		<tr><th>配药药师</th><td>
+		${orderrFinished.docmake}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.doctorWr">
+		<tr><th>开药医生</th><td>
+		${orderrFinished.doctorWrStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.doctorId">
+		<tr><th>首推荐医生</th><td>
+		${orderrFinished.doctorIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.sellerId">
+		<tr><th>所属业务员</th><td>
+		${orderrFinished.sellerIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.operId">
+		<tr><th>取药操作员</th><td>
+		${orderrFinished.operIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.productnums">
+		<tr><th>商品数量</th><td>
+		${orderrFinished.productnums}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.OrderrFinished.diagnose">
+		<tr><th>诊断</th><td>
+		${orderrFinished.diagnose}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

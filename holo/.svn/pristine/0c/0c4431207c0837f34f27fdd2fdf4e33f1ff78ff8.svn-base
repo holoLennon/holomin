@@ -1,0 +1,55 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Dgmmsg.id">
+		<tr><th>序号ID</th><td>
+		${dgmmsg.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${dgmmsg.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.readed">
+		<tr><th>是否读过</th><td>
+		${dgmmsg.readedString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.fromto">
+		<tr><th>发送接收</th><td>
+		${dgmmsg.fromtoString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.memberId">
+		<tr><th>会员</th><td>
+		${dgmmsg.memberIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.druggistId">
+		<tr><th>药师</th><td>
+		${dgmmsg.druggistIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.productId">
+		<tr><th>产品</th><td>
+		${dgmmsg.productIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Dgmmsg.msg">
+		<tr><th>消息内容</th><td>
+		${dgmmsg.msg}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

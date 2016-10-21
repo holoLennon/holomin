@@ -1,0 +1,45 @@
+/**
+ * Created by Administrator on 2015/3/20.
+ */
+/**
+ * 注册页面a
+ */
+appctrl.controller('regaCtrl', function ($scope,$ionicModal, $timeout, $ionicPopup, $stateParams, $location, $sce, $http, $rootScope, Storage, RegService,CommonService) {
+    $scope.user={};
+    $scope.vm={};
+
+
+    /**
+     * rega提交
+     * 使用Ajax来验证该手机号有没有注册过
+     */
+    $scope.regaCommit = function (){
+        if(!checkPhoneNum($scope.user.username)){
+            CommonService.alertm("请输入手机号").then(function (res) { });
+            return;
+        }
+        RegService.rega($scope.user.username).then(function (data) {
+            if(!data.success){
+                CommonService.alertm(data.msg).then(function (res) {
+                });
+                return;
+            }
+            if (data.msg == "rega_alreadyreg") { //已经注册
+                CommonService.alertm("该手机号已经成功注册过，您只要直接登录就可以").then(function (res) {
+                    $location.path("/tab/home");
+                    $rootScope.$broadcast('event.NeedLoginException','reg');
+                });
+            }
+            else {
+                //原本应该到regb，没有短信验证
+                $scope.user.obj1=data.obj["obj1"];
+                Storage.set(REG_USER,$scope.user);
+                $location.path("/tab/regca");
+            }
+        });
+    };
+});
+
+
+
+

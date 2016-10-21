@@ -1,0 +1,186 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.yijian.common.dal.bean.*;
+
+/**
+ * 数据库表里的一些，字段属性ISO，如性别之男女
+ * @author zmax
+ *
+ */
+public class MapDb {
+	/**
+	 * 由表设计时就进行确定的标准，格式:Db.TableName.ColumnName，各项首字大写
+	 */
+	public void init(){
+		mymap.put("Memberdoctor.StatusDm",JsonUtil.getMapFromJson("{'0':'临时关系','1':'正式关系'}"));
+		mymap.put("Memberdoctor.ItypeFirst",JsonUtil.getMapFromJson("{'0':'否','1':'是'}"));
+		mymap.put("Dmmsg.Readed",JsonUtil.getMapFromJson("{'0':'未读','1':'已读'}"));
+		mymap.put("Dmmsg.Fromto",JsonUtil.getMapFromJson("{'0':'患者发给医生','1':'医生发给患者'}"));
+		mymap.put("Dgmmsg.Readed",JsonUtil.getMapFromJson("{'0':'未读','1':'已读'}"));
+		mymap.put("Dgmmsg.Fromto",JsonUtil.getMapFromJson("{'0':'患者发给药师','1':'药师发给患者'}"));
+		mymap.put("Drugstore.Attr",JsonUtil.getMapFromJson("{'加盟':'加盟','直营':'直营','签约':'签约'}"));
+		mymap.put("SellerCount.Itype",JsonUtil.getMapFromJson("{'0':'日统计','1':'月统计'}"));
+		mymap.put("WaEntityArticle.Status",JsonUtil.getMapFromJson("{'0':'无效','1':'上线'}"));
+		mymap.put("Wxmenu.Mtype",JsonUtil.getMapFromJson("{'menu':'菜单','button':'一级菜单','sub_button':'二级菜单'}"));
+		mymap.put("Wxmenu.Type",JsonUtil.getMapFromJson("{'click':'点击推时间','view':'跳转URL','scancode_push':'扫码推事件','scancode_waitmsg':'扫码推事件且弹出消息接收中提示框','pic_sysphoto':'弹出系统拍照发图','pic_photo_or_album':'弹出拍照或者相册发图','pic_weixin':'弹出微信相册发图器','location_select':'弹出地理位置选择器','media_id':'下发消息（除文本消息）','view_limited':'跳转图文消息URL'}"));
+		mymap.put("WaRecvmsg.Msgtype",JsonUtil.getMapFromJson("{'text':'文本','image':'图片','voice':'音频','video':'视频','location':'地理位置','link':'链接','event':'事件'}"));
+		mymap.put("WaRecvmsg.Event",JsonUtil.getMapFromJson("{'subscribe':'订阅','unsubscribe':'取消订阅','SCAN':'扫描二维码','LOCATION':'上报地理','CLICK':'点击菜单','VIEW':'菜单跳转'}"));
+		mymap.put("Permittable.RoleId",JsonUtil.getMapFromJson("{'0':'超管','1':'一般管理员','2':'药企商户','3':'操作员','4':'经销商','5':'会员','6':'医生','7':'商品提供商','8':'业务员','9':'药剂师'}"));
+		mymap.put("Permittable.Pall",JsonUtil.getMapFromJson("{'0':'无','9':'部分','91':'全部'}"));
+		mymap.put("Permittable.Btnnew",JsonUtil.getMapFromJson("{'0':'无','9':'部分','91':'全部'}"));
+		mymap.put("Permittable.Btnedit",JsonUtil.getMapFromJson("{'0':'无','9':'部分','91':'全部'}"));
+		mymap.put("Permittable.Btndel",JsonUtil.getMapFromJson("{'0':'无','9':'部分','91':'全部'}"));
+		mymap.put("Permittable.Btnshow",JsonUtil.getMapFromJson("{'0':'无','9':'部分','91':'全部'}"));
+		mymap.put("Permitfield.RoleId",JsonUtil.getMapFromJson("{'0':'超管','1':'一般管理员','2':'药企商户','3':'操作员','4':'经销商','5':'会员','6':'医生','7':'商品提供商','8':'业务员','9':'药剂师'}"));
+		mymap.put("Permitfield.Pf41",JsonUtil.getMapFromJson("{'0':'无','9':'有','1~sessionobj.id':'1~sessionobj.id'}"));
+		mymap.put("Permitfield.Pf42",JsonUtil.getMapFromJson("{'0':'无','9':'有'}"));
+		mymap.put("Permitfield.Pf51",JsonUtil.getMapFromJson("{'0':'无','9':'有'}"));
+		mymap.put("Permitfield.Pf52",JsonUtil.getMapFromJson("{'0':'无','9':'有'}"));
+		mymap.put("Wxcfg.Itype",JsonUtil.getMapFromJson("{'1':'服务号','2':'企业号','3':'订阅号'}"));
+		mymap.put("Wxr.RoleId",JsonUtil.getMapFromJson("{'0':'超管','1':'一般管理员','2':'药企商户','3':'操作员','4':'经销商','5':'会员','6':'医生','7':'商品提供商','8':'业务员','9':'药剂师'}"));
+		mymap.put("Wxrb.Status",JsonUtil.getMapFromJson("{'0':'初创','1':'业务已处理'}"));
+		mymap.put("Wxouser.Statusuf",JsonUtil.getMapFromJson("{'0':'只有openid','1':'完全版'}"));
+		mymap.put("Wxouser.Sex",JsonUtil.getMapFromJson("{'1':'男','2':'女','0':'未知'}"));
+		mymap.put("Wxouser.Subscribe",JsonUtil.getMapFromJson("{'0':'没有关注该公众号','1':'关注过了该公众号'}"));
+		mymap.put("Wxousersubscribehis.Act",JsonUtil.getMapFromJson("{'0':'取消关注','1':'关注'}"));
+		mymap.put("WaQrcodeticketScene.StatusTemporary",JsonUtil.getMapFromJson("{'0':'是临时二维码','1':'是永久二维码'}"));
+		mymap.put("WaQrcodeticketScene.StatusValid",JsonUtil.getMapFromJson("{'0':'无效','1':'有效'}"));
+		mymap.put("WaQradv.Rettype",JsonUtil.getMapFromJson("{'0':'无返回','1':'返回一个纯文本','2':'返回一个图文'}"));
+		mymap.put("Product.StatusRecipe",JsonUtil.getMapFromJson("{'0':'非处方药','1':'处方药'}"));
+		mymap.put("Product.StatusUsed",JsonUtil.getMapFromJson("{'0':'外用','1':'口服','2':'含服','3':'咀嚼'}"));
+		mymap.put("Product.Punit",JsonUtil.getMapFromJson("{'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}"));
+		mymap.put("User.Status",JsonUtil.getMapFromJson("{'0':'正在申请','1':'有效','-1':'申请被拒','-2':'删除'}"));
+		mymap.put("User.RoleId",JsonUtil.getMapFromJson("{'0':'超管','1':'一般管理员','2':'药企商户','3':'操作员','4':'经销商','5':'会员','6':'医生','7':'商品提供商','8':'业务员','9':'药剂师'}"));
+		mymap.put("Member.Usersex",JsonUtil.getMapFromJson("{'0':'男','1':'女'}"));
+		mymap.put("Member.Idtype",JsonUtil.getMapFromJson("{'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}"));
+		mymap.put("Member.StatusRelation",JsonUtil.getMapFromJson("{'0':'无','1':'有'}"));
+		mymap.put("Doctor.Dlevel",JsonUtil.getMapFromJson("{'0':'副主任医师','1':'主任医师','2':'主治医生','3':'医师'}"));
+		mymap.put("Doctor.Usersex",JsonUtil.getMapFromJson("{'0':'男','1':'女'}"));
+		mymap.put("Doctor.Idtype",JsonUtil.getMapFromJson("{'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}"));
+		mymap.put("Doctor.Itype",JsonUtil.getMapFromJson("{'0':'医院医生','1':'平台医生'}"));
+		mymap.put("Doctor.StatusRelation",JsonUtil.getMapFromJson("{'0':'无','1':'有'}"));
+		mymap.put("Druggist.Dlevel",JsonUtil.getMapFromJson("{'0':'副主任','1':'主任','2':'教授','3':'院士'}"));
+		mymap.put("Druggist.Usersex",JsonUtil.getMapFromJson("{'0':'男','1':'女'}"));
+		mymap.put("Druggist.Idtype",JsonUtil.getMapFromJson("{'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}"));
+		mymap.put("Seller.Dlevel",JsonUtil.getMapFromJson("{'0':'专员业务员','1':'地区经理','2':'省区经理','3':'大区经理','4':'总监','9':'合作企业'}"));
+		mymap.put("Seller.Usersex",JsonUtil.getMapFromJson("{'男':'男','女':'女'}"));
+		mymap.put("Orderr.Iotype",JsonUtil.getMapFromJson("{'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}"));
+		mymap.put("Orderr.Status",JsonUtil.getMapFromJson("{'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}"));
+		mymap.put("Orderr.Statusgoods",JsonUtil.getMapFromJson("{'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}"));
+		mymap.put("Orderr.StatusCarriageType",JsonUtil.getMapFromJson("{'0':'物流发货','1':'到店自提'}"));
+		mymap.put("OrderrFinished.Iotype",JsonUtil.getMapFromJson("{'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}"));
+		mymap.put("OrderrFinished.Status",JsonUtil.getMapFromJson("{'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}"));
+		mymap.put("OrderrFinished.Statusgoods",JsonUtil.getMapFromJson("{'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}"));
+		mymap.put("OrderrFinished.StatusCarriageType",JsonUtil.getMapFromJson("{'0':'物流发货','1':'到店自提'}"));
+		mymap.put("Orderrdetail.Iotype",JsonUtil.getMapFromJson("{'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}"));
+		mymap.put("Orderrdetail.Status",JsonUtil.getMapFromJson("{'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付','-2':'已退货赔付','-3':'退货申请'}"));
+		mymap.put("Orderrdetail.Statusgoods",JsonUtil.getMapFromJson("{'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃','-2':'已退货','-3':'退货申请'}"));
+		mymap.put("Orderrdetail.Statuscount",JsonUtil.getMapFromJson("{'0':'未统计','1':'已统计'}"));
+		mymap.put("OrderrdetailFinished.Iotype",JsonUtil.getMapFromJson("{'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}"));
+		mymap.put("OrderrdetailFinished.Status",JsonUtil.getMapFromJson("{'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付','-2':'已退货赔付','-3':'退货申请'}"));
+		mymap.put("OrderrdetailFinished.Statusgoods",JsonUtil.getMapFromJson("{'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃','-2':'已退货','-3':'退货申请'}"));
+		mymap.put("OrderrdetailFinished.Statuscount",JsonUtil.getMapFromJson("{'0':'未统计','1':'已统计'}"));
+		MapSpec.init(mymap);
+	}
+
+	/**Map[String,Map[String,String]]版配置列表*/
+	public Map<String,Map<String,String>> mymap=new HashMap<String, Map<String,String>>();
+	/**Map[String,List[Myiso]]版配置列表*/
+	public Map<String,List<Myiso>> mymap2=new HashMap<String, List<Myiso>>();
+
+	private static MapDb instance = null;   
+	//单例
+	public static MapDb getInstance(){   
+		if(null == instance ) {
+			synchronized(IsoInstance.class){ 
+				if(null == instance) 
+					instance = new MapDb(); 
+			} 
+		} 
+		return instance;
+	}
+	/**
+	 * 程序写死的的配置，不能在配置表中修改，否则程序会出错。
+	 */
+	public MapDb(){
+		init();
+		genList();
+	}
+
+	/**
+	 * 根据KEY获取整个map
+	 * @param key
+	 * @return
+	 */
+	public Map<String, String> getMap(String key) {
+		Map<String, String> ret=mymap.get(key);
+		if(ret==null)
+			return new HashMap<String, String>();
+		return ret;
+	}
+	/**
+	 * 根据key获取map1,再从map1中根据key1获取value
+	 * @param key
+	 * @param key1
+	 * @return
+	 */
+	public String getMapString(String key,String key1){
+		return getMap(key).get(key1);
+	}
+	/**
+	 * 根据key获取list
+	 * @param key
+	 * @return
+	 */
+	public List<Myiso> getList(String key) {
+		List<Myiso> ret=mymap2.get(key);
+		if(ret==null)
+			return new ArrayList<Myiso>();
+		return ret;
+	}
+
+	/**
+	 * 生成mymap2
+	 */
+	private void genList(){
+		mymap2.clear();
+		Iterator<Entry<String,Map<String,String>>> iter = mymap.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String,Map<String,String>> entry = (Entry<String,Map<String,String>>) iter.next();
+			String key = entry.getKey();
+			Map<String,String> val = entry.getValue();
+			List<Myiso> list=map2list(val);
+			mymap2.put(key, list);
+		}		
+	}
+	/**
+	 * map[String,String]转list[Myiso]
+	 * @param val
+	 * @return
+	 */
+	private List<Myiso> map2list(Map<String,String> map){
+		List<Myiso> list=new ArrayList<Myiso>();
+		Iterator<Entry<String,String>> iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String,String> entry = (Entry<String,String>) iter.next();
+			String key = entry.getKey();
+			String val = entry.getValue();
+			Myiso myiso=new Myiso();
+			myiso.setCkey(key);
+			myiso.setCvalue(val);
+			list.add(myiso);
+		}
+		return list;
+	}
+}

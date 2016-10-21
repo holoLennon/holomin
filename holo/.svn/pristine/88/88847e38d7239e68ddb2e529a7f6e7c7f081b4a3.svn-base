@@ -1,0 +1,477 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+
+
+/**
+ * 专题产品
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "topic_product")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class TopicProduct extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "专题产品";
+
+	//date formats
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**专题 Integer   */
+	@Max(99999999999L)
+	
+	private Integer topicId;
+	/**商品 Integer   */
+	@Max(99999999999L)
+	
+	private Integer productId;
+	/**排列顺序 Integer default=99 数字小排名前 */
+	@Max(99999999999L)
+	
+	private Integer priority = 99;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(TopicProduct _this){
+		_this.priority=99;
+	}
+	public TopicProduct(){
+		makedefault(this);
+	}
+	public TopicProduct(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param topicId Integer 专题   
+	 * @param productId Integer 商品   
+	 * @param priority Integer 排列顺序 default=99 数字小排名前 
+	* @param notuse String 没用
+	 */
+	public TopicProduct(Integer topicId ,Integer productId ,Integer priority ,String notuse) {
+		super();
+		this.topicId = topicId;
+		this.productId = productId;
+		this.priority = priority;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param topicId Integer 专题   
+	 * @param productId Integer 商品   
+	 * @param priority Integer 排列顺序 default=99 数字小排名前 
+	* @param notuse String 没用
+	 */
+	public TopicProduct(Integer id ,Integer topicId ,Integer productId ,Integer priority ,String notuse) {
+		super();
+		this.id = id;
+		this.topicId = topicId;
+		this.productId = productId;
+		this.priority = priority;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param topicId Integer 专题   
+	 * @param productId Integer 商品   
+	 * @param priority Integer 排列顺序 default=99 数字小排名前 
+	* @param notuse String 没用
+	 */
+	public TopicProduct(Integer id ,Integer topicId ,Integer productId ,Integer priority ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.topicId = topicId;
+		this.productId = productId;
+		this.priority = priority;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取专题  */
+	
+
+	@Column(name = "topic_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getTopicId() {
+		return this.topicId;
+	}
+	/**设置专题  */
+
+	public void setTopicId(Integer value) {
+		this.topicId = value;
+	}
+	/**获取商品  */
+	
+
+	@Column(name = "product_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductId() {
+		return this.productId;
+	}
+	/**设置商品  */
+
+	public void setProductId(Integer value) {
+		this.productId = value;
+	}
+	/**获取排列顺序 数字小排名前 */
+	
+
+	@Column(name = "priority", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getPriority() {
+		return this.priority;
+	}
+	/**设置排列顺序 数字小排名前 */
+
+	public void setPriority(Integer value) {
+		this.priority = value;
+	}
+	/**专题String*/
+	private String topicIdString;
+	/**获取专题String*/
+	@Transient
+	
+	public String getTopicIdString() {
+		return topicIdString;
+	}
+	/**设置专题String*/
+	public void setTopicIdString(String value) {
+		this.topicIdString=value;
+	}
+	/**Topic - topicIdTopicObj*/
+	private Topic topicIdTopicObj;
+	/**获取 Topic - topicIdTopicObj*/
+	@Transient
+	
+	public Topic getTopicIdTopicObj() {
+		return topicIdTopicObj;
+	}
+	/**设置 Topic - 专题Obj*/
+	public void setTopicIdTopicObj(Topic value) {
+		this.topicIdTopicObj=value;
+	}
+	/**专题Stringid*/
+	private String topicIdStringid;
+	/**获取专题Stringid*/
+	@Transient
+	
+	public String getTopicIdStringid() {
+		return topicIdStringid;
+	}
+	/**设置专题Stringid*/
+	public void setTopicIdStringid(String value) {
+		this.topicIdStringid=value;
+	}
+	/**商品String*/
+	private String productIdString;
+	/**获取商品String*/
+	@Transient
+	
+	public String getProductIdString() {
+		return productIdString;
+	}
+	/**设置商品String*/
+	public void setProductIdString(String value) {
+		this.productIdString=value;
+	}
+	/**Product - productIdProductObj*/
+	private Product productIdProductObj;
+	/**获取 Product - productIdProductObj*/
+	@Transient
+	
+	public Product getProductIdProductObj() {
+		return productIdProductObj;
+	}
+	/**设置 Product - 商品Obj*/
+	public void setProductIdProductObj(Product value) {
+		this.productIdProductObj=value;
+	}
+	/**商品Stringid*/
+	private String productIdStringid;
+	/**获取商品Stringid*/
+	@Transient
+	
+	public String getProductIdStringid() {
+		return productIdStringid;
+	}
+	/**设置商品Stringid*/
+	public void setProductIdStringid(String value) {
+		this.productIdStringid=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.topicIdTopicObj=null; //Topic
+		this.productIdProductObj=null; //Product
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getTopicId())
+			.append(getProductId())
+			.append(getPriority())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof TopicProduct == false) return false;
+		if(this == obj) return true;
+		TopicProduct other = (TopicProduct)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",TopicId:",getTopicId())
+			.append(",ProductId:",getProductId())
+			.append(",Priority:",getPriority())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","topicIdString","topicIdTopicObj","topicIdStringid","productIdString","productIdProductObj","productIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","topicIdString","topicIdTopicObj","topicIdStringid","productIdString","productIdProductObj","productIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 专题产品
+TopicProduct topicProduct = new TopicProduct(
+	topicId , //Integer 专题   
+	productId , //Integer 商品   
+	priority , //Integer 排列顺序 default=99 数字小排名前 
+	null
+);
+*/
+}

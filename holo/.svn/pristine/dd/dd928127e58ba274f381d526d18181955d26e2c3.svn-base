@@ -1,0 +1,57 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/ProductType/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${productType.id}" />
+	<@z.pmt key="42.ProductType.ckey">
+				<@p.text label="db.ProductType.ckey" nameid="ckey"  value="${productType.ckey}" help="ID的补充" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.channelName">
+				<@p.text label="db.ProductType.channelName" nameid="channelName"  value="${productType.channelName}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.statusValidOrNot">
+				<@p.radio label="db.ProductType.statusValidOrNot" nameid="statusValidOrNot" value="${productType.statusValidOrNot}" help="" list=productType.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.parentid">
+				<@p.selecttree  label="db.ProductType.parentid" nameid="parentid" url="${base}/user/ProductType/tree.html" multiple="" headerKey="${productType.parentid}" headerValue="${productType.parentidString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.priority">
+				<@p.textnumber label="db.ProductType.priority" nameid="priority"  value="${productType.priority}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.childrennum">
+				<@p.textnumber label="db.ProductType.childrennum" nameid="childrennum"  value="${productType.childrennum}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.family">
+				<@p.label label="db.ProductType.family" nameid="family" value="${productType.family}" help="逗号分开" moreopt="" />
+	</@z.pmt>
+				<input id="genurl" name="genurl" type="hidden" value="${productType.genurl}" />
+	<@z.pmt key="42.ProductType.icon">
+				<@p.text label="db.ProductType.icon" nameid="icon"  value="${productType.icon}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.ProductType.img">
+					<@p.ckfimg label="db.ProductType.img" nameid="img"  value="${productType.img}" help=""  moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

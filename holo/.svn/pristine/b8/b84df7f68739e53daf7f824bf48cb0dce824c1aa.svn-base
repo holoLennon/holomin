@@ -1,0 +1,90 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Topic.id">
+		<tr><th>序号ID</th><td>
+		${topic.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${topic.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.statusValidOrNot">
+		<tr><th>状态</th><td>
+		${topic.statusValidOrNotString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.title">
+		<tr><th>标题</th><td>
+		${topic.title}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.img1">
+		<tr><th>图1</th><td>
+		${topic.img1}
+		<br/><img src="${topic.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.txt1">
+		<tr><th>文1</th><td>
+		${topic.txt1}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.img2">
+		<tr><th>图2</th><td>
+		${topic.img2}
+		<br/><img src="${topic.img2}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.txt2">
+		<tr><th>文2</th><td>
+		${topic.txt2}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.img3">
+		<tr><th>图3</th><td>
+		${topic.img3}
+		<br/><img src="${topic.img3}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.txt3">
+		<tr><th>文3</th><td>
+		${topic.txt3}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.img4">
+		<tr><th>图4</th><td>
+		${topic.img4}
+		<br/><img src="${topic.img4}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.txt4">
+		<tr><th>文4</th><td>
+		${topic.txt4}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.img5">
+		<tr><th>图5</th><td>
+		${topic.img5}
+		<br/><img src="${topic.img5}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Topic.txt5">
+		<tr><th>文5</th><td>
+		${topic.txt5}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

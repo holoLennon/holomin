@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <script type="text/javascript" src="res/js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="res/js/floatAd.js"></script>
+    <script type="text/javascript" src="res/js/myfocus-2.0.0 beta.min.js"></script>
+    <script type="text/javascript" src="res/js/common.js"></script>
+    <script type="text/javascript" src="res/js/floatAd.js"></script>
+    <link type="text/css" rel="stylesheet" href="res/css/style.css">
+    <title>智慧浙江 - 首页 - Powered by Zmax</title>
+    <meta http-equiv="keywords" content="智慧浙江"/>
+    <meta http-equiv="description" content="智慧浙江"/>
+</head>
+<script type="text/javascript">
+    $(function(){
+//调用漂浮插件
+        $("body").floatAd({
+            imgSrc : 'http://www.zjsc.org.cnres/upload/2014120999.jpg',
+            url : "http://www.zjsc.org.cn/zjsc/c/yjdt/201412/153.htm"
+        });
+    })
+</script>
+<body>
+<div class="container">
+    <div class="top">
+        <div class="top1">
+            <div class="top1_left">
+                <span>北京时间：</span>
+            </div>
+            <div class="top1_right">
+                <a href="/zjsc/index.htm">会员注册</a>&nbsp;|&nbsp;
+                <a href="/zjsc/index.htm">会员登录</a>&nbsp;|&nbsp;
+                <a href="/zjsc/index.htm">加入收藏</a>&nbsp;|&nbsp;
+                <a href="/zjsc/index.htm">返回首页</a>
+            </div>
+        </div>
+        <div class="top2">
+            <div class="top2_left">
+                <img src="res/images/about_05_01.jpg" width="196" height="97" />
+            </div>
+            <div class="top2_right">
+                <div class="main_nav hover">
+                    <ul>
+                        <li><a href="/zjsc/index.htm">首页</a></li>
+
+                        <li><a href="/zjsc/c/about/index.htm"
+                               target="_self" >本会
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/gaishu/index.htm" >概述</a></dd>
+                                <dd><a href="/zjsc/c/hydbdh/index.htm" >会员</a></dd>
+                                <dd><a href="/zjsc/c//index.htm" >秘书处</a></dd>
+                            </dl>
+                        </li>
+                        <li><a href="/zjsc/c/news/index.htm"
+                               target="_self" >新闻
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/yjdt/index.htm" >新闻报道</a></dd>
+                                <dd><a href="/zjsc/c/gonggao/index.htm" >促进会公告</a></dd>
+                            </dl>
+                        </li>
+                        <li><a href="/zjsc/c/jianshepingdao/index.htm"
+                               target="_self" >建设频道
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/xiangmujieshao/index.htm" >项目介绍</a></dd>
+                                <dd><a href="/zjsc/c/zhengcefangzhen/index.htm" >政策方针</a></dd>
+                                <dd><a href="/zjsc/c/qianyanxinxi/index.htm" >前沿信息</a></dd>
+                                <dd><a href="/zjsc/c/hangyedongtai/index.htm" >行业动态</a></dd>
+                                <dd><a href="/zjsc/c/huiyuandongtai/index.htm" >会员动态</a></dd>
+                            </dl>
+                        </li>
+                        <li><a href="/zjsc/c/fuwu/index.htm"
+                               target="_self" >服务
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/kepuxuanchuan/index.htm" >科普宣传</a></dd>
+                                <dd><a href="/zjsc/c/peixundiaoyan/index.htm" >沙龙活动</a></dd>
+                                <dd><a href="/zjsc/c/zwhd/index.htm" >征文活动</a></dd>
+                            </dl>
+                        </li>
+                        <li><a href="/zjsc/c/zhanjia/index.htm"
+                               target="_self" >专家
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/zhuanjiafengcai/index.htm" >专家风采</a></dd>
+                                <dd><a href="/zjsc/c/zhuanjiaguandian/index.htm" >专家观点</a></dd>
+                                <dd><a href="/zjsc/c/yangjiubaogao/index.htm" >研究报告</a></dd>
+                            </dl>
+                        </li>
+                        <li><a href="/zjsc/c/jiaoliu/index.htm"
+                               target="_self" >交流
+                        </a>
+                            <dl>
+                                <dd><a href="/zjsc/c/dishijiaoliu/index.htm" >地市交流</a></dd>
+                                <dd><a href="/zjsc/c/shengwaijiaoliu/index.htm" >省外交流</a></dd>
+                                <dd><a href="/zjsc/c/guojijiaoliu/index.htm" >国际交流</a></dd>
+                                <dd><a href="/zjsc/c/jiaoliuhezhuo/index.htm" >交流合作</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    $(".hover ul li").hover(function(){
+                        $(this).children("dl").slideDown(300)
+                    }, function(){
+                        $(this).children("dl").slideUp(100)
+                    });
+
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="banner">
+        <iframe src="res/htm/new_tp_banner.htm" width="998" height="230" marginheight="0" marginwidth="0" scrolling="no" frameborder="0"></iframe>
+    </div>
+    <div class="gg">
+        <span>最新公告：</span>   <a
+            href="/zjsc/c/gonggao/201403/142.htm">浙江省产业技术创新战略联盟关于申报2014年度省重大科技专项牵头单位的公示</a>|  <a
+            href="/zjsc/c/gonggao/201404/146.htm">关于举办“智慧城市建设思路、规划及案例分析” 培训班通知</a>|  <a
+            href="/zjsc/c/gonggao/201301/24.htm">智慧城市促进会动态</a>|
+    </div>
+
+
+    <div class="main_mid1">
+        <div class="main_left1">
+            <div class="main_left1_bt">
+                <div class="main_left1_bt1">智慧浙江建设</div>
+                <div class="more1">
+                    <a href="/zjsc/c/about/index.htm"><img src="res/images/index2_08.jpg"
+                                                           width="63" height="33" /> </a>
+                </div>
+            </div>
+            <div class="main_left1_nr">
+                <div class="main_left1_nr1">——支撑“智慧浙江”全面建设</div>
+                <div class="main_left1_nr2">
+                    <p style="text-indent: 2em;">随着新一代信息技术的迅速发展和深入应用，城市智慧化成为当今世界城市发展的重要趋势和基本特征，成为现代城市发展的新模式。</p>
+                </div>
+                <div class="main_left1_nr3">
+
+                    <div class="item">
+                        <a href="/zjsc/c/about/201301/34.htm">联系我们</a>
+                    </div>
+
+                    <div class="item">
+                        <a href="/zjsc/c/about/201207/4.htm">促进会介绍</a>
+                    </div>
+
+                    <div class="item">
+                        <a href="/zjsc/c/about/201207/5.htm">促进会章程</a>
+                    </div>
+
+                    <div class="item">
+                        <a href="/zjsc/c/about/201207/7.htm">会员选举</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="main_right1">
+            <div class="main_right1_bt">
+                <div class="main_left1_bt1">新闻中心</div>
+                <div class="more2">
+                    <a href="/zjsc/c/news/index.htm"><img src="res/images/index2_20.jpg"
+                                                          width="41" height="11" /> </a>
+                </div>
+            </div>
+            <div class="main_right1_nr">
+                <div class="main_right1_nr_tp">
+                    <iframe src="res/htm/new_tp.htm" width="238" height="206"
+                            marginheight="0" marginwidth="0" scrolling="no" frameborder="0"></iframe>
+                </div>
+                <div class="main_right1_nr_new">
+                    <ul>
+                        <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会圆满落幕</a></li>
+                        <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                        <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展圆满落幕 </a></li>
+                        <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成功举办</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在杭召开</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备会召开</a></li>
+                        <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析培训活动成功举行</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="main_left">
+            <div class="main_left2">
+                <div class="main_left2_bt">
+                    <div class="main_left1_bt1">
+                        <a href="/zjsc/c/zhuanjiaguandian/index.htm">内容内容</a>
+                    </div>
+                </div>
+                <div class="main_left2_nr">
+                    <ul>
+                        <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会</a></li>
+                        <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                        <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展 </a></li>
+                        <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备</a></li>
+                        <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main_right">
+            <div class="main_right2">
+
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="/zjsc/c/zhuanjiaguandian/index.htm">内容内容</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网</a></li>
+                            <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大”主题展圆满落幕 </a></li>
+                            <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁博览会成功举办</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区会在杭召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智建设筹备会召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思动成功举行</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="/zjsc/c/zhuanjiaguandian/index.htm">内容内容</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会圆满落幕</a></li>
+                            <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展圆满落幕 </a></li>
+                            <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成功举办</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在杭召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备会召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析培训活动成功举行</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="main_banner">
+            <img src="res/images/index2_20.jpg"/> </a>
+        </div>
+
+        <div class="main_left">
+            <div class="main_left2">
+                <div class="main_left2_bt">
+                    <div class="main_left1_bt1">会员风采
+                    </div>
+                    <div class="more2"><a href="/zjsc/c/hyfc/index.htm"><img src="res/images/index2_20.jpg" width="41" height="11" /></a>
+                    </div>
+                </div>
+                <div class="main_left2_nr">
+                    <ul>
+                        <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会</a></li>
+                        <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                        <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展 </a></li>
+                        <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在</a></li>
+                        <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备</a></li>
+                        <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main_right">
+            <div class="main_right2">
+
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="/zjsc/c/zhuanjiaguandian/index.htm">专家观点</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会圆满落幕</a></li>
+                            <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展圆满落幕 </a></li>
+                            <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成功举办</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在杭召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备会召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析培训活动成功举行</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="main_right2_nr1">
+                    <div class="main_right2_bt1">
+                        <a href="/zjsc/c/zhuanjiaguandian/index.htm">内容内容</a>
+                    </div>
+                    <div class="main_right2_new">
+                        <ul>
+                            <li><a href="/zjsc/c/yjdt/201512/155.htm">第二届世界互联网大会•互联网之光博览会圆满落幕</a></li>
+                            <li><a href="/zjsc/c/yjdt/201507/154.htm">省智慧城市促进会全体会员大会成功召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201412/153.htm">首届世界互联网大会“互联网之光”主题展圆满落幕 </a></li>
+                            <li><a href="/zjsc/c/yjdt/201409/152.htm">第四届中国( 宁波) 智慧城市博览会成功举办</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/151.htm">浙江省智慧社区产业联盟成立大会在杭召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201405/150.htm">全省推进智慧城市示范试点建设筹备会召开</a></li>
+                            <li><a href="/zjsc/c/yjdt/201404/149.htm">智慧城市建设思路、规划及案例分析培训活动成功举行</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="main_banner">
+            <div class="main_banner_bt1">
+                友情链接
+            </div>
+            <div class="main_banner_nr">
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >政府部门</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >智慧城市</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >会员单位</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+                <select class="main_banner_nr_select" onchange="javascript:window.open(this.options[this.selectedIndex].value)">
+                    <option value="http://www.bhcode.net" selected="selected" >交流合作</option>
+                    <option value="http://sucai.bhcode.net" >素材网</option>
+                    <option value="http://www.baidu.com" >百度</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="foot">
+    <div class="foot_text">
+        <p>版权所有：浙江省智慧城市促进会  备案号：浙ICP备1401260</p>
+        <p></p>
+        <p><a target="_blank" href="/zjsc/admin/index.do">管理登录</a></p>
+    </div>
+</div>
+</body>
+</html>
+

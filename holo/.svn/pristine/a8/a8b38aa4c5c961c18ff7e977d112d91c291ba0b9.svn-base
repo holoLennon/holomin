@@ -1,0 +1,71 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/OrderrFinished/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${orderrFinished.id}" />
+	<@z.pmt key="42.OrderrFinished.iotype">
+				<@p.radio label="db.OrderrFinished.iotype" nameid="iotype" value="${orderrFinished.iotype}" help="" list=orderrFinished.iotypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.status">
+				<@p.radio label="db.OrderrFinished.status" nameid="status" value="${orderrFinished.status}" help="" list=orderrFinished.statusMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.statusgoods">
+				<@p.radio label="db.OrderrFinished.statusgoods" nameid="statusgoods" value="${orderrFinished.statusgoods}" help="" list=orderrFinished.statusgoodsMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.statusCarriageType">
+				<@p.radio label="db.OrderrFinished.statusCarriageType" nameid="statusCarriageType" value="${orderrFinished.statusCarriageType}" help="" list=orderrFinished.statusCarriageTypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.sn">
+				<@p.textnumber label="db.OrderrFinished.sn" nameid="sn"  value="${orderrFinished.sn}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.memberId">
+				<@p.searchforid label="db.OrderrFinished.memberId" nameid="memberId" value="${orderrFinished.memberId}" stringvalue="${orderrFinished.memberIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Member/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.sumprice">
+				<@p.textnumber label="db.OrderrFinished.sumprice" nameid="sumprice"  value="${orderrFinished.sumprice}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.title">
+				<@p.text label="db.OrderrFinished.title" nameid="title"  value="${orderrFinished.title}" help="第一个商品的名称" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.img1">
+					<@p.ckfimg label="db.OrderrFinished.img1" nameid="img1"  value="${orderrFinished.img1}" help="第一个商品的图"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.drugstoreId">
+				<@p.searchforid label="db.OrderrFinished.drugstoreId" nameid="drugstoreId" value="${orderrFinished.drugstoreId}" stringvalue="${orderrFinished.drugstoreIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Drugstore/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.doctorWr">
+				<@p.searchforid label="db.OrderrFinished.doctorWr" nameid="doctorWr" value="${orderrFinished.doctorWr}" stringvalue="${orderrFinished.doctorWrString}" help="iotype=0时有效" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.operId">
+				<@p.searchforid label="db.OrderrFinished.operId" nameid="operId" value="${orderrFinished.operId}" stringvalue="${orderrFinished.operIdString}" help="取药时的操作员" dataoptions="searcher:searchOtherId" url="/user/Oper/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.productnums">
+				<@p.textnumber label="db.OrderrFinished.productnums" nameid="productnums"  value="${orderrFinished.productnums}" help="发货前数一数" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OrderrFinished.diagnose">
+				<@p.text label="db.OrderrFinished.diagnose" nameid="diagnose"  value="${orderrFinished.diagnose}" help="" dataoptions="validType:['length[0,200]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

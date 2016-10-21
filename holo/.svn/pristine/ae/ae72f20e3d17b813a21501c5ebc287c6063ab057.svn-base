@@ -1,0 +1,101 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Doctor/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${doctor.id}" />
+	<@z.pmt key="42.Doctor.productchannelId">
+				<@p.selecttree  label="db.Doctor.productchannelId" nameid="productchannelId" url="${base}/user/Productchannel/tree.html" multiple="" headerKey="${doctor.productchannelId}" headerValue="${doctor.productchannelIdString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.age">
+				<@p.textnumber label="db.Doctor.age" nameid="age"  value="${doctor.age}" help="每年自动加1" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.img1">
+					<@p.ckfimg label="db.Doctor.img1" nameid="img1"  value="${doctor.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.hospitalId">
+				<@p.searchforid label="db.Doctor.hospitalId" nameid="hospitalId" value="${doctor.hospitalId}" stringvalue="${doctor.hospitalIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Hospital/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.dlevel">
+				<@p.radio label="db.Doctor.dlevel" nameid="dlevel" value="${doctor.dlevel}" help="" list=doctor.dlevelMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.usersex">
+				<@p.radio label="db.Doctor.usersex" nameid="usersex" value="${doctor.usersex}" help="" list=doctor.usersexMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.idtype">
+				<@p.radio label="db.Doctor.idtype" nameid="idtype" value="${doctor.idtype}" help="" list=doctor.idtypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.idnum">
+				<@p.text label="db.Doctor.idnum" nameid="idnum"  value="${doctor.idnum}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.zip">
+				<@p.text label="db.Doctor.zip" nameid="zip"  value="${doctor.zip}" help="" dataoptions="validType:['length[0,6]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.addr">
+				<@p.text label="db.Doctor.addr" nameid="addr"  value="${doctor.addr}" help="" dataoptions="validType:['length[0,200]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.company">
+				<@p.text label="db.Doctor.company" nameid="company"  value="${doctor.company}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.mobile">
+				<@p.text label="db.Doctor.mobile" nameid="mobile"  value="${doctor.mobile}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.tele">
+				<@p.text label="db.Doctor.tele" nameid="tele"  value="${doctor.tele}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.email">
+				<@p.text label="db.Doctor.email" nameid="email"  value="${doctor.email}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.itype">
+				<@p.radio label="db.Doctor.itype" nameid="itype" value="${doctor.itype}" help="平台医生就是客服" list=doctor.itypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.countPrescription">
+				<@p.textnumber label="db.Doctor.countPrescription" nameid="countPrescription"  value="${doctor.countPrescription}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.countOrderr">
+				<@p.textnumber label="db.Doctor.countOrderr" nameid="countOrderr"  value="${doctor.countOrderr}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.countFirst">
+				<@p.textnumber label="db.Doctor.countFirst" nameid="countFirst"  value="${doctor.countFirst}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.qrimg">
+					<@p.ckfimg label="db.Doctor.qrimg" nameid="qrimg"  value="${doctor.qrimg}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.sellerId">
+				<@p.searchforid label="db.Doctor.sellerId" nameid="sellerId" value="${doctor.sellerId}" stringvalue="${doctor.sellerIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Seller/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.statusRelation">
+				<@p.radio label="db.Doctor.statusRelation" nameid="statusRelation" value="${doctor.statusRelation}" help="" list=doctor.statusRelationMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.imgqa">
+					<@p.ckfimg label="db.Doctor.imgqa" nameid="imgqa"  value="${doctor.imgqa}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.cidgt">
+				<@p.text label="db.Doctor.cidgt" nameid="cidgt"  value="${doctor.cidgt}" help="" dataoptions="validType:['length[0,32]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Doctor.ilastdev">
+				<@p.radio label="db.Doctor.ilastdev" nameid="ilastdev" value="${doctor.ilastdev}" help="" list=doctor.ilastdevMap moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#include "/pages/global/jscss.html"/>
+</head>
+<script type="text/javascript">
+	var thiswin=this;
+	var dataGrid;
+	$(function() {
+		dataGrid = $('#dataGrid').datagrid({
+			url : '${base}/user/AlipayPaynotify/grid',
+			methord: "get",
+			queryParams : {queryhq:$.trim($('#queryhq').val())},
+			fit : true,
+			fitColumns : true,
+			border : false,
+			pagination : true,
+			idField : 'id',
+			pageSize : 30,
+			pageList : [ 10, 20, 30, 50,100],
+			sortName : 'id',
+			sortOrder : 'desc',
+			checkOnSelect : false,
+			selectOnCheck : false,
+			nowrap : false,
+			striped : true,
+			rownumbers : true,
+			singleSelect : true,
+ 			
+           frozenColumns:[[   
+                    {field:'ck',checkbox:true}   
+            ]],	
+			columns : [ [
+	 	<@z.pmt key="52.AlipayPaynotify.id">
+		{field : 'id',title : '序号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.notifyTime">
+		{field : 'notifyTimeString',title : '通知时间',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.notifyType">
+		{field : 'notifyType',title : '通知类型',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.notifyId">
+		{field : 'notifyId',title : '通知校验ID',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.signType">
+		{field : 'signType',title : '签名方式',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.sign">
+		{field : 'sign',title : '签名',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.outTradeNo">
+		{field : 'outTradeNo',title : '商户网站唯一订单号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.subject">
+		{field : 'subject',title : '商品名称',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.paymentType">
+		{field : 'paymentType',title : '支付类型',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.tradeNo">
+		{field : 'tradeNo',title : '支付宝交易号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.tradeStatus">
+		{field : 'tradeStatus',title : '交易状态',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.sellerId">
+		{field : 'sellerId',title : '卖家支付宝用户号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.sellerEmail">
+		{field : 'sellerEmail',title : '卖家支付宝账号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.buyerId">
+		{field : 'buyerId',title : '买家支付宝用户号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.buyerEmail">
+		{field : 'buyerEmail',title : '买家支付宝账号',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.totalFee">
+		{field : 'totalFee',title : '交易金额',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.quantity">
+		{field : 'quantity',title : '购买数量',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.price">
+		{field : 'price',title : '商品单价',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.body">
+		{field : 'body',title : '商品描述',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.gmtCreate">
+		{field : 'gmtCreateString',title : '交易创建时间',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.gmtPayment">
+		{field : 'gmtPaymentString',title : '交易付款时间',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.isTotalFeeAdjust">
+		{field : 'isTotalFeeAdjust',title : '是否调整总价',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.useCoupon">
+		{field : 'useCoupon',title : '是否使用红包买家',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.discount">
+		{field : 'discount',title : '折扣',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.refundStatus">
+		{field : 'refundStatus',title : '退款状态',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.AlipayPaynotify.gmtRefund">
+		{field : 'gmtRefundString',title : '退款时间',width : 100 }, 
+	</@z.pmt>
+			{
+				field : 'action',
+				title : '',
+				width : 0
+			} ] ],
+			toolbar : '#toolbar',
+			onLoadSuccess : function() {
+				$('#searchForm table').show();
+				parent.$.messager.progress('close');
+				$(this).datagrid('tooltip');
+				var retData=$(this).datagrid('getData');
+				if(retData && retData['obj1'])
+					$('#queryhq').val(retData['obj1']);
+			},
+			onRowContextMenu : function(e, rowIndex, rowData) {
+				e.preventDefault();
+				$(this).datagrid('unselectAll');
+				$(this).datagrid('selectRow', rowIndex);
+			}
+		});
+	});
+	function loadData(){
+		dataGrid.datagrid('reload');
+	}
+
+	function searchFun(value,name) {
+		var searchlike=" 0=1 ";
+		queryByHql("("+searchlike+")");
+	}
+
+</script>
+<body class="easyui-layout">
+<div data-options="region:'north',title:'[支付宝支付结果回调]搜索查询',split:true,iconCls:'icon-search'" style="height:100px;">
+<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'brick_delete',plain:true" onclick="cleanSearchFun();">清空查询</a>
+<input id="isearch" class="easyui-searchbox" style="width:300px" data-options="searcher:searchFun,prompt:'请输入搜索值'"></input>
+<br/>
+</div>
+<div data-options="region:'center'" style="padding:10px; text-align:left;">
+	<table id="dataGrid" data-options="border:false,fit:true,fitColumns:true,singleSelect:true"></table>
+</div>
+<div id="toolbar" style="display: none;">
+<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'help'" onclick="$('#wHelp').window('open');" >帮助</a>
+<@z.pmt key="0.AlipayPaynotify.new">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_add'" onclick="javascript:openW2('${base}/user/AlipayPaynotify/new.html?&'+$.trim($('#newobj').val()),'添加');" >添加</a>
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_add'" onclick="javascript:openW2('${base}/user/AlipayPaynotify/new.html?&copyfrom=AlipayPaynotify&copyfromwhere=id='+selectRow(),'添加');" >复制添加</a>
+</@z.pmt>
+
+<@z.pmt key="0.AlipayPaynotify.edit">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_edit'" onclick="javascript:openW2WithRow('${base}/user/AlipayPaynotify/edit.html?id=','修改');" >修改</a>
+</@z.pmt>
+
+<@z.pmt key="0.AlipayPaynotify.del">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'arrow_accept'" onclick="delCn('AlipayPaynotify');" >删除</a>
+</@z.pmt>
+
+<@z.pmt key="0.AlipayPaynotify.show">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_link'" onclick="javascript:openW2WithRow('${base}/user/AlipayPaynotify/show.html?id=','查看');" >查看</a>
+</@z.pmt>
+
+</div>
+<input id="queryhq" name="queryhq" type="hidden" value="${queryhq}"/>
+<input id="newobj" name="newobj" type="hidden" value="${newobj}"/>
+<div id="wHelp" name="wHelp" class="easyui-window" data-options="closed:true,modal:true,title:'帮助'" style="width:600px;height:400px;">支付宝支付结果回调-<br/></div>
+<div id="w2" name="w2" class="easyui-window" data-options="closed:true,modal:true,title:'窗口'" style="width:600px;height:400px;"></div>
+<div id="w1" name="w1" class="easyui-window" data-options="closed:true,modal:true,title:'窗口'" style="width:700px;height:500px;">
+	<iframe id="show_w1" name="show_w1" frameborder="0" style="border: 0; width: 100%; height: 98%;"></iframe>
+</div>
+
+</body>
+</html>

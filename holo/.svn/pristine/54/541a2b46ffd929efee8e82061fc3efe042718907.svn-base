@@ -1,0 +1,104 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.spec;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zmax.yijian.biz.service.my.AdminService;
+import com.zmax.yijian.biz.service.my.CadminService;
+import com.zmax.yijian.biz.service.my.DoctorService;
+import com.zmax.yijian.biz.service.my.DruggistService;
+import com.zmax.yijian.biz.service.my.MemberService;
+import com.zmax.yijian.biz.service.my.OperService;
+import com.zmax.yijian.biz.service.my.SellerService;
+import com.zmax.yijian.biz.service.my.UserService;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+import com.zmax.conf.AttrStatic;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+
+
+
+
+
+
+/**
+ * 和角色相关的Service
+ * @author zmax
+ *
+ */
+@Service
+public class SpecRoleService {
+	
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	
+	/**
+	 * 给用户增加角色对象 user.setUserobj(admin);
+	 * @param user User
+	 */
+	public void userAddRoleobj(User user){
+		int usertype=user.getRoleId();
+		switch (usertype) {
+		case AttrStatic.ROLE_ADMIN:
+		{
+			user.setUserobj(adminService.get(null, user.getId()));
+			break;
+		}
+		case AttrStatic.ROLE_CADMIN:
+		{
+			user.setUserobj(cadminService.get(null, user.getId()));
+			break;
+		}
+		case AttrStatic.ROLE_OPER:
+		{
+			user.setUserobj(operService.get(null, user.getId()));
+			break;
+		}
+		case AttrStatic.ROLE_SELLER:
+		{
+			user.setUserobj(sellerService.get(null, user.getId()));
+			break;
+		}
+		case AttrStatic.ROLE_MEMBER:
+		{
+			user.setUserobj(memberService.get(null, user.getId()));
+			break;
+		}	
+		case AttrStatic.ROLE_DOCTOR:
+		{
+			user.setUserobj(doctorService.get(null, user.getId()));
+			break;
+		}
+		default:
+		break;
+		}
+	}
+}

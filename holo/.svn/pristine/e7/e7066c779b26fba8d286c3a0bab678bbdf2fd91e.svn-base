@@ -1,0 +1,95 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Pomotionspec.id">
+		<tr><th>序号ID</th><td>
+		${pomotionspec.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${pomotionspec.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.statusValidOrNot">
+		<tr><th>状态</th><td>
+		${pomotionspec.statusValidOrNotString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.title">
+		<tr><th>标题</th><td>
+		${pomotionspec.title}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.img1">
+		<tr><th>图1</th><td>
+		${pomotionspec.img1}
+		<br/><img src="${pomotionspec.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.txt1">
+		<tr><th>文1</th><td>
+		${pomotionspec.txt1}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.img2">
+		<tr><th>图2</th><td>
+		${pomotionspec.img2}
+		<br/><img src="${pomotionspec.img2}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.txt2">
+		<tr><th>文2</th><td>
+		${pomotionspec.txt2}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.img3">
+		<tr><th>图3</th><td>
+		${pomotionspec.img3}
+		<br/><img src="${pomotionspec.img3}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.txt3">
+		<tr><th>文3</th><td>
+		${pomotionspec.txt3}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.img4">
+		<tr><th>图4</th><td>
+		${pomotionspec.img4}
+		<br/><img src="${pomotionspec.img4}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.txt4">
+		<tr><th>文4</th><td>
+		${pomotionspec.txt4}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.img5">
+		<tr><th>图5</th><td>
+		${pomotionspec.img5}
+		<br/><img src="${pomotionspec.img5}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.txt5">
+		<tr><th>文5</th><td>
+		${pomotionspec.txt5}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Pomotionspec.listPomotionspecProduct">
+		<tr><th>产品列表</th><td>
+		${pomotionspec.listPomotionspecProduct}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

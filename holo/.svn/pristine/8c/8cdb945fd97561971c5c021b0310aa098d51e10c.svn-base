@@ -1,0 +1,242 @@
+package com.zmax.yijian.biz.service.spec;
+
+import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.sun.org.apache.regexp.internal.recompile;
+import com.zmax.yijian.biz.service.common.PermitCheckUtils;
+import com.zmax.yijian.biz.service.common.SessionUserUtils;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.conf.Propmy;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+import com.zmax.yijian.web.utils.FastjsonFilter;
+import com.zmax.conf.AttrStatic;
+import com.zmax.conf.SessionName;
+import com.zmax.entity.Sele;
+import com.zmax.exception.BoException;
+import com.zmax.exception.NeedLoginException;
+import com.zmax.utils.beans.JsonLos;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.date.DateUtils;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+
+/**
+ * 购物车与订单服务
+ * @author zmax
+ *
+ */
+@Service
+public class SpecYjCartOrderrService {
+
+	private static final Logger logger = Logger.getLogger(SpecYjCartOrderrService.class);
+
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	ManufacturerService manufacturerService;	
+	@Autowired
+	OrderrService orderrService;
+	@Autowired
+	OrderrdetailService orderrdetailService;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	DmmsgService dmmsgService;
+
+
+	@Autowired
+	SessionUserUtils sessionUserUtils;
+	@Autowired
+	PermitCheckUtils permitCheckUtils;
+
+	/**
+	 * 购物车转订单
+	 * @param tokenUser
+	 * @param carts 购物车的Json串
+	 * @param orderrForm 页面上传入的orderr信息
+	 * @return
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public Orderr memberCartToOrderr(User tokenUser, String carts,Orderr orderrForm) throws BoException, NeedLoginException, Exception {
+		// 解析json成实体类
+		List<Cart> listCart = JSON.parseArray(carts, Cart.class);
+		if (listCart == null || listCart.size() == 0) {
+			throw new BoException("购物车为空");
+		}
+		//订单详细
+		int productnums=0; //商品总数量
+		double sumprice=0.0; //商品总价
+		Product product0=null;
+		List<Orderrdetail> listOrderrdetail = new ArrayList<Orderrdetail>();
+		for (int i = 0; i < listCart.size(); i++) {
+			Cart cart=listCart.get(i);
+			Product product=productService.get(null, cart.getProductId());
+			if(product==null){
+				logger.info("购物车中有商品为空,productId="+cart.getProductId());
+				continue;
+			}
+			if(product0==null)
+				product0=productService.get(null, cart.getProductId());
+			//精简构造 订单详细
+			Orderrdetail orderrdetail = new Orderrdetail(
+					null , //Date 发货时间   
+					null , //Date 收货时间   
+					null , //Integer 订单号   
+					0 , //Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃','-2':'已退货','-3':'退货申请'}
+					0 , //Integer 统计状态 default=0  {'0':'未统计','1':'已统计'}
+					product.getId() , //Integer 产品   
+					product.getPrice() , //Double 单价 default=0.0  
+					cart.getNum() , //Integer 数量 default=1  
+					null , //String 用药方法   
+					null , //String 医嘱   
+					null , //String 用法用量   
+					null
+					);
+			productnums+=orderrdetail.getNum();
+			sumprice+=orderrdetail.getNum()*orderrdetail.getPrice();
+			listOrderrdetail.add(orderrdetail);
+			//orderrdetailService.saveCreate(tokenUser, new Orderrdetail() , orderrdetail, null, null, true, true);
+		}
+		Member member=memberService.get(null, tokenUser.getId());
+		
+		//精简构造 订单
+		Orderr orderr = new Orderr(
+				null , //Date 支付时间   
+				2 , //Integer 开单类型 default=0  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}
+				0 , //Integer 支付状态 default=0  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}
+				0 , //Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}
+				1 , //Integer 提货方式 default=0  {'0':'物流发货','1':'到店自提'}
+				(new Date()).getTime() , //Long 序列号 default=0l  
+				tokenUser.getId() , //Integer 会员   
+				sumprice , //Double 总价 default=0.0  
+				(product0==null)?null:product0.getTitle() , //String 商品名  第一个商品的名称 
+				(product0==null)?null:product0.getImg1() , //String 图1  第一个商品的图 
+				orderrForm.getDrugstoreId() , //Integer 取药点 default=0  
+				member.getDoctorId() , //Integer 推荐医生 default=0 查询统计用 
+				null , //Integer 取药操作员 default=0 取药时的操作员
+				productnums , //Integer 商品数量  发货前数一数 
+				null , //String 诊断   
+				null
+				);
+		// 生成订单
+		orderrService.saveCreate(tokenUser, new Orderr(), orderr, null, null, true, true);
+		//订单详细
+		for (Orderrdetail orderrdetail : listOrderrdetail) {
+			orderrdetail.setOrderrId(orderr.getId());
+			orderrdetailService.saveCreate(tokenUser, new Orderrdetail() , orderrdetail, null, null, true, true);
+			orderrdetail.setOrderrIdOrderrObj(null); //json 死机
+		}
+		orderr.setListorderrdetail(listOrderrdetail);
+		return orderr;
+	}
+
+	/**
+	 * 医生给患者开药方，保存orderr后，再保存orderrdetail，再根据orderrdetail算出总价等信息，更新orderr
+	 * @param tokenUser 这个是医生
+	 * @param orderr 已经存过的orderr+页面上提交上来的，obj1就是List[Orderrdetail]
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void createOrderrdetailAfterDoctorMakeOrderrToMember(User tokenUser, Orderr orderr) throws BoException, NeedLoginException, Exception {
+		String orderrdetails=(String)orderr.getObj1();
+		if(StringUtils.isBlank(orderrdetails))
+			throw new BoException("药品为空!");
+		List<Orderrdetail> listOrderrdetail = JSON.parseArray(orderrdetails, Orderrdetail.class);
+		if (listOrderrdetail == null || listOrderrdetail.size() == 0) {
+			throw new BoException("药品为空!!");
+		}
+		
+		int productnums=0; //商品总数量
+		double sumprice=0.0; //商品总价
+		Product product0=null;
+		
+		for (Orderrdetail orderrdetail : listOrderrdetail) {
+			Product product=productService.get(tokenUser, orderrdetail.getProductId());
+			if(product0==null){
+				product0=new Product();
+				BeanUtils.copyProperties(product, product0);
+			}				
+			Orderrdetail orderrdetaildb = new Orderrdetail(
+					null , //Date 发货时间   
+					null , //Date 收货时间   
+					orderr.getId() , //Integer 订单号   
+					0 , //Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃','-2':'已退货','-3':'退货申请'}
+					0 , //Integer 统计状态 default=0  {'0':'未统计','1':'已统计'}
+					orderrdetail.getProductId() , //Integer 产品   
+					(product.getPrice()==null)?0.0:product.getPrice(), //Double 单价 default=0.0  
+					(orderrdetail.getNum()==null)?0:orderrdetail.getNum() , //Integer 数量 default=1  
+					orderrdetail.getUsemethord() , //String 用药方法   
+					orderrdetail.getOtherdetail() , //String 医嘱   
+					orderrdetail.getUsemount() , //String 用法用量   
+					null
+				);
+			productnums+=orderrdetail.getNum();
+			sumprice+=orderrdetail.getNum()*orderrdetail.getPrice();
+			orderrdetailService.saveCreate(tokenUser, new Orderrdetail(), orderrdetaildb, null, null, true, true);
+		}
+		Orderr orderrdb=orderrService.get(null, orderr.getId());
+		orderrdb.setSumprice(sumprice);
+		orderrdb.setProductnums(productnums);
+		orderrdb.setTitle((product0==null)?null:product0.getTitle());
+		orderrdb.setImg1((product0==null)?null:product0.getImg1());
+		orderrService.update(null, orderrdb);
+		//发个通知给患者
+		//精简构造 医患聊天记录
+		Dmmsg dmmsg = new Dmmsg(
+			0 , //Integer 是否读过 default=0  {'0':'未读','1':'已读'}
+			1 , //Integer 发送接收 default=0  {'0':'患者发给医生','1':'医生发给患者'}
+			orderr.getMemberId() , //Integer 会员 default=0  
+			tokenUser.getId() , //Integer 医生 default=0  
+			0 , //Integer 产品 default=0 如果为空表示全科咨询 
+			"系统消息：医生为您开的药笺<a href='#/tab/Orderr/"+orderr.getId()+"'>点击查看</a>" , //String 消息内容   
+			null
+		);
+		dmmsgService.saveCreate(null, new Dmmsg(), dmmsg, null, null, true, true);
+	}
+	
+}

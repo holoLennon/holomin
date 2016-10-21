@@ -1,0 +1,588 @@
+package com.zmax.yijian.web.controller.spec.pub;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.UrlFilenameViewController;
+
+
+
+
+
+
+
+
+import com.octo.captcha.service.image.ImageCaptchaService;
+import com.zmax.conf.Addr;
+import com.zmax.conf.SessionName;
+import com.zmax.exception.BoException;
+import com.zmax.exception.NeedLoginException;
+import com.zmax.exception.OpenWeixinQQException;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.JsonUtilAli;
+import com.zmax.utils.string.MD5;
+import com.zmax.utils.string.Md5PwdEncoder;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.utils.string.XMLConverUtil;
+import com.zmax.yijian.biz.wxapi.MenuServAPI;
+import com.zmax.yijian.biz.service.common.SessionUserUtils;
+import com.zmax.yijian.biz.service.my.WxouserService;
+import com.zmax.yijian.biz.service.spec.*;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.conf.Prop;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.bean.wx.BaseResult;
+import com.zmax.yijian.common.dal.bean.wx.WaMenu;
+import com.zmax.yijian.common.utils.AESUtil;
+import com.zmax.yijian.common.utils.ExpireSet;
+import com.zmax.yijian.common.utils.MyUtils;
+import com.zmax.yijian.common.utils.StringUtils1;
+import com.zmax.yijian.web.controller.base.base.BaseController;
+import com.zmax.zbabi.utils.RequestUtils;
+/**
+ * 微信给用户使用的，包括会员和管理员
+ * <br>
+ * <b>类描述:</b>
+ * 
+ * <pre>
+ * 包括
+ * 用户直接访问的
+ * 用户从微信跳过来的，微信会带上code，通过code后台取出用户信息
+ * 简单版：https://open.weixin.qq.com/connect/oauth2/authorize?appid=aaa&redirect_uri=http%3A%2F%2Fwww.xx.com%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect
+ * 完全版：https://open.weixin.qq.com/connect/oauth2/authorize?appid=aaa&redirect_uri=http%3A%2F%2Fwww.xx.com%2Findex.html&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect
+ * </pre>
+ * 
+ * @see
+ * @since
+ */
+@Controller
+@RequestMapping("/")
+public class SpecWxController extends BaseController{
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(SpecWxController.class);
+	/**重复通知过滤  时效60秒*/ 
+	private static ExpireSet<String> expireSet = new ExpireSet<String>(60);
+
+	/**平台id，用于单用户，多微信用户的路径是/pub/wx/{bizId}/xxxx，同时参数带@PathVariable Integer bizId*/
+	private Integer bizId=Conf.BIZID;
+
+	@Autowired
+	SpecWxService specWxService;
+	@Autowired
+	WxouserService wxouserService;
+
+	@Autowired
+	SessionUserUtils sessionUserUtils;
+	@Autowired
+	Prop prop;
+
+
+
+
+	/**
+	 * 让用户跳回指定页
+	 * @param response
+	 * @param gobackUrl
+	 */
+	private void goTo(HttpServletResponse response,String gobackUrl){
+		try {
+			response.sendRedirect(gobackUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(e);
+		}
+	}
+	/**
+	 * 返回手机页，加上openid
+	 * @param response
+	 * @param gobackUrl
+	 * @param wxouser 他的id就是openid
+	 * @throws Exception 
+	 */
+	private void goToAppBackurl(HttpServletRequest request,HttpServletResponse response,Wxouser wxouser) throws BoException{
+		try {
+			String gobackUrl=(String)request.getSession().getAttribute(SessionName.wxAppGobackUrl);
+			if (logger.isDebugEnabled())
+				logger.debug("goToAppBackurl这里从sesssion取出时gobackUrl-->"+gobackUrl);	
+			if(StringUtils.isBlank(gobackUrl)){
+				logger.error("goToAppBackurl  gobackUrl为空，页面将不会跳转");
+				throw new BoException("返回地址为空，页面将不会跳转");
+			}
+			//第二种方法：这里采用的是先对前端传过来的url解码再在链接的 ？后加上openid=XXXXXXXXXXXXXXXXXXX，再解码 sendRedirect
+			gobackUrl = URLDecoder.decode(gobackUrl,"UTF-8");
+			if(wxouser!=null)
+				gobackUrl=urlAddParamForS(gobackUrl,"openid="+wxouser.getId(),"openid");
+			if (logger.isDebugEnabled())
+				logger.debug("goToAppBackurl 经过解码再带上带openid返回-->"+gobackUrl);	
+			response.sendRedirect(gobackUrl);
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.error(e);
+		}
+	}
+
+	/**
+	 * 给url加参数 若已经带有key，则不需要再加
+	 * @param url  http://so.maykeys.com/sowww/index.html?pwxinvitememberId=129&testuser=test10123450020#/app/home/258"
+	 * @param param 参数 ex."openid="+123456
+	 * @param key 关键字 ex. openid
+	 * @return  http://so.maykeys.com/sowww/index.html?openid=openid1&pwxinvitememberId=129&testuser=test10123450020#/app/home/258"
+	 */	
+	public static String urlAddParamForS(String url,String param,String key){
+		//若已经带有key，则不需要再加
+		if(url.contains(key)){
+			return url;
+		}
+		int qposition=StringUtils.indexOf(url, "?");
+		String newUrl=url.substring(0, qposition+1)+param+"&"+url.substring(qposition+1, url.length());
+		return newUrl;
+	}
+
+	/**
+	 * 微信获取openid接口，会让用会去微信转一圈或两圈，回来后，wxouser会创建或更新，流程结束后，值是通过session传递的，包括
+	 * <br>SessionName.WxouserVisiter 访问者之微信用户对象  ，这个是WXBOR流程产生的结果
+	 * 如果是返回给手机，则会在URL参数上增加&openid=xxx
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId
+	 * @param gobackUrl 应用希望的返回地址
+	 * @param innerUrl 内部应用url 优先级低于gobackUrl
+	 * @param testuser 测试用户test101234xxxxx
+	 */
+	@RequestMapping(value="/pub/wx/wxbor")
+	public void wxbor(HttpServletRequest request,HttpServletResponse response,ModelMap model,String gobackUrl,String innerUrl,String testuser) throws BoException,Exception{	
+		if (logger.isDebugEnabled())
+			logger.debug("wxbor页面传递的gobackUrl="+gobackUrl);
+		if(StringUtils.isNotBlank(gobackUrl)){
+			if (logger.isDebugEnabled())
+				logger.debug("wxbor保存session返回gobackUrl="+gobackUrl);
+			request.getSession().setAttribute(SessionName.wxAppGobackUrl, gobackUrl);
+		}
+
+		//看下session有没有微信用户，有的话，直接返回，没有去简单版
+		Wxouser wxouserVisiter=(Wxouser)request.getSession().getAttribute(SessionName.WxouserVisiter+bizId);
+		if(null!=wxouserVisiter){
+			if (logger.isDebugEnabled())
+				logger.debug("wxbor找到session微信对象-->"+wxouserVisiter.toString());		
+			gobackUrl=(String)request.getSession().getAttribute(SessionName.wxAppGobackUrl);
+
+			if (logger.isDebugEnabled())
+				logger.debug("wxbor取出刚才session存储的gobackUrl-->"+gobackUrl);
+			if(StringUtils.isNotBlank(gobackUrl)){
+				goToAppBackurl(request,response,wxouserVisiter);
+				return;
+			}
+			if(StringUtils.isNotBlank(innerUrl)){
+				goTo(response, innerUrl);
+				return;
+			}
+			return;
+		}
+		//自己
+		String urlMe=prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/"+bizId+"/wxbor.html";
+		//简单版的url
+		String indexsf=prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/"+bizId+"/wxReturnOpenidSimp.html?gobackUrl="+urlMe;
+		String genurl=specWxService.gotoWeixOauthUrl(bizId, indexsf, true);
+		//测试用户
+		if(StringUtils.isNotBlank(testuser) && testuser.indexOf(Conf.TESTUSER)==0){
+			genurl=indexsf+"&code="+testuser+"&testuser="+testuser;
+		}
+		if (logger.isDebugEnabled())
+			logger.debug("wxbor跳转-->"+genurl);		
+		goTo(response, genurl);
+	}
+
+	/**
+	 * 这个页面是应用让用户访问QQ后，QQ让用户跳回来的。
+	 * wx获取openid简单版，保存openid->session,根据wxouser决定要不要去完全版
+	 * 获取openid简版
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 应用传来的商家id，通过url路径方式体现
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 * @param gobackUrl 完成返回路径，通过url参数方式体现，通常是wxbor
+	 */
+	@RequestMapping(value="/pub/wx/wxReturnOpenidSimp")
+	public void wxReturnOpenidSimp(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code,String gobackUrl){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid简版_收到bizId="+bizId+",code="+code);
+			User user=sessionUserUtils.userFromRequest(request);
+			Wxouser wxouser=specWxService.saveWxouserSimp(code, bizId,user);
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid简版_wxouser--->"+wxouser);
+			if(wxouser==null||wxouser.getStatusuf()==null||wxouser.getStatusuf()==0){
+				//去完全版
+				String indexsf=prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/"+bizId+"/wxReturnOpenidFull.html?gobackUrl="+gobackUrl;
+				String genurl=specWxService.gotoWeixOauthUrl(bizId, indexsf, false);
+				//测试用户
+				if(StringUtils.isNotBlank(code) && code.indexOf(Conf.TESTUSER)==0){
+					genurl=indexsf+"&code="+code+"&testuser="+code;
+				}
+				if (logger.isDebugEnabled())
+					logger.debug("获取openid_去完全版_跳转到:"+genurl);
+
+				goTo(response, genurl);
+				return;
+			}
+			//WxouserVisiter保存到session中
+			if (logger.isDebugEnabled())
+				logger.debug("wxouser是完全版了，保存到Session:"+wxouser);
+			request.getSession().setAttribute(SessionName.WxouserVisiter+bizId, wxouser);		
+			request.getSession().setAttribute(SessionName.openId, wxouser.getId());		
+			//测试用户
+			if(StringUtils.isNotBlank(code) && code.indexOf(Conf.TESTUSER)==0){
+				gobackUrl=StringUtilz.urlAddParam(gobackUrl, "code="+code+"&testuser="+code);
+			}
+			if (logger.isDebugEnabled()){
+				logger.debug("回到wxborDone跳转--->"+gobackUrl);
+			}
+			//回到wxborDone
+			goTo(response, gobackUrl);
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		}catch (Exception e) {
+			errm(model,"服务器正忙");
+		}
+	}
+
+	/**
+	 * wx跳到后台完全版，获取完整地wxouser
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 应用传来的商家id，通过url路径方式体现
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 * @param gobackUrl 完成返回路径，通过url参数方式体现，通常是wxbor
+	 */
+	@RequestMapping(value="/pub/wx/wxReturnOpenidFull")
+	public void wxReturnOpenidFull(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code,String gobackUrl){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid完全版_收到bizId="+bizId+",code="+code);
+			User user=sessionUserUtils.userFromRequest(request);
+			Wxouser wxouser=specWxService.saveWxouserFull(code, bizId, user);
+
+			//WxouserVisiter保存到session中
+			if (logger.isDebugEnabled())
+				logger.debug("wxouser是完全版了，保存到Session:"+wxouser);
+			request.getSession().setAttribute(SessionName.WxouserVisiter+bizId, wxouser);		
+			request.getSession().setAttribute(SessionName.openId, wxouser.getId());	
+
+			//测试用户
+			if(StringUtils.isNotBlank(code) && code.indexOf(Conf.TESTUSER)==0){
+				gobackUrl=StringUtilz.urlAddParam(gobackUrl, "code="+code+"&testuser="+code);
+			}
+			if (logger.isDebugEnabled()){
+				logger.debug("回到wxborDone跳转--->"+gobackUrl);
+			}
+			goTo(response, gobackUrl);
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		}catch (Exception e) {
+			errm(model,"服务器正忙");
+		}
+	}
+
+
+
+	/**
+	 * popenid版微信获取openid接口，目标是获取用户的openid
+	 * 
+	 * 流程：
+	 * <br>放session:gobackUrl,popenid
+	 * <br>会让用会去微信到wxReturnOpenidSimp1 得到openid，根据openid+popenid，创建wxr,wxouser,跳回手机应用
+	 * <br>Session也会增加openid和popenid，但并不是很关键，这样做只是在登录时可以减少一下内部通讯。
+	 * <br>如果是返回给手机，则会在URL参数上增加&openid=xxx
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 商家ID
+	 * @param popenid 父OPENID，介绍人OPENID
+	 * @param gobackUrl 应用希望的返回地址,是手机跳过来的。
+	 * @param testuser 测试用户test101234xxxxx
+	 */
+	@RequestMapping(value="/pub/wx/wxbor1")
+	public void wxbor1(HttpServletRequest request,HttpServletResponse response,ModelMap model,String popenid,String gobackUrl,String testuser) throws BoException,Exception{	
+		if (logger.isDebugEnabled())
+			logger.debug("wxbor1页面传递参数"+String.format("Integer bizId=%s,String popenid=%s,String gobackUrl=%s,String testuser=%s"
+					, bizId, popenid, gobackUrl, testuser));
+
+		//外部过来时有gobackUrl,放session，等完成后，通过session取出，并且跳转返回应用;
+		if(StringUtils.isBlank(gobackUrl)){
+			logger.error("返回地址为空");
+			errm(model,"返回地址为空");
+			return;
+		}
+		request.getSession().setAttribute(SessionName.wxAppGobackUrl, gobackUrl);
+
+		//看下session中是否已经有openid了
+		String sessionOpenid=(String)request.getSession().getAttribute(SessionName.openId);
+		if(StringUtils.isNotBlank(sessionOpenid)){
+			//已经有了，不需要再做了
+			if (logger.isDebugEnabled())
+				logger.debug("session中是否已经有openid已经有了，不需要再做了");
+			goToAppBackurl(request,response,new Wxouser(sessionOpenid));
+			return;
+		}
+
+		//如果popenid为空，用老板号
+		if(StringUtils.isBlank(popenid))
+			popenid=""+bizId;
+		request.getSession().setAttribute(SessionName.popenId, popenid);
+
+
+		//简单版的url
+		String indexsf=prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/"+bizId+"/wxReturnOpenidSimp1.html?";
+		String genurl=specWxService.gotoWeixOauthUrl(bizId, indexsf, true);
+		//测试用户
+		if(StringUtils.isNotBlank(testuser) && testuser.indexOf(Conf.TESTUSER)==0){
+			genurl=indexsf+"&code="+testuser+"&testuser="+testuser;
+		}
+		if (logger.isDebugEnabled())
+			logger.debug("wxbor1跳转-->"+genurl);	
+		//让用户跳到微信wxReturnOpenidSimp1，过一会收到消息的是		wxReturnOpenidSimp1(request, response, model, bizId, code, gobackUrl);
+		goTo(response, genurl);
+	}
+
+
+	/**
+	 * 这个页面是应用让用户访问QQ后，QQ让用户跳回来的。
+	 * wx获取openid简单版，保存openid->session,根据wxouser决定要不要去完全版
+	 * 如果是简单版，跳完全版；
+	 * 如果是完全版，结束后跳gobackUrl，gobackUrl地址是在session中的
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 应用传来的商家id，通过url路径方式体现
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 */
+	@RequestMapping(value="/pub/wx/wxReturnOpenidSimp1")
+	public void wxReturnOpenidSimp1(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid简版_收到bizId="+bizId+",code="+code+",session中popenid="+(String)request.getSession().getAttribute(SessionName.popenId));
+			User user=sessionUserUtils.userFromRequest(request);
+			Wxouser wxouser=specWxService.saveWxouserSimp(code, bizId,user);
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid简版_wxouser--->"+wxouser);
+			if(wxouser==null||wxouser.getStatusuf()==null||wxouser.getStatusuf()==0){
+				//去完全版
+				String indexsf=prop.getDomain()+"/"+prop.getWebnamee()+"/pub/wx/"+bizId+"/wxReturnOpenidFull1.html?";
+				String genurl=specWxService.gotoWeixOauthUrl(bizId, indexsf, false);
+				//测试用户
+				if(StringUtils.isNotBlank(code) && code.indexOf(Conf.TESTUSER)==0){
+					genurl=indexsf+"&code="+code+"&testuser="+code;
+				}
+				if (logger.isDebugEnabled())
+					logger.debug("获取openid_去完全版_跳转到:"+genurl);
+
+				goTo(response, genurl);
+				return;
+			}
+			//WxouserVisiter保存到session中
+			if (logger.isDebugEnabled())
+				logger.debug("wxouser是完全版了，保存到Session:"+wxouser);
+			request.getSession().setAttribute(SessionName.WxouserVisiter+bizId, wxouser);		
+			request.getSession().setAttribute(SessionName.openId, wxouser.getId());		
+			specWxService.saveWxr(wxouser, (String)request.getSession().getAttribute(SessionName.popenId));
+			goToAppBackurl(request,response,wxouser);
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		}catch (Exception e) {
+			errm(model,"服务器正忙");
+		}
+	}
+
+	/**
+	 * wx跳到后台完全版，获取完整地wxouser，结束后跳gobackUrl，gobackUrl地址是在session中的
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 应用传来的商家id，通过url路径方式体现
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 */
+	@RequestMapping(value="/pub/wx/wxReturnOpenidFull1")
+	public void wxReturnOpenidFull1(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("获取openid完全版_收到bizId="+bizId+",code="+code+",session中popenid="+(String)request.getSession().getAttribute(SessionName.popenId));
+			User user=sessionUserUtils.userFromRequest(request);
+			Wxouser wxouser=specWxService.saveWxouserFull(code, bizId, user);
+
+			//WxouserVisiter保存到session中
+			if (logger.isDebugEnabled())
+				logger.debug("wxouser是完全版了，保存到Session:"+wxouser);
+			request.getSession().setAttribute(SessionName.WxouserVisiter+bizId, wxouser);		
+			request.getSession().setAttribute(SessionName.openId, wxouser.getId());		
+			specWxService.saveWxr(wxouser, (String)request.getSession().getAttribute(SessionName.popenId));
+			goToAppBackurl(request,response,wxouser);
+
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			errm(model,e.getMessage());
+		}catch (Exception e) {
+			errm(model,"服务器正忙");
+		}
+	}	
+
+
+	/**
+	 * 管理员创建微信自定义菜单
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 店家id
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/createWeixMenu")
+	public void createWeixMenu(HttpServletRequest request,HttpServletResponse response,ModelMap model){
+		try {
+			specWxService.createWxMenu(bizId);
+			writeJson(request, response, new Json(true,bizId+"号店创建微信自定义菜单成功"));
+		} catch (BoException e) {
+			writeJson(request, response, new Json(false,e.getMessage()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"系统错误:"+e.getMessage()));
+		}	
+	}
+	/**
+	 * 重刷下微信TOKEN
+	 * @param request
+	 * @param response
+	 * @param model
+	 */
+	@RequestMapping(value="/pub/wx/refreshTokens65535")
+	public String refreshTokens(HttpServletRequest request,HttpServletResponse response,ModelMap model){
+		specWxService.refreshTokens();
+		if(model!=null)
+			model.addAttribute("errorMsg", "完成");
+		return "/error/msg";
+	}
+	/**
+	 * 已关注用户从微信首页点击菜单或链接进入到此_会员首页
+	 * 测试：http://ddd.xxx.com/xxx/pub/wx/index.html?code=10123456789
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 * @param act home:#/tab/home ;
+	 * @param tb 是trunk 还是 branch
+	 * @param token 如果不空，则进行userId绑定
+	 */
+	@RequestMapping(value="/pub/wx/index")
+	public String index(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code,String act,String tb,String token){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("index:获取openid关注版_收到bizId="+bizId+",code="+code);
+			Wxouser wxouser= specWxService.saveWxouserFullAttation(code, bizId);
+			if(wxouser!=null){
+				if (logger.isDebugEnabled())
+					logger.debug("index:获取openid关注版_收到bizId="+bizId+",code="+code+",wxouser="+wxouser.getId()+","+wxouser.getOpenid());
+			}
+			if(StringUtils.isNotBlank(token)){
+				try {
+					User tokenUser = AESUtil.getInstance().decryptUser(token);
+					specWxService.updateOpenidUserIdBind(tokenUser.getId(), wxouser.getId());
+				} catch (Exception e) {
+					
+				}
+			}
+			model.addAttribute("wxouser", wxouser);
+			//      #/tab/OrgList
+			String tabact="";
+			if(StringUtils.isNotBlank(act)){
+				tabact="#/tab/"+act;
+			}
+			model.addAttribute("act", tabact);
+			model.addAttribute("tb", tb);
+
+			return "/pub/wx/index";
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			return errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			return errm(model,e.getMessage());
+		}catch (Exception e) {
+			return errm(model,"服务器正忙");
+		}
+	}	
+	/**
+	 * 已关注用户从微信首页点击菜单或链接进入到此_商家首页
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param bizId 应用传来的商家id，通过url路径方式体现
+	 * @param code QQ传来的code,可以用于获取openid，如果是test101234nnn则是测试号传过来的测试
+	 * @param act home:#/tab/home ; 
+	 */
+	@RequestMapping(value="/pub/wx/index_b")
+	public String index_b(HttpServletRequest request,HttpServletResponse response,ModelMap model,String code,String act){	
+		try {
+			if (logger.isDebugEnabled())
+				logger.debug("index_b:获取openid关注版_收到bizId="+bizId+",code="+code);
+			Wxouser wxouser=specWxService.saveWxouserFullAttation(code, bizId);
+			if (logger.isDebugEnabled())
+				logger.debug("index_b:wxouser="+wxouser.toJsonNotshow());
+			
+			model.addAttribute("wxouser", wxouser);
+
+			//      #/tab/OrgList
+			String tabact="";
+			if(StringUtils.isNotBlank(act)){
+				tabact="#/tab/"+act;
+			}
+			model.addAttribute("act", tabact);
+
+			return "/pub/wx/index_b";
+		} catch (OpenWeixinQQException e) {
+			e.printStackTrace();
+			return errm(model,e.getMessage());
+		} catch (BoException e) {
+			e.printStackTrace();
+			return errm(model,e.getMessage());
+		}catch (Exception e) {
+			return errm(model,"服务器正忙");
+		}
+	}	
+}

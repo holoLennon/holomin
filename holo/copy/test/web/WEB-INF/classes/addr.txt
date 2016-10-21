@@ -1,0 +1,7 @@
+{
+'user':'http://user.maykeys.com/user',
+'weix':'http://weix.maykeys.com/weix',
+'res':'http://res.maykeys.com',
+'bb':'http://bb.maykeys.com/bb',
+'so':'http://so.maykeys.com/so'
+}

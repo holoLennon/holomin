@@ -1,0 +1,66 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Productchannel.id">
+		<tr><th>序号ID</th><td>
+		${productchannel.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.channelName">
+		<tr><th>名称</th><td>
+		${productchannel.channelName}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.statusValidOrNot">
+		<tr><th>状态</th><td>
+		${productchannel.statusValidOrNotString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.parentid">
+		<tr><th>父ID</th><td>
+		${productchannel.parentidStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.priority">
+		<tr><th>排列顺序</th><td>
+		${productchannel.priority}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.childrennum">
+		<tr><th>孩子数量</th><td>
+		${productchannel.childrennum}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.family">
+		<tr><th>祖先</th><td>
+		${productchannel.family}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.icon">
+		<tr><th>图标名称</th><td>
+		${productchannel.icon}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.img">
+		<tr><th>图</th><td>
+		${productchannel.img}
+		<br/><img src="${productchannel.img}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Productchannel.genurl">
+		<tr><th>生成地址</th><td>
+		${productchannel.genurl}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

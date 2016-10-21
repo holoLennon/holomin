@@ -1,0 +1,101 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Seller.id">
+		<tr><th>用户ID</th><td>
+		${seller.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.dlevel">
+		<tr><th>级别</th><td>
+		${seller.dlevelString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.name">
+		<tr><th>姓名</th><td>
+		${seller.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.idcard">
+		<tr><th>身份证号</th><td>
+		${seller.idcard}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.age">
+		<tr><th>年龄</th><td>
+		${seller.age}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.usersex">
+		<tr><th>性别</th><td>
+		${seller.usersexString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.gmtIn">
+		<tr><th>入司时间</th><td>
+		${seller.gmtInString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.gmtWork">
+		<tr><th>就职时间(合作时间)</th><td>
+		${seller.gmtWorkString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.area">
+		<tr><th>所在区域</th><td>
+		${seller.area}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.mmoney">
+		<tr><th>直接销售总额</th><td>
+		${seller.mmoney}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.mmoneyteam">
+		<tr><th>下属团队销售总额</th><td>
+		${seller.mmoneyteam}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.mmoneyall">
+		<tr><th>总销售金额</th><td>
+		${seller.mmoneyall}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.parentid">
+		<tr><th>上级</th><td>
+		${seller.parentidStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.priority">
+		<tr><th>排列顺序</th><td>
+		${seller.priority}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.childrennum">
+		<tr><th>孩子数量</th><td>
+		${seller.childrennum}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.family">
+		<tr><th>祖先</th><td>
+		${seller.family}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Seller.qrimg">
+		<tr><th>二维码</th><td>
+		${seller.qrimg}
+		<br/><img src="${seller.qrimg}" />
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

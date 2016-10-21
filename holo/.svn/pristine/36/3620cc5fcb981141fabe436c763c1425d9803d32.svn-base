@@ -1,0 +1,116 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Member.id">
+		<tr><th>用户ID</th><td>
+		${member.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.name">
+		<tr><th>呢称</th><td>
+		${member.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.img1">
+		<tr><th>头像</th><td>
+		${member.img1}
+		<br/><img src="${member.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.age">
+		<tr><th>年纪</th><td>
+		${member.age}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.usersex">
+		<tr><th>用户性别</th><td>
+		${member.usersexString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.idtype">
+		<tr><th>证件类型</th><td>
+		${member.idtypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.idnum">
+		<tr><th>证件号码</th><td>
+		${member.idnum}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.realname">
+		<tr><th>姓名</th><td>
+		${member.realname}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.mobile">
+		<tr><th>手机</th><td>
+		${member.mobile}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.zip">
+		<tr><th>邮编</th><td>
+		${member.zip}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.addr">
+		<tr><th>地址</th><td>
+		${member.addr}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.email">
+		<tr><th>电子邮件</th><td>
+		${member.email}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.realname1">
+		<tr><th>其它联系人姓名</th><td>
+		${member.realname1}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.mobile1">
+		<tr><th>其它联系人手机</th><td>
+		${member.mobile1}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.doctorId">
+		<tr><th>首推荐医生</th><td>
+		${member.doctorIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.countPrescription">
+		<tr><th>总处方数量</th><td>
+		${member.countPrescription}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.countOrderr">
+		<tr><th>总消费金额</th><td>
+		${member.countOrderr}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.statusRelation">
+		<tr><th>是否有新医患关系</th><td>
+		${member.statusRelationString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.cidgt">
+		<tr><th>个推cid</th><td>
+		${member.cidgt}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Member.ilastdev">
+		<tr><th>上个设备</th><td>
+		${member.ilastdevString}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

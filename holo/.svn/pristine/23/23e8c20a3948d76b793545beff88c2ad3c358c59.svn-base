@@ -1,0 +1,50 @@
+<!--Product，商品详细信息-->
+<ion-view view-title='滋补保健' cache-view="false" hide-tabs="false">
+
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+    <ion-content class="has-header" >
+        <style type="text/css">
+            b { text-decoration: line-through; font-weight:100;}
+        </style>
+        <ul>
+            <li class="item" style="height:140px;border: none;background: none">
+                <img src='res/img/zibubaojian.jpg' style="height:130px;width: 110%;margin-left: -5%;margin-top: -10px">
+            </li>
+        </ul>
+
+        <div style="height: 20px;color:black;font-size: 14px"></div>
+        <div class="row">
+            <ion-list class="list" style="border: none">
+                <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product1/{{obj.productId}}" collection-item-width="'48%'" collection-item-height="160px" >
+
+                    <img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="height: 80px;margin-left: 25%"/>
+                    <!--<h2 style="margin-top: 60px">{{obj.productIdString}}</h2>-->
+                    <div style="margin-top: 60px;margin-left: -60px">
+                        <span >{{obj.productIdProductObj.myname}}</span><br>
+                        <span style="font-size: 12px">{{obj.productIdProductObj.productstyle}}</span><br>
+                        <span style="font-size: 14px;color: red">￥{{obj.productIdProductObj.price}}</span>
+                    </div>
+
+                    <!--<button ng-if="act==1" class="button icon ion-gear-a" ng-click="chooseThis(obj)"></button>-->
+
+                </ion-item>
+            </ion-list>
+        </div>
+
+            <!--<ion-list class="list" style="border: none">-->
+                <!--<ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product/{{obj.productId}}" collection-item-width="'100%'" collection-item-height="75px" style="border: none">-->
+                    <!--<img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="border: solid 0.8px lightblue"/>-->
+                    <!--<h2 style="font-size: 13px">{{obj.productIdProductObj.myname}}</h2>-->
+                    <!--<p>-->
+                        <!--<span style="font-size: 11px">{{obj.productIdProductObj.productstyle}}</span><br>-->
+                        <!--<span style="font-size: 10px">{{obj.productIdProductObj.intro}}</span>-->
+                    <!--</p>-->
+                <!--</ion-item>-->
+            <!--</ion-list>-->
+            <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+            <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+        </ion-content>
+
+</ion-view>
+

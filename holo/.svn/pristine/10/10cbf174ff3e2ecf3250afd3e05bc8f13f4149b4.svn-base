@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+    <script src="http://yijian.zjjnyd.com/yijian/res/js/underscore.js"></script>
+</head>
+<body>
+<#if ((wxouser.id)??)>
+连接中...
+    <script type="text/javascript">
+    	var tb="${tb}";
+		/**客户端信息*/
+		var CLIENT_INFO="clientInfo";
+        var openid="${wxouser.id}";
+        var clientInfo= window.JSON.parse(window.localStorage.getItem(CLIENT_INFO));
+        if(!clientInfo){
+            clientInfo=_.clone(_ClientInfo);
+        }
+        clientInfo.openid=openid;
+		window.localStorage.setItem(CLIENT_INFO, window.JSON.stringify(clientInfo));
+		console.log(clientInfo);
+		if(tb==="branch")
+			window.location="http://yijian2.zjjnyd.com/yijianwww/index.html${act}";
+		window.location="http://yijian.zjjnyd.com/yijianwww/index.html${act}";
+    </script>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+	<a href="http://yijian.zjjnyd.com/yijianwww/index.html${act}">如果没有自动跳转，请点我进入</a>
+
+<#else>
+请从公众号进入
+</#if>
+</body>
+</html>

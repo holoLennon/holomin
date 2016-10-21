@@ -1,0 +1,776 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+package com.zmax.yijian.biz.service.my;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+
+import com.zmax.entity.*;
+import com.zmax.exception.*;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.EasyUiUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.easyui.Tree;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.conf.AttrStatic;
+
+import com.zmax.yijian.biz.service.base.BaseService;
+import com.zmax.yijian.biz.service.common.*;
+import com.zmax.yijian.biz.service.spec.SpecService;
+import com.zmax.yijian.common.dal.bean.*;
+import org.apache.poi.hssf.usermodel.*;
+
+/**
+ * 
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+@Service
+public class OrderrService extends BaseService<Orderr> {
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(OrderrService.class);
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+	@Autowired
+	CommonzSvrUitlsSpec commonzSvrUitlsSpec;
+	@Autowired
+	SpecService specService;
+
+	/**
+	 * 创建时的保存
+	 * @param sessionUser 
+	 * @param oldobj 旧对象，创建时通常是个空对象
+	 * @param obj 新对象，也就是需要保存的对象
+	 * @param copyfrom 从哪个表复制对象
+	 * @param copyfromwhere 复制的条件
+	 * @param needBefore 是否需要做写表前操作
+	 * @param needAfter 是否需要写表后操作
+	 * @throws Exception
+	 */
+	public void saveCreate(User sessionUser,Orderr oldobj,Orderr obj,String copyfrom,String copyfromwhere,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		//用于做复制新增的检查
+		if(StringUtils.isNotBlank(copyfrom)&&StringUtils.isNotBlank(copyfromwhere)){
+			Object objsrc=specService.getFirst(copyfrom, copyfromwhere, null);
+			commonzSvrUitlsSpec.obj2objcheck(sessionUser,objsrc, obj ,copyfrom ,"Orderr");
+		}		
+		if(needBefore){
+			//创建_写表前操作之通用
+			commonzSvrUitls.createBefore(oldobj,obj,"Orderr",sessionUser);
+			//创建_写表前操作之本地
+			createAndUpdateBefore(sessionUser,"create",oldobj, obj);
+			//创建_写表前操作之自定义，目的是修改obj
+			commonzSvrUitlsSpec.createAndUpdateBefore("create",oldobj, obj,sessionUser);
+		}
+		save(obj);
+		//TODO:lang
+		if(needAfter){
+			//创建_写表后操作之本地
+			createAndUpdateAfter(sessionUser,"create",obj,new Orderr());
+			//创建_写表后操作之自定义
+			commonzSvrUitlsSpec.createAndUpdateAfter("create",obj,new Orderr(),sessionUser);
+		}
+	}
+	/**
+	 * 更新
+	 * 流程：从DB取出DB对象，对提交对象进行修正，将修正对象复制到DB对象，保存
+	 * @param sessionUser 
+	 * @param obj
+	 * @param id 这个id通常是从session中获取的
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void updateUpdate(User sessionUser,Orderr obj,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		//数据库表里取出的对象，要把页面对象obj里的内容，放进来进行保存
+		Orderr dbobj=get(sessionUser, id);
+		if(dbobj==null)
+			throw new BoException("数据库中数据找不到");
+		if(needBefore){
+			//更新_写表前操作之通用，目的是修改obj
+			commonzSvrUitls.updateBefore(dbobj,obj,"Orderr",sessionUser);
+			//更新_写表前操作之本地，目的是修改obj
+			createAndUpdateBefore(sessionUser,"update",dbobj, obj);
+			//更新_写表前操作之自定义，目的是修改obj
+			commonzSvrUitlsSpec.createAndUpdateBefore("update", dbobj, obj, sessionUser);
+		}
+		//复制一下老数据库对象，给createAndUpdateAfter用
+		Orderr olddbobj=new Orderr();
+		ClassUtils.beanDeepCopy(dbobj, olddbobj);
+		//把页面传进来的对象obj复制到数据库里产生的对象dbobj,之后保存数据库产生的对象dbobj
+		ClassUtils.beanDeepCopy(obj, dbobj);
+		update(sessionUser,dbobj);
+		if(needAfter){
+			//更新_写表后操作之本地
+			createAndUpdateAfter(sessionUser,"update",dbobj,olddbobj);
+			//更新_写表后操作之自定义
+			commonzSvrUitlsSpec.createAndUpdateAfter("update",dbobj,olddbobj,sessionUser);
+		}
+	}
+
+	/**
+	 * 根据IDS批量更新某些数据
+	 * @param sessionUser 
+	 * @param ids
+	 * @param setfield
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void updateBatchByIds(User sessionUser,String[] ids,String setfield,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		String hql= "update Orderr set "+setfield +" where "+StringUtilz.whereIn(ids);
+		executeHql(sessionUser, hql, null);
+		if(needAfter)
+			commonzSvrUitlsSpec.batchupdateAfter(sessionUser,"Orderr", setfield, ids);
+	}
+	/**
+	 * 根据ID删除一个
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void deleteOneById(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		if(needBefore)
+			commonzSvrUitlsSpec.deleteByIdBefore(sessionUser,"Orderr", id);
+		deleteById(sessionUser,id);
+		if(needAfter)
+			commonzSvrUitlsSpec.deleteByIdAfter(sessionUser,"Orderr", id);
+		//TODO:lang
+	}
+	/**
+	 * 根据IDs删除批量
+	 * @param sessionUser 
+	 * @param ids
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void deleteBatch(User sessionUser,String[] ids,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		
+		for (String string : ids) {
+			Integer id=Integer.valueOf(string);
+			if(needBefore)
+				commonzSvrUitlsSpec.deleteByIdBefore(sessionUser,"Orderr", id);
+			deleteById(sessionUser,id);
+			if(needAfter)
+				commonzSvrUitlsSpec.deleteByIdAfter(sessionUser,"Orderr", id);
+		}
+	}
+	/**
+	 * 首页
+	 * @param sessionUser 
+	 * @param obj 在index时会传一个新对象进来，用于添加搜索条件用的列表
+	 * @param needBefore
+	 * @param needAfter
+	 * @param act 更多的操作 "nullCreate"=如果是空列表创建一个新对象
+	 */
+	public void csindex(User sessionUser,Orderr obj,boolean needBefore,boolean needAfter,String act) throws BoException,Exception{
+		if(StringUtils.equals(act, "nullCreate")){
+			if(obj==null)
+				throw new Exception("无法创建空对象");
+			Orderr dbobj=get(sessionUser, obj.getId());
+			if(dbobj==null){
+				//创建_写表前操作之自定义，目的是修改obj
+				commonzSvrUitlsSpec.createAndUpdateBefore("create",new Orderr(), obj,sessionUser);
+				save(obj);
+			}
+		}
+		if(needAfter){
+			indexAfter(sessionUser,obj); //给搜索用
+		}
+	}
+	/**
+	 * 表格
+	 * @param sessionUser 
+	 * @param search
+	 * @param ph
+	 * @param queryhq
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Grid csgrid(User sessionUser,Orderr search, PageHelper ph,String queryhq,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		String order=(ph.realSort()+" "+ph.getOrder()).trim();
+		List<Object> params = new ArrayList<Object>();
+		if(needBefore)
+			gridBefore(sessionUser,search);
+		String searchwhere=commonzSvrUitlsSpec.makeWhere(sessionUser,search, queryhq, params);
+		String where=StringUtilz.whereAdd(searchwhere, queryhq);
+		Grid page = listPagedQuery(sessionUser, where, order, ph.getPage(), ph.getRows(), params.toArray());
+		page.setObj1(queryhq);
+		if(needAfter)
+			gridAfter(sessionUser,page.getRows());	
+		
+		return page;
+	}
+	/**
+	 * excel表格
+	 * @param sessionUser 
+	 * @param search
+	 * @param ph
+	 * @param queryhq
+	 * @param act
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public HSSFWorkbook csexcelexport(User sessionUser,Orderr search, PageHelper ph,String queryhq,String act,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		String order=(ph.realSort()+" "+ph.getOrder()).trim();
+		List<Object> params = new ArrayList<Object>();
+		if(needBefore)
+			gridBefore(sessionUser,search);
+		String excelwhere=commonzSvrUitlsSpec.makeExportExcelQuery(sessionUser,"Orderr",queryhq, act, params);
+		String where=StringUtilz.whereAdd(excelwhere, queryhq);
+		int pageNo=1;
+		int pageSize=100;
+		
+		HSSFWorkbook wb = new HSSFWorkbook();  
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet  
+        HSSFSheet sheet = wb.createSheet("导出1");  
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short  
+        // 第四步，创建单元格，并设置值表头 设置表头居中  
+        HSSFCellStyle style = wb.createCellStyle();  
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式    
+        HSSFCell cell=null;
+        int nowrow=0;
+         //excel表格第一行，插入的是字段英文名。
+        HSSFRow row = sheet.createRow(nowrow++);
+        String[] fielde={"Id","GmtCreate","GmtCreateString","GmtPay","GmtPayString","Iotype","IotypeString","Status","StatusString","Statusgoods","StatusgoodsString","StatusCarriageType","StatusCarriageTypeString","Sn","MemberId","MemberIdString","Sumprice","Title","Img1","DrugstoreId","DrugstoreIdString","Doccheck","Docmake","DoctorWr","DoctorWrString","DoctorId","DoctorIdString","SellerId","SellerIdString","OperId","OperIdString","Productnums","Diagnose","Pomotionticketnums","Listorderrdetail","Paywxh5",""};
+        for (int i = 0; i < fielde.length; i++) {
+        	cell=row.createCell(i);
+	        cell.setCellStyle(style);
+	        cell.setCellValue(fielde[i]);  
+		}
+        //excel表格第一行，插入的是字段英文名。
+        row = sheet.createRow(nowrow++);
+        String[] fieldc={"序号ID","创建时间","创建时间","支付时间","支付时间","开单类型","开单类型","支付状态","支付状态","收发货状态","收发货状态","提货方式","提货方式","序列号","会员","会员","总价","商品名","图1","取药点","取药点","复核药师","配药药师","开药医生","开药医生","首推荐医生","首推荐医生","所属业务员","所属业务员","取药操作员","取药操作员","商品数量","诊断","可用优惠券数量","订单详细列表","微信支付H5对象",""};
+        for (int i = 0; i < fieldc.length; i++) {
+        	cell=row.createCell(i);
+	        cell.setCellStyle(style);
+	        cell.setCellValue(fieldc[i]);  
+		}	  
+        
+        //开始插入数据
+		while(true){
+			Grid page = listPagedQuery(sessionUser, where, order, pageNo, pageSize, params.toArray());
+			List<Orderr> list=page.getRows();
+			
+			for (Orderr orderr : list) {
+				addString(sessionUser, orderr);
+		        row = sheet.createRow(nowrow++);
+		        int nowcol=0;
+		        //放序号ID
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getId()!=null)
+					cell.setCellValue(orderr.getId());  
+		        //放创建时间
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getGmtCreate()!=null)
+					cell.setCellValue(orderr.getGmtCreate());  
+		        //放创建时间String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getGmtCreateString());  
+		        //放支付时间
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getGmtPay()!=null)
+					cell.setCellValue(orderr.getGmtPay());  
+		        //放支付时间String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getGmtPayString());  
+		        //放开单类型
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getIotype()!=null)
+					cell.setCellValue(orderr.getIotype());  
+		        //放开单类型String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getIotypeString());  
+		        //放支付状态
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getStatus()!=null)
+					cell.setCellValue(orderr.getStatus());  
+		        //放支付状态String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getStatusString());  
+		        //放收发货状态
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getStatusgoods()!=null)
+					cell.setCellValue(orderr.getStatusgoods());  
+		        //放收发货状态String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getStatusgoodsString());  
+		        //放提货方式
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getStatusCarriageType()!=null)
+					cell.setCellValue(orderr.getStatusCarriageType());  
+		        //放提货方式String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getStatusCarriageTypeString());  
+		        //放序列号
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getSn()!=null)
+					cell.setCellValue(orderr.getSn());  
+		        //放会员
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getMemberId()!=null)
+					cell.setCellValue(orderr.getMemberId());  
+		        //放会员String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getMemberIdString());  
+		        //放总价
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getSumprice()!=null)
+					cell.setCellValue(orderr.getSumprice());  
+		        //放商品名
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getTitle()!=null)
+					cell.setCellValue(orderr.getTitle());  
+		        //放图1
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getImg1()!=null)
+					cell.setCellValue(orderr.getImg1());  
+		        //放取药点
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDrugstoreId()!=null)
+					cell.setCellValue(orderr.getDrugstoreId());  
+		        //放取药点String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getDrugstoreIdString());  
+		        //放复核药师
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDoccheck()!=null)
+					cell.setCellValue(orderr.getDoccheck());  
+		        //放配药药师
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDocmake()!=null)
+					cell.setCellValue(orderr.getDocmake());  
+		        //放开药医生
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDoctorWr()!=null)
+					cell.setCellValue(orderr.getDoctorWr());  
+		        //放开药医生String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getDoctorWrString());  
+		        //放首推荐医生
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDoctorId()!=null)
+					cell.setCellValue(orderr.getDoctorId());  
+		        //放首推荐医生String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getDoctorIdString());  
+		        //放所属业务员
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getSellerId()!=null)
+					cell.setCellValue(orderr.getSellerId());  
+		        //放所属业务员String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getSellerIdString());  
+		        //放取药操作员
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getOperId()!=null)
+					cell.setCellValue(orderr.getOperId());  
+		        //放取药操作员String
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				cell.setCellValue(orderr.getOperIdString());  
+		        //放商品数量
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getProductnums()!=null)
+					cell.setCellValue(orderr.getProductnums());  
+		        //放诊断
+	        	cell=row.createCell(nowcol++);
+		        cell.setCellStyle(style);
+				if(orderr.getDiagnose()!=null)
+					cell.setCellValue(orderr.getDiagnose());  
+			}
+			
+			
+			pageNo++;
+			if(page.getRows().size()<pageSize)
+				break;
+		}
+		return wb;
+	}
+	/**
+	 * 详情
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Orderr csshow(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		Orderr orderr=get(sessionUser, id);
+		if(needAfter)
+			showAfter(sessionUser,orderr);
+		return (orderr==null)?new Orderr():orderr;
+	}
+	/**
+	 * 新建GET
+	 * @param sessionUser 
+	 * @param orderr 初始用户
+	 * @param copyfrom 从其它表复制的表名
+	 * @param copyfromwhere 从其它表复制的条件
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Orderr csnewget(User sessionUser,Orderr orderr,String copyfrom,String copyfromwhere,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		if(orderr==null)
+			orderr=new Orderr();
+		//如果是从其它表复制过来的
+		if(StringUtils.isNotBlank(copyfrom)&&StringUtils.isNotBlank(copyfromwhere)){
+			Object objsrc=specService.getFirst(copyfrom, copyfromwhere, null);
+			commonzSvrUitlsSpec.obj2obj(sessionUser,objsrc, orderr,copyfrom ,"Orderr");
+			orderr.setId(null);
+		}
+		if(needBefore)
+			commonzSvrUitlsSpec.newgetBefore(sessionUser,orderr);
+		if(needAfter)
+			newgetAfter(sessionUser,orderr);
+		return orderr;
+	}
+	/**
+	 * 修改时的请求
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 * @throws Exception
+	 */
+	public Orderr csedit(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		
+		Orderr orderr=get(sessionUser, id);
+		if(orderr==null){
+			throw new Exception("数据找不到");
+		}
+			
+		if(needBefore)
+			commonzSvrUitlsSpec.editBefore(sessionUser,orderr);
+		if(needAfter)
+			editAfter(sessionUser,orderr);
+		return orderr;
+	}
+	////////下面是系列补充与检查
+
+	/**
+	 * 创建更新，写表前，如计算总价之类，通常都是一样的操作
+	 * @param sessionUser
+	 * @param simb
+	 * @param dbobj update更新时是数据库里取出的老对象，create创建时是个new Object()
+	 * @param obj 主要目的是修改这个对象
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void createAndUpdateBefore(User sessionUser,String simb,Orderr dbobj,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		//create update 共用
+		//冗余
+		Drugstore obj3=drugstoreService.get(sessionUser, obj.getDrugstoreId());
+		if(obj3!=null){
+			obj.setDrugstoreIdDrugstoreObj(obj3);
+			obj.setDoccheck(obj3.getDoccheck());
+		}
+		//冗余
+		Drugstore obj4=drugstoreService.get(sessionUser, obj.getDrugstoreId());
+		if(obj4!=null){
+			obj.setDrugstoreIdDrugstoreObj(obj4);
+			obj.setDocmake(obj4.getDocmake());
+		}
+		//冗余
+		Member obj5=memberService.get(sessionUser, obj.getMemberId());
+		if(obj5!=null){
+			obj.setMemberIdMemberObj(obj5);
+			obj.setDoctorId(obj5.getDoctorId());
+		}
+		//冗余
+		Doctor obj6=doctorService.get(sessionUser, obj.getDoctorId());
+		if(obj6!=null){
+			obj.setDoctorIdDoctorObj(obj6);
+			obj.setSellerId(obj6.getSellerId());
+		}
+		//create 独有
+		if("create".equals(simb)){
+		}
+		//update 独有
+		if("update".equals(simb)){
+			
+		}
+	}	
+	/**
+	 * 创建更新，有可能要改变其它表，或本表的其它数据，通常都是一样的操作
+	 * @param sessionUser
+	 * @param simb
+	 * @param obj 已经db保存过的对象
+	 * @param olddbobj update更新时是复制过的数据库老对象，create创建时是个new Object()
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void createAndUpdateAfter(User sessionUser,String simb,Orderr obj,Orderr olddbobj) throws BoException,Exception{
+		if(obj==null)return;
+		//create 独有
+		if("create".equals(simb)){
+		}
+		//update 独有
+		if("update".equals(simb)){
+		}
+	}	
+
+	@Autowired
+	OrderrFinishedService orderrFinishedService;
+	/**
+	 * 完成
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param finishWhere 完成的hql表达式
+	 */
+	public void createFinished(User sessionUser,String finishWhere) throws BoException,Exception{
+		finishWhere=(StringUtils.isBlank(finishWhere))?commonzSvrUitlsSpec.defaultFinishHql("Orderr"):finishWhere;
+		List<Orderr> list=listfind(sessionUser, null, finishWhere, null, null);
+		if(list==null || list.size()<1){
+			return;
+		}
+		List<OrderrFinished> listFinished=new ArrayList<OrderrFinished>();
+		for (Orderr orderr : list) {
+			OrderrFinished obj=new OrderrFinished();
+			ClassUtils.beanDeepCopy(orderr, obj);
+			listFinished.add(obj);
+			commonzSvrUitlsSpec.finishBefore(sessionUser, obj ,finishWhere);
+		}
+		orderrFinishedService.saveOrUpdateAll(listFinished);
+		deleteAll(sessionUser, list);
+	}
+
+	/**
+	 * 获取index，创建新对象后，返回页面之前
+	 * @param obj
+	 */
+	public void indexAfter(User sessionUser,Orderr obj) throws BoException,Exception{
+		addList(sessionUser,obj); //给搜索用
+		commonzSvrUitlsSpec.indexAfter(sessionUser,obj);
+	}	
+	/**
+	 * 列表，读库前
+	 * @param obj
+	 */
+	public void gridBefore(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		commonzSvrUitlsSpec.gridBefore(sessionUser,obj);
+
+	}	
+	/**
+	 * 列表，读库后
+	 * @param list
+	 */
+	public void gridAfter(User sessionUser,List<Orderr> list) throws BoException,Exception{
+		if(list==null||list.size()==0) return;
+		for (int i = 0; i < list.size(); i++) {
+			gridOneAfter(sessionUser,list.get(i));	
+		}
+		commonzSvrUitlsSpec.gridAfter(sessionUser,list);
+	}
+	/**
+	 * 列表中的单项，读库后
+	 * @param obj
+	 */
+	public void gridOneAfter(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		addString(sessionUser,obj);	
+		
+	}	
+	/**
+	 * show，读库后
+	 * @param obj
+	 */
+	public void showAfter(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		addObj(sessionUser,obj);
+		addString(sessionUser,obj);
+		commonzSvrUitlsSpec.show(sessionUser,obj);
+	}
+	/**
+	 * newGet，对象产生之后，返回页面之前，可能还会在对象中放一些允许用户修改的，从其它表复制过来的数据，目的是为了方便用户
+	 * @param obj
+	 * @throws Exception
+	 */
+	public void newgetAfter(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		addList(sessionUser,obj);
+		addString(sessionUser,obj);
+		commonzSvrUitlsSpec.newgetAfter(sessionUser,obj);
+	}	
+	/**
+	 * Edit Get，获取对象之后，返回页面之前
+	 * @param obj
+	 */
+	public void editAfter(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		addList(sessionUser,obj);
+		addString(sessionUser,obj);	
+		commonzSvrUitlsSpec.editAfter(sessionUser,obj);
+	}
+	
+	////////下面是各类补充
+	/**
+	 * 加上各类对象
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addObj(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		obj.setMemberIdMemberObj(memberService.get(sessionUser,obj.getMemberId()));
+		obj.setDrugstoreIdDrugstoreObj(drugstoreService.get(sessionUser,obj.getDrugstoreId()));
+		obj.setDoctorWrDoctorObj(doctorService.get(sessionUser,obj.getDoctorWr()));
+		obj.setDoctorIdDoctorObj(doctorService.get(sessionUser,obj.getDoctorId()));
+		obj.setSellerIdSellerObj(sellerService.get(sessionUser,obj.getSellerId()));
+		obj.setOperIdOperObj(operService.get(sessionUser,obj.getOperId()));
+		commonzSvrUitlsSpec.addObj(sessionUser,obj);		
+	}
+
+	/**
+	 * 给对象加上list,map，用于radio选择，combox搜索
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addList(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		obj.setIotypeMap((Map)IsoInstance.getInstance().getMap("Orderr.Iotype"));
+		obj.setStatusMap((Map)IsoInstance.getInstance().getMap("Orderr.Status"));
+		obj.setStatusgoodsMap((Map)IsoInstance.getInstance().getMap("Orderr.Statusgoods"));
+		obj.setStatusCarriageTypeMap((Map)IsoInstance.getInstance().getMap("Orderr.StatusCarriageType"));
+		commonzSvrUitlsSpec.addList(sessionUser,obj);
+	}
+
+	/**
+	 * 加文本
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addString(User sessionUser,Orderr obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		String value="";
+		value=(String)IsoInstance.getInstance().getMapString("Orderr.Iotype", ""+obj.getIotype());
+		if(StringUtils.isEmpty(value))
+			value=""+obj.getIotype();
+		obj.setIotypeString(value);
+		value=(String)IsoInstance.getInstance().getMapString("Orderr.Status", ""+obj.getStatus());
+		if(StringUtils.isEmpty(value))
+			value=""+obj.getStatus();
+		obj.setStatusString(value);
+		value=(String)IsoInstance.getInstance().getMapString("Orderr.Statusgoods", ""+obj.getStatusgoods());
+		if(StringUtils.isEmpty(value))
+			value=""+obj.getStatusgoods();
+		obj.setStatusgoodsString(value);
+		value=(String)IsoInstance.getInstance().getMapString("Orderr.StatusCarriageType", ""+obj.getStatusCarriageType());
+		if(StringUtils.isEmpty(value))
+			value=""+obj.getStatusCarriageType();
+		obj.setStatusCarriageTypeString(value);
+		Member obj7=(Member)(memberService.get(sessionUser,obj.getMemberId()));
+		if(obj7!=null){
+			obj.setMemberIdString(obj7.getMyname());
+			obj.setMemberIdStringid(obj7.getMynameid());
+		}
+
+		Drugstore obj8=(Drugstore)(drugstoreService.get(sessionUser,obj.getDrugstoreId()));
+		if(obj8!=null){
+			obj.setDrugstoreIdString(obj8.getMyname());
+			obj.setDrugstoreIdStringid(obj8.getMynameid());
+		}
+
+		Doctor obj9=(Doctor)(doctorService.get(sessionUser,obj.getDoctorWr()));
+		if(obj9!=null){
+			obj.setDoctorWrString(obj9.getMyname());
+			obj.setDoctorWrStringid(obj9.getMynameid());
+		}
+
+		Doctor obj10=doctorService.get(sessionUser,obj.getDoctorId());
+		if(obj10!=null){
+			obj.setDoctorIdString(obj10.getMyname());
+			obj.setDoctorIdStringid(obj10.getMynameid());
+		}
+		Seller obj11=sellerService.get(sessionUser,obj.getSellerId());
+		if(obj11!=null){
+			obj.setSellerIdString(obj11.getMyname());
+			obj.setSellerIdStringid(obj11.getMynameid());
+		}
+		Oper obj12=(Oper)(operService.get(sessionUser,obj.getOperId()));
+		if(obj12!=null){
+			obj.setOperIdString(obj12.getMyname());
+			obj.setOperIdStringid(obj12.getMynameid());
+		}
+
+		commonzSvrUitlsSpec.addString(sessionUser,obj);
+	}
+	@Autowired
+	DrugstoreService drugstoreService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	OperService operService;
+}

@@ -1,0 +1,22 @@
+<ion-view view-title="注册" hide-back-button="true">
+
+    <ion-content>
+        <div class="list listreg">
+            <div class="item item-icon-left">
+                <i class="icon ion-ios-telephone-outline"></i>
+                {{user.username}}
+            </div>
+            <label class="item-input item-floating-label">
+                <span class="input-label">密码</span>
+                <input type="password" placeholder="请输入密码" ng-model="user.password" style="border-bottom:solid 1px #ccc;">
+            </label>
+            <label class="item-input item-floating-label">
+                <span class="input-label">重复</span>
+                <input type="password" placeholder="请再次输入密码" ng-model="user.repwd" style="border-bottom:solid 1px #ccc;">
+            </label>
+            <a class="button button-block button-calm" ng-click="regcaCommit()" style="margin-top:30px;">
+                下一步
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

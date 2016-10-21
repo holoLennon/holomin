@@ -1,0 +1,9 @@
+package com.zmax.yijian.common.utils;
+/**
+ * 微信工具
+ * @author zmax
+ *
+ */
+public class WeixUtils {
+//wxmenu -> WaMenu
+}

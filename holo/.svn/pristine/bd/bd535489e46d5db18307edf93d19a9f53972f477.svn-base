@@ -1,0 +1,92 @@
+<!--Orderrdetail，订单详细详细信息-->
+<ion-view view-title='订单详细' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">发货时间:{{obj.gmtSentString}}</li>
+		<li class="item">收货时间:{{obj.gmtRecvString}}</li>
+		<li class="item">订单号:{{obj.orderrIdString}}</li>
+		<li class="item">开单类型:{{obj.iotypeString}}</li>
+		<li class="item">支付状态:{{obj.statusString}}</li>
+		<li class="item">收发货状态:{{obj.statusgoodsString}}</li>
+		<li class="item">统计状态:{{obj.statuscountString}}</li>
+		<li class="item">会员:{{obj.memberIdString}}</li>
+		<li class="item">开药医生:{{obj.doctorWrString}}</li>
+		<li class="item">首推荐医生:{{obj.doctorIdString}}</li>
+		<li class="item">产品:{{obj.productIdString}}</li>
+		<li class="item">商品名:{{obj.title}}</li>
+		<li class="item">厂商产地:{{obj.manufacturerIdString}}</li>
+		<li class="item">规格型号:{{obj.productstyle}}</li>
+		<li class="item">图1:{{obj.img1}}</li>
+		<li class="item">单价:{{obj.price}}</li>
+		<li class="item">数量:{{obj.num}}</li>
+		<li class="item">总价:{{obj.sumprice}}</li>
+		<li class="item">用药方法:{{obj.usemethord}}</li>
+		<li class="item">医嘱:{{obj.otherdetail}}</li>
+		<li class="item">用法用量:{{obj.usemount}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号ID:<input type="text" placeholder="序号ID"  ng-model="obj.id"></label>
+		<label class="item item-input"><span class="input-label">发货时间:</span><input type="datetime" ng-model="obj.gmtSent"></label>
+		<label class="item item-input"><span class="input-label">收货时间:</span><input type="datetime" ng-model="obj.gmtRecv"></label>
+		<label class="item item-input">订单号:<input type="text" placeholder="订单号"  ng-model="obj.orderrId"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				开单类型:
+			</div>
+			<select  ng-model="obj.iotype">
+				<option ng-repeat="(key,val) in obj.iotypeMap" value="{{key}}" ng-selected="val==obj.iotype">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				支付状态:
+			</div>
+			<select  ng-model="obj.status">
+				<option ng-repeat="(key,val) in obj.statusMap" value="{{key}}" ng-selected="val==obj.status">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				收发货状态:
+			</div>
+			<select  ng-model="obj.statusgoods">
+				<option ng-repeat="(key,val) in obj.statusgoodsMap" value="{{key}}" ng-selected="val==obj.statusgoods">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				统计状态:
+			</div>
+			<select  ng-model="obj.statuscount">
+				<option ng-repeat="(key,val) in obj.statuscountMap" value="{{key}}" ng-selected="val==obj.statuscount">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">会员:<input type="text" placeholder="会员"  ng-model="obj.memberId"></label>
+		<label class="item item-input">开药医生:<input type="text" placeholder="开药医生"  ng-model="obj.doctorWr"></label>
+		<label class="item item-input">首推荐医生:<input type="text" placeholder="首推荐医生"  ng-model="obj.doctorId"></label>
+		<label class="item item-input">产品:<input type="text" placeholder="产品"  ng-model="obj.productId"></label>
+		<label class="item item-input">商品名:<input type="text" placeholder="商品名"  ng-model="obj.title"></label>
+		<label class="item item-input">厂商产地:<input type="text" placeholder="厂商产地"  ng-model="obj.manufacturerId"></label>
+		<label class="item item-input">规格型号:<input type="text" placeholder="规格型号"  ng-model="obj.productstyle"></label>
+		<label class="item item-input">图1:<input type="text" placeholder="图1"  ng-model="obj.img1"></label>
+		<label class="item item-input">单价:<input type="text" placeholder="单价"  ng-model="obj.price"></label>
+		<label class="item item-input">数量:<input type="text" placeholder="数量"  ng-model="obj.num"></label>
+		<label class="item item-input">总价:<input type="text" placeholder="总价"  ng-model="obj.sumprice"></label>
+		<label class="item item-input">用药方法:<input type="text" placeholder="用药方法"  ng-model="obj.usemethord"></label>
+		<label class="item item-input">医嘱:<input type="text" placeholder="医嘱"  ng-model="obj.otherdetail"></label>
+		<label class="item item-input">用法用量:<input type="text" placeholder="用法用量"  ng-model="obj.usemount"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

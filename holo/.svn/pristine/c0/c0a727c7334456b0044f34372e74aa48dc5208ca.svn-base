@@ -1,0 +1,830 @@
+package com.zmax.yijian.biz.service.common;
+/**
+ * 权限检查工具
+ */
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.zmax.conf.AttrStatic;
+import com.zmax.conf.SessionName;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.clazz.GenericsUtils;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecUserService;
+import com.zmax.yijian.common.dal.bean.*;
+
+
+
+/**
+ * 权限工具，主要用在xxxService的各项操作之前
+ * kv例:
+ * 1.user.new(del或edit或list..其它自定义)=null;
+ * 2./user/xxx;
+ * 3.user=userId=sessonobj.id;
+ * 4.user=return dbobj.userId==sessionobj.id
+
+ * @author zmax
+ *
+ */
+
+@Component
+public class PermitCheckUtils {
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(PermitCheckUtils.class);
+
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+	
+	@Autowired
+	SpecUserService specUserService;
+
+	/**全局权限列表，key=role.id,value=[权限key,权限value]*/
+	public static Map<Integer,Map<String,String>> pMap=new HashMap<Integer, Map<String,String>>();
+
+	//private String tname;
+	private GroovyShell shell;
+
+	/**权限EXCEL的路径*/
+	//public static String permitExcelPath="";
+	/**权限excel的最大宽度*/
+	static int CELLMAXNUM=19;
+	/**
+	 *在从excel中导出时，是否要转大小写:
+	 *<br>0默认,全部转成小写(未来对象下划线变大写也用这个),ex.aBbCc->abbcc or a_Bb_Cc -> a_bb_cc 
+	 *<br>1保持原样
+	 *<br>2大写变下划线 ex.aBbCc -> a_bb_cc
+	 */
+	static int WORDCHANGE=1;	
+	/**
+	 * 通过反射获取子类确定的泛型类
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public PermitCheckUtils() {
+		shell = new GroovyShell();
+	}
+
+	/**
+	 * 初始化权限列表
+	 * 某目录下，permit*.xls
+	 */
+	public void doInit(){
+		pMap.clear();
+
+		//超管
+		int role=0;
+		Map<String,String> pmtMap=takePmtMap(role);
+		putPermit(role, pmtMap, "0.u"+role, "9");
+		putPermit(role, pmtMap, "0.u", "9");
+		putPermit(role, pmtMap, "0.ua", "9");
+		putPermit(role, pmtMap, "0.uo", "9");
+		pMap.put(role, pmtMap);
+		if (logger.isDebugEnabled())
+			logger.debug("权限分配:role=" + role+",pmtMap.size()="+pmtMap.size());
+
+		//其它权限
+		//通过
+		//permitByExcel();
+		permitByDb();
+	}
+	/**
+	 * 根据role获取pmtMap，没有的话，建一下
+	 * @param role
+	 * @return
+	 */
+	public Map<String,String>  takePmtMap(int role){
+		Map<String,String> pmtMap=pMap.get(role);
+		if(pmtMap==null){
+			pmtMap=new HashMap<String, String>();
+			pMap.put(role, pmtMap);
+		}
+
+		return pmtMap;
+	}
+
+
+	
+	List<Permittable> listTbDb=new ArrayList<Permittable>();
+	List<Permitfield> listFieldDb=new ArrayList<Permitfield>();
+
+	/**
+	 * 权限之Db版
+	 */
+	public void permitByDb(){
+		listTbDb=permittableService.listAll();
+		listFieldDb=permitfieldService.listAll();
+		//权限通用版
+		Map<String,String> roleMap=IsoInstance.getInstance().getMymap().get("User.RoleId");
+		Iterator<Entry<String,String>> iter = roleMap.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String,String> entry = iter.next(); 
+			String key = entry.getKey();
+			if(!"0".equals(key))
+				specUserService.putFirstPmt(Integer.valueOf(key));
+		}		
+		for (Permittable permittable : listTbDb) {
+			calcuTbByDb(permittable);
+		}
+	}	
+	/**
+	 * 权限之Excel版
+	 */
+//	public void permitByExcel(){
+//		Collection<File> excels=FileUtils.listFiles(new File(permitExcelPath), new String[]{"xls"}, false);
+//		for (File file : excels) {
+//			if(file.getName().indexOf("permit")==0){
+//				eachExcle(file.getAbsolutePath());				
+//			}
+//		}
+//	}
+	/**
+	 * 是否是打开的状态
+	 * @param value
+	 * @return
+	 */
+	boolean isOn(Integer value){
+		if(value==null)
+			return false;
+		return value.intValue()>5;
+	}
+	/**
+	 * 是否是打开的状态
+	 * @param value
+	 * @return
+	 */
+	boolean isOn(String value){
+		if(value==null)
+			return false;
+		if("".equals(value))
+			return false;
+		if("null".equals(value))
+			return false;
+		String value1=value.substring(0,1);
+		if(!StringUtils.isNumeric(value1)){
+			return false;
+		}
+		int ivalue=0;
+		try {
+			ivalue = Integer.valueOf(value1);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return ivalue>5;
+	}
+	/**
+	 * 是否是关闭的状态
+	 * @param value
+	 * @return
+	 */
+	boolean isOff(Integer value){
+		return !isOn(value);
+	}
+	/**
+	 * 是否是关闭的状态
+	 * @param value
+	 * @return
+	 */
+	boolean isOff(String value){
+		return !isOn(value);
+	}
+	/**
+	 * 计算权限Excel
+	 * 0.ua=超管+普管
+	 * 0.uo=超管+普管+代理+操作员
+	 * @param excelFile
+	 */
+	private void eachExcle(String excelFile){
+		HSSFWorkbook workbook=null;
+		try {
+			//			File file1=new File("权限.xls");
+			//			System.out.println("file1.getAbsoluteFile()="+ file1.getAbsoluteFile());
+			FileInputStream file=new FileInputStream(excelFile);
+			workbook = new HSSFWorkbook(file);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			logger.error(e);
+		}
+		if(workbook==null){
+			return;
+		}
+		//jsonmap版
+		Map<String,String> mapRole=(Map<String,String>)IsoInstance.getInstance().getMap("User.RoleId");
+		for (String keyRole : mapRole.keySet()) {
+			int role=(Integer.valueOf(keyRole));
+
+			//数据库表版
+			//		List<Role> listRole=roleService.listAll();
+			//		for (int role : listRole) {
+
+			//权限约定0=超管
+			if(role==AttrStatic.ROLE_ADMIN){
+				continue;
+			}
+
+
+			HSSFSheet sheet =null;
+			try {
+				sheet = workbook.getSheetAt(role);
+			} catch (Exception e) {
+				sheet =null;
+			}			
+			if(sheet ==null)
+				continue;
+			//如果是0开头，或者Sheet开头的，不做处理
+			if(sheet.getSheetName().indexOf("0")==0 || sheet.getSheetName().indexOf("Sheet")==0){
+				continue;
+			}
+			//开始做了
+			//权限列表
+			Map<String,String> pmtMap=takePmtMap(role);
+			//通用版权限
+			specUserService.putFirstPmt(role);
+
+
+
+			String cvalue=null;
+			int index=0;
+			String key="";
+			String tbname="";
+			String fieldname="";
+
+
+			while(true){ //excel一行行的读下去
+				//0 1是标题行
+				if(index==0||index==1){
+					index++;
+					continue;
+				}
+				//表名
+				tbname=valueFromSheet(sheet, index, 0);
+				if(StringUtils.isBlank(tbname))
+					break;
+				//如果是0.xxx
+				if(tbname.indexOf("0.")==0){
+					putPermit(role, pmtMap, tbname, "9");
+					index++;
+					continue;
+				}
+				//字段名
+				fieldname=valueFromSheet(sheet, index, 2);
+				//转小写开头
+				fieldname=StringUtilz.changeFirstCharacterCase(fieldname,false);
+				if("0".equals(valueFromSheet(sheet, index, 2))){//表权限设置
+
+					cvalue=valueFromSheet(sheet, index, 5);
+					key="0."+tbname;
+					putPermit(role, pmtMap, key, cvalue);
+					//if("1".equals()){ //如果有0.User==1，下面设置才有意义
+					if(StringUtils.isNotBlank(pmtMap.get("0."+tbname))){
+						calcuTbByExcel(sheet, index, tbname, role, pmtMap);
+					}
+
+					//}
+				}else{ //字段权限设置
+					if(StringUtils.isNotBlank(pmtMap.get("0."+tbname))){
+						calcuFieldByExcel(sheet, index, tbname, fieldname, role, pmtMap);	
+					}
+					//					if("1".equals(pmtMap.get("0."+tbname))){ //如果有0.User==1，下面设置才有意义
+					//						
+					//					}
+				}
+
+				index++;
+			}
+			pMap.put(role, pmtMap);
+			if (logger.isDebugEnabled())
+				logger.debug("权限分配:role=" + role+",pmtMap.size()="+pmtMap.size());
+		}
+	}
+	/**
+	 * 计算表之通过excel.sheet
+	 * @param sheet
+	 * @param index
+	 * @param tbname
+	 * @param role
+	 * @param pmtMap
+	 */
+	private void calcuTbByExcel(HSSFSheet sheet,int index,String tbname,int role,Map<String,String> pmtMap){
+		//6	7	8	9	10	11
+		//增按钮	删按钮	改按钮	查按钮	2表查+hql	3表改删检查gvy
+		String key="";
+		String cvalue="";
+		//增按钮	删按钮	改按钮	查按钮
+		cvalue=valueFromSheet(sheet, index, 6);
+		if("9".equals(cvalue)){
+			key="0."+tbname+".new";
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		cvalue=valueFromSheet(sheet, index, 7);
+		if("9".equals(cvalue)){
+			key="0."+tbname+".del";
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		cvalue=valueFromSheet(sheet, index, 8);
+		if("9".equals(cvalue)){
+			key="0."+tbname+".edit";
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		cvalue=valueFromSheet(sheet, index, 9);
+		if("9".equals(cvalue)){
+			key="0."+tbname+".show";
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		//2表查+hql	
+		cvalue=valueFromSheet(sheet, index, 10);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="2."+tbname;
+			cvalue=fast2(cvalue);
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		//3表改删检查gvy
+		cvalue=valueFromSheet(sheet, index, 11);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="3."+tbname;
+			cvalue=fast3(cvalue);
+			putPermit(role, pmtMap, key, cvalue);
+		}	
+	}
+	/**
+	 * 计算表之通过Table Permittable
+	 * @param sheet
+	 * @param index
+	 * @param tbname
+	 * @param role
+	 * @param pmtMap
+	 */
+	private void calcuTbByDb(Permittable permittable){
+		//6	7	8	9	10	11
+		//增按钮	删按钮	改按钮	查按钮	2表查+hql	3表改删检查gvy
+		String key="";
+		String cvalue="";
+		Integer ivalue=0;
+		//总开关
+		cvalue=""+permittable.getPall();
+		if(isOff(cvalue)){
+			return;
+		}
+		key="0."+permittable.getTbname();
+		putPermit(permittable.getRoleId(), key, cvalue);
+		//增按钮	删按钮	改按钮	查按钮
+		cvalue=""+permittable.getBtnnew();
+		if(isOn(cvalue)){
+			key="0."+permittable.getTbname()+".new";
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		cvalue=""+permittable.getBtndel();
+		if(isOn(cvalue)){
+			key="0."+permittable.getTbname()+".del";
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		cvalue=""+permittable.getBtnedit();
+		if(isOn(cvalue)){
+			key="0."+permittable.getTbname()+".edit";
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		cvalue=""+permittable.getBtnshow();
+		if(isOn(cvalue)){
+			key="0."+permittable.getTbname()+".show";
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		//2表查+hql	
+		cvalue=permittable.getQueryaddhql();
+		if(StringUtils.isNotBlank(cvalue)){
+			key="2."+permittable.getTbname();
+			cvalue=fast2(cvalue);
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		//3表改删检查gvy
+		cvalue=permittable.getModigvy();
+		if(StringUtils.isNotBlank(cvalue)){
+			key="3."+permittable.getTbname();
+			cvalue=fast3(cvalue);
+			putPermit(permittable.getRoleId(), key, cvalue);
+		}
+		//字段
+		List<Permitfield> listfd=fieldFromDblist(permittable);
+		for (Permitfield permitfield : listfd) {
+			calcuFieldByDb(permitfield);
+		}
+
+	}
+	/**
+	 * 从数据库列表中，根据roleId和tablename找到Permitfield
+	 * @param permittable
+	 * @return List<Permitfield>
+	 */
+	private List<Permitfield> fieldFromDblist(Permittable permittable){
+		List<Permitfield> ret = new ArrayList<Permitfield>();
+		for (Permitfield fdb : listFieldDb) {
+			if(fdb.getRoleId().equals(permittable.getRoleId())
+					&&fdb.getTbname().equals(permittable.getTbname())
+					){
+				ret.add(fdb);
+			}
+		}
+		return ret;
+	}
+	/**
+	 * 2表查+hql	的快捷转换
+	 * @param value
+	 * @return
+	 */
+	private String fast2(String value){
+		if(StringUtils.isBlank(value))
+			return value;
+		if("id".equals(value)){
+			return "\"id=\"+sessionobj.id";
+		}
+		if("userId".equals(value)){
+			return "\"userId=\"+sessionobj.userId";
+		}
+		return value;
+
+	}
+	/**
+	 * 3表改删检查gvy的快捷转换
+	 * @param value
+	 * @return
+	 */
+	private String fast3(String value){
+		if(StringUtils.isBlank(value))
+			return value;
+		if("id".equals(value)){
+			return "dbobj.id==sessionobj.id";
+		}
+		if("userId".equals(value)){
+			return "dbobj.userId==sessionobj.userId";
+		}
+		return value;
+
+	}
+	/**
+	 * 计算字段之通过excel
+	 * @param sheet
+	 * @param index
+	 * @param tbname
+	 * @param fieldname
+	 * @param role
+	 * @param pmtMap
+	 */
+	private void calcuFieldByExcel(HSSFSheet sheet,int index,String tbname,String fieldname,int role,Map<String,String> pmtMap){
+		//12	13	14
+		//41增可写字段	42改可写字段	51查可看字段	52列表显示字段
+		String key="";
+		String cvalue="";
+		//41增可写字段
+		cvalue=valueFromSheet(sheet, index, 12);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="41."+tbname+"."+fieldname;
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		//42改可写字段
+		cvalue=valueFromSheet(sheet, index, 13);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="42."+tbname+"."+fieldname;
+			putPermit(role, pmtMap, key, cvalue);
+		}
+		//51查可看字段
+		cvalue=valueFromSheet(sheet, index, 14);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="51."+tbname+"."+fieldname;
+			putPermit(role, pmtMap, key, cvalue);
+		}	
+		//52列表显示字段
+		cvalue=valueFromSheet(sheet, index, 14);
+		if(StringUtils.isNotBlank(cvalue)){
+			key="52."+tbname+"."+fieldname;
+			putPermit(role, pmtMap, key, cvalue);
+		}
+	}
+	/**
+	 * 计算字段之通过数据库
+	 * @param sheet
+	 * @param index
+	 * @param tbname
+	 * @param fieldname
+	 * @param role
+	 * @param pmtMap
+	 */
+	private void calcuFieldByDb(Permitfield permitfield){
+		//12	13	14
+		//41增可写字段	42改可写字段	51查可看字段	52列表显示字段
+		String key="";
+		String cvalue="";
+		//41增可写字段
+		cvalue=permitfield.getPf41();
+		if(isOn(cvalue)||cvalue.indexOf("~")>-1){ //41有可能会放默认值
+			key="41."+permitfield.getTbname()+"."+permitfield.getFieldname();
+			putPermit(permitfield.getRoleId(), key, cvalue);
+		}
+		//42改可写字段
+		cvalue=permitfield.getPf42();
+		if(isOn(cvalue)){
+			key="42."+permitfield.getTbname()+"."+permitfield.getFieldname();
+			putPermit(permitfield.getRoleId(), key, cvalue);
+		}
+		//51查可看字段
+		cvalue=permitfield.getPf51();
+		if(isOn(cvalue)){
+			key="51."+permitfield.getTbname()+"."+permitfield.getFieldname();
+			putPermit(permitfield.getRoleId(), key, cvalue);
+		}	
+		//52列表显示字段
+		cvalue=permitfield.getPf52();
+		if(isOn(cvalue)){
+			key="52."+permitfield.getTbname()+"."+permitfield.getFieldname();
+			putPermit(permitfield.getRoleId(), key, cvalue);
+		}
+	}
+	/**
+	 * 权限数据放到Map中
+	 * @param role
+	 * @param pmtMap
+	 * @param key
+	 * @param cvalue
+	 */
+	private void putPermit(int role,Map<String,String> pmtMap,String key,String cvalue){
+		logger.debug("权限初始化[" +role+"]\t"+ key+"\t"+cvalue+"");
+		pmtMap.put(key, cvalue);
+	}
+	/**
+	 * 权限数据放到Map中
+	 * @param role
+	 * @param pmtMap
+	 * @param key
+	 * @param cvalue
+	 */
+	private void putPermit(int roleId,String key,String cvalue){
+		logger.debug("权限初始化[" +roleId+"]\t"+ key+"\t"+cvalue+"");
+		Map<String,String> pmtMap=takeMapByRoleId(roleId);
+		pmtMap.put(key, cvalue);
+	}
+	/**
+	 * 从Sheet中取数据
+	 * @param sheet
+	 * @param x 行
+	 * @param y 列
+	 * @return 如果是第0列，返回小写及trim
+	 */
+	private String valueFromSheet(HSSFSheet sheet,int x,int y){
+		HSSFRow row =null;
+		row = sheet.getRow(x);
+		if(row!=null){
+			HSSFCell cell=row.getCell(y);
+			if(cell!=null){
+				if(cell.getCellType()==0){
+					String tmp1=cell.toString();
+					if(tmp1.indexOf(".")>0)return tmp1.split("\\.")[0];
+				}
+				String value=cell.toString();
+				//去空及小写
+				if(value!=null && y==0){
+					if (WORDCHANGE==0){
+						value=value.trim().toLowerCase();	
+					}else if(WORDCHANGE==2){
+						value=StringUtilz.cap2Undline(value);
+					}else{
+
+					}
+				}
+
+				return value;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 根据roleId返回权限列表
+	 * @param roleId
+	 * @return
+	 */
+	public Map<String,String> takeMapByRoleId(Integer roleId){
+		if(roleId==null)
+			return new HashMap<String, String>();
+		Map<String,String> ret=pMap.get(roleId);
+		if(ret==null){
+			ret=new HashMap<String, String>();
+			pMap.put(roleId, ret);
+		}		
+		return ret;
+	}
+	
+	/**
+	 * 检查对象是否是用户的，用于get,edit和delete 
+	 * @param sessionUser
+	 * @param obj 取出的对象
+	 * @param tname 表名
+	 * @return
+	 */
+	public boolean checkObj(User sessionUser,Object obj,String tname){
+		if(sessionUser==null)return true;
+		//超级管理员有所有权限
+		if(SpecUserService.isAdmin(sessionUser))
+			return true;
+		String key="3."+tname;
+		return checkObjInPermitMap(key,sessionUser,obj);
+	}
+	
+	/**
+	 * 加where，用于list	表查增
+	 * @param sessionUser
+	 * @param tname 表名
+	 * @return
+	 */
+	public String addWhere(User sessionUser,String tname){
+		if(sessionUser==null)
+			return "";
+		//超级管理员有所有权限
+		if(SpecUserService.isAdmin(sessionUser))
+			return "";
+
+		String key="2."+tname;
+		return addhqlPermitMap(key, sessionUser);
+	}
+
+	/**
+	 * 41.新增时，给禁填数据们放个默认值
+	 * @param permtMap
+	 * @param className
+	 * @param sessionobj session给的对象，通常是sessionUser
+	 * @param dbobj 数据库给的对象 
+	 * @param dest 返回的结果对象
+	 */
+	public void createWithDefaultValue(String className,User sessionUser,Object dbobj,Object dest){
+		Map<String,String> permtMap=pMap.get(sessionUser.getRoleId());
+		if(permtMap==null || permtMap.size()==0)
+			return ;
+		String field="";
+		for (String key : permtMap.keySet()) {
+			if(key.indexOf("41."+className+".")==0){
+				//字段
+				field=key.replaceAll("41."+className+".", "");
+				if(StringUtils.isBlank(field))
+					continue;
+				Object value=calcuResultBySessionobj(key, sessionUser, dbobj);
+				if(value==null)
+					continue;
+				ClassUtils.setFieldValue(dest, field, value);
+			}
+		}
+		return ;
+	}
+	
+	/**
+	 * 42.更改时，给禁填数据们放个默认值  value=1~公式
+	 * @param permtMap
+	 * @param className
+	 * @param sessionobj session给的对象，通常是sessionUser
+	 * @param dbobj 数据库给的对象 
+	 * @param dest 返回的结果对象
+	 */
+	public void updateWithDefaultValue(String className,User sessionUser,Object dbobj,Object dest){
+		Map<String,String> permtMap=pMap.get(sessionUser.getRoleId());
+		if(permtMap==null || permtMap.size()==0)
+			return ;
+		String field="";
+		for (String key : permtMap.keySet()) {
+			if(key.indexOf("42."+className+".")==0){
+				//字段
+				field=key.replaceAll("42."+className+".", "");
+				if(StringUtils.isBlank(field))
+					continue;
+				Object value=calcuResultBySessionobj(key, sessionUser, dbobj);
+				if(value==null)
+					continue;
+				ClassUtils.setFieldValue(dest, field, value);
+			}
+		}
+		return ;
+	}	
+	/**
+	 * 42.更改保存前返回允许用户修改的字段集合
+	 * 先看0.Xxx.edit(permittable相应的权限)，0完全无权，91完全有权，9部分有权
+	 * 如果是9部分有权，则查permitfield之value=9，这些都可以改。其它不行。
+	 * @param className
+	 * @return Set<String> 可以改的字段集合，不能改的字段要从老DB中复制 ,0完全无权返回空，91完全有权返回{"91all"}，9部分有权{"aa","bb"...}
+	 */
+	public Set<String> keepSessionByPermit(String className,User sessionUser){
+		Map<String,String> permtMap=pMap.get(sessionUser.getRoleId());
+		Set<String> set=new HashSet<String>();
+		if(permtMap==null || permtMap.size()==0)
+			return set;
+		String item=""; //也就是字段名
+		String key="0."+className+".edit"; 
+		String pvalue=permtMap.get(key);
+		if("0".equals(pvalue)){
+			//完全没权，返回空set
+			return set;
+		}else if("91".equals(pvalue)){
+			//完全有权，返回所有字段的set
+			set.add("91all");
+			return set;
+		}else{
+			//部分有权，返回permitfield之value=9
+			for (String str : permtMap.keySet()) {
+				if(str.indexOf("42."+className+".")==0){
+					String value=permtMap.get(str);
+					item=str.replaceAll("42."+className+".", "");
+					if(StringUtils.isNotBlank(item)&&"9".equals(value)){
+						set.add(item);
+					}
+				}
+			}
+		}
+		return set;
+	}
+	/**
+	 * 通过sessionobj计算产生一个结果，
+	 * 用于41/42，给禁填数据放个默认值	 
+	 * @param map
+	 * @param key
+	 * @param sessionobj session给的对象
+	 * @param dbobj 数据库给的对象
+	 * @return
+	 */
+	public Object calcuResultBySessionobj(String key,User sessionUser,Object dbobj){
+		Map<String,String> permtMap=pMap.get(sessionUser.getRoleId());
+		String value=(permtMap==null)?null:permtMap.get(key);
+		if(StringUtils.isBlank(value)) //不禁止
+			return null; 
+		if(value.indexOf("~")==-1)
+			return null;
+		String vscript=value.split("~")[1];
+		if(sessionUser!=null)
+			shell.setVariable("sessionobj",	sessionUser);
+		if(dbobj!=null)
+			shell.setVariable("dbobj",	dbobj);
+		Script script = shell.parse("return "+vscript);
+		return script.run();
+	}
+
+	/**
+	 * 表改删查检查判断
+	 * 3.user:return dbobj.userId==sessionobj.id
+	 * @param map
+	 * @param key
+	 * @param sessionobj
+	 * @return
+	 */
+	private boolean checkObjInPermitMap(String key,User sessionUser,Object dbobj){
+		Map<String,String> map=pMap.get(sessionUser.getRoleId());
+		String value=(map==null)?null:map.get(key);
+		if(StringUtils.isBlank(value)) //不禁止
+			return true; 
+		if(sessionUser==null||dbobj==null)
+			return false;
+		shell.setVariable("sessionobj",	sessionUser);
+		shell.setVariable("dbobj",	dbobj);
+		Script script = shell.parse("return "+value);
+		return (Boolean)script.run();
+	}
+	/**
+	 * 表查增
+	 * 2.user:"userId="+sessonobj+".id"
+	 * @param map
+	 * @param key
+	 * @param sessionobj
+	 * @return
+	 */
+	private String addhqlPermitMap(String key,User sessionUser){
+		Map<String,String> map=pMap.get(sessionUser.getRoleId());
+		String value=(map==null)?null:map.get(key);
+		if(StringUtils.isBlank(value)) //不禁止
+			return ""; 
+		shell.setVariable("sessionobj",	sessionUser);
+		Script script = shell.parse("return "+value); //return "id=3"
+		String ret= ""+script.run();
+		ret=(ret==null)?"":ret;
+		ret=(ret.equals("null"))?"":ret;	
+		return ret;
+	}
+}

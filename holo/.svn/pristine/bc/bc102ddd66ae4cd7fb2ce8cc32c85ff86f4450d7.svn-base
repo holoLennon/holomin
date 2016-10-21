@@ -1,0 +1,30 @@
+/**
+ * Created by Administrator on 2015/3/20.
+ */
+/**
+ * 注册页面cb 会员
+ */
+appctrl.controller('regcbCtrl', function ($scope,$ionicModal, $timeout, $ionicPopup, $stateParams, $location, $sce, $http, $rootScope, Storage, RegService) {
+
+    $scope.user=Storage.get(REG_USER);
+    $scope.member={};
+    /**下一步*/
+    $scope.regcbCommit = function (){
+        RegService.regcb($scope.user,$scope.member).then(function (data) {
+            Storage.set(REG_USER,$scope.user);
+            if(!data.success){
+                CommonService.alertm(data.msg).then(function (res) {
+                });
+                return;
+            }
+            //结束时，打开登录页
+            $location.path("/tab/my");
+            $rootScope.$broadcast('event.NeedLoginException','reg');
+        });
+    };
+
+});
+
+
+
+

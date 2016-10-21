@@ -1,0 +1,106 @@
+@Autowired
+AlipayPaynotifyService alipayPaynotifyService;
+@Autowired
+MemberdoctorService memberdoctorService;
+@Autowired
+DoctorProductService doctorProductService;
+@Autowired
+DmmsgService dmmsgService;
+@Autowired
+DgmmsgService dgmmsgService;
+@Autowired
+DrugstoreService drugstoreService;
+@Autowired
+SellerCountService sellerCountService;
+@Autowired
+HospitalService hospitalService;
+@Autowired
+WaEntityArticleService waEntityArticleService;
+@Autowired
+WxmenuService wxmenuService;
+@Autowired
+WaRecvmsgService waRecvmsgService;
+@Autowired
+WaCustomAudParamService waCustomAudParamService;
+@Autowired
+WxmsgtemplateService wxmsgtemplateService;
+@Autowired
+WaTemplateAddService waTemplateAddService;
+@Autowired
+WxUsergroupService wxUsergroupService;
+@Autowired
+WaGeneralNoticeRetService waGeneralNoticeRetService;
+@Autowired
+WwwhomeService wwwhomeService;
+@Autowired
+TbfieldService tbfieldService;
+@Autowired
+WebsetService websetService;
+@Autowired
+MyisoService myisoService;
+@Autowired
+MyisouService myisouService;
+@Autowired
+OperLogService operLogService;
+@Autowired
+PermittableService permittableService;
+@Autowired
+PermitfieldService permitfieldService;
+@Autowired
+WxcfgService wxcfgService;
+@Autowired
+WxrService wxrService;
+@Autowired
+WxrbService wxrbService;
+@Autowired
+WxouserService wxouserService;
+@Autowired
+WxousersubscribehisService wxousersubscribehisService;
+@Autowired
+WaQrcodeticketSceneService waQrcodeticketSceneService;
+@Autowired
+WaQradvService waQradvService;
+@Autowired
+PomotionspecService pomotionspecService;
+@Autowired
+PomotionspecProductService pomotionspecProductService;
+@Autowired
+ProductService productService;
+@Autowired
+ProductExtTxtService productExtTxtService;
+@Autowired
+ProductchannelService productchannelService;
+@Autowired
+ManufacturerService manufacturerService;
+@Autowired
+ProductTypeService productTypeService;
+@Autowired
+ProductTypeLinkProductService productTypeLinkProductService;
+@Autowired
+SuggestionService suggestionService;
+@Autowired
+UserService userService;
+@Autowired
+AdminService adminService;
+@Autowired
+CadminService cadminService;
+@Autowired
+MemberService memberService;
+@Autowired
+DoctorService doctorService;
+@Autowired
+DruggistService druggistService;
+@Autowired
+SellerService sellerService;
+@Autowired
+OperService operService;
+@Autowired
+CartService cartService;
+@Autowired
+OrderrService orderrService;
+@Autowired
+OrderrFinishedService orderrFinishedService;
+@Autowired
+OrderrdetailService orderrdetailService;
+@Autowired
+OrderrdetailFinishedService orderrdetailFinishedService;

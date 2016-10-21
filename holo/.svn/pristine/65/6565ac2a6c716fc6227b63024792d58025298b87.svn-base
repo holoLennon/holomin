@@ -1,0 +1,887 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+@Component
+public class PermitDbSvrUitls {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+	
+	public PermitDbSvrUitls(){
+
+	}
+	public void doInit(){
+		loadAllTf();
+		putfield();
+		permitTable();
+	}	
+	/**
+	 * 所有的权限之表管理
+	 */
+	public void permitTable(){
+		for (String[] atl : tList) {
+			p1(atl[0], atl[1]);
+		}
+	}
+	/**
+	 * 根据表名保存系列role的permitTable
+	 * @param tbname 表名
+	 * @param tbalias 表说明
+	 */
+	public void p1(String tbname,String tbalias){
+		List<Permittable> listTbAdd=new ArrayList<Permittable>();
+		List<Permitfield> listFieldAdd=new ArrayList<Permitfield>();
+		Map<String,String> roleMap=MapDb.getInstance().mymap.get("User.RoleId");
+		Iterator<Entry<String,String>> iter = roleMap.entrySet().iterator();
+		int  pall=0, btnnew=0, btnedit=0, btndel=0, btnshow=0;
+		String queryaddhql="", modigvy="";
+		while (iter.hasNext()) {
+			Entry<String,String> entry = iter.next(); 
+			String key = entry.getKey();
+			//String val = entry.getValue();
+			Integer roleId=Integer.parseInt(key);
+			Permittable permittable=findExistTb(roleId, tbname);
+			if(permittable==null){
+				permittable=new Permittable(null, roleId, tbname, tbalias, pall, btnnew, btnedit, btndel, btnshow, queryaddhql, modigvy, null);
+				//permittableService.save(permittable);
+				listTbAdd.add(permittable);
+				
+			}
+			t1(listFieldAdd,roleId,tbname);
+		}
+		permittableService.saveOrUpdateAll(listTbAdd);
+		permitfieldService.saveOrUpdateAll(listFieldAdd);
+	}
+	
+	/**
+	 * 如果不存在，保存permitField
+	 * @param roleId
+	 * @param permittableId
+	 * @param tbname
+	 */
+	public void t1(List<Permitfield> listFieldAdd,int roleId, String tbname){
+		List<String[]> fl=tfMap.get(tbname);
+		for (String[] fs : fl) {
+			Permitfield permitfield=findExistFd(roleId, tbname, fs[0]);
+			if(permitfield==null){
+				permitfield=new Permitfield(null, roleId,tbname, fs[0], fs[1], "", "", "", "", null);
+				listFieldAdd.add(permitfield);
+			}
+			
+		}
+	}
+	
+	/**表及字段的Map<tbname,List<{fieldname,fieldalias}>>*/
+	Map<String,List<String[]>> tfMap=new HashMap<String, List<String[]>>();
+	/**表的List<{tbname,tbalias}>*/
+	List<String[]> tList=new ArrayList<String[]>();
+	
+	/**数据库取出的表*/
+	List<Permittable> listTbDb=new ArrayList<Permittable>();
+	/**数据库取出的字段*/
+	List<Permitfield> listFieldDb=new ArrayList<Permitfield>();
+	/**
+	 * 找已经存在的Tb，找到返回该对象，找不到返回null
+	 * @param roleId
+	 * @param tbname
+	 * @return
+	 */
+	public Permittable findExistTb(Integer roleId,String tbname){
+		for (Permittable obj : listTbDb) {
+			if(roleId.equals(obj.getRoleId())&&tbname.equals(obj.getTbname())){
+				return obj;
+			}
+		}
+		return null;
+	}
+	public Permitfield findExistFd(Integer roleId,String tbname,String fieldname){
+		for (Permitfield obj : listFieldDb) {
+			if(roleId.equals(obj.getRoleId())&&tbname.equals(obj.getTbname())&&fieldname.equals(obj.getFieldname())){
+				return obj;
+			}
+		}
+		return null;
+	}
+	/**
+	 * 从数据库中取出
+	 */
+	public void loadAllTf(){
+		listTbDb=permittableService.listAll();
+		listFieldDb=permitfieldService.listAll();
+	}
+
+	/**
+	 * 存放所有表和字段
+	 */
+	public void putfield(){
+		List<String[]> fl;
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"notifyTime","通知时间"});
+		fl.add(new String[]{"notifyType","通知类型"});
+		fl.add(new String[]{"notifyId","通知校验ID"});
+		fl.add(new String[]{"signType","签名方式"});
+		fl.add(new String[]{"sign","签名"});
+		fl.add(new String[]{"outTradeNo","商户网站唯一订单号"});
+		fl.add(new String[]{"subject","商品名称"});
+		fl.add(new String[]{"paymentType","支付类型"});
+		fl.add(new String[]{"tradeNo","支付宝交易号"});
+		fl.add(new String[]{"tradeStatus","交易状态"});
+		fl.add(new String[]{"sellerId","卖家支付宝用户号"});
+		fl.add(new String[]{"sellerEmail","卖家支付宝账号"});
+		fl.add(new String[]{"buyerId","买家支付宝用户号"});
+		fl.add(new String[]{"buyerEmail","买家支付宝账号"});
+		fl.add(new String[]{"totalFee","交易金额"});
+		fl.add(new String[]{"quantity","购买数量"});
+		fl.add(new String[]{"price","商品单价"});
+		fl.add(new String[]{"body","商品描述"});
+		fl.add(new String[]{"gmtCreate","交易创建时间"});
+		fl.add(new String[]{"gmtPayment","交易付款时间"});
+		fl.add(new String[]{"isTotalFeeAdjust","是否调整总价"});
+		fl.add(new String[]{"useCoupon","是否使用红包买家"});
+		fl.add(new String[]{"discount","折扣"});
+		fl.add(new String[]{"refundStatus","退款状态"});
+		fl.add(new String[]{"gmtRefund","退款时间"});
+		tfMap.put("AlipayPaynotify", fl);
+		tList.add(new String[]{"AlipayPaynotify","支付宝支付结果回调"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtModified","修改时间"});
+		fl.add(new String[]{"statusDm","关系"});
+		fl.add(new String[]{"itypeFirst","是否为首推"});
+		fl.add(new String[]{"itype","医生类型"});
+		fl.add(new String[]{"memberId","患者"});
+		fl.add(new String[]{"doctorId","医生"});
+		fl.add(new String[]{"countPrescription","处方数量"});
+		fl.add(new String[]{"countOrderr","消费金额"});
+		fl.add(new String[]{"mname","会员姓名"});
+		fl.add(new String[]{"dname","医生姓名"});
+		fl.add(new String[]{"productchannelId","医科目录"});
+		fl.add(new String[]{"mmsgnotread","会员未读消息"});
+		fl.add(new String[]{"dmsgnotread","医生未读消息"});
+		tfMap.put("Memberdoctor", fl);
+		tList.add(new String[]{"Memberdoctor","医患关系"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"doctorId","医生"});
+		fl.add(new String[]{"productId","商品"});
+		tfMap.put("DoctorProduct", fl);
+		tList.add(new String[]{"DoctorProduct","医生的药架"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"readed","是否读过"});
+		fl.add(new String[]{"fromto","发送接收"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"doctorId","医生"});
+		fl.add(new String[]{"productId","产品"});
+		fl.add(new String[]{"msg","消息内容"});
+		tfMap.put("Dmmsg", fl);
+		tList.add(new String[]{"Dmmsg","医患聊天记录"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"readed","是否读过"});
+		fl.add(new String[]{"fromto","发送接收"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"druggistId","药师"});
+		fl.add(new String[]{"productId","产品"});
+		fl.add(new String[]{"msg","消息内容"});
+		tfMap.put("Dgmmsg", fl);
+		tList.add(new String[]{"Dgmmsg","药师患者聊天记录"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"areaid","地区"});
+		fl.add(new String[]{"cname","药房名称"});
+		fl.add(new String[]{"addr","药房地址"});
+		fl.add(new String[]{"tele","药房电话"});
+		fl.add(new String[]{"attr","药房性质"});
+		fl.add(new String[]{"docname","咨询药师姓名"});
+		fl.add(new String[]{"doctele","咨询药师电话"});
+		fl.add(new String[]{"doccheck","复核药师"});
+		fl.add(new String[]{"docmake","配药药师"});
+		fl.add(new String[]{"docqq","药房咨询QQ"});
+		fl.add(new String[]{"centerlng","经度lng"});
+		fl.add(new String[]{"centerlat","维度lat"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"img2","图2"});
+		tfMap.put("Drugstore", fl);
+		tList.add(new String[]{"Drugstore","实体药店"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtCount","被统计日或月"});
+		fl.add(new String[]{"itype","类型"});
+		fl.add(new String[]{"sellerId","业务员"});
+		fl.add(new String[]{"mmoney","直接销售金额"});
+		fl.add(new String[]{"mmoneyteam","下属团队销售金额"});
+		fl.add(new String[]{"mmoneyall","总销售金额"});
+		fl.add(new String[]{"cmemo","备注"});
+		tfMap.put("SellerCount", fl);
+		tList.add(new String[]{"SellerCount","业务员销售统计"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"areaid","地区"});
+		fl.add(new String[]{"cname","名称"});
+		fl.add(new String[]{"addr","地址"});
+		tfMap.put("Hospital", fl);
+		tList.add(new String[]{"Hospital","医院"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"status","状态"});
+		fl.add(new String[]{"keyw","关键字"});
+		fl.add(new String[]{"title","图文消息标题"});
+		fl.add(new String[]{"description","图文消息描述"});
+		fl.add(new String[]{"pic","图片链接"});
+		fl.add(new String[]{"picurl","图片完整链接"});
+		fl.add(new String[]{"url","点击图文消息跳转链接"});
+		tfMap.put("WaEntityArticle", fl);
+		tList.add(new String[]{"WaEntityArticle","共用对象之图文"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"userId","卖家"});
+		fl.add(new String[]{"mtype","菜单类型"});
+		fl.add(new String[]{"type","响应动作类型"});
+		fl.add(new String[]{"name","菜单标题"});
+		fl.add(new String[]{"key1","菜单KEY值"});
+		fl.add(new String[]{"url","网页链接"});
+		fl.add(new String[]{"mediaId","合法media_id"});
+		fl.add(new String[]{"parentid","父ID"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		tfMap.put("Wxmenu", fl);
+		tList.add(new String[]{"Wxmenu","微信自定义菜单"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"tousername","服务者微信号"});
+		fl.add(new String[]{"fromusername","发送方帐号"});
+		fl.add(new String[]{"createtime","消息创建时间"});
+		fl.add(new String[]{"msgtype","消息类型"});
+		fl.add(new String[]{"content","文本消息内容"});
+		fl.add(new String[]{"msgid","消息id"});
+		fl.add(new String[]{"picurl","图片链接"});
+		fl.add(new String[]{"mediaid","消息媒体id"});
+		fl.add(new String[]{"format","语音格式"});
+		fl.add(new String[]{"thumbmediaid","缩略图的媒体id"});
+		fl.add(new String[]{"locationX","地理位置维度"});
+		fl.add(new String[]{"locationY","地理位置经度"});
+		fl.add(new String[]{"scale","地图缩放大小"});
+		fl.add(new String[]{"label1","地理位置信息"});
+		fl.add(new String[]{"title","消息标题"});
+		fl.add(new String[]{"description","消息描述"});
+		fl.add(new String[]{"url","消息链接"});
+		fl.add(new String[]{"event","事件类型"});
+		fl.add(new String[]{"eventkey","事件KEY值"});
+		fl.add(new String[]{"ticket","二维码的ticket"});
+		fl.add(new String[]{"latitude","地理位置纬度"});
+		fl.add(new String[]{"longitude","地理位置经度"});
+		fl.add(new String[]{"precision1","地理位置精度"});
+		fl.add(new String[]{"recognition","语音识别结果"});
+		tfMap.put("WaRecvmsg", fl);
+		tList.add(new String[]{"WaRecvmsg","接收到的消息"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"userId","卖家"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		fl.add(new String[]{"kfAccount","完整客服账号"});
+		fl.add(new String[]{"nickname","客服昵称"});
+		fl.add(new String[]{"password","登录密码"});
+		tfMap.put("WaCustomAudParam", fl);
+		tList.add(new String[]{"WaCustomAudParam","客服管理之增删改参数"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"userId","卖家"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"templateIdShort","模板短编号"});
+		fl.add(new String[]{"templateId","模板id"});
+		fl.add(new String[]{"title","说明"});
+		fl.add(new String[]{"content","模板内容"});
+		tfMap.put("Wxmsgtemplate", fl);
+		tList.add(new String[]{"Wxmsgtemplate","微信自定义模板"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"userId","卖家"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		fl.add(new String[]{"templateIdShort","模板短编号"});
+		fl.add(new String[]{"templateId","模板id"});
+		tfMap.put("WaTemplateAdd", fl);
+		tList.add(new String[]{"WaTemplateAdd","模板消息接口之获得模板ID"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","分组id"});
+		fl.add(new String[]{"sellerId","所属卖家"});
+		fl.add(new String[]{"name","分组名字"});
+		fl.add(new String[]{"count","分组内用户数量"});
+		tfMap.put("WxUsergroup", fl);
+		tList.add(new String[]{"WxUsergroup","用户分组"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"returnCode","返回状态码"});
+		fl.add(new String[]{"returnMsg","返回信息"});
+		fl.add(new String[]{"appid","公众账号ID"});
+		fl.add(new String[]{"mchId","商户号"});
+		fl.add(new String[]{"deviceInfo","设备号"});
+		fl.add(new String[]{"nonceStr","随机字符串"});
+		fl.add(new String[]{"sign","签名"});
+		fl.add(new String[]{"resultCode","业务结果"});
+		fl.add(new String[]{"errCode","错误代码"});
+		fl.add(new String[]{"errCodeDes","错误代码描述"});
+		fl.add(new String[]{"openid","用户标识"});
+		fl.add(new String[]{"isSubscribe","是否关注公众账号"});
+		fl.add(new String[]{"tradeType","交易类型"});
+		fl.add(new String[]{"bankType","付款银行"});
+		fl.add(new String[]{"totalFee","总金额"});
+		fl.add(new String[]{"feeType","货币种类"});
+		fl.add(new String[]{"cashFee","现金支付金额"});
+		fl.add(new String[]{"cashFeeType","现金支付货币类型"});
+		fl.add(new String[]{"couponFee","代金券或立减优惠金额"});
+		fl.add(new String[]{"couponCount","代金券或立减优惠使用数量"});
+		fl.add(new String[]{"transactionId","微信支付订单号"});
+		fl.add(new String[]{"outTradeNo","商户订单号"});
+		fl.add(new String[]{"attach","商家数据包"});
+		fl.add(new String[]{"timeEnd","支付完成时间"});
+		tfMap.put("WaGeneralNoticeRet", fl);
+		tList.add(new String[]{"WaGeneralNoticeRet","微信支付回调通用结果"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","所属用户"});
+		fl.add(new String[]{"logo","图标"});
+		fl.add(new String[]{"sharetxt","分享转发说明"});
+		fl.add(new String[]{"headimg1","图1"});
+		fl.add(new String[]{"headimgtxt1","图说明1"});
+		fl.add(new String[]{"headimglink1","图链接1"});
+		fl.add(new String[]{"headimg2","图2"});
+		fl.add(new String[]{"headimgtxt2","图说明2"});
+		fl.add(new String[]{"headimglink2","图链接2"});
+		fl.add(new String[]{"headimg3","图3"});
+		fl.add(new String[]{"headimgtxt3","图说明3"});
+		fl.add(new String[]{"headimglink3","图链接3"});
+		tfMap.put("Wwwhome", fl);
+		tList.add(new String[]{"Wwwhome","手机页首页配置"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"parentid","父ID"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		fl.add(new String[]{"cname","名称简介"});
+		fl.add(new String[]{"ckey","表名字段名"});
+		fl.add(new String[]{"cvalue","值"});
+		tfMap.put("Tbfield", fl);
+		tList.add(new String[]{"Tbfield","表字段"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"cname","名称简介"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"enumFieldType","字段类型"});
+		fl.add(new String[]{"cvalue","值"});
+		tfMap.put("Webset", fl);
+		tList.add(new String[]{"Webset","网站设置"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"ctype","类型"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"cmemo","备注说明"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"cvalue","值"});
+		tfMap.put("Myiso", fl);
+		tList.add(new String[]{"Myiso","参数设置"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"userId","所属用户"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"cmemo","备注说明"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"cckey","保存值"});
+		fl.add(new String[]{"ccvalue","显示"});
+		tfMap.put("Myisou", fl);
+		tList.add(new String[]{"Myisou","用户参数设置"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"userId","操作员内码"});
+		fl.add(new String[]{"fid","从ID"});
+		fl.add(new String[]{"tid","到ID"});
+		fl.add(new String[]{"cmemo","说明"});
+		tfMap.put("OperLog", fl);
+		tList.add(new String[]{"OperLog","操作记录"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"roleId","角色"});
+		fl.add(new String[]{"tbname","表名"});
+		fl.add(new String[]{"tbalias","表说明"});
+		fl.add(new String[]{"pall","表权限"});
+		fl.add(new String[]{"btnnew","按钮增"});
+		fl.add(new String[]{"btnedit","按钮改"});
+		fl.add(new String[]{"btndel","按钮删"});
+		fl.add(new String[]{"btnshow","按钮查"});
+		fl.add(new String[]{"queryaddhql","查询增加的hql"});
+		fl.add(new String[]{"modigvy","修改检查脚本"});
+		tfMap.put("Permittable", fl);
+		tList.add(new String[]{"Permittable","权限之表设定"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"roleId","角色"});
+		fl.add(new String[]{"tbname","表名"});
+		fl.add(new String[]{"fieldname","字段名"});
+		fl.add(new String[]{"fieldalias","字段说明"});
+		fl.add(new String[]{"pf41","增可写字段41"});
+		fl.add(new String[]{"pf42","改可写字段42"});
+		fl.add(new String[]{"pf51","查可看字段51"});
+		fl.add(new String[]{"pf52","列表显示字段52"});
+		tfMap.put("Permitfield", fl);
+		tList.add(new String[]{"Permitfield","权限之字段设定"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","所属用户"});
+		fl.add(new String[]{"statusApplyPassRefuse","状态"});
+		fl.add(new String[]{"cname","名称"});
+		fl.add(new String[]{"wxnum","微信号"});
+		fl.add(new String[]{"itype","类型"});
+		fl.add(new String[]{"appid","appid"});
+		fl.add(new String[]{"appsecret","appsecret"});
+		fl.add(new String[]{"token","token"});
+		fl.add(new String[]{"encodingaeskey","encodingaeskey"});
+		fl.add(new String[]{"mchid","微信支付商户号"});
+		fl.add(new String[]{"partnerid","商户平台登录帐号"});
+		fl.add(new String[]{"partnerkey","商户平台登录密码"});
+		fl.add(new String[]{"paykey","商户支付密钥"});
+		fl.add(new String[]{"appAppid","app的appid"});
+		fl.add(new String[]{"appMchid","app的微信支付商户号"});
+		fl.add(new String[]{"appPaykey","app的商户支付密钥"});
+		fl.add(new String[]{"accesstoken","accesstoken"});
+		fl.add(new String[]{"ticket","ticket"});
+		tfMap.put("Wxcfg", fl);
+		tList.add(new String[]{"Wxcfg","微信配置"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","微信openid"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"parentid","父openid"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		fl.add(new String[]{"userId","平台用户"});
+		fl.add(new String[]{"roleId","角色"});
+		fl.add(new String[]{"imgqr","二维码"});
+		tfMap.put("Wxr", fl);
+		tList.add(new String[]{"Wxr","微信用户关系"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"openid","openid"});
+		fl.add(new String[]{"popenid","父openid"});
+		fl.add(new String[]{"status","状态"});
+		tfMap.put("Wxrb", fl);
+		tList.add(new String[]{"Wxrb","微信用户非首推关系"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","微信openid"});
+		fl.add(new String[]{"openid","微信openid"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"sellerId","所属卖家"});
+		fl.add(new String[]{"userId","平台用户"});
+		fl.add(new String[]{"statusuf","用户信息类型"});
+		fl.add(new String[]{"nickname","用户昵称"});
+		fl.add(new String[]{"sex","性别"});
+		fl.add(new String[]{"province","省份"});
+		fl.add(new String[]{"city","城市"});
+		fl.add(new String[]{"country","国家"});
+		fl.add(new String[]{"headimgurl","用户头像"});
+		fl.add(new String[]{"privilege","用户特权信息"});
+		fl.add(new String[]{"unionid","微信标识"});
+		fl.add(new String[]{"realname","真实姓名"});
+		fl.add(new String[]{"mobile","手机号"});
+		fl.add(new String[]{"email","电子邮件"});
+		fl.add(new String[]{"orderZip","收货邮编"});
+		fl.add(new String[]{"orderAddress","收货地址"});
+		fl.add(new String[]{"subscribe","是否订阅"});
+		fl.add(new String[]{"subscribeTime","关注时间"});
+		fl.add(new String[]{"remark","备注"});
+		fl.add(new String[]{"groupid","所在的分组ID"});
+		tfMap.put("Wxouser", fl);
+		tList.add(new String[]{"Wxouser","微信用户"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","时间"});
+		fl.add(new String[]{"sellerId","所属卖家"});
+		fl.add(new String[]{"wxouserId","微信openid"});
+		fl.add(new String[]{"act","操作"});
+		tfMap.put("Wxousersubscribehis", fl);
+		tList.add(new String[]{"Wxousersubscribehis","微信用户关注历史记录"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"sceneStr","场景值ID字符串形式"});
+		fl.add(new String[]{"actType","操作类型"});
+		fl.add(new String[]{"actDetailSplit","操作参数分隔符"});
+		fl.add(new String[]{"actDetail","操作详情或参数"});
+		fl.add(new String[]{"statusTemporary","是否为临时二维码"});
+		fl.add(new String[]{"statusValid","是否有效"});
+		fl.add(new String[]{"img1","图1"});
+		tfMap.put("WaQrcodeticketScene", fl);
+		tList.add(new String[]{"WaQrcodeticketScene","二维码场景及转换"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"title","标题"});
+		fl.add(new String[]{"imgqr","二维码"});
+		fl.add(new String[]{"rettype","关注后返回方式"});
+		fl.add(new String[]{"num","关注数量"});
+		fl.add(new String[]{"rettxt","返回的纯文本"});
+		fl.add(new String[]{"waEntityArticleId","返回的图文"});
+		tfMap.put("WaQradv", fl);
+		tList.add(new String[]{"WaQradv","广告使用的关注二维码"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtModified","修改时间"});
+		fl.add(new String[]{"gmtRelease","发布时间"});
+		fl.add(new String[]{"statusApplyPassRefuse","状态"});
+		fl.add(new String[]{"statusRecipe","是否处方药"});
+		fl.add(new String[]{"statusUsed","使用方法"});
+		fl.add(new String[]{"usemount","用法用量"});
+		fl.add(new String[]{"productchannelId","商品目录"});
+		fl.add(new String[]{"manufacturerId","厂商产地"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"productno","商品编号"});
+		fl.add(new String[]{"title","商品名"});
+		fl.add(new String[]{"commonname","通用名"});
+		fl.add(new String[]{"allowno","批准文号"});
+		fl.add(new String[]{"productstyle","规格型号"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"img2","图2"});
+		fl.add(new String[]{"img3","图3"});
+		fl.add(new String[]{"img4","图4"});
+		fl.add(new String[]{"img5","图5"});
+		fl.add(new String[]{"img6","图6"});
+		fl.add(new String[]{"imgbarcode","条码"});
+		fl.add(new String[]{"hittimes","点击次数"});
+		fl.add(new String[]{"buytimes","购买次数"});
+		fl.add(new String[]{"punit","商品单位"});
+		fl.add(new String[]{"marketprice","市场价"});
+		fl.add(new String[]{"price","优惠价"});
+		fl.add(new String[]{"carriagePrice","运费"});
+		fl.add(new String[]{"store","库存"});
+		fl.add(new String[]{"intro","功能主治"});
+		fl.add(new String[]{"genurl","生成地址"});
+		tfMap.put("Product", fl);
+		tList.add(new String[]{"Product","商品"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","商品ID"});
+		fl.add(new String[]{"txt","详细介绍"});
+		tfMap.put("ProductExtTxt", fl);
+		tList.add(new String[]{"ProductExtTxt","商品详细"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"channelName","名称"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		fl.add(new String[]{"parentid","父ID"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		fl.add(new String[]{"family","祖先"});
+		fl.add(new String[]{"icon","图标名称"});
+		fl.add(new String[]{"img","图"});
+		fl.add(new String[]{"genurl","生成地址"});
+		tfMap.put("Productchannel", fl);
+		tList.add(new String[]{"Productchannel","商品目录"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		fl.add(new String[]{"name","名称"});
+		fl.add(new String[]{"img","图"});
+		fl.add(new String[]{"idbiz","营业执照号"});
+		fl.add(new String[]{"contentname","联系人"});
+		fl.add(new String[]{"tele","联系电话"});
+		fl.add(new String[]{"fax","传真"});
+		fl.add(new String[]{"mobile","手机号"});
+		tfMap.put("Manufacturer", fl);
+		tList.add(new String[]{"Manufacturer","药品生产厂家"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"ckey","关键字"});
+		fl.add(new String[]{"channelName","名称"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		fl.add(new String[]{"parentid","父ID"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		fl.add(new String[]{"family","祖先"});
+		fl.add(new String[]{"genurl","生成地址"});
+		fl.add(new String[]{"icon","图标名称"});
+		fl.add(new String[]{"img","图"});
+		tfMap.put("ProductType", fl);
+		tList.add(new String[]{"ProductType","商品类型"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"productId","商品ID"});
+		fl.add(new String[]{"productTypeId","商品类型ID"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"statusValidOrNot","状态"});
+		tfMap.put("ProductTypeLinkProduct", fl);
+		tList.add(new String[]{"ProductTypeLinkProduct","商品类型包含商品"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"memberId","消费者会员"});
+		fl.add(new String[]{"cadminId","处理员"});
+		fl.add(new String[]{"detail","内容"});
+		fl.add(new String[]{"mobile","手机号"});
+		fl.add(new String[]{"cmemo","备注说明"});
+		tfMap.put("Suggestion", fl);
+		tList.add(new String[]{"Suggestion","意见建议"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtModified","修改时间"});
+		fl.add(new String[]{"status","状态"});
+		fl.add(new String[]{"roleId","角色"});
+		fl.add(new String[]{"username","账号"});
+		fl.add(new String[]{"password","密码"});
+		fl.add(new String[]{"nickname","昵称"});
+		fl.add(new String[]{"userId","隶属于"});
+		fl.add(new String[]{"openid","微信openid"});
+		fl.add(new String[]{"userobj","类型对象"});
+		fl.add(new String[]{"pmtmap","权限列表"});
+		fl.add(new String[]{"objmap","拥有的对象"});
+		fl.add(new String[]{"openidmd5","微信openidMd5"});
+		fl.add(new String[]{"token","token"});
+		tfMap.put("User", fl);
+		tList.add(new String[]{"User","账号信息修改"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"nickname","昵称"});
+		tfMap.put("Admin", fl);
+		tList.add(new String[]{"Admin","超级管理员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"nickname","昵称"});
+		tfMap.put("Cadmin", fl);
+		tList.add(new String[]{"Cadmin","一般管理员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"name","呢称"});
+		fl.add(new String[]{"img1","头像"});
+		fl.add(new String[]{"age","年纪"});
+		fl.add(new String[]{"usersex","用户性别"});
+		fl.add(new String[]{"idtype","证件类型"});
+		fl.add(new String[]{"idnum","证件号码"});
+		fl.add(new String[]{"realname","姓名"});
+		fl.add(new String[]{"mobile","手机"});
+		fl.add(new String[]{"zip","邮编"});
+		fl.add(new String[]{"addr","地址"});
+		fl.add(new String[]{"email","电子邮件"});
+		fl.add(new String[]{"realname1","其它联系人姓名"});
+		fl.add(new String[]{"mobile1","其它联系人手机"});
+		fl.add(new String[]{"doctorId","首推荐医生"});
+		fl.add(new String[]{"countPrescription","总处方数量"});
+		fl.add(new String[]{"countOrderr","总消费金额"});
+		fl.add(new String[]{"statusRelation","是否有新医患关系"});
+		tfMap.put("Member", fl);
+		tList.add(new String[]{"Member","个人会员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"productchannelId","医科目录"});
+		fl.add(new String[]{"age","年纪"});
+		fl.add(new String[]{"img1","头像"});
+		fl.add(new String[]{"name","姓名"});
+		fl.add(new String[]{"hospitalId","所在医院"});
+		fl.add(new String[]{"dlevel","职称"});
+		fl.add(new String[]{"usersex","用户性别"});
+		fl.add(new String[]{"idtype","证件类型"});
+		fl.add(new String[]{"idnum","证件号码"});
+		fl.add(new String[]{"zip","邮编"});
+		fl.add(new String[]{"addr","地址"});
+		fl.add(new String[]{"company","工作单位"});
+		fl.add(new String[]{"mobile","手机"});
+		fl.add(new String[]{"tele","座机"});
+		fl.add(new String[]{"email","电子邮件"});
+		fl.add(new String[]{"itype","医生类型"});
+		fl.add(new String[]{"countPrescription","总处方数量"});
+		fl.add(new String[]{"countOrderr","总开方成交金额"});
+		fl.add(new String[]{"countFirst","总首推消费金额"});
+		fl.add(new String[]{"qrimg","二维码"});
+		fl.add(new String[]{"sellerId","所属业务员"});
+		fl.add(new String[]{"statusRelation","是否有新医患关系"});
+		fl.add(new String[]{"wasmy","我的推荐医生id"});
+		tfMap.put("Doctor", fl);
+		tList.add(new String[]{"Doctor","医生会员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"licenseno","执照号码"});
+		fl.add(new String[]{"img1","执照照片"});
+		fl.add(new String[]{"img2","头像"});
+		fl.add(new String[]{"name","姓名"});
+		fl.add(new String[]{"dlevel","职称"});
+		fl.add(new String[]{"usersex","用户性别"});
+		fl.add(new String[]{"idtype","证件类型"});
+		fl.add(new String[]{"idnum","证件号码"});
+		fl.add(new String[]{"zip","邮编"});
+		fl.add(new String[]{"addr","地址"});
+		fl.add(new String[]{"company","工作单位"});
+		fl.add(new String[]{"mobile","手机"});
+		fl.add(new String[]{"tele","座机"});
+		fl.add(new String[]{"email","电子邮件"});
+		tfMap.put("Druggist", fl);
+		tList.add(new String[]{"Druggist","药剂师"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"dlevel","级别"});
+		fl.add(new String[]{"name","姓名"});
+		fl.add(new String[]{"idcard","身份证号"});
+		fl.add(new String[]{"age","年龄"});
+		fl.add(new String[]{"usersex","性别"});
+		fl.add(new String[]{"gmtIn","入司时间"});
+		fl.add(new String[]{"gmtWork","就职时间(合作时间)"});
+		fl.add(new String[]{"area","所在区域"});
+		fl.add(new String[]{"mmoney","直接销售总额"});
+		fl.add(new String[]{"mmoneyteam","下属团队销售总额"});
+		fl.add(new String[]{"mmoneyall","总销售金额"});
+		fl.add(new String[]{"parentid","上级"});
+		fl.add(new String[]{"priority","排列顺序"});
+		fl.add(new String[]{"childrennum","孩子数量"});
+		fl.add(new String[]{"family","祖先"});
+		fl.add(new String[]{"qrimg","二维码"});
+		tfMap.put("Seller", fl);
+		tList.add(new String[]{"Seller","业务员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","用户ID"});
+		fl.add(new String[]{"drugstoreId","取药点"});
+		fl.add(new String[]{"name","姓名"});
+		fl.add(new String[]{"idcard","身份证号"});
+		tfMap.put("Oper", fl);
+		tList.add(new String[]{"Oper","店铺操作员"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"memberId","消费者会员"});
+		fl.add(new String[]{"productId","产品"});
+		fl.add(new String[]{"num","数量"});
+		fl.add(new String[]{"price","单价"});
+		fl.add(new String[]{"sumprice","总价"});
+		tfMap.put("Cart", fl);
+		tList.add(new String[]{"Cart","购物车"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtPay","支付时间"});
+		fl.add(new String[]{"iotype","开单类型"});
+		fl.add(new String[]{"status","支付状态"});
+		fl.add(new String[]{"statusgoods","收发货状态"});
+		fl.add(new String[]{"statusCarriageType","提货方式"});
+		fl.add(new String[]{"sn","序列号"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"sumprice","总价"});
+		fl.add(new String[]{"title","商品名"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"drugstoreId","取药点"});
+		fl.add(new String[]{"doccheck","复核药师"});
+		fl.add(new String[]{"docmake","配药药师"});
+		fl.add(new String[]{"doctorWr","开药医生"});
+		fl.add(new String[]{"doctorId","首推荐医生"});
+		fl.add(new String[]{"sellerId","所属业务员"});
+		fl.add(new String[]{"operId","取药操作员"});
+		fl.add(new String[]{"productnums","商品数量"});
+		fl.add(new String[]{"diagnose","诊断"});
+		fl.add(new String[]{"pomotionticketnums","可用优惠券数量"});
+		fl.add(new String[]{"listorderrdetail","订单详细列表"});
+		fl.add(new String[]{"paywxh5","微信支付H5对象"});
+		tfMap.put("Orderr", fl);
+		tList.add(new String[]{"Orderr","订单"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtPay","支付时间"});
+		fl.add(new String[]{"iotype","开单类型"});
+		fl.add(new String[]{"status","支付状态"});
+		fl.add(new String[]{"statusgoods","收发货状态"});
+		fl.add(new String[]{"statusCarriageType","提货方式"});
+		fl.add(new String[]{"sn","序列号"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"sumprice","总价"});
+		fl.add(new String[]{"title","商品名"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"drugstoreId","取药点"});
+		fl.add(new String[]{"doccheck","复核药师"});
+		fl.add(new String[]{"docmake","配药药师"});
+		fl.add(new String[]{"doctorWr","开药医生"});
+		fl.add(new String[]{"doctorId","首推荐医生"});
+		fl.add(new String[]{"sellerId","所属业务员"});
+		fl.add(new String[]{"operId","取药操作员"});
+		fl.add(new String[]{"productnums","商品数量"});
+		fl.add(new String[]{"diagnose","诊断"});
+		fl.add(new String[]{"pomotionticketnums","可用优惠券数量"});
+		fl.add(new String[]{"listorderrdetail","订单详细列表"});
+		fl.add(new String[]{"paywxh5","微信支付H5对象"});
+		tfMap.put("OrderrFinished", fl);
+		tList.add(new String[]{"OrderrFinished","订单"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtSent","发货时间"});
+		fl.add(new String[]{"gmtRecv","收货时间"});
+		fl.add(new String[]{"orderrId","订单号"});
+		fl.add(new String[]{"iotype","开单类型"});
+		fl.add(new String[]{"status","支付状态"});
+		fl.add(new String[]{"statusgoods","收发货状态"});
+		fl.add(new String[]{"statuscount","统计状态"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"doctorWr","开药医生"});
+		fl.add(new String[]{"doctorId","首推荐医生"});
+		fl.add(new String[]{"productId","产品"});
+		fl.add(new String[]{"title","商品名"});
+		fl.add(new String[]{"manufacturerId","厂商产地"});
+		fl.add(new String[]{"productstyle","规格型号"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"price","单价"});
+		fl.add(new String[]{"num","数量"});
+		fl.add(new String[]{"sumprice","总价"});
+		fl.add(new String[]{"usemethord","用药方法"});
+		fl.add(new String[]{"otherdetail","医嘱"});
+		fl.add(new String[]{"usemount","用法用量"});
+		tfMap.put("Orderrdetail", fl);
+		tList.add(new String[]{"Orderrdetail","订单详细"});
+		fl=new ArrayList<String[]>();
+		fl.add(new String[]{"id","序号ID"});
+		fl.add(new String[]{"gmtCreate","创建时间"});
+		fl.add(new String[]{"gmtSent","发货时间"});
+		fl.add(new String[]{"gmtRecv","收货时间"});
+		fl.add(new String[]{"orderrId","订单号"});
+		fl.add(new String[]{"iotype","开单类型"});
+		fl.add(new String[]{"status","支付状态"});
+		fl.add(new String[]{"statusgoods","收发货状态"});
+		fl.add(new String[]{"statuscount","统计状态"});
+		fl.add(new String[]{"memberId","会员"});
+		fl.add(new String[]{"doctorWr","开药医生"});
+		fl.add(new String[]{"doctorId","首推荐医生"});
+		fl.add(new String[]{"productId","产品"});
+		fl.add(new String[]{"title","商品名"});
+		fl.add(new String[]{"manufacturerId","厂商产地"});
+		fl.add(new String[]{"productstyle","规格型号"});
+		fl.add(new String[]{"img1","图1"});
+		fl.add(new String[]{"price","单价"});
+		fl.add(new String[]{"num","数量"});
+		fl.add(new String[]{"sumprice","总价"});
+		fl.add(new String[]{"usemethord","用药方法"});
+		fl.add(new String[]{"otherdetail","医嘱"});
+		fl.add(new String[]{"usemount","用法用量"});
+		tfMap.put("OrderrdetailFinished", fl);
+		tList.add(new String[]{"OrderrdetailFinished","订单详细"});
+		
+		
+	}
+}

@@ -1,0 +1,187 @@
+/**
+ * Orderr，订单详细
+ */
+appctrl.controller('OrderrCtrl', function($scope, $rootScope, $log, $timeout,
+                                          $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                          $location, $state,
+                                          $cordovaNetwork, $cordovaGoogleAnalytics,
+                                          $stateParams,$log,
+                                          ENV,CommonService,OrderrService,DrugstoreService,zspecService,Storage) {
+    $log.debug("enter Orderr ctrl");
+    /**参数*/
+    var id = $stateParams.id;
+
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    if(id==='0')
+        $scope.vm.isedit=true;
+    /**对象*/
+    $scope.obj={};
+
+    /**药店列表*/
+    $scope.listDrugstore=[];
+    /**选中的药店*/
+    $scope.drugstore={};
+    /**药店页码*/
+    $scope.pageDrugstore=_.clone(_Page);
+
+
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Orderr ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Orderr ctrl afterEnter");
+        if (ctrlReinitMap.get('OrderrCtrl')) {
+            ctrlReinitMap.remove('OrderrCtrl');
+            $log.debug("Orderr ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Orderr ctrl init id="+id);
+        $scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Orderr ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Orderr);
+        }else{
+            $scope.obj=OrderrService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+        $log.debug("Orderr ctrl get id="+id);
+        if(isblank0(id)) {
+            OrderrService.newget().then(function (data) {
+                $log.debug("Orderr ctrl newget then");
+                $scope.obj=data;
+            });
+        }else{
+            OrderrService.get(id).then(function (data) {
+                $log.debug("Orderr ctrl get then");
+                $scope.obj=data;
+            });
+        }
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug("Orderr ctrl get id="+id);
+        $log.debug($scope.obj)
+        if(isblanklist($scope.listCart))
+            return;
+        //carts是$scope.listCart从对象变成json字符串，记得不要太长。
+        for(var i = 0;i < $scope.listCart.length; i++) {
+            var item= $scope.listCart[i];
+            item.obj1="";
+        }
+        var carts=window.JSON.stringify($scope.listCart);
+        $scope.obj.obj1=carts;
+        zspecService.memberCartToOrderr($scope.obj).then(function (data) {
+            $log.debug("Orderr ctrl save then");
+            $scope.obj=data;
+            $scope.listCart=[];
+            Storage.remove(LISTCART);
+            ctrlReinitMap.put('tabCtrl',1);
+            //$location.path("/tab/CartList");
+        });
+    };
+    /**
+     * 点击了叉叉，如果是id=0，返回上一页
+     */
+    $scope.clickx=function(){
+        if(id==='0')
+            goBack();
+    };
+    /**
+     * 上传图片
+     * @param file
+     * @param dest
+     */
+    $scope.upload=function(file,dest){
+        $log.debug("upload ="+file);
+        FileUploadService.upload(file).then(function (data) {
+            $log.debug("upload then");
+            $log.debug(data);
+            $scope.obj[dest]=data.msg;
+        });
+    };
+
+
+
+
+    /////////////药店弹出窗口start
+    /**弹出窗_药店*/
+    $scope.pop_mdrugstorelist={};
+    /**
+     * 设定弹出窗口_药店
+     */
+    $ionicPopover.fromTemplateUrl('views/tab-c/mdrugstorelist.html', {
+        scope: $scope
+    }).then(function(popover) {
+        $scope.pop_mdrugstorelist = popover;
+    });
+    /**打开窗口_药店*/
+    $scope.open_pop_mdrugstorelist = function(e) {
+        if(!isblanklist($scope.listDrugstore)){
+            $scope.pop_mdrugstorelist.show(e);
+            return;
+        }
+        DrugstoreService.first(null, $scope.pageDrugstore).then(function (data) {
+            $log.debug("DrugstoreList ctrl query then");
+            $scope.addListDrugstore(data);
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.pop_mdrugstorelist.show(e);
+        });
+
+    };
+
+
+    /////////////药店弹出窗口end
+
+    /**
+     * 给listDrugstore上加数据
+     * @param data
+     */
+    $scope.addListDrugstore=function(data){
+        angular.forEach(data, function (item) {
+            $scope.listDrugstore.push(item);
+        });
+        if(data && data.length < $scope.pageDrugstore.pageSize){
+            $scope.pageDrugstore.hasNextPage=false;
+        }else{
+            $scope.pageDrugstore.hasNextPage=true;
+        }
+    };
+    /**
+     * 选择药店
+     * @param drugstore
+     */
+    $scope.choseDrugstore=function(drugstore){
+        $scope.obj.drugstoreId=drugstore.id;
+        $scope.drugstore=drugstore;
+        $scope.pop_mdrugstorelist.hide();
+    };
+
+
+    $scope.init();
+    ctrlReinitMap.remove('OrderrCtrl');
+});

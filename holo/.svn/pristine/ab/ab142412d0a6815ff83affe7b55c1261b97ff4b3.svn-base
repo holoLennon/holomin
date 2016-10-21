@@ -1,0 +1,18 @@
+﻿<script type="text/javascript" src="../js/myfocus-2.0.0 beta.min.js"></script>
+<style type="text/css">
+    #myFocus{ width:238px; height:206px;clear:both; border:none;}
+</style>
+<script type="text/javascript">
+    myFocus.set({id:'myFocus',pattern:'mF_qiyi'});
+</script>
+<div id="myFocus"><!--焦点图盒子--><!--载入画面(可删除)-->
+    <div class="pic"><!--图片列表-->
+        <ul>
+            <li><a href="/zjsc/c/yjdt/201512/155.htm" target="_blank"><img src="../upload/20151231博览会新闻.jpg" thumb="" alt="新闻" text="" ></a></li>
+            <li><a href="#"><img src="../upload/20150728xinwen.jpg" thumb="" alt="新闻" text="" ></a></li>
+            <li><a href="/zjsc/c/yjdt/201301/48.htm" target="_blank"><img src="../upload/20150728xinwen-huizhang.jpg" thumb="" alt="新闻" text=""></a></li>
+            <li><a href="http://www.zjsc.org.cn/zjsc/ru/mb2/upload/2014hulianwangzhiguang.jpg"><img src="../upload/2014hulianwangzhiguang.jpg" thumb="" alt="新闻" text="" ></a></li>
+            <li><a href="http://www.zjsc.org.cn/zjsc/ru/mb2/upload/2014999new.jpg"><img src="../upload/2014999new.jpg" thumb="" alt="新闻" text="" ></a></li>
+        </ul>
+    </div>
+</div>

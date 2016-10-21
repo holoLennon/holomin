@@ -1,0 +1,385 @@
+package com.zmax.yijian.biz.service.spec;
+
+import java.lang.reflect.ParameterizedType;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.sun.org.apache.regexp.internal.recompile;
+import com.zmax.yijian.biz.service.common.PermitCheckUtils;
+import com.zmax.yijian.biz.service.common.SessionUserUtils;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.conf.Propmy;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+import com.zmax.yijian.web.utils.FastjsonFilter;
+import com.zmax.conf.AttrStatic;
+import com.zmax.conf.SessionName;
+import com.zmax.entity.Sele;
+import com.zmax.exception.BoException;
+import com.zmax.utils.beans.JsonLos;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.date.DateUtils;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+
+/**
+ * 用户角色相关服务，包括权限判断，用户初始化等。
+ * @author zmax
+ *
+ */
+@Service
+public class SpecUserService {
+
+	private static final Logger logger = Logger.getLogger(SpecUserService.class);
+
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	ManufacturerService manufacturerService;	
+
+	@Autowired
+	WxrService wxrService;	
+
+	@Autowired
+	SessionUserUtils sessionUserUtils;
+	@Autowired
+	PermitCheckUtils permitCheckUtils;
+	/**
+	 * 是否是操作员
+	 * @param request
+	 * @return
+	 */
+	public boolean isOper(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isOper(user);
+	}
+	/**
+	 * 是否是操作员
+	 * @param request
+	 * @return
+	 */
+	public static boolean isOper(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_OPER).equals(user.getRoleId()));
+	}
+
+	/**
+	 * 是否是个人会员
+	 * @param request
+	 * @return
+	 */
+	public boolean isMember(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isMember(user);
+	}
+	/**
+	 * 是否是操作员
+	 * @param request
+	 * @return
+	 */
+	public static boolean isMember(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_MEMBER).equals(user.getRoleId()));
+	}
+	/**
+	 * 是否是产品供应商
+	 * @param request
+	 * @return
+	 */
+	public boolean isManufacturer(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isManufacturer(user);
+	}
+	/**
+	 * 是否是产品供应商
+	 * @param request
+	 * @return
+	 */
+	public static  boolean  isManufacturer(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_manufacturer).equals(user.getRoleId()));
+	}
+
+	/**
+	 * 是否是超级管理员
+	 * @param request
+	 * @return
+	 */
+	public boolean isAdmin(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isAdmin(user);
+	}
+	/**
+	 * 是否是超级管理员
+	 * @param user
+	 * @return
+	 */
+	public static boolean isAdmin(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_ADMIN).equals(user.getRoleId()));
+	}
+	/**
+	 * 是否是一般管理员
+	 * @param request
+	 * @return
+	 */
+	public boolean isCadmin(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isCadmin(user);
+	}
+	/**
+	 * 是否是一般管理员
+	 * @param user
+	 * @return
+	 */
+	public static boolean isCadmin(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_CADMIN).equals(user.getRoleId()));
+	}
+	/**
+	 * 是否是代理商
+	 * @param request
+	 * @return
+	 */
+	public boolean isDoctor(HttpServletRequest request){
+		User user=sessionUserUtils.userFromRequest(request);
+		if(user==null)
+			return false;
+		return isDoctor(user);
+	}
+	/**
+	 * 是否是代理
+	 * @param user
+	 * @return
+	 */
+	public static boolean isDoctor(User user){
+		if(user==null)
+			return false;
+		return (Integer.valueOf(AttrStatic.ROLE_DOCTOR).equals(user.getRoleId()));
+	}
+
+	/**
+	 * 设置通用版权限
+	 * @param role
+	 * @param pmtMap
+	 */
+	public void putFirstPmt(int roleId){
+
+		putPermit(roleId, "0.u"+roleId, "9");
+		//级别权限
+		switch (roleId) {
+		case AttrStatic.ROLE_CADMIN:{
+			putPermit(roleId, "0.ua", "9");
+			putPermit(roleId, "0.uo", "9");
+			putPermit(roleId, "0.u2", "9");
+			putPermit(roleId, "0.u3", "9");
+			putPermit(roleId, "0.u4", "9");
+			putPermit(roleId, "0.u5", "9");
+			putPermit(roleId, "0.u6", "9");
+			break;
+		}
+		case AttrStatic.ROLE_OPER:{
+			putPermit(roleId, "0.uo", "9");
+			putPermit(roleId, "0.u3", "9");
+			break;
+		}
+		case AttrStatic.ROLE_DOCTOR:{
+			putPermit(roleId, "0.u6", "9");
+			break;
+		}
+		default:
+			break;
+		}
+	}	
+	/**
+	 * 权限数据放到Map中
+	 * @param role
+	 * @param pmtMap
+	 * @param key
+	 * @param cvalue
+	 */
+	private void putPermit(int roleId,String key,String cvalue){
+		logger.debug("权限初始化[" +roleId+"]\t"+ key+"\t"+cvalue+"");
+		Map<String,String> pmtMap=permitCheckUtils.takeMapByRoleId(roleId);
+		pmtMap.put(key, cvalue);
+	}	
+	/**
+	 * 初始化：后台注册流程-创建USER后，对其它角色DB进行补充；不需要审核通过
+	 * @param obj1
+	 */
+	public void createDbAfterUser0(User obj1){
+
+	}
+	/**
+	 * 后台注册流程-创建USER后，管理员审核通过后，进行的操作；同时也是用户初始化过程
+	 * @param obj1
+	 */
+	public void createDbAfterUser1(User obj1){
+		if(obj1==null)
+			return;
+		//用户的userId如果不空，补全=id
+		if(null==obj1.getUserId()){
+			obj1.setUserId(obj1.getId());	
+			userService.update(null,obj1);
+		}
+		//超管
+		if(Integer.valueOf(AttrStatic.ROLE_ADMIN).equals(obj1.getRoleId())){
+			Admin obju=new Admin(obj1.getId());
+			obju.setNickname(obj1.getNickname());
+			adminService.saveOrUpdate(null, obju);
+		}
+		//普管
+		if(Integer.valueOf(AttrStatic.ROLE_CADMIN).equals(obj1.getRoleId())){
+			Cadmin obju=new Cadmin(obj1.getId());
+			obju.setNickname(obj1.getNickname());
+			cadminService.saveOrUpdate(null, obju);
+		}
+
+
+		//操作
+		if(Integer.valueOf(AttrStatic.ROLE_OPER).equals(obj1.getRoleId())){
+			Oper obju=new Oper(obj1.getId());
+			obju.setName(obj1.getNickname());
+			operService.saveOrUpdate(null, obju);
+		}
+
+
+		//个人
+		if(Integer.valueOf(AttrStatic.ROLE_MEMBER).equals(obj1.getRoleId())){
+			Member obju=new Member(obj1.getId());
+			obju.setName(obj1.getNickname());
+			memberService.saveOrUpdate(null, obju);
+		}
+		//Doctor
+		if(Integer.valueOf(AttrStatic.ROLE_DOCTOR).equals(obj1.getRoleId())){
+			Doctor obju=new Doctor(obj1.getId());
+			obju.setName(obj1.getNickname());
+			doctorService.saveOrUpdate(null, obju);
+		}
+		//Seller
+		if(Integer.valueOf(AttrStatic.ROLE_SELLER).equals(obj1.getRoleId())){
+			Seller obju=new Seller(obj1.getId());
+			obju.setName(obj1.getNickname());
+			sellerService.saveOrUpdate(null, obju);
+		}
+		//供货商
+		if(Integer.valueOf(AttrStatic.ROLE_manufacturer).equals(obj1.getRoleId())){
+			Manufacturer obju=new Manufacturer(obj1.getId());
+			obju.setName(obj1.getNickname());
+			manufacturerService.saveOrUpdate(null, obju);
+		}
+		//药师
+		if(Integer.valueOf(AttrStatic.ROLE_DRUGGIST).equals(obj1.getRoleId())){
+			Druggist obju=new Druggist(obj1.getId());
+			obju.setName(obj1.getNickname());
+			druggistService.saveOrUpdate(null, obju);
+		}
+	}
+	/**
+	 * 更新Member后，nickname各表同步更新，头像复制等
+	 * @param member
+	 */
+	public void updateMember(Member member){
+		if(member==null)
+			return;
+
+	}
+	/**
+	 * 登录后,user.obj1=bizId;user.obj2=openid;如果不存在创建一二级对象
+	 * 这里主要是放openid
+	 * @param user
+	 * @return
+	 */
+	public boolean updateAfterLogin(User user){
+		//个人
+		if(Integer.valueOf(AttrStatic.ROLE_MEMBER).equals(user.getRoleId())){
+		}
+		//医生
+		if(Integer.valueOf(AttrStatic.ROLE_DOCTOR).equals(user.getRoleId())){
+		}
+		return true;
+	}
+	/**
+	 * 会员信息补全，并且更新user的nickname
+	 * @param memberDb 数据库里拿到的
+	 * @param member 用户提交的
+	 */
+	public void updateCompletionMember(Member memberDb,Member member){
+		User user=userService.get(null, member.getId());
+		user.setNickname(member.getName());
+		memberDb.setAge(member.getAge());
+		memberDb.setName(member.getName());
+		memberDb.setUsersex(member.getUsersex());
+		userService.update(null, user);
+		memberService.update(null, memberDb);
+	}
+	/**
+	 *  医生信息补全 ，并且更新user的nickname
+	 * @param doctorDb 数据库里拿到的
+	 * @param doctor  用户提交的
+	 */
+	public void updateCompletionDoctor(Doctor doctorDb,Doctor doctor){
+		User user=userService.get(null, doctor.getId());
+		user.setNickname(doctor.getName());
+		doctorDb.setAge(doctor.getAge());
+		doctorDb.setName(doctor.getName());
+		doctorDb.setUsersex(doctor.getUsersex());
+		userService.update(null, user);
+		doctorService.update(null, doctorDb);
+	}
+
+}

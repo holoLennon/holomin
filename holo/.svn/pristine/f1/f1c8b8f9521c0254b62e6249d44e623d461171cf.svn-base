@@ -1,0 +1,9 @@
+// Ionic Starter App
+/**
+ * 启动加载
+ */
+app.run(function($ionicPlatform, $rootScope, $state, $ionicLoading, $log,
+                 $cordovaAppVersion, $cordovaGoogleAnalytics,
+                 amMoment) {
+    $log.debug("app.run");
+});

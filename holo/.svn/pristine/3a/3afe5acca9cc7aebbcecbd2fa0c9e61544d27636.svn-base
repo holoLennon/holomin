@@ -1,0 +1,39 @@
+<!--Orderr，订单详细信息-->
+<ion-view view-title='药笺' cache-view='false' hide-tabs='false' >
+	<ion-nav-buttons side="left">
+	</ion-nav-buttons>
+	<ion-content class="has-header" >
+		<ul class="list" ng-if="obj && vm.isedit==false">
+			<div style="font-size: 16px;height: 25px;margin-top: 5px">
+				<a style="color: #707070;margin-left: 10px">患者信息</a>
+			</div>
+			<label class="item item-input" style="border: none">姓  名：<span style="font-size: 12px">{{obj.memberIdMemberObj.name}}</span></label>
+			<label class="item item-input" style="border: none">年  龄：<span style="font-size: 12px">{{obj.memberIdMemberObj.age}}</span></label>
+			<div style="font-size: 16px;height: 25px;margin-top: 5px">
+				<a style="color: #707070;margin-left: 10px">药笺信息</a>
+			</div>
+			<ion-list class="list">
+				<ion-item  bindonce collection-repeat="objd in obj.listorderrdetail" collection-item-width="100%" collection-item-height="40%" style="background-color: #F4F4F4;">
+					<label class="item item-input" style="border:1px;font-size: 12px ;height: 20%;width:100%" >配    药：{{objd.title}}</label>
+					<!--<label class="item item-input" style="border:1px;font-size: 12px;height: 20%" width="100%">用法用量：<span style="font-size: 12px">{{objd.usemount}}</span> </label>-->
+					<label class="item item-input" style="border:1px;font-size: 12px;height: 20%;width:100%">规格：{{objd.productstyle}}</label>
+					<label class="item item-input" style="border:1px;font-size: 12px;height: 20%;width:100%">单价：{{objd.price}}元</label>
+					<label class="item item-input" style="border:1px;font-size: 12px;height: 20%;width:100%">数量：{{objd.num}}盒 </label>
+					<label class="item item-input" style="border:1px;font-size: 12px;height: 20%;width:100%">总价格：{{objd.sumprice}}元</label>
+
+
+				</ion-item>
+				</ion-item>
+			</ion-list>
+		</ul>
+		<ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+		<!--<ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>-->
+		<!--<ion-item style="background:none;border: none"><a ng-click="addNewProduct()" class="button button-full button-balanced" style="border: none;background-color: #008cad"><i class="icon ion-medkit"></i>添加新药</a></ion-item>-->
+		<!--<li class="item" style="border: none;background: none"><a ng-click="saveOrderr()" class="button button-full button-balanced" style="border: none;background-color: #008cad"><i class="icon ion-checkmark"></i>保存</a></li>-->
+	</ion-content>
+	<!--<div class="bar bar-subfooter" style="bottom:55px;">-->
+		<!--<h2 class="title"></h2>-->
+		<!--<div ng-click="addNewProduct()" class="button button-icon icon ion-ios-download-outline">加 药</div>-->
+		<!--<div ng-click="saveOrderr()" class="button button-icon icon ion-ios-paperplane-outline">确 认</div>-->
+	<!--</div>-->
+</ion-view>

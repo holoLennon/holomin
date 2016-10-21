@@ -1,0 +1,23 @@
+<!--ProductExtTxt，商品详细详细信息-->
+<ion-view view-title='商品详细' cache-view="false" hide-tabs="false">
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">商品ID:{{obj.idString}}</li>
+		<li class="item">详细介绍:{{obj.txt}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">商品ID:<input type="text" placeholder="商品ID"  ng-model="obj.id"></label>
+		<label class="item item-input">详细介绍:<input type="text" placeholder="详细介绍"  ng-model="obj.txt"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

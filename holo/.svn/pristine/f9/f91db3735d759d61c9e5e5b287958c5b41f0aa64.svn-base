@@ -1,0 +1,1226 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.wx.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 订单
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "orderr_finished")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class OrderrFinished extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "订单";
+
+	//date formats
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	public static final String FORMAT_GMT_PAY = DATE_FORMAT;
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**支付时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtPay;
+	/**开单类型 Integer default=0  map={'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}*/
+	@Max(999L)
+	
+	private Integer iotype = 0;
+	/**支付状态 Integer default=0  map={'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}*/
+	@Max(999L)
+	
+	private Integer status = 0;
+	/**收发货状态 Integer default=0  map={'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}*/
+	@Max(999L)
+	
+	private Integer statusgoods = 0;
+	/**提货方式 Integer default=0  map={'0':'物流发货','1':'到店自提'}*/
+	@Max(999L)
+	
+	private Integer statusCarriageType = 0;
+	/**序列号 Long default=0l  */
+	@Max(999999999999999999L)
+	
+	private Long sn;
+	/**会员 Integer   */
+	@Max(99999999999L)
+	
+	private Integer memberId;
+	/**总价 Double default=0.0  */
+	
+	
+	private Double sumprice;
+	/**商品名 String  第一个商品的名称 */
+	@Length(max=100)
+	
+	private String title;
+	/**图1 String  第一个商品的图 */
+	@Length(max=200)
+	
+	private String img1;
+	/**取药点 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer drugstoreId = 0;
+	/**复核药师 String   */
+	@Length(max=20)
+	
+	private String doccheck;
+	/**配药药师 String   */
+	@Length(max=20)
+	
+	private String docmake;
+	/**开药医生 Integer default=0 iotype=0时有效 */
+	@Max(99999999999L)
+	
+	private Integer doctorWr = 0;
+	/**首推荐医生 Integer default=0 查询统计用 */
+	@Max(99999999999L)
+	
+	private Integer doctorId = 0;
+	/**所属业务员 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer sellerId = 0;
+	/**取药操作员 Integer default=0 取药时的操作员 */
+	@Max(99999999999L)
+	
+	private Integer operId = 0;
+	/**商品数量 Integer  发货前数一数 */
+	@Max(99999999999L)
+	
+	private Integer productnums;
+	/**诊断 String   */
+	@Length(max=200)
+	
+	private String diagnose;
+	/**可用优惠券数量*/
+	private int pomotionticketnums;
+	/**订单详细列表*/
+	private List<Orderrdetail> listorderrdetail;
+	/**微信支付H5对象*/
+	private WaJsapiPaymentParam paywxh5;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(OrderrFinished _this){
+		_this.gmtCreate=new Date();
+		_this.iotype=0;
+		_this.status=0;
+		_this.statusgoods=0;
+		_this.statusCarriageType=0;
+		_this.sn=0l;
+		_this.sumprice=0.0;
+		_this.drugstoreId=0;
+		_this.doctorWr=0;
+		_this.doctorId=0;
+		_this.sellerId=0;
+		_this.operId=0;
+	}
+	public OrderrFinished(){
+		makedefault(this);
+	}
+	public OrderrFinished(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param gmtPay Date 支付时间   
+	 * @param iotype Integer 开单类型 default=0  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}
+	 * @param status Integer 支付状态 default=0  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}
+	 * @param statusgoods Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}
+	 * @param statusCarriageType Integer 提货方式 default=0  {'0':'物流发货','1':'到店自提'}
+	 * @param sn Long 序列号 default=0l  
+	 * @param memberId Integer 会员   
+	 * @param sumprice Double 总价 default=0.0  
+	 * @param title String 商品名  第一个商品的名称 
+	 * @param img1 String 图1  第一个商品的图 
+	 * @param drugstoreId Integer 取药点 default=0  
+	 * @param doctorWr Integer 开药医生 default=0 iotype=0时有效 
+	 * @param operId Integer 取药操作员 default=0 取药时的操作员 
+	 * @param productnums Integer 商品数量  发货前数一数 
+	 * @param diagnose String 诊断   
+	* @param notuse String 没用
+	 */
+	public OrderrFinished(Date gmtPay ,Integer iotype ,Integer status ,Integer statusgoods ,Integer statusCarriageType ,Long sn ,Integer memberId ,Double sumprice ,String title ,String img1 ,Integer drugstoreId ,Integer doctorWr ,Integer operId ,Integer productnums ,String diagnose ,String notuse) {
+		super();
+		this.gmtPay = gmtPay;
+		this.iotype = iotype;
+		this.status = status;
+		this.statusgoods = statusgoods;
+		this.statusCarriageType = statusCarriageType;
+		this.sn = sn;
+		this.memberId = memberId;
+		this.sumprice = sumprice;
+		this.title = title;
+		this.img1 = img1;
+		this.drugstoreId = drugstoreId;
+		this.doctorWr = doctorWr;
+		this.operId = operId;
+		this.productnums = productnums;
+		this.diagnose = diagnose;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param gmtPay Date 支付时间   
+	 * @param iotype Integer 开单类型 default=0  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}
+	 * @param status Integer 支付状态 default=0  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}
+	 * @param statusgoods Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}
+	 * @param statusCarriageType Integer 提货方式 default=0  {'0':'物流发货','1':'到店自提'}
+	 * @param sn Long 序列号 default=0l  
+	 * @param memberId Integer 会员   
+	 * @param sumprice Double 总价 default=0.0  
+	 * @param title String 商品名  第一个商品的名称 
+	 * @param img1 String 图1  第一个商品的图 
+	 * @param drugstoreId Integer 取药点 default=0  
+	 * @param doccheck String 复核药师   
+	 * @param docmake String 配药药师   
+	 * @param doctorWr Integer 开药医生 default=0 iotype=0时有效 
+	 * @param doctorId Integer 首推荐医生 default=0 查询统计用 
+	 * @param sellerId Integer 所属业务员 default=0  
+	 * @param operId Integer 取药操作员 default=0 取药时的操作员 
+	 * @param productnums Integer 商品数量  发货前数一数 
+	 * @param diagnose String 诊断   
+	* @param notuse String 没用
+	 */
+	public OrderrFinished(Integer id ,Date gmtPay ,Integer iotype ,Integer status ,Integer statusgoods ,Integer statusCarriageType ,Long sn ,Integer memberId ,Double sumprice ,String title ,String img1 ,Integer drugstoreId ,String doccheck ,String docmake ,Integer doctorWr ,Integer doctorId ,Integer sellerId ,Integer operId ,Integer productnums ,String diagnose ,String notuse) {
+		super();
+		this.id = id;
+		this.gmtCreate = new Date();
+		this.gmtPay = gmtPay;
+		this.iotype = iotype;
+		this.status = status;
+		this.statusgoods = statusgoods;
+		this.statusCarriageType = statusCarriageType;
+		this.sn = sn;
+		this.memberId = memberId;
+		this.sumprice = sumprice;
+		this.title = title;
+		this.img1 = img1;
+		this.drugstoreId = drugstoreId;
+		this.doccheck = doccheck;
+		this.docmake = docmake;
+		this.doctorWr = doctorWr;
+		this.doctorId = doctorId;
+		this.sellerId = sellerId;
+		this.operId = operId;
+		this.productnums = productnums;
+		this.diagnose = diagnose;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param gmtCreate Date 创建时间   
+	 * @param gmtPay Date 支付时间   
+	 * @param iotype Integer 开单类型 default=0  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}
+	 * @param status Integer 支付状态 default=0  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}
+	 * @param statusgoods Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}
+	 * @param statusCarriageType Integer 提货方式 default=0  {'0':'物流发货','1':'到店自提'}
+	 * @param sn Long 序列号 default=0l  
+	 * @param memberId Integer 会员   
+	 * @param sumprice Double 总价 default=0.0  
+	 * @param title String 商品名  第一个商品的名称 
+	 * @param img1 String 图1  第一个商品的图 
+	 * @param drugstoreId Integer 取药点 default=0  
+	 * @param doccheck String 复核药师   
+	 * @param docmake String 配药药师   
+	 * @param doctorWr Integer 开药医生 default=0 iotype=0时有效 
+	 * @param doctorId Integer 首推荐医生 default=0 查询统计用 
+	 * @param sellerId Integer 所属业务员 default=0  
+	 * @param operId Integer 取药操作员 default=0 取药时的操作员 
+	 * @param productnums Integer 商品数量  发货前数一数 
+	 * @param diagnose String 诊断   
+	 * @param pomotionticketnums Integer 可用优惠券数量   
+	 * @param listorderrdetail String 订单详细列表   
+	 * @param paywxh5 String 微信支付H5对象   
+	* @param notuse String 没用
+	 */
+	public OrderrFinished(Integer id ,Date gmtCreate ,Date gmtPay ,Integer iotype ,Integer status ,Integer statusgoods ,Integer statusCarriageType ,Long sn ,Integer memberId ,Double sumprice ,String title ,String img1 ,Integer drugstoreId ,String doccheck ,String docmake ,Integer doctorWr ,Integer doctorId ,Integer sellerId ,Integer operId ,Integer productnums ,String diagnose ,int pomotionticketnums ,List<Orderrdetail> listorderrdetail ,WaJsapiPaymentParam paywxh5 ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.gmtCreate = gmtCreate;
+		this.gmtPay = gmtPay;
+		this.iotype = iotype;
+		this.status = status;
+		this.statusgoods = statusgoods;
+		this.statusCarriageType = statusCarriageType;
+		this.sn = sn;
+		this.memberId = memberId;
+		this.sumprice = sumprice;
+		this.title = title;
+		this.img1 = img1;
+		this.drugstoreId = drugstoreId;
+		this.doccheck = doccheck;
+		this.docmake = docmake;
+		this.doctorWr = doctorWr;
+		this.doctorId = doctorId;
+		this.sellerId = sellerId;
+		this.operId = operId;
+		this.productnums = productnums;
+		this.diagnose = diagnose;
+		this.pomotionticketnums = pomotionticketnums;
+		this.listorderrdetail = listorderrdetail;
+		this.paywxh5 = paywxh5;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?""+id+" "+title+" ":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]"+id+" "+title+" ":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取支付时间  */
+	
+
+	@Column(name = "gmt_pay", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtPay() {
+		return this.gmtPay;
+	}
+	/**设置支付时间  */
+
+	public void setGmtPay(Date value) {
+		this.gmtPay = value;
+	}
+	/**获取开单类型  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}*/
+	
+
+	@Column(name = "iotype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getIotype() {
+		return this.iotype;
+	}
+	/**设置开单类型  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}*/
+
+	public void setIotype(Integer value) {
+		this.iotype = value;
+	}
+	/**获取支付状态  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}*/
+	
+
+	@Column(name = "status", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatus() {
+		return this.status;
+	}
+	/**设置支付状态  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}*/
+
+	public void setStatus(Integer value) {
+		this.status = value;
+	}
+	/**获取收发货状态  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}*/
+	
+
+	@Column(name = "statusgoods", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusgoods() {
+		return this.statusgoods;
+	}
+	/**设置收发货状态  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}*/
+
+	public void setStatusgoods(Integer value) {
+		this.statusgoods = value;
+	}
+	/**获取提货方式  {'0':'物流发货','1':'到店自提'}*/
+	
+
+	@Column(name = "status_carriage_type", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusCarriageType() {
+		return this.statusCarriageType;
+	}
+	/**设置提货方式  {'0':'物流发货','1':'到店自提'}*/
+
+	public void setStatusCarriageType(Integer value) {
+		this.statusCarriageType = value;
+	}
+	/**获取序列号  */
+	
+
+	@Column(name = "sn", unique = true, nullable = true, insertable = true, updatable = true, length = 18)
+	public Long getSn() {
+		return this.sn;
+	}
+	/**设置序列号  */
+
+	public void setSn(Long value) {
+		this.sn = value;
+	}
+	/**获取会员  */
+	
+
+	@Column(name = "member_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getMemberId() {
+		return this.memberId;
+	}
+	/**设置会员  */
+
+	public void setMemberId(Integer value) {
+		this.memberId = value;
+	}
+	/**获取总价  */
+	
+
+	@Column(name = "sumprice", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getSumprice() {
+		return this.sumprice;
+	}
+	/**设置总价  */
+
+	public void setSumprice(Double value) {
+		this.sumprice = value;
+	}
+	/**获取商品名 第一个商品的名称 */
+	
+
+	@Column(name = "title", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getTitle() {
+		return this.title;
+	}
+	/**设置商品名 第一个商品的名称 */
+
+	public void setTitle(String value) {
+		this.title = value;
+	}
+	/**获取图1 第一个商品的图 */
+	
+
+	@Column(name = "img1", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg1() {
+		return this.img1;
+	}
+	/**设置图1 第一个商品的图 */
+
+	public void setImg1(String value) {
+		this.img1 = value;
+	}
+	/**获取取药点  */
+	
+
+	@Column(name = "drugstore_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDrugstoreId() {
+		return this.drugstoreId;
+	}
+	/**设置取药点  */
+
+	public void setDrugstoreId(Integer value) {
+		this.drugstoreId = value;
+	}
+	/**获取复核药师  */
+	
+
+	@Column(name = "doccheck", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDoccheck() {
+		return this.doccheck;
+	}
+	/**设置复核药师  */
+
+	public void setDoccheck(String value) {
+		this.doccheck = value;
+	}
+	/**获取配药药师  */
+	
+
+	@Column(name = "docmake", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDocmake() {
+		return this.docmake;
+	}
+	/**设置配药药师  */
+
+	public void setDocmake(String value) {
+		this.docmake = value;
+	}
+	/**获取开药医生 iotype=0时有效 */
+	
+
+	@Column(name = "doctor_wr", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDoctorWr() {
+		return this.doctorWr;
+	}
+	/**设置开药医生 iotype=0时有效 */
+
+	public void setDoctorWr(Integer value) {
+		this.doctorWr = value;
+	}
+	/**获取首推荐医生 查询统计用 */
+	
+
+	@Column(name = "doctor_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDoctorId() {
+		return this.doctorId;
+	}
+	/**设置首推荐医生 查询统计用 */
+
+	public void setDoctorId(Integer value) {
+		this.doctorId = value;
+	}
+	/**获取所属业务员  */
+	
+
+	@Column(name = "seller_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getSellerId() {
+		return this.sellerId;
+	}
+	/**设置所属业务员  */
+
+	public void setSellerId(Integer value) {
+		this.sellerId = value;
+	}
+	/**获取取药操作员 取药时的操作员 */
+	
+
+	@Column(name = "oper_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getOperId() {
+		return this.operId;
+	}
+	/**设置取药操作员 取药时的操作员 */
+
+	public void setOperId(Integer value) {
+		this.operId = value;
+	}
+	/**获取商品数量 发货前数一数 */
+	
+
+	@Column(name = "productnums", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductnums() {
+		return this.productnums;
+	}
+	/**设置商品数量 发货前数一数 */
+
+	public void setProductnums(Integer value) {
+		this.productnums = value;
+	}
+	/**获取诊断  */
+	
+
+	@Column(name = "diagnose", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getDiagnose() {
+		return this.diagnose;
+	}
+	/**设置诊断  */
+
+	public void setDiagnose(String value) {
+		this.diagnose = value;
+	}
+	/**对象 获取可用优惠券数量  */
+	@Transient
+	
+
+	public int getPomotionticketnums() {
+		return this.pomotionticketnums;
+	}
+	/**设置可用优惠券数量  */
+
+	public void setPomotionticketnums(int value) {
+		this.pomotionticketnums = value;
+	}
+	/**对象 获取订单详细列表  */
+	@Transient
+	
+
+	public List<Orderrdetail> getListorderrdetail() {
+		return this.listorderrdetail;
+	}
+	/**设置订单详细列表  */
+
+	public void setListorderrdetail(List<Orderrdetail> value) {
+		this.listorderrdetail = value;
+	}
+	/**对象 获取微信支付H5对象  */
+	@Transient
+	
+
+	public WaJsapiPaymentParam getPaywxh5() {
+		return this.paywxh5;
+	}
+	/**设置微信支付H5对象  */
+
+	public void setPaywxh5(WaJsapiPaymentParam value) {
+		this.paywxh5 = value;
+	}
+	/**创建时间String*/
+	private String gmtCreateString;
+	/**获取创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**支付时间String*/
+	private String gmtPayString;
+	/**获取支付时间String*/
+	@Transient
+	
+	public String getGmtPayString() {
+		if(gmtPayString==null && gmtPay!=null)
+			gmtPayString=new SimpleDateFormat(DATE_FORMAT).format(gmtPay);
+		return gmtPayString;
+	}
+	/**设置支付时间String*/
+	public void setGmtPayString(String value) {
+		this.gmtPayString=value;
+	}
+	/**开单类型String*/
+	private String iotypeString;
+	/**获取开单类型String*/
+	@Transient
+	
+	public String getIotypeString() {
+		return iotypeString;
+	}
+	/**设置开单类型String*/
+	public void setIotypeString(String value) {
+		this.iotypeString=value;
+	}
+	/**开单类型Map*/
+	private Map<String, Object> iotypeMap;
+	/**获取开单类型Map*/
+	@Transient
+	
+	public Map<String, Object> getIotypeMap() {
+		return iotypeMap;
+	}
+	/**设置开单类型Map*/
+	public void setIotypeMap(Map<String, Object> value) {
+		this.iotypeMap=value;
+	}
+	/**支付状态String*/
+	private String statusString;
+	/**获取支付状态String*/
+	@Transient
+	
+	public String getStatusString() {
+		return statusString;
+	}
+	/**设置支付状态String*/
+	public void setStatusString(String value) {
+		this.statusString=value;
+	}
+	/**支付状态Map*/
+	private Map<String, Object> statusMap;
+	/**获取支付状态Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusMap() {
+		return statusMap;
+	}
+	/**设置支付状态Map*/
+	public void setStatusMap(Map<String, Object> value) {
+		this.statusMap=value;
+	}
+	/**收发货状态String*/
+	private String statusgoodsString;
+	/**获取收发货状态String*/
+	@Transient
+	
+	public String getStatusgoodsString() {
+		return statusgoodsString;
+	}
+	/**设置收发货状态String*/
+	public void setStatusgoodsString(String value) {
+		this.statusgoodsString=value;
+	}
+	/**收发货状态Map*/
+	private Map<String, Object> statusgoodsMap;
+	/**获取收发货状态Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusgoodsMap() {
+		return statusgoodsMap;
+	}
+	/**设置收发货状态Map*/
+	public void setStatusgoodsMap(Map<String, Object> value) {
+		this.statusgoodsMap=value;
+	}
+	/**提货方式String*/
+	private String statusCarriageTypeString;
+	/**获取提货方式String*/
+	@Transient
+	
+	public String getStatusCarriageTypeString() {
+		return statusCarriageTypeString;
+	}
+	/**设置提货方式String*/
+	public void setStatusCarriageTypeString(String value) {
+		this.statusCarriageTypeString=value;
+	}
+	/**提货方式Map*/
+	private Map<String, Object> statusCarriageTypeMap;
+	/**获取提货方式Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusCarriageTypeMap() {
+		return statusCarriageTypeMap;
+	}
+	/**设置提货方式Map*/
+	public void setStatusCarriageTypeMap(Map<String, Object> value) {
+		this.statusCarriageTypeMap=value;
+	}
+	/**会员String*/
+	private String memberIdString;
+	/**获取会员String*/
+	@Transient
+	
+	public String getMemberIdString() {
+		return memberIdString;
+	}
+	/**设置会员String*/
+	public void setMemberIdString(String value) {
+		this.memberIdString=value;
+	}
+	/**Member - memberIdMemberObj*/
+	private Member memberIdMemberObj;
+	/**获取 Member - memberIdMemberObj*/
+	@Transient
+	
+	public Member getMemberIdMemberObj() {
+		return memberIdMemberObj;
+	}
+	/**设置 Member - 会员Obj*/
+	public void setMemberIdMemberObj(Member value) {
+		this.memberIdMemberObj=value;
+	}
+	/**会员Stringid*/
+	private String memberIdStringid;
+	/**获取会员Stringid*/
+	@Transient
+	
+	public String getMemberIdStringid() {
+		return memberIdStringid;
+	}
+	/**设置会员Stringid*/
+	public void setMemberIdStringid(String value) {
+		this.memberIdStringid=value;
+	}
+	/**取药点String*/
+	private String drugstoreIdString;
+	/**获取取药点String*/
+	@Transient
+	
+	public String getDrugstoreIdString() {
+		return drugstoreIdString;
+	}
+	/**设置取药点String*/
+	public void setDrugstoreIdString(String value) {
+		this.drugstoreIdString=value;
+	}
+	/**Drugstore - drugstoreIdDrugstoreObj*/
+	private Drugstore drugstoreIdDrugstoreObj;
+	/**获取 Drugstore - drugstoreIdDrugstoreObj*/
+	@Transient
+	
+	public Drugstore getDrugstoreIdDrugstoreObj() {
+		return drugstoreIdDrugstoreObj;
+	}
+	/**设置 Drugstore - 取药点Obj*/
+	public void setDrugstoreIdDrugstoreObj(Drugstore value) {
+		this.drugstoreIdDrugstoreObj=value;
+	}
+	/**取药点Stringid*/
+	private String drugstoreIdStringid;
+	/**获取取药点Stringid*/
+	@Transient
+	
+	public String getDrugstoreIdStringid() {
+		return drugstoreIdStringid;
+	}
+	/**设置取药点Stringid*/
+	public void setDrugstoreIdStringid(String value) {
+		this.drugstoreIdStringid=value;
+	}
+	/**开药医生String*/
+	private String doctorWrString;
+	/**获取开药医生String*/
+	@Transient
+	
+	public String getDoctorWrString() {
+		return doctorWrString;
+	}
+	/**设置开药医生String*/
+	public void setDoctorWrString(String value) {
+		this.doctorWrString=value;
+	}
+	/**Doctor - doctorWrDoctorObj*/
+	private Doctor doctorWrDoctorObj;
+	/**获取 Doctor - doctorWrDoctorObj*/
+	@Transient
+	
+	public Doctor getDoctorWrDoctorObj() {
+		return doctorWrDoctorObj;
+	}
+	/**设置 Doctor - 开药医生Obj*/
+	public void setDoctorWrDoctorObj(Doctor value) {
+		this.doctorWrDoctorObj=value;
+	}
+	/**开药医生Stringid*/
+	private String doctorWrStringid;
+	/**获取开药医生Stringid*/
+	@Transient
+	
+	public String getDoctorWrStringid() {
+		return doctorWrStringid;
+	}
+	/**设置开药医生Stringid*/
+	public void setDoctorWrStringid(String value) {
+		this.doctorWrStringid=value;
+	}
+	/**首推荐医生String*/
+	private String doctorIdString;
+	/**获取首推荐医生String*/
+	@Transient
+	
+	public String getDoctorIdString() {
+		return doctorIdString;
+	}
+	/**设置首推荐医生String*/
+	public void setDoctorIdString(String value) {
+		this.doctorIdString=value;
+	}
+	/**Doctor - doctorIdDoctorObj*/
+	private Doctor doctorIdDoctorObj;
+	/**获取 Doctor - doctorIdDoctorObj*/
+	@Transient
+	
+	public Doctor getDoctorIdDoctorObj() {
+		return doctorIdDoctorObj;
+	}
+	/**设置 Doctor - 首推荐医生Obj*/
+	public void setDoctorIdDoctorObj(Doctor value) {
+		this.doctorIdDoctorObj=value;
+	}
+	/**首推荐医生Stringid*/
+	private String doctorIdStringid;
+	/**获取首推荐医生Stringid*/
+	@Transient
+	
+	public String getDoctorIdStringid() {
+		return doctorIdStringid;
+	}
+	/**设置首推荐医生Stringid*/
+	public void setDoctorIdStringid(String value) {
+		this.doctorIdStringid=value;
+	}
+	/**所属业务员String*/
+	private String sellerIdString;
+	/**获取所属业务员String*/
+	@Transient
+	
+	public String getSellerIdString() {
+		return sellerIdString;
+	}
+	/**设置所属业务员String*/
+	public void setSellerIdString(String value) {
+		this.sellerIdString=value;
+	}
+	/**Seller - sellerIdSellerObj*/
+	private Seller sellerIdSellerObj;
+	/**获取 Seller - sellerIdSellerObj*/
+	@Transient
+	
+	public Seller getSellerIdSellerObj() {
+		return sellerIdSellerObj;
+	}
+	/**设置 Seller - 所属业务员Obj*/
+	public void setSellerIdSellerObj(Seller value) {
+		this.sellerIdSellerObj=value;
+	}
+	/**所属业务员Stringid*/
+	private String sellerIdStringid;
+	/**获取所属业务员Stringid*/
+	@Transient
+	
+	public String getSellerIdStringid() {
+		return sellerIdStringid;
+	}
+	/**设置所属业务员Stringid*/
+	public void setSellerIdStringid(String value) {
+		this.sellerIdStringid=value;
+	}
+	/**取药操作员String*/
+	private String operIdString;
+	/**获取取药操作员String*/
+	@Transient
+	
+	public String getOperIdString() {
+		return operIdString;
+	}
+	/**设置取药操作员String*/
+	public void setOperIdString(String value) {
+		this.operIdString=value;
+	}
+	/**Oper - operIdOperObj*/
+	private Oper operIdOperObj;
+	/**获取 Oper - operIdOperObj*/
+	@Transient
+	
+	public Oper getOperIdOperObj() {
+		return operIdOperObj;
+	}
+	/**设置 Oper - 取药操作员Obj*/
+	public void setOperIdOperObj(Oper value) {
+		this.operIdOperObj=value;
+	}
+	/**取药操作员Stringid*/
+	private String operIdStringid;
+	/**获取取药操作员Stringid*/
+	@Transient
+	
+	public String getOperIdStringid() {
+		return operIdStringid;
+	}
+	/**设置取药操作员Stringid*/
+	public void setOperIdStringid(String value) {
+		this.operIdStringid=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.iotypeMap=null;
+		this.statusMap=null;
+		this.statusgoodsMap=null;
+		this.statusCarriageTypeMap=null;
+		this.memberIdMemberObj=null; //Member
+		this.drugstoreIdDrugstoreObj=null; //Drugstore
+		this.doctorWrDoctorObj=null; //Doctor
+		this.doctorIdDoctorObj=null; //Doctor
+		this.sellerIdSellerObj=null; //Seller
+		this.operIdOperObj=null; //Oper
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getGmtCreate())
+			.append(getGmtPay())
+			.append(getIotype())
+			.append(getStatus())
+			.append(getStatusgoods())
+			.append(getStatusCarriageType())
+			.append(getSn())
+			.append(getMemberId())
+			.append(getSumprice())
+			.append(getTitle())
+			.append(getImg1())
+			.append(getDrugstoreId())
+			.append(getDoccheck())
+			.append(getDocmake())
+			.append(getDoctorWr())
+			.append(getDoctorId())
+			.append(getSellerId())
+			.append(getOperId())
+			.append(getProductnums())
+			.append(getDiagnose())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof OrderrFinished == false) return false;
+		if(this == obj) return true;
+		OrderrFinished other = (OrderrFinished)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",GmtPay:",getGmtPay())
+			.append(",Iotype:",getIotype())
+			.append(",Status:",getStatus())
+			.append(",Statusgoods:",getStatusgoods())
+			.append(",StatusCarriageType:",getStatusCarriageType())
+			.append(",Sn:",getSn())
+			.append(",MemberId:",getMemberId())
+			.append(",Sumprice:",getSumprice())
+			.append(",Title:",getTitle())
+			.append(",Img1:",getImg1())
+			.append(",DrugstoreId:",getDrugstoreId())
+			.append(",Doccheck:",getDoccheck())
+			.append(",Docmake:",getDocmake())
+			.append(",DoctorWr:",getDoctorWr())
+			.append(",DoctorId:",getDoctorId())
+			.append(",SellerId:",getSellerId())
+			.append(",OperId:",getOperId())
+			.append(",Productnums:",getProductnums())
+			.append(",Diagnose:",getDiagnose())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtPayString","iotypeString","iotypeMap","statusString","statusMap","statusgoodsString","statusgoodsMap","statusCarriageTypeString","statusCarriageTypeMap","memberIdString","memberIdMemberObj","memberIdStringid","drugstoreIdString","drugstoreIdDrugstoreObj","drugstoreIdStringid","doctorWrString","doctorWrDoctorObj","doctorWrStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","sellerIdString","sellerIdSellerObj","sellerIdStringid","operIdString","operIdOperObj","operIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtPayString","iotypeString","iotypeMap","statusString","statusMap","statusgoodsString","statusgoodsMap","statusCarriageTypeString","statusCarriageTypeMap","memberIdString","memberIdMemberObj","memberIdStringid","drugstoreIdString","drugstoreIdDrugstoreObj","drugstoreIdStringid","doctorWrString","doctorWrDoctorObj","doctorWrStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","sellerIdString","sellerIdSellerObj","sellerIdStringid","operIdString","operIdOperObj","operIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 订单
+OrderrFinished orderrFinished = new OrderrFinished(
+	gmtPay , //Date 支付时间   
+	iotype , //Integer 开单类型 default=0  {'0':'医生药笺','1':'平台医生药笺','2':'用户自采购'}
+	status , //Integer 支付状态 default=0  {'0':'未支付','1':'已发起支付申请','2':'支付成功','-1':'放弃支付'}
+	statusgoods , //Integer 收发货状态 default=0  {'0':'未发货','1':'部分发货','2':'已全部发货','3':'部分收货','4':'已全部收货','-1':'放弃'}
+	statusCarriageType , //Integer 提货方式 default=0  {'0':'物流发货','1':'到店自提'}
+	sn , //Long 序列号 default=0l  
+	memberId , //Integer 会员   
+	sumprice , //Double 总价 default=0.0  
+	title , //String 商品名  第一个商品的名称 
+	img1 , //String 图1  第一个商品的图 
+	drugstoreId , //Integer 取药点 default=0  
+	doctorWr , //Integer 开药医生 default=0 iotype=0时有效 
+	operId , //Integer 取药操作员 default=0 取药时的操作员 
+	productnums , //Integer 商品数量  发货前数一数 
+	diagnose , //String 诊断   
+	null
+);
+*/
+}

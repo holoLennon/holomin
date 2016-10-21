@@ -1,0 +1,50 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Cart.id">
+		<tr><th>序号ID</th><td>
+		${cart.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${cart.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.memberId">
+		<tr><th>消费者会员</th><td>
+		${cart.memberIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.productId">
+		<tr><th>产品</th><td>
+		${cart.productIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.num">
+		<tr><th>数量</th><td>
+		${cart.num}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.price">
+		<tr><th>单价</th><td>
+		${cart.price}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Cart.sumprice">
+		<tr><th>总价</th><td>
+		${cart.sumprice}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

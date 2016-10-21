@@ -1,0 +1,71 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Orderr/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${orderr.id}" />
+	<@z.pmt key="42.Orderr.iotype">
+				<@p.radio label="db.Orderr.iotype" nameid="iotype" value="${orderr.iotype}" help="" list=orderr.iotypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.status">
+				<@p.radio label="db.Orderr.status" nameid="status" value="${orderr.status}" help="" list=orderr.statusMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.statusgoods">
+				<@p.radio label="db.Orderr.statusgoods" nameid="statusgoods" value="${orderr.statusgoods}" help="" list=orderr.statusgoodsMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.statusCarriageType">
+				<@p.radio label="db.Orderr.statusCarriageType" nameid="statusCarriageType" value="${orderr.statusCarriageType}" help="" list=orderr.statusCarriageTypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.sn">
+				<@p.textnumber label="db.Orderr.sn" nameid="sn"  value="${orderr.sn}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.memberId">
+				<@p.searchforid label="db.Orderr.memberId" nameid="memberId" value="${orderr.memberId}" stringvalue="${orderr.memberIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Member/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.sumprice">
+				<@p.textnumber label="db.Orderr.sumprice" nameid="sumprice"  value="${orderr.sumprice}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.title">
+				<@p.text label="db.Orderr.title" nameid="title"  value="${orderr.title}" help="第一个商品的名称" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.img1">
+					<@p.ckfimg label="db.Orderr.img1" nameid="img1"  value="${orderr.img1}" help="第一个商品的图"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.drugstoreId">
+				<@p.searchforid label="db.Orderr.drugstoreId" nameid="drugstoreId" value="${orderr.drugstoreId}" stringvalue="${orderr.drugstoreIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Drugstore/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.doctorWr">
+				<@p.searchforid label="db.Orderr.doctorWr" nameid="doctorWr" value="${orderr.doctorWr}" stringvalue="${orderr.doctorWrString}" help="iotype=0时有效" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.operId">
+				<@p.searchforid label="db.Orderr.operId" nameid="operId" value="${orderr.operId}" stringvalue="${orderr.operIdString}" help="取药时的操作员" dataoptions="searcher:searchOtherId" url="/user/Oper/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.productnums">
+				<@p.textnumber label="db.Orderr.productnums" nameid="productnums"  value="${orderr.productnums}" help="发货前数一数" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Orderr.diagnose">
+				<@p.text label="db.Orderr.diagnose" nameid="diagnose"  value="${orderr.diagnose}" help="" dataoptions="validType:['length[0,200]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

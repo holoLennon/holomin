@@ -1,0 +1,88 @@
+<!--DgmmsgList，药师患者聊天记录列表-->
+<ion-view view-title="药师咨询"   cache-view='false' hide-tabs="false">
+    <ion-nav-buttons side="right">
+        <h4></h4>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <div ng-if="obj.fromto==0">
+            <div ng-repeat="obj in list" class="message-wrapper" on-hold="onMessageHold($event, $index, message)">
+                <!-- 药师接收消息-->
+                <div ng-if="obj.fromto==1">
+                    <img class="profile-pic left"
+                         ng-src="{{obj.druggistIdDruggistObj.img1}}" reset-img  />
+                    <!--<img src="res/img/yaoshitouxiang.png" class="profile-pic left"/>-->
+                    <div class="chat-bubble left">
+                        <div class="message" >
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeL" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 会员发送消息-->
+                <div ng-if="obj.fromto==0">
+                    <!--<img class="profile-pic right"-->
+                         <!--ng-src="{{obj.druggistIdDruggistObj.img1}}" reset-img />-->
+                    <img src="res/img/wo_touxiang.png" class="profile-pic right"/>
+                    <div class="chat-bubble right">
+                        <div class="message" >
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cf"></div>
+            </div>
+        </div>
+        <div ng-if="obj.fromto==1">
+            <div ng-repeat="obj in list" class="message-wrapper" on-hold="onMessageHold($event, $index, message)">
+                <div ng-if="obj.fromto==0">
+                    <img class="profile-pic left"
+                         ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />
+                    <div class="chat-bubble left">
+                        <div class="message" >
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeL" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="obj.fromto==1">
+                    <img class="profile-pic right"
+                         ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />
+                    <div class="chat-bubble right">
+                        <div class="message">
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cf"></div>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+    <div class="bar bar-subfooter">
+        <div class="item item-input-inset" style="margin-top: -25px">
+            <label class="item-input-wrapper">
+                <input type="text" placeholder="消息" ng-model="obj.msg">
+            </label>
+            <button class="button button-small" ng-click="save();">
+                提交
+            </button>
+        </div>
+    </div>
+
+</ion-view>

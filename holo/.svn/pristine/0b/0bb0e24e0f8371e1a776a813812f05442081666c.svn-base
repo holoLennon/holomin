@@ -1,0 +1,103 @@
+<!--DmmsgList，医患聊天记录列表-->
+<ion-view view-title="医患聊天"   cache-view='false'>
+    <ion-nav-buttons side="right">
+        <h4></h4><div ng-if="obj.fromto==1" style="margin-top: 7px">
+        <button style="background-color: #008cad;border: none;color:#fff;" ng-click="openPopover($event)">开药笺</button>
+        <script id="my-popover.html" type="text/ng-template">
+            <ion-popover-view style="width: 6em;height:5em;" >
+                <div style="margin-top:5px;text-align: center;">
+                    <a ng-click="closePopover($event)"  href="#/tab/OrderrListb/0/{{obj.memberId}}">查看病例</a></br>
+                    <p></p>
+                    <a ng-click="closePopover($event)" href="#/tab/Orderr16yaojian/0">开具药笺</a>
+                </div>
+            </ion-popover-view>
+        </script>
+    </div>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs has-header" style="margin-bottom: 60px">
+        <div style="height: 10px"></div>
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <div ng-if="obj.fromto==0">
+            <div ng-repeat="obj in list" class="message-wrapper" on-hold="onMessageHold($event, $index, message)">
+                <!-- 医生接收消息-->
+                <div ng-if="obj.fromto==1">
+                    <!--<img class="profile-pic left"
+                         ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />-->
+                    <img src="res/img/yishengtouxiangfang.png" class="profile-pic left"/>
+                    <div class="chat-bubble left">
+                        <div class="message" >
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeL" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <!--会员发送消息 -->
+                <div ng-if="obj.fromto==0">
+                    <!--<img class="profile-pic right"-->
+                    <!--ng-src="{{obj.memberIdMemberObj.img1}}" reset-img />-->
+                    <img src="res/img/wo_touxiang.png" class="profile-pic right"/>
+                    <div class="chat-bubble right">
+                        <div class="message">
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cf"></div>
+            </div>
+        </div>
+        <div ng-if="obj.fromto==1">
+            <div ng-repeat="obj in list" class="message-wrapper" on-hold="onMessageHold($event, $index, message)">
+                <!-- 会员接收消息-->
+                <div ng-if="obj.fromto==0">
+                    <!--   <img class="profile-pic left"
+                            ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />-->
+                    <img src="res/img/wo_touxiang.png" class="profile-pic left"/>
+                    <div class="chat-bubble left">
+                        <div class="message" >
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeL" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 医生发送消息-->
+                <div ng-if="obj.fromto==1">
+                    <!--<img class="profile-pic right"-->
+                    <!--ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />-->
+                    <img src="res/img/yishengtouxiang.png" class="profile-pic right"/>
+                    <div class="chat-bubble right">
+                        <div class="message">
+                            {{obj.msg}}
+                        </div>
+                        <div class="message-detail">
+                            <span class="bold"></span>
+                            <span class="agotimeR" am-time-ago="obj.gmtCreate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cf"></div>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+    <div class="bar bar-subfooter">
+        <div class="item item-input-inset" style="margin-top: -25px;border: none">
+            <label class="item-input-wrapper">
+                <input type="text" placeholder="消息" ng-model="obj.msg">
+            </label>
+            <button class="button button-small" ng-click="save();" style="border: none">
+                提交
+            </button>
+        </div>
+    </div>
+</ion-view>

@@ -1,0 +1,27 @@
+<!--Memberdoctor，医患关系详细信息-->
+<ion-view view-title='医患关系'   cache-view='false' hide-tabs="false">
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">修改时间:{{obj.gmtModifiedString}}</li>
+		<li class="item">关系:{{obj.statusDmString}}</li>
+		<li class="item">医生类型:{{obj.itype}}</li>
+		<li class="item">患者:{{obj.memberIdString}}</li>
+		<li class="item">医生:{{obj.doctorIdString}}</li>
+		<li class="item">处方数量:{{obj.countPrescription}}</li>
+		<li class="item">消费金额:{{obj.countOrderr}}</li>
+		<li class="item">会员姓名:{{obj.mname}}</li>
+		<li class="item">医生姓名:{{obj.dname}}</li>
+		<li class="item">医科目录:{{obj.productchannelId}}</li>
+		<li class="item">会员未读消息:{{obj.mmsgnotread}}</li>
+		<li class="item">医生未读消息:{{obj.dmsgnotread}}</li>
+	</ul>
+	  </ion-content>
+</ion-view>

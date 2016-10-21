@@ -1,0 +1,68 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Pomotionspec/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${pomotionspec.id}" />
+	<@z.pmt key="42.Pomotionspec.statusValidOrNot">
+				<@p.radio label="db.Pomotionspec.statusValidOrNot" nameid="statusValidOrNot" value="${pomotionspec.statusValidOrNot}" help="" list=pomotionspec.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.title">
+				<@p.text label="db.Pomotionspec.title" nameid="title"  value="${pomotionspec.title}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.img1">
+					<@p.ckfimg label="db.Pomotionspec.img1" nameid="img1"  value="${pomotionspec.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.txt1">
+				<@p.textarea label="db.Pomotionspec.txt1" nameid="txt1" value="${pomotionspec.txt1}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.img2">
+					<@p.ckfimg label="db.Pomotionspec.img2" nameid="img2"  value="${pomotionspec.img2}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.txt2">
+				<@p.textarea label="db.Pomotionspec.txt2" nameid="txt2" value="${pomotionspec.txt2}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.img3">
+					<@p.ckfimg label="db.Pomotionspec.img3" nameid="img3"  value="${pomotionspec.img3}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.txt3">
+				<@p.textarea label="db.Pomotionspec.txt3" nameid="txt3" value="${pomotionspec.txt3}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.img4">
+					<@p.ckfimg label="db.Pomotionspec.img4" nameid="img4"  value="${pomotionspec.img4}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.txt4">
+				<@p.textarea label="db.Pomotionspec.txt4" nameid="txt4" value="${pomotionspec.txt4}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.img5">
+					<@p.ckfimg label="db.Pomotionspec.img5" nameid="img5"  value="${pomotionspec.img5}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.txt5">
+				<@p.textarea label="db.Pomotionspec.txt5" nameid="txt5" value="${pomotionspec.txt5}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Pomotionspec.listPomotionspecProduct">
+				<@p.text label="db.Pomotionspec.listPomotionspecProduct" nameid="listPomotionspecProduct"  value="${pomotionspec.listPomotionspecProduct}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

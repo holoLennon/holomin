@@ -1,0 +1,117 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.spec;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zmax.yijian.biz.service.my.AdminService;
+import com.zmax.yijian.biz.service.my.CadminService;
+import com.zmax.yijian.biz.service.my.DoctorService;
+import com.zmax.yijian.biz.service.my.DruggistService;
+import com.zmax.yijian.biz.service.my.MemberService;
+import com.zmax.yijian.biz.service.my.OperService;
+import com.zmax.yijian.biz.service.my.OrderrService;
+import com.zmax.yijian.biz.service.my.SellerService;
+import com.zmax.yijian.biz.service.my.UserService;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.Oper;
+import com.zmax.yijian.common.dal.bean.Orderr;
+import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+import com.zmax.conf.AttrStatic;
+import com.zmax.exception.BoException;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+
+
+
+
+
+
+/**
+ * 和易健相关的Service
+ * @author zmax
+ *
+ */
+@Service
+public class SpecYjService {
+	
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	OrderrService orderrService;
+	
+	@Autowired
+	SpecDao specDao;
+	/**
+	 * 取药，加销量
+	 * @param oper
+	 * @param id
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void updateTakeDrug(Oper oper,Integer id) throws BoException,Exception{
+		Orderr orderr=orderrService.get(null, id);
+		if(orderr.getStatus().intValue()==-1||orderr.getStatus().intValue()==2){
+			throw new BoException("无法完成此过药操作");
+		}
+		orderr.setStatus(2);
+		orderr.setStatusgoods(4);
+		orderr.setOperId(oper.getId());
+		orderr.setDrugstoreId(oper.getDrugstoreId());
+		orderr.setGmtPay(new Date());
+		
+		orderrService.update(null,orderr); 
+		//详细
+//		gmt_sent	datetime					发货时间
+//		gmt_recv	datetime					收货时间
+//		orderr_id	int	11				订单号
+//		status	tinyint	3		0		支付状态
+//		statusgoods	tinyint	3		0		收发货状态
+		
+		specDao.executeHql("update Orderrdetail set gmtSent=?,gmtRecv=?,status=2,statusgoods=4 where orderrId=?"
+				, new Object[]{new Date(),new Date(),orderr.getId()});
+
+		//加销量
+		//count_prescription 		count_orderr
+		//患者
+		specDao.executeHql("update Member set countPrescription=countPrescription+1,countOrderr=countOrderr+? where id=?"
+				, new Object[]{orderr.getSumprice(),orderr.getMemberId()});
+		//开药医生
+		if(orderr.getIotype().intValue()==0){
+			specDao.executeHql("update Doctor set countPrescription=countPrescription+1,countOrderr=countOrderr+? where id=?"
+					, new Object[]{orderr.getSumprice(),orderr.getDoctorId()});
+		}
+		//首推医生
+		if(orderr.getIotype().intValue()==1||orderr.getIotype().intValue()==2){
+			specDao.executeHql("update Doctor set countFirst=countFirst+? where id=?"
+					, new Object[]{orderr.getSumprice(),orderr.getDoctorId()});
+		}
+	}
+}

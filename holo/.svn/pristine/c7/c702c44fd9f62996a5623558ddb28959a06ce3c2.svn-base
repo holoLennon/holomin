@@ -1,0 +1,7 @@
+<ion-view view-title="探索">
+  <ion-content class="center">
+    即将到来！
+    <!--这里如果放函数，会执行9次-->
+    <!--{{pageinit();}}-->
+  </ion-content>
+</ion-view>

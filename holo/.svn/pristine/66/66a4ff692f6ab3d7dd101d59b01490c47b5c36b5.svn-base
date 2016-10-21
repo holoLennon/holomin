@@ -1,0 +1,64 @@
+/*
+ * zmax 
+ * 
+ */
+
+package com.zmax.yijian.web.controller.restful.spec;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zmax.conf.AttrStatic;
+import com.zmax.exception.BoException;
+import com.zmax.exception.NeedLoginException;
+import com.zmax.exception.RightException;
+import com.zmax.utils.easyui.Json;
+import com.zmax.yijian.biz.service.my.CartService;
+import com.zmax.yijian.biz.service.my.UserService;
+import com.zmax.yijian.biz.service.spec.SpecWxService;
+import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.yijian.common.dal.bean.Wxouser;
+import com.zmax.yijian.common.utils.AESUtil;
+import com.zmax.yijian.web.controller.restful.RestSpecUtils;
+import com.zmax.yijian.web.controller.restful.RestUtils;
+import com.zmax.yijian.web.controller.restful.entity.ClientInfo;
+import com.zmax.yijian.web.controller.spec.pub.SpecPubController;
+
+/**
+ * 会员的RestFul控制 
+ * 自定义功能
+ * 
+ *
+ */
+@Controller
+@RequestMapping("/rest/Member")
+public class SpecRestMemberController {
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(SpecRestMemberController.class);
+
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	RestUtils restUtils;
+	@Autowired
+	RestSpecUtils restSpecUtils;
+	
+	@Autowired
+	SpecPubController specPubController;
+	@Autowired
+	SpecWxService specWxService;
+	
+
+}

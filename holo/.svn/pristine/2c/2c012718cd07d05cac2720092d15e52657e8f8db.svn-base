@@ -1,0 +1,37 @@
+<!--Doctor，医生会员详细信息-->
+<ion-view view-title='医生会员' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">医科目录:{{obj.productchannelIdString}}</li>
+		<li class="item">年纪:{{obj.age}}</li>
+		<li class="item">头像</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">姓名:{{obj.name}}</li>
+		<li class="item">所在医院:{{obj.hospitalIdString}}</li>
+		<li class="item">职称:{{obj.dlevelString}}</li>
+		<li class="item">用户性别:{{obj.usersexString}}</li>
+		<li class="item">证件类型:{{obj.idtypeString}}</li>
+		<li class="item">证件号码:{{obj.idnum}}</li>
+		<li class="item">邮编:{{obj.zip}}</li>
+		<li class="item">地址:{{obj.addr}}</li>
+		<li class="item">工作单位:{{obj.company}}</li>
+		<li class="item">手机:{{obj.mobile}}</li>
+		<li class="item">座机:{{obj.tele}}</li>
+		<li class="item">电子邮件:{{obj.email}}</li>
+		<li class="item">医生类型:{{obj.itypeString}}</li>
+		<li class="item">总处方数量:{{obj.countPrescription}}</li>
+		<li class="item">总开方成交金额:{{obj.countOrderr}}</li>
+		<li class="item">总首推消费金额:{{obj.countFirst}}</li>
+		<li class="item">二维码</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.qrimg}}' style="height:120px"></li>
+		<li class="item">所属业务员:{{obj.sellerIdString}}</li>
+		<li class="item">是否有新医患关系:{{obj.statusRelationString}}</li>
+		<li class="item">我的推荐医生id:{{obj.wasmy}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

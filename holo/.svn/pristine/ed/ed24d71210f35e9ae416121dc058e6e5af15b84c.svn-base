@@ -1,0 +1,138 @@
+/**
+ * DgmmsgList，药师患者聊天记录列表
+ */
+appctrl.controller('DgmmsgListCtrl', function($scope, $rootScope,$timeout,
+                                           $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                           $location, $state,$stateParams,$ionicScrollDelegate,
+                                           $cordovaNetwork, $cordovaGoogleAnalytics,$log,Storage,
+                                           ENV,DgmmsgService) {
+    $log.debug("enter DgmmsgList ctrl");
+    /**参数*/
+    var fromto = $stateParams.fromto;
+    var memberId = $stateParams.memberId;
+    var druggistId = $stateParams.druggistId;
+    /** var gmtCreateString = $stateParams.gmtCreateString;*/
+
+    /**对象*/
+    $scope.obj={};
+    /**页码*/
+    $scope.page=_.clone(_Page);
+    /**页面显示的列表*/
+    $scope.list=[];
+    /**
+     * 达到页面底部
+     */
+    $scope.scrollBottom = function() {
+        $ionicScrollDelegate.scrollBottom();
+    };
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("DgmmsgList ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("DgmmsgList ctrl afterEnter");
+        if (ctrlReinitMap.get('DgmmsgListCtrl')) {
+            ctrlReinitMap.remove('DgmmsgListCtrl');
+            $log.debug("DgmmsgList ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("DgmmsgList ctrl init ");
+	    $scope.page.where="memberId="+memberId+" and druggistId="+druggistId;//Storage.get("DgmmsgList"+"QueryWhere");
+		$scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+        $scope.newDgmmsg();
+    };
+    /**
+     * 上拉刷新
+     */
+    $scope.doRefresh=function(){
+        $scope.init();
+    };
+    /**
+     * 给list上加数据
+     * @param data
+     */
+    $scope.addList=function(data){
+        angular.forEach(data, function (item) {
+            $scope.list.push(item);
+        });
+        if(data && data.length < $scope.page.pageSize){
+            $scope.page.hasNextPage=false;
+        }else{
+            $scope.page.hasNextPage=true;
+        }
+    };
+
+    /**
+     * 第一次查询
+     */
+    $scope.first=function(){
+        DgmmsgService.first(null,$scope.page).then(function (data) {
+            $log.debug("DgmmsgList ctrl query then");
+            $scope.addList(data);
+            $scope.list= _.sortBy($scope.list,
+                function(data) {
+                    return data.gmtCreateString;
+                });
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+
+    };
+
+    /**
+     * 下拉加载更多查询
+     */
+    $scope.more=function(){
+        $log.debug("DgmmsgList ctrl more=========");
+        if(!$scope.page.hasNextPage){
+            return;
+        }
+        DgmmsgService.more($scope.page).then(function (data) {
+            $log.debug("DgmmsgList ctrl more then");
+            $scope.addList(data);
+            $scope.list= _.sortBy($scope.list,
+                function(data) {
+                    return data.gmtCreateString;
+                });
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+    };
+    /**
+     * 创建一个新的空的聊天消息
+     */
+    $scope.newDgmmsg=function(){
+        $scope.obj=_.clone(_Dgmmsg);
+        $scope.obj.fromto=fromto;//Integer 发送接收
+        $scope.obj.memberId=memberId; //Integer 会员
+        $scope.obj.druggistId=druggistId; //Integer 药师
+        /** $scope.obj.gmtCreateString=gmtCreateString; */
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug($scope.obj)
+        DgmmsgService.create($scope.obj).then(function (data) {
+            $log.debug("Dgmmsg ctrl save then");
+            $scope.list.push(data);
+            $scope.scrollBottom();
+            $scope.newDgmmsg();
+        });
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('DgmmsgListCtrl');
+});

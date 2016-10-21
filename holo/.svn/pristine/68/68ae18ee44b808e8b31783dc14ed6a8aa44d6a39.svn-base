@@ -1,0 +1,38 @@
+<ion-modal-view class="login_mian">
+    <ion-header-bar class="bar bar-header bar-positive disable-user-behavior">
+    	<div class="buttons">
+            <button class="button button-clear login_back" ng-click="popLogin.hide()">
+            	<i class="icon ion-ios-arrow-left"></i>
+            </button>
+        </div>
+        <h1 class="title">登录</h1>
+    </ion-header-bar>
+
+    <ion-content>
+        <form name="passwordLoginForm">
+            <div class="login_form_b">
+                <div class="login_input">
+                    <div class="item_thumb">
+                    	<i class="icon ion-ios-personadd-outline"></i>
+                    </div>
+                    <div class="item_content">
+                    	<input type="text" ng-model="user.username" required placeholder="请输入登录名"/>
+                   	</div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="login_input">
+                    <div class="item_thumb">
+                    	<i class="icon ion-ios-locked-outline"></i>
+                    </div>
+                    <div class="item_content">
+                    	<input type="password" ng-model="user.password" required placeholder="请输入密码"/>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="login_button">
+                    <button class="button button-block button-assertive login_button_ab" ng-disabled="!passwordLoginForm.$valid" type="submit" ng-click="dologin(user)">登录</button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,314 @@
+package com.zmax.yijian.web.controller.ext;
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.ckfinder.connector.ConnectorServlet;
+import com.ckfinder.connector.configuration.ZresConfiguration;
+
+import com.ckfinder.connector.configuration.Constants;
+import com.ckfinder.connector.configuration.Events.EventTypes;
+import com.ckfinder.connector.data.BeforeExecuteCommandEventArgs;
+import com.ckfinder.connector.errors.ConnectorException;
+import com.ckfinder.connector.handlers.command.Command;
+import com.ckfinder.connector.handlers.command.CopyFilesCommand;
+import com.ckfinder.connector.handlers.command.CreateFolderCommand;
+import com.ckfinder.connector.handlers.command.DeleteFilesCommand;
+import com.ckfinder.connector.handlers.command.DeleteFolderCommand;
+import com.ckfinder.connector.handlers.command.DownloadFileCommand;
+import com.ckfinder.connector.handlers.command.ErrorCommand;
+import com.ckfinder.connector.handlers.command.FileUploadCommand;
+import com.ckfinder.connector.handlers.command.GetFilesCommand;
+import com.ckfinder.connector.handlers.command.GetFoldersCommand;
+import com.ckfinder.connector.handlers.command.IPostCommand;
+import com.ckfinder.connector.handlers.command.InitCommand;
+import com.ckfinder.connector.handlers.command.LoadCookiesCommand;
+import com.ckfinder.connector.handlers.command.MoveFilesCommand;
+import com.ckfinder.connector.handlers.command.QuickUploadCommand;
+import com.ckfinder.connector.handlers.command.RenameFileCommand;
+import com.ckfinder.connector.handlers.command.RenameFolderCommand;
+import com.ckfinder.connector.handlers.command.ThumbnailCommand;
+import com.ckfinder.connector.handlers.command.XMLErrorCommand;
+
+
+
+/**
+ * 
+ * <br>
+ * <b>类描述:资源管理</b>
+ * 
+ * <pre>
+ * 流程:
+ * 1.http://localhost./zres/ckfinder/core/connector/java/connector.java?command=Init
+ * 初始化
+ * 返回：init.xml
+ * 2.http://localhost./zres/ckfinder/core/connector/java/connector.java?command=GetFolders&type=users&currentFolder=%2F&langCode=zh-cn&hash=9091f76827cf613d593948a4832
+ * 获取目录
+ * 返回:getFolders.xml
+ * 3.http://localhost./zres/ckfinder/core/connector/java/connector.java?command=GetFiles&type=users&currentFolder=%2F4%2Fimages%2Fuser%2F5%2F20130915%2F&langCode=zh-cn&hash=9091f76827cf613d593948a4832
+ * 获取文件
+ * 返回:getFiles.xml
+ * 4.1选择版，就根据内容直接显示图了。
+ * 4.2资源版，会去取图如下：
+ * http://localhost./zres/ckfinder/core/connector/java/connector.java?command=Thumbnail&type=users&currentFolder=%2F4%2Fimages%2Fuser%2F5%2F20130915%2F&langCode=zh-cn&hash=9091f76827cf613d593948a4832&FileName=t.jpg&fileHash=201310101941-55
+ * 返回就是图
+ * </pre>
+ * 
+ * @see
+ * @since
+ */
+@Controller
+@RequestMapping("/")
+public class ZresController {
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(ZresController.class);
+	/**
+	 * 资源
+	 * @param model
+	 * @param errorMsg
+	 * @return
+	 */
+	@RequestMapping(value="/pub/zres",method=RequestMethod.GET)
+	public String zres(HttpServletRequest request,ModelMap model,String errorMsg) {
+		request.getSession().getServletContext().setAttribute("session", request.getSession()); 
+		return "/pub/zres";
+	}
+	/**
+	 * zres 之连接
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/zresconn.html")
+	public void zres(HttpServletRequest request,HttpServletResponse response,ModelMap model) throws Exception{
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		getResponse(request, response, false);
+	}
+
+	/**
+	 * Creating reponse for every command in request param.
+	 *
+	 * @param request request
+	 * @param response response
+	 * @param post if it's post command.
+	 * @throws ServletException when error occurs.
+	 */
+	private void getResponse(final HttpServletRequest request,
+			final HttpServletResponse response, final boolean post)
+	throws Exception {
+
+		String command = request.getParameter("command");
+		ZresConfiguration configuration = null;
+		try {
+			configuration = ZresConfiguration.getInstace();	
+			if (configuration == null) {
+				throw new Exception("Configuration wasn't initialized correctly. Check server logs.");
+			}
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+		try {
+
+			if (command == null || command.equals("")) {
+				throw new ConnectorException(
+						Constants.Errors.CKFINDER_CONNECTOR_ERROR_INVALID_COMMAND, false);
+			}
+			CommandHandlerEnum cmd = null;
+
+			try {
+				cmd =  CommandHandlerEnum.valueOf(command.toUpperCase());
+				// checks if command should go via POST request or it's a post request
+				// and it's not upload command
+				if ((cmd.getCommand() instanceof IPostCommand || post)
+						&& !CommandHandlerEnum.FILEUPLOAD.equals(cmd)
+						&& !CommandHandlerEnum.QUICKUPLOAD.equals(cmd)) {
+					checkPostRequest(request);
+				}
+			} catch (IllegalArgumentException e1){
+				//Ignore custom plugins commands 
+			}
+
+			BeforeExecuteCommandEventArgs args = new BeforeExecuteCommandEventArgs();
+			args.setCommand(command);
+			args.setRequest(request);
+			args.setResponse(response);
+
+			if (configuration.getEvents() != null) {
+				if (configuration.getEvents().run(EventTypes.BeforeExecuteCommand,
+						args, configuration)) {                                        
+					cmd = CommandHandlerEnum.valueOf(command.toUpperCase());
+					cmd.execute(request, response, configuration);
+				}
+			} else {
+				cmd = CommandHandlerEnum.valueOf(command.toUpperCase());
+				cmd.execute(request, response, configuration);
+			}
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			response.reset();
+			throw e;
+		} catch (ConnectorException e) {
+			e.printStackTrace();
+			response.reset();
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.reset();
+			throw e;
+		}
+	}
+	/**
+	 * checks post request if it's ckfinder command.
+	 * @param request request
+	 * @throws ConnectorException when param isn't set
+	 * or has wrong value.
+	 */
+	private void checkPostRequest(final HttpServletRequest request)
+	throws ConnectorException {
+		if (request.getParameter("CKFinderCommand") == null 
+				|| !(request.getParameter("CKFinderCommand").equals("true"))) {
+			throw new ConnectorException(
+					Constants.Errors.CKFINDER_CONNECTOR_ERROR_INVALID_REQUEST, true);
+		}
+
+	}
+	/**
+	 * Enum with all command handles by servlet.
+	 *
+	 */
+	private enum CommandHandlerEnum {
+		/**
+		 * init command.
+		 */
+		INIT(new InitCommand()),
+		/**
+		 * get subfolders for seleted location command.
+		 */
+		GETFOLDERS(new GetFoldersCommand()),
+		/**
+		 * get files from current folder command.
+		 */
+		GETFILES(new GetFilesCommand()),
+		/**
+		 * sends cookies from the server.
+		 */
+		LOADCOOKIES(new LoadCookiesCommand()),
+		/**
+		 * get thumbnail for file command.
+		 */
+		THUMBNAIL(new ThumbnailCommand()),
+		/**
+		 * download file command.
+		 */
+		DOWNLOADFILE(new DownloadFileCommand()),
+		/**
+		 * create subfolder.
+		 */
+		CREATEFOLDER(new CreateFolderCommand()),
+		/**
+		 * rename file.
+		 */
+		RENAMEFILE(new RenameFileCommand()),
+		/**
+		 * rename folder.
+		 */
+		RENAMEFOLDER(new RenameFolderCommand()),
+		/**
+		 * delete folder.
+		 */
+		DELETEFOLDER(new DeleteFolderCommand()),
+		/**
+		 * copy files.
+		 */
+		COPYFILES(new CopyFilesCommand()),
+		/**
+		 * move files.
+		 */
+		MOVEFILES(new MoveFilesCommand()),
+		/**
+		 * delete files.
+		 */
+		DELETEFILES(new DeleteFilesCommand()),
+		/**
+		 * file upload.
+		 */
+		FILEUPLOAD(new FileUploadCommand()),
+		/**
+		 * quick file upload.
+		 */
+		QUICKUPLOAD(new QuickUploadCommand()),
+		/**
+		 *XML error command.
+		 */
+		XMLERROR(new XMLErrorCommand()),
+		/**
+		 * error command.
+		 */
+		ERROR(new ErrorCommand());
+		/**
+		 * command class for enum field.
+		 */
+		private Command command;
+
+		/**
+		 * Enum contructor to set command.
+		 *
+		 * @param command1 command name
+		 */
+		private CommandHandlerEnum(final Command command1) {
+			this.command = command1;
+		}
+
+		/**
+		 * Execute command.
+		 *
+		 * @param request request
+		 * @param response response
+		 * @param configuration connector configuraion
+		 * @param sc servletContext
+		 * @param params params for command.
+		 * @throws ConnectorException when error occurs
+		 */
+		private void execute(final HttpServletRequest request,
+				final HttpServletResponse response, final ZresConfiguration configuration,
+				final Object... params)
+		throws ConnectorException {
+			Command com = null;
+			try {
+				com = command.getClass().newInstance();
+			} catch (IllegalAccessException e1) {
+				throw new ConnectorException(
+						Constants.Errors.CKFINDER_CONNECTOR_ERROR_INVALID_COMMAND);
+			} catch (InstantiationException e1) {
+				throw new ConnectorException(
+						Constants.Errors.CKFINDER_CONNECTOR_ERROR_INVALID_COMMAND);
+			}
+			if (com == null) {
+				throw new ConnectorException(
+						Constants.Errors.CKFINDER_CONNECTOR_ERROR_INVALID_COMMAND);
+			}
+			com.runCommand(request, response, configuration, params);
+		}
+
+		/**
+		 * gets command.
+		 * @return command
+		 */
+		public Command getCommand() {
+			return this.command;
+		}
+
+	}
+}

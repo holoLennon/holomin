@@ -1,0 +1,53 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Manufacturer/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${manufacturer.id}" />
+	<@z.pmt key="42.Manufacturer.statusValidOrNot">
+				<@p.radio label="db.Manufacturer.statusValidOrNot" nameid="statusValidOrNot" value="${manufacturer.statusValidOrNot}" help="" list=manufacturer.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.name">
+				<@p.text label="db.Manufacturer.name" nameid="name"  value="${manufacturer.name}" help="" dataoptions="validType:['length[0,150]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.img">
+					<@p.ckfimg label="db.Manufacturer.img" nameid="img"  value="${manufacturer.img}" help=""  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.idbiz">
+				<@p.text label="db.Manufacturer.idbiz" nameid="idbiz"  value="${manufacturer.idbiz}" help="（必填）" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.contentname">
+				<@p.text label="db.Manufacturer.contentname" nameid="contentname"  value="${manufacturer.contentname}" help="（必填）" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.tele">
+				<@p.text label="db.Manufacturer.tele" nameid="tele"  value="${manufacturer.tele}" help="（必填）" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.fax">
+				<@p.text label="db.Manufacturer.fax" nameid="fax"  value="${manufacturer.fax}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Manufacturer.mobile">
+				<@p.text label="db.Manufacturer.mobile" nameid="mobile"  value="${manufacturer.mobile}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

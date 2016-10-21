@@ -1,0 +1,292 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.spec;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.dao.base.SpecDao;
+
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+
+
+
+
+
+
+/**
+ * @author zmax
+ *
+ */
+@Service
+public class SpecService {
+	@Autowired
+	SpecDao specDao;
+
+	/**
+	 * 执行executeSql
+	 * @param sql
+	 * @param values
+	 * @return
+	 */
+	public int executeSql(String sql, Object... values){
+		return specDao.executeSql(sql, values);
+	}
+	/**
+	 * 执行executeHql
+	 * @param sql
+	 * @param values
+	 * @return
+	 */
+	public int executeHql(String hql, Object... values){
+		return specDao.executeHql(hql, values);
+	}
+	/**
+	 * 根据类名获取对象
+	 * @param entityName ex.com.zmax.xxx.admin
+	 * @param id
+	 * @return
+	 */
+	public Object get(String entityName, Serializable id){
+		return specDao.get(entityName, id);
+	}
+	/**
+	 * 
+	 * 根据条件获取第一个对象
+	 * @param tbname 表名
+	 * @param where ex. aaa=1 and bbb=2
+	 * @param order ex. id desc
+	 * @return
+	 */
+	public Object getFirst(String tbname,String where,String order){
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="from "+tbname+" "+where+" "+order;
+		return specDao.getFirst(hql);
+	}
+	/**
+	 * 
+	 * 根据条件获取第一个值
+	 * @param select ex.select id from Zxy
+	 * @param where ex. aaa=1 and bbb=2
+	 * @param order ex. id desc
+	 * @return
+	 */
+	public Object getFirstValue(String select,String where,String order){
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql=select+" "+where+" "+order;
+		return specDao.getFirst(hql);
+	}
+	/**
+	 * 获取全部列表 IDS版
+	 * @param tbname ex.user
+	 * @param where ex.id>1
+	 * @param order ex.
+	 * @param ids Integer[]
+	 * @param params
+	 * @return
+	 */	
+	public List listfindInIds(String tbname,String where,String order,Object[] ids, Object[] params) {
+		String whereids=StringUtilz.whereIn(ids);
+		where = StringUtilz.whereAdd(where, whereids);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="from "+tbname+" "+where+" "+order;
+		return specDao.listfind(hql, params);
+	}	
+	/**
+	 * 获取全部列表 IDS版 带分页
+	 * @param tbname ex.user
+	 * @param where ex.id>1
+	 * @param order ex.
+	 * @param ids Integer[]
+	 * @param page Pagination
+	 * @param params
+	 * @return
+	 */	
+	public List listfindInIdsWithpage(String tbname,String where,String order,Object[] ids, Pagination page, Object[] params) {
+		String whereids=StringUtilz.whereIn(ids);
+		where = StringUtilz.whereAdd(where, whereids);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="from "+tbname+" "+where+" "+order;
+		return specDao.listfindWithpage(hql, page, params);
+	}
+
+	/**
+	 * 获取分页列表 无分页
+	 * @param tbname 表名
+	 * @param where ex. aaa=1 and bbb=2
+	 * @param order ex. id desc
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	public List listfind(String tbname,String where,String order,Object[] params) {
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="from "+tbname+" "+where+" "+order;
+		return specDao.listfind(hql,params);
+	}	
+	/**
+	 * 获取分页列表 有分页
+	 * @param tbname 表名
+	 * @param where ex. aaa=1 and bbb=2
+	 * @param order ex. id desc
+	 * @param page Pagination
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes" })
+	public List listfindWithpage(String tbname,String where,String order, Pagination page,Object[] params) {
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="from "+tbname+" "+where+" "+order;
+		return specDao.listfindWithpage(hql, page, params);
+	}
+
+	/**
+	 * 根据HQL条件返回列表，返回Pagination，有分页
+	 * 
+	 * @param hql ex.from Admin where id=1 order by id desc
+	 * @param page Pagination
+	 * @param params 
+	 * @return Pagination
+	 */
+	public Pagination listfindPageWithpage(String hql, Pagination page, Object[] params) {
+		return specDao.listfindPageWithpage(hql, page, params);
+	}
+	/**
+	 * 根据HQL条件返回列表，返回Grid，有分页
+	 * 
+	 * @param hql ex.from Admin where id=1 order by id desc
+	 * @param page Pagination
+	 * @param params 
+	 * @return Grid
+	 */
+	public Grid listfindGridWithpage(String hql, Pagination page, Object... params) {
+		return specDao.listfindGridWithpage(hql, page, params);
+	}
+	/**
+	 * 自定义查询HQL，返回List[Object[]]
+	 * @param hql ex:select t.obj_id,t.template_id,s.ckey from channel_prop_link t,channel_prop_template s where t.obj_id="+channelId+" and t.template_id=s.id
+	 * @return
+	 */
+	public List<Object[]> listObjectHql(String hql, Object[] params){
+		return specDao.listObjectHql(hql, params);
+	}
+	/**
+	 * 自定义查询HQL，返回List[Object[]]
+	 * @param hql ex:select t.obj_id,t.template_id,s.ckey from channel_prop_link t,channel_prop_template s where t.obj_id="+channelId+" and t.template_id=s.id
+	 * @param page Pagination
+	 * @return
+	 */	
+	public List<Object[]> listObjectHqlWithpage(String hql, Pagination page, Object[] params){
+		return specDao.listObjectHqlWithpage(hql,page, params);
+	}
+	/**
+	 * 自定义查询SQL，返回List[Object[]]
+	 * @param sql ex:select t.obj_id,t.template_id,s.ckey from channel_prop_link t,channel_prop_template s where t.obj_id="+channelId+" and t.template_id=s.id
+	 * @return
+	 */
+	public List<Object[]> listObjectSql(String sql, Object[] params){
+		return specDao.listObjectSql(sql, params);
+	}
+	/**
+	 * 自定义查询SQL，返回List[Object[]]
+	 * @param sql ex:select t.obj_id,t.template_id,s.ckey from channel_prop_link t,channel_prop_template s where t.obj_id="+channelId+" and t.template_id=s.id
+	 * @param page Pagination
+	 * @return
+	 */
+	public List<Object[]> listObjectSqlWithpage(String sql, Pagination page, Object[] params){
+		return specDao.listObjectSqlWithpage(sql,page, params);
+	}	
+	/**
+	 * 在LINK表中，通过ID1找到另一个LIST 无分页
+	 * @param tblinkname 链接表名 ex ProductTypeLinkProduct
+	 * @param tbname 需要返回的列表的表名 ex Product
+	 * @param where ex.productTypeId=3 and shopId=2
+	 * @param order 排序
+	 * @param params 
+	 * @return
+	 */
+	public List listfindLinkById(String tblinkname,String tbname,String where,String order,Object[] params) {
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="select id from "+tblinkname+where+order;
+		List<Object[]> listIds=listObjectHql(hql, params);
+		if(listIds==null || listIds.size()==0)
+			return new ArrayList();
+		Object[] ids=new Object[listIds.size()];
+		for (int i = 0; i < listIds.size(); i++) {
+			ids[i]=listIds.get(i)[0];
+		}
+
+		List listObj=listfindInIds(tbname, null, null, ids, null);
+		//重新排序
+		List listret=new ArrayList();
+		for (Object mid : ids) {
+			Object obj=findObjInListObjById(mid, listObj);
+			if(obj!=null)
+				listret.add(obj);
+		}
+		return listret;
+	}	
+	/**
+	 * 在LINK表中，通过ID1找到另一个LIST 带分页
+	 * ex. specService.listfindLinkByIdWithpage("ProductTypeLinkProduct", "Product", "productTypeId=1 and shopId=?", "priority", new Pagination(pageindex, pagecount),new Object[]{companyId});
+	 * @param tblinkname 链接表名 ex ProductTypeLinkProduct
+	 * @param tbname 需要返回的列表的表名 ex Product
+	 * @param where ex.productTypeId=3 and shopId=2
+	 * @param order 排序
+	 * @param page Pagination
+	 * @param params 
+	 * @return
+	 */
+	public List listfindLinkByIdWithpage(String tblinkname,String tbname,String where,String order, Pagination page,Object[] params) {
+		where = StringUtilz.whereLast(where);
+		order = StringUtilz.fixOrderBy(order);
+		String hql="select id from "+tblinkname+where+order;
+		List<Object[]> listIds=listObjectHqlWithpage(hql, page, params);
+		if(listIds==null || listIds.size()==0)
+			return new ArrayList();
+		Object[] ids=new Object[listIds.size()];
+		for (int i = 0; i < listIds.size(); i++) {
+			ids[i]=listIds.get(i);
+		}
+
+		List listObj=listfindInIds(tbname, null, null, ids, null);
+		//重新排序
+		List listret=new ArrayList();
+		for (Object mid : ids) {
+			Object obj=findObjInListObjById(mid, listObj);
+			if(obj!=null)
+				listret.add(obj);
+		}
+		return listret;
+	}		
+	/**
+	 * 根据id从list中找到对象
+	 * @param id
+	 * @param listObj
+	 * @return
+	 */
+	private Object findObjInListObjById(Object id,List listObj){
+		for (Object object : listObj) {
+			if(id.equals(ClassUtils.getFieldValue(object, "id")))
+				return object;
+		}
+		return null;
+	}
+}

@@ -1,0 +1,157 @@
+package com.zmax.test;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+import com.zmax.utils.file.FileUtil;
+
+public class ImportExcelProductchannel extends BaseService{
+	
+	@Autowired 		//会自动注入 default by type
+	public BaseDao<Productchannel> productchannelDao;
+
+	/**
+	 * 从excel导入Parent,children格式的数据
+	 * xls: 
+	 * a1,b1,c1,d1
+	 * a1,b1,c1,d2
+	 * ...
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void importProductchannel() throws FileNotFoundException, IOException {
+		int sheetIndex=0;
+		String excel="D:\\z_java\\z2\\jnyd\\设计文档\\doc\\pccc.xls";
+		int level=3;//级别，也就是EXCEL的列数量
+		//连接符号
+		String ccc="^";
+		//用于存放EXCEL数据
+		String[] vx=new String[level];
+		//用于过滤重复数据,格式key=level_vx[level],value=obj
+		Map<String,Productchannel> ss=new HashMap<String, Productchannel>();
+		String key="";
+		int parentid=0;
+		HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(excel));
+		HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+		int irow=0;
+		while(true){
+			for (int col = 0; col < vx.length; col++) {
+				vx[col]=valueFromSheet(sheet, irow, col);
+			}
+			if(StringUtils.isBlank(vx[0])){
+				break;
+			}
+			//0
+			key="0"+ccc+vx[0];
+			parentid=0;
+			if(!ss.containsKey(key)){
+				
+				//Productchannel obj=new Productchannel(null, vx[0], 1, parentid, 99, 0, "", null, null, null);
+				Productchannel obj=new Productchannel();
+				productchannelDao.save(obj);
+				ss.put(key, obj);
+				System.out.println("key=" + key);
+			}
+			//1-n
+			for (int col = 1; col < vx.length; col++) {
+				key=""+col+ccc+vx[col];
+				if(!ss.containsKey(key)){
+					parentid=ss.get(""+(col-1)+ccc+vx[col-1]).getId();
+					//Productchannel obj=new Productchannel(null, vx[col], 1, parentid, 99, 0, "", null, null, null);
+					Productchannel obj=new Productchannel();
+					productchannelDao.save(obj);
+					ss.put(key, obj);
+					System.out.println("key=" + key);
+				}
+			}
+			irow++;
+		}
+		System.out.println("Import Done");
+	}
+	
+	
+	/**
+	 * 计算一下，child,family之类
+	 */
+	@Test
+	public void caculateProductchannelAll(){
+		//先从parentid=0开始
+		List<Productchannel> list0=productchannelDao.listfind("from Productchannel where parentid=0");
+		for (Productchannel productchannel : list0) {
+			calcuProductchannelEach(productchannel, null);
+		}
+	}
+	/**
+	 * 递归计算childrennum和family等，从自己开始，把下面的节点都做一次
+	 * @param productchannel 自己
+	 * @param father 如果=null就表示为顶级元素，parentid=0的。
+	 */
+	private void calcuProductchannelEach(Productchannel productchannel,Productchannel father){
+		String family="";
+		//father
+		if(father!=null){
+			if(StringUtils.isBlank(father.getFamily()))
+				family=""+father.getId();
+			else
+				family=father.getFamily()+","+father.getId();
+		}
+		
+		//son
+		List<Productchannel> listchildren=productchannelDao.listfind("from Productchannel where parentid="+productchannel.getId());
+		productchannel.setChildrennum(listchildren.size());
+		productchannel.setFamily(family);
+		productchannelDao.update(productchannel);
+		System.out.println("productchannel.update=" + productchannel.toString());
+		if(listchildren==null || listchildren.size()==0){
+			return;
+		}
+		for (Productchannel child : listchildren) {
+			calcuProductchannelEach(child, productchannel);
+		}
+	}
+	/**
+	 * 从Sheet中取数据
+	 * @param sheet
+	 * @param x 行
+	 * @param y 列
+	 * @return 如果是第0列，返回小写及trim
+	 */
+	public String valueFromSheet(HSSFSheet sheet,int x,int y){
+		HSSFRow row =null;
+		row = sheet.getRow(x);
+		if(row!=null){
+			HSSFCell cell=row.getCell(y);
+			//				if(cell!=null&&cell.toString().equals("11.0")){
+			//					logger.debug("");
+			//				}
+			if(cell!=null){
+				if(cell.getCellType()==0){
+					String tmp1=cell.toString();
+					if(tmp1.indexOf(".")>0)return tmp1.split("\\.")[0];
+				}
+				String value=cell.toString();
+				value=value.trim();
+				return value;
+			}
+		}
+		return "";
+	}
+}

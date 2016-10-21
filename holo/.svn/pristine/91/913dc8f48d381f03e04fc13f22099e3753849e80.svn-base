@@ -1,0 +1,25 @@
+<style>
+    input[required]:invalid, input:focus:invalid, textarea[required]:invalid, textarea:focus:invalid{box-shadow: none;}
+</style>
+<!--Editmember，会员密码修改-->
+<ion-view view-title="密码修改"  cache-view="false" hide-tabs="false">
+    <ion-content>
+        <ul>
+            <label class="item item-input">姓名:<input type="text" placeholder="姓名"  ng-model="obj.name" ng-readonly="!isedit"></label>
+            <label class="item item-input">年龄:<input type="text" placeholder="年龄"  ng-model="obj.age" ng-readonly="!isedit"></label>
+            <label class="item item-input">职称:<input type="text" placeholder="职称"  ng-model="obj.dlevelString" ng-readonly="!isedit"></label>
+            <label class="item item-input">邮编:<input type="text" placeholder="邮编"  ng-model="obj.zip"></label>
+            <label class="item item-input">地址:<input type="text" placeholder="地址"  ng-model="obj.addr"></label>
+            <label class="item item-input">电子邮件:<input type="text" placeholder="电子邮件"  ng-model="obj.email"></label>
+            <!--<label class="item item-input">修改密码: <input type="password" ng-model="user.password" required placeholder="请输入新密码"/></label>-->
+            <table><tr>
+            <a ng-click="vm.isedit=false;save()" class="button button-positive"style="margin-top:20px;;width:48% ;background-color: #008cad;margin-left: 2px" ></i>修改基本信息</a>
+
+                <button class="button button-positive" ng-click="jumpPage('User/'+obj.id)"style="margin-top:20px;width:48% ;background-color: #008cad ;margin-left: 4px" ></i>修改密码</button>
+            </tr>
+        </table>
+        </ul>
+
+
+    </ion-content>
+</ion-view>

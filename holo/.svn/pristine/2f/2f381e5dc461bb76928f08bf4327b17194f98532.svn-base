@@ -1,0 +1,36 @@
+package com.zmax.test;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecWxService;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+import com.zmax.yijian.common.utils.MyUtils;
+
+public class TestWx extends BaseService{
+	
+	@Autowired
+	SpecWxService specWxService;
+	
+	@Test
+	public void acct(){
+		Integer bizId=Conf.BIZID;
+		String code="011a35d0ec5f9a475d8359fb6ff1c5bl";
+		specWxService.init();
+		specWxService.refreshTokensByDb();
+		
+		try {
+			Wxcfg wxcfg=MyUtils.takeWxcfg(bizId);
+			//wxcfg.setAccesstoken(wxcfg.getAccesstoken()+"A");
+			Wxouser wxouser= specWxService.saveWxouserFullAttation(code, bizId);
+			System.out.println("wxouser.toJsonNotshow2()="
+					+ wxouser.toJsonNotshow2());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

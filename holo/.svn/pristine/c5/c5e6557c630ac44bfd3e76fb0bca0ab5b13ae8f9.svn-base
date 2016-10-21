@@ -1,0 +1,47 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Memberdoctor/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${memberdoctor.id}" />
+	<@z.pmt key="42.Memberdoctor.statusDm">
+				<@p.radio label="db.Memberdoctor.statusDm" nameid="statusDm" value="${memberdoctor.statusDm}" help="用户发消息后创建临时关系，医生回复后变成正式" list=memberdoctor.statusDmMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.itypeFirst">
+				<@p.radio label="db.Memberdoctor.itypeFirst" nameid="itypeFirst" value="${memberdoctor.itypeFirst}" help="以患者表为主" list=memberdoctor.itypeFirstMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.memberId">
+				<@p.searchforid label="db.Memberdoctor.memberId" nameid="memberId" value="${memberdoctor.memberId}" stringvalue="${memberdoctor.memberIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Member/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.doctorId">
+				<@p.searchforid label="db.Memberdoctor.doctorId" nameid="doctorId" value="${memberdoctor.doctorId}" stringvalue="${memberdoctor.doctorIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.countPrescription">
+				<@p.textnumber label="db.Memberdoctor.countPrescription" nameid="countPrescription"  value="${memberdoctor.countPrescription}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.countOrderr">
+				<@p.textnumber label="db.Memberdoctor.countOrderr" nameid="countOrderr"  value="${memberdoctor.countOrderr}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.mmsgnotread">
+				<@p.textnumber label="db.Memberdoctor.mmsgnotread" nameid="mmsgnotread"  value="${memberdoctor.mmsgnotread}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Memberdoctor.dmsgnotread">
+				<@p.textnumber label="db.Memberdoctor.dmsgnotread" nameid="dmsgnotread"  value="${memberdoctor.dmsgnotread}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

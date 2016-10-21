@@ -1,0 +1,24 @@
+package com.zmax.yijian.common.conf;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.zmax.yijian.common.dal.bean.Wxcfg;
+
+/**
+ * 这里放静态参数，比如内存列表
+ * @author zmax
+ *
+ */
+public class RtCfg {
+	/**微信配置列表*/
+	public static Map<Integer,Wxcfg> wxcfgMap=new HashMap<Integer, Wxcfg>();
+	/**
+	 * 初始化
+	 */
+	public static void init(){
+		//全局
+		
+		
+	}
+}

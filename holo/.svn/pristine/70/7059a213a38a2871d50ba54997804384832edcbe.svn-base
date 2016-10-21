@@ -1,0 +1,29 @@
+package com.zmax.yijian.web.utils;
+
+import com.zmax.yijian.common.dal.bean.User;
+
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
+
+public class TestGroovy {
+	private static GroovyShell shell;
+
+	public static void test2(){
+		User sessionobj=new User();
+		sessionobj.setId(3);
+		String value="\"id=\"+sessionobj.id";
+		shell = new GroovyShell();
+		shell.setVariable("sessionobj",	sessionobj);
+		Script script = shell.parse("return "+value); //return "id=3"
+		String ret= ""+script.run();
+		System.out.println("ret=" + ret);
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		test2();
+	}
+
+}

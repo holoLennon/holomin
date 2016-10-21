@@ -1,0 +1,12 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表 Home-->
+<ion-view view-title="问题攻略"cache-view="false" hide-tabs="false ">
+    <ion-nav-buttons side="right">
+        <h4></h4>
+    </ion-nav-buttons>
+
+
+
+    <ion-content style="margin-top: 273px;border: none">
+
+    </ion-content>
+</ion-view>

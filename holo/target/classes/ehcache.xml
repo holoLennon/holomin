@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+	<!-- cache，load in common.xml-->
+	<diskStore path="/tmp/com_zmax_ehcache_yijian/"/>
+	<defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120"
+		overflowToDisk="true" diskSpoolBufferSizeMB="30" maxElementsOnDisk="10000000" 
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120"/>
+
+	<cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="5000" eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="7200" overflowToDisk="true"/>
+	<cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true"  overflowToDisk="true"/>
+	<!-- for page -->
+    <cache name="SimplePageCachingFilter"         
+        maxElementsInMemory="5000"         
+        eternal="false"        
+        overflowToDisk="true"         
+        timeToIdleSeconds="900"         
+        timeToLiveSeconds="1800"        
+        memoryStoreEvictionPolicy="LFU" />
+	<!-- for object @Cacheable(cacheName="ObjectCache")@TriggersRemove(cacheName="ObjectCache",removeAll=true)-->
+    <cache name="ObjectCache"         
+        maxElementsInMemory="5000"         
+        eternal="false"        
+        overflowToDisk="true"         
+        timeToIdleSeconds="900"         
+        timeToLiveSeconds="1800"        
+        memoryStoreEvictionPolicy="LFU" />	
+</ehcache>

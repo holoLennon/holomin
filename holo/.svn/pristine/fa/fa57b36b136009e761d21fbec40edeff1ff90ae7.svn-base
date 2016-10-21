@@ -1,0 +1,55 @@
+package com.zmax.test;
+
+import javax.annotation.Resource;
+
+import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+@RunWith(SpringJUnit4ClassRunner.class) //指定测试用例的运行器 这里是指定了Junit4
+@ContextConfiguration({"/yijian-biz.xml",
+	"/yijian-common.xml",
+	"/yijian-druid.xml",
+	"/yijian-web.xml",
+	"/zbabi.xml",
+	"/applicationContext-yijian.xml"}) //指定Spring的配置文件 /为classpath下
+//@Transactional //对所有的测试方法都使用事务，并在测试完成后回滚事务
+public class BaseService {
+	//@Autowired
+	//private ApplicationContext appplicationContext; //自动注入applicationContext，这样就可以使用appli*.getBean("beanName")
+
+	
+	@Before //在每个测试用例方法之前都会执行
+	public void init(){
+	}
+	
+	@After //在每个测试用例执行完之后执行
+	public void destory(){
+	}
+	
+	@Test
+//	@Transactional  //使用该注释会使用事务，而且在测试完成之后会回滚事务，也就是说在该方法中做出的一切操作都不会对数据库中的数据产生任何影响
+//	@Rollback(false) //这里设置为false，就让事务不回滚
+	public void testShow(){
+//		Assert.assertNotNull(userDao);
+//		Assert.assertNotNull(userService);
+//		User user;
+//		user=userDao.get(User.class, 1);
+//		System.out.println("user.toString()=" + user.toString());
+//		user=userService.get(null, 1);
+//		System.out.println("user.toString()=" + user.toString());
+	}
+	
+	public void testTest() {
+		
+	}
+	
+}

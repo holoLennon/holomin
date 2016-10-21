@@ -1,0 +1,92 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Druggist.id">
+		<tr><th>用户ID</th><td>
+		${druggist.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.licenseno">
+		<tr><th>执照号码</th><td>
+		${druggist.licenseno}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.img1">
+		<tr><th>执照照片</th><td>
+		${druggist.img1}
+		<br/><img src="${druggist.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.img2">
+		<tr><th>头像</th><td>
+		${druggist.img2}
+		<br/><img src="${druggist.img2}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.name">
+		<tr><th>姓名</th><td>
+		${druggist.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.dlevel">
+		<tr><th>职称</th><td>
+		${druggist.dlevelString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.usersex">
+		<tr><th>用户性别</th><td>
+		${druggist.usersexString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.idtype">
+		<tr><th>证件类型</th><td>
+		${druggist.idtypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.idnum">
+		<tr><th>证件号码</th><td>
+		${druggist.idnum}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.zip">
+		<tr><th>邮编</th><td>
+		${druggist.zip}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.addr">
+		<tr><th>地址</th><td>
+		${druggist.addr}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.company">
+		<tr><th>工作单位</th><td>
+		${druggist.company}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.mobile">
+		<tr><th>手机</th><td>
+		${druggist.mobile}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.tele">
+		<tr><th>座机</th><td>
+		${druggist.tele}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Druggist.email">
+		<tr><th>电子邮件</th><td>
+		${druggist.email}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

@@ -1,0 +1,139 @@
+package com.zmax.yijian.common.utils;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+
+
+
+
+
+
+import com.zmax.entity.Sele;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+
+public class StringUtils1 {
+	/**
+	 * 改变url,给定一个paramName和paramValue，若paramName存在，则改变paramName对应的oldvalue,否则就添加一个paramName与paramValue的键值对
+	 * (前提是给定的参数，paramName和paramValue均不为空，为空直接返回原url)
+	 * 具体形如
+	 * @param url   "http://so1.maykeys.com/sowww/index.html?shopId=166&popenid=166#/app/home"
+	 * @param paramName  "openid"
+	 * @param paramValue  "aaaa"
+	 * @return
+	 */
+	public static String changeURLParameter(String url, String paramName, String paramValue) {
+		if (StringUtils.isBlank(paramName) || StringUtils.isBlank(paramValue)) {
+			return url;
+		}
+		// ? #拆开
+		// 先把?拆开 a?b#c ->{a,b,c}
+		String a = "";
+		String b = "";
+		String c = "";
+
+		String[] abcArray = url.split("[?]");
+		a = abcArray[0];
+		if (abcArray.length > 1) {
+			String bc = abcArray[1];
+			String[] bcArray = bc.split("#");
+			b = bcArray[0];
+			if (bcArray.length > 0) {
+				c = bcArray[1];
+			}
+		}
+		if (StringUtils.isBlank(b)) {
+			return url;
+		}
+
+		// 用&拆p, p1=1&p2=2 ，{p1=1,p2=2}
+		String[] bArray = b.split("&");
+		String newb = "";
+		boolean found = false;
+		for (int i = 0; i < bArray.length; i++) {
+			String bi = bArray[i];
+			if (StringUtils.isBlank(bi))
+				continue;
+			String key = "";
+			String value = "";
+
+			String[] biArray = bi.split("="); // {p1,1}
+			key = biArray[0];
+			if (biArray.length > 1)
+				value = biArray[1];
+
+			if (key.equals(paramName)) {
+				found = true;
+				if (StringUtils.isNotBlank(paramValue)) {
+					newb = newb + "&" + key + "=" + paramValue;
+				} else {
+					continue;
+				}
+			} else {
+				newb = newb + "&" + key + "=" + value;
+			}
+		}
+		// 如果没找到，加上
+		if (!found && StringUtils.isNotBlank(paramValue)) {
+			newb = newb + "&" + paramName + "=" + paramValue;
+		}
+		if (StringUtils.isNotBlank(newb))
+			a = a + "?" + newb;
+		if (StringUtils.isNotBlank(c))
+			a = a + "#" + c;
+		return a;
+	}
+	
+	/**
+	 * 从url地址中根据key获取value
+	 * 具体形如
+	 * @param url  "http://so1.maykeys.com/sowww/index.html?shopId=166&popenid=166#/app/home"
+	 * @param paramName "shopid"
+	 * @return  166
+	 */
+	public static String getURLParamValue(String url, String paramName) {
+		if(StringUtils.isBlank(paramName)){
+			return null;
+		}
+		// ? #拆开
+		// 先把?拆开 a?b#c ->{a,b,c}
+		String b = "";
+		String[] abcArray = url.split("[?]");
+		if (abcArray.length > 1) {
+			String bc = abcArray[1];
+			String[] bcArray = bc.split("#");
+			b = bcArray[0];
+		}
+		if (StringUtils.isBlank(b)) {
+			return null;
+		}
+
+		// 用&拆p, p1=1&p2=2 ，{p1=1,p2=2}
+		String[] bArray = b.split("&");
+		for (int i = 0; i < bArray.length; i++) {
+			String bi = bArray[i];
+			if (StringUtils.isBlank(bi))
+				continue;
+			String key = "";
+			String value = "";
+			String[] biArray = bi.split("="); // {p1,1}
+			key = biArray[0];
+			if (biArray.length > 1)
+				value = biArray[1];
+			if (key.equals(paramName)) {
+				return value;
+			} 
+		}
+		return null;
+	}
+}
+

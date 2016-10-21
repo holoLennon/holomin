@@ -1,0 +1,42 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表 Home-->
+<ion-view view-title="首页" hide-nav-bar="true" class="allweb" style="background-color: #f5f5f5">
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+    <div class="bar bar-header bar-positive ">
+        <a class="ion-logo" href="#/tab/ProductTypeLinkProductListHome"></a>
+        <div class="title" style="width: 40px;margin: auto">首页</div>
+        <a class="ion-erweima_b pull-right" href="#/tab/Doctor_qrcodea/{{meuser.id}}"></a>
+    </div>
+    <div class="bar bar-subheader" style="height:200px;">
+    <li class="row" style="margin-top: -10px">
+        <a class="ion-zhenshizuozhen" href="#/tab/MdoctorLista"></a>
+        <a class="ion-yaopinfuwu" href="#/tab/ProductTypeList"></a>
+        <a class="ion-xueshujiaoliu" href="#/tab/Madingpage"></a>
+    </li>
+    <li class="row">
+        <a class="ion-woyaofang"  href="#/tab/DoctorProductList/0"> </a>
+        <a class="ion-woyaojian" href="#/tab/OrderrLista/1/{{meuser.id}}"></a>
+        <a class="ion-wodingdan" href="#/tab/OrderrListme/2/{{meuser.id}}"></a>
+    </li>
+    <li class="row" style="width: 120%;margin-top: -7px;margin-left: -10px;background-color: #fff;">
+        <a class="ion-xinyaotuijian"></a>
+    </li>
+
+    </div>
+
+	<ion-content style="margin-top: 273px;border: none">
+        <ion-list class="list" style="border: none">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product/{{obj.productId}}" collection-item-width="'100%'" collection-item-height="75px" style="border: none">
+                <img ng-src="{{obj.productIdProductObj.img1}}" reset-img style="border: solid 0.8px lightblue"/>
+                <h2 style="font-size: 13px">{{obj.productIdProductObj.myname}}</h2>
+                <p>
+				<span style="font-size: 11px">{{obj.productIdProductObj.productstyle}}</span><br>
+                    <span style="font-size: 10px">{{obj.productIdProductObj.intro}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>易健</title>
+    <!--去除手机号码拨打电话-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+
+    <!-- compiled css output -->
+    <link href="res/css/ionic.app.min.css" rel="stylesheet">
+    <link href="res/css/index.css" rel="stylesheet" />
+    <link href="res/css/chat2.css" rel="stylesheet" />
+
+    <!-- load cordova frame-->
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
+    <!-- ionic/angularjs js -->
+    <script src="res/lib/ionic/js/ionic.bundle.min.js"></script>
+    <script src="res/lib/angular-resource/angular-resource.min.js"></script>
+    <script src="res/lib/moment/min/moment-with-locales.min.js"></script>
+    <script src="res/lib/angular-moment/angular-moment.min.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="res/lib/ngCordova/dist/ng-cordova.min.js"></script>
+
+    <!-- 第三方 微信-->
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <!-- 高德地图脚本 -->
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=eb4a60b6c78565947121122dd31cba96"></script>
+    <!-- chatjs -->
+    <script src="res/lib/zamx/chat2.js"></script>
+    <!-- tools -->
+    <script src="res/lib/underscore.js"></script>
+    <script src="res/lib/zmax/global.js"></script>
+    <script src="res/lib/zmax/check.js"></script>
+    <script src="res/lib/zmax/hashmap.js"></script>
+    <script src="res/change/siteUrlWww.js"></script>
+
+    <!-- your app's js -->
+    <script src="rjs/config.js"></script>
+    <script src="rjs/app.js"></script>
+    <script src="rjs/route.js"></script>
+    <script src="rjs/services.js"></script>
+    <script src="rjs/WxService.js"></script>
+    <script src="rjs/GaodeService.js"></script>
+    <script src="rjs/restcmd.js"></script>
+    <script src="rjs/myutils.js"></script>
+    <!-- beans -->
+    <script src="beans/pubbeans.js"></script>
+    <script src="beans/beans.js"></script>
+    <!-- services -->
+    <script src="services/CartService.js"></script>
+    <script src="services/DgmmsgService.js"></script>
+    <script src="services/DmmsgService.js"></script>
+    <script src="services/DoctorProductService.js"></script>
+    <script src="services/DoctorService.js"></script>
+    <script src="services/DruggistService.js"></script>
+    <script src="services/DrugstoreService.js"></script>
+    <script src="services/HospitalService.js"></script>
+    <script src="services/ManufacturerService.js"></script>
+    <script src="services/MemberdoctorService.js"></script>
+    <script src="services/MemberService.js"></script>
+    <script src="services/OrderrdetailFinishedService.js"></script>
+    <script src="services/OrderrdetailService.js"></script>
+    <script src="services/OrderrFinishedService.js"></script>
+    <script src="services/OrderrService.js"></script>
+    <script src="services/ProductchannelService.js"></script>
+    <script src="services/ProductExtTxtService.js"></script>
+    <script src="services/ProductService.js"></script>
+    <script src="services/ProductTypeLinkProductService.js"></script>
+    <script src="services/ProductTypeService.js"></script>
+    <script src="services/SellerService.js"></script>
+    <script src="services/SuggestionService.js"></script>
+    <script src="services/UserService.js"></script>
+    <script src="services/WwwhomeService.js"></script>
+    <script src="services/zspecService.js"></script>
+
+    <!-- controllers -->
+    <script src="views/pub/tabs.js"></script>
+    <script src="views/pub/rega.js"></script>
+    <script src="views/pub/regb.js"></script>
+    <script src="views/pub/regca.js"></script>
+    <script src="views/pub/regcb.js"></script>
+
+    <!-- a -->
+    <script src="views/tab-a/Druggist.js"></script>
+    <script src="views/tab-a/User.js"></script>
+    <script src="views/tab-a/UserList.js"></script>
+    <script src="views/tab-a/Wwwhome.js"></script>
+    <script src="views/tab-a/Man.js"></script>
+    <script src="views/tab-a/Women.js"></script>
+    <script src="views/tab-a/Oldman.js"></script>
+    <script src="views/tab-a/zhongxiyaopin.js"></script>
+    <script src="views/tab-a/yiliaoqixie.js"></script>
+    <script src="views/tab-a/zibubaojian.js"></script>
+    <script src="views/tab-a/weishensu.js"></script>
+    <script src="views/tab-a/Children.js"></script>
+    <script src="views/tab-a/WwwhomeList.js"></script>
+
+    <!-- b -->
+    <script src="views/tab-b/Freefinddrug.js"></script>
+    <script src="views/tab-b/Madingpage.js"></script>
+    <script src="views/tab-b/Product.js"></script>
+    <script src="views/tab-b/Productchannel.js"></script>
+    <script src="views/tab-b/ProductchannelList.js"></script>
+    <script src="views/tab-b/ProductExtTxt.js"></script>
+    <script src="views/tab-b/ProductExtTxtList.js"></script>
+    <script src="views/tab-b/ProductList.js"></script>
+    <script src="views/tab-b/ProductTypeList.js"></script>
+    <script src="views/tab-b/ProductType.js"></script>
+    <script src="views/tab-b/ProductTypeLinkProductList.js"></script>
+    <script src="views/tab-b/Sousuoye.js"></script>
+
+
+
+    <!-- c -->
+    <script src="views/tab-c/Cart.js"></script>
+    <script src="views/tab-c/CartList.js"></script>
+    <script src="views/tab-c/Orderr.js"></script>
+    <script src="views/tab-c/OrderrList.js"></script>
+    <script src="views/tab-c/Orderrdetail.js"></script>
+    <script src="views/tab-c/OrderrdetailFinished.js"></script>
+    <script src="views/tab-c/OrderrdetailFinishedList.js"></script>
+    <script src="views/tab-c/OrderrdetailList.js"></script>
+    <script src="views/tab-c/OrderrFinished.js"></script>
+    <script src="views/tab-c/OrderrFinishedList.js"></script>
+
+
+
+    <!-- d -->
+    <script src="views/tab-d/DgmmsgList.js"></script>
+    <script src="views/tab-d/Dmmsg.js"></script>
+    <script src="views/tab-d/DmmsgList.js"></script>
+    <script src="views/tab-d/Doctor.js"></script>
+    <script src="views/tab-d/DoctorList.js"></script>
+    <script src="views/tab-d/DoctorProduct.js"></script>
+    <script src="views/tab-d/DoctorProductList.js"></script>
+    <script src="views/tab-d/Druggist.js"></script>
+    <script src="views/tab-d/DruggistList.js"></script>
+    <script src="views/tab-d/Drugstore.js"></script>
+    <script src="views/tab-d/DrugstoreList.js"></script>
+    <script src="views/tab-d/DrugstoreListMap.js"></script>
+    <script src="views/tab-d/Member.js"></script>
+    <script src="views/tab-d/Memberdoctor.js"></script>
+    <script src="views/tab-d/MemberdoctorList.js"></script>
+    <script src="views/tab-d/MemberList.js"></script>
+
+    <!-- 0 -->
+    <script src="views/tab-0/ProductListSearch.js"></script>
+    <script src="views/tab-0/Hospital.js"></script>
+    <script src="views/tab-0/HospitalList.js"></script>
+    <script src="views/tab-0/Manufacturer.js"></script>
+    <script src="views/tab-0/ManufacturerList.js"></script>
+    <script src="views/tab-0/Seller.js"></script>
+    <script src="views/tab-0/SellerList.js"></script>
+    <script src="views/tab-0/Suggestion.js"></script>
+    <script src="views/tab-0/SuggestionList.js"></script>
+
+    <!-- test data js
+    <script src="rjs/testdata.js"></script>
+    -->
+</head>
+<body ng-app="zionic">
+<!--
+    The nav bar that will be updated as we navigate between views.
+  -->
+<ion-nav-bar class="bar-positive">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+</ion-nav-bar>
+<!--
+The views will be rendered in the <ion-nav-view> directive below
+Templates are in the /templates folder (but you could also
+have templates inline in this html file if you'd like).
+-->
+<ion-nav-view>
+</ion-nav-view>
+</body>
+</html>

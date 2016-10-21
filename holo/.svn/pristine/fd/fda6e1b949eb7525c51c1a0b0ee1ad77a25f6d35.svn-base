@@ -1,0 +1,19 @@
+<ion-modal-view>
+
+    <ion-header-bar class="bar bar-header bar-positive disable-user-behavior">
+        <h1 class="title">支付博支付</h1>
+        <div class="buttons">
+            <button class="button button-clear icon ion-close-circled" ng-click="ctrlMapPut('OrderrListCtrl', 1);popWxpay.hide();jumpPage('OrderrList');"></button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <div style="float:left;padding-left:5px;">
+                <a>
+                    <p style="color:#e60042;font-size:18px;">温馨提示：支付完成后请关闭此框</p>
+                    <p style="color:#e60042;font-size:18px;">优惠活动产品购买成功后，记得填写收货地址资料哦！</p>
+                </a>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

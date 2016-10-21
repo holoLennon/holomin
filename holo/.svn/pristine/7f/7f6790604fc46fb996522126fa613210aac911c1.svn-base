@@ -1,0 +1,897 @@
+/**使用者角色 '5':'会员','6':'医生'*/
+var roleId=5;
+/**
+ * 配置路由
+ */
+app.config(function($stateProvider, $urlRouterProvider,$logProvider,ENV) {
+    $logProvider.debugEnabled(ENV.debug);
+    console.log("app.config.route");
+    $stateProvider
+
+    //菜单
+        .state('tab', {
+            url: "/tab",
+            abstract: true,
+            templateUrl: "views/pub/tabs.html",
+            controller: 'tabCtrl'
+        })
+        //注册
+        .state('tab.rega', {
+            url: '/rega',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/pub/rega.html',
+                    controller: 'regaCtrl'
+                }
+            }
+        })
+        .state('tab.regb', {
+            url: '/regb',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/pub/regb.html',
+                    controller: 'regbCtrl'
+                }
+            }
+        })
+        .state('tab.regca', {
+            url: '/regca',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/pub/regca.html',
+                    controller: 'regcaCtrl'
+                }
+            }
+        })
+        .state('tab.regcb', {
+            url: '/regcb',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/pub/regcb.html',
+                    controller: 'regcbCtrl'
+                }
+            }
+        })
+
+        //手机页首页配置列表
+        .state('tab.WwwhomeList', {
+            url: '/WwwhomeList',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/WwwhomeList.html',
+                    controller: 'WwwhomeListCtrl'
+                }
+            }
+        })
+        ///////////////////////a
+        //手机页首页配置详细
+        .state('tab.Wwwhome', {
+            url: '/Wwwhome',
+            views: {
+                'tab-a': {
+                    controller: 'WwwhomeCtrl',
+                    templateUrl: 'views/tab-a/Wwwhome.html'
+
+                }
+            }
+        })
+        ////轻松找药页
+        .state('tab.Freefinddrug', {
+            url: '/Freefinddrug',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/Freefinddrug.html'
+                }
+            }
+        })
+        //药剂师列表
+        .state('tab.DruggistList', {
+            url: '/DruggistList',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DruggistList.html',
+                    controller: 'DruggistListCtrl'
+                }
+            }
+        })
+        ////药剂师详细
+        //.state('tab.Druggist', {
+        //    url: '/Druggist/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-d/Druggist.html',
+        //            controller: 'DruggistCtrl'
+        //        }
+        //    }
+        //})
+        ////医生会员列表
+        .state('tab.DoctorList', {
+            url: '/DoctorList',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DoctorList.html',
+                    controller: 'DoctorListCtrl'
+                }
+            }
+        })
+        //医生会员详细
+        .state('tab.Doctor', {
+            url: '/Doctor/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/Doctor.html',
+                    controller: 'DoctorCtrl'
+                }
+            }
+        })
+
+        //////医生的药架列表
+        //.state('tab.DoctorProductList', {
+        //    url: '/DoctorProductList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-d/DoctorProductList.html',
+        //            controller: 'DoctorProductListCtrl'
+        //        }
+        //    }
+        //})
+        //////医生的药架详细
+        //.state('tab.DoctorProduct', {
+        //    url: '/DoctorProduct/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-d/DoctorProduct.html',
+        //            controller: 'DoctorProductCtrl'
+        //        }
+        //    }
+        //})
+        //////医患聊天记录列表
+        .state('tab.Dm2017List', {
+            url: '/Dm2017List/:fromto/:memberId/:doctorId',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DmmsgList.html',
+                    controller: 'DmmsgListCtrl'
+                }
+            }
+        })
+        //////医患聊天记录详细
+        //.state('tab.Dmmsg', {
+        //    url: '/Dmmsg/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-a/Dmmsg.html',
+        //            controller: 'DmmsgCtrl'
+        //        }
+        //    }
+        //})
+        //
+
+        //建设中跳转
+        .state('tab.Madingpage', {
+            url: '/Madingpage',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/Madingpage.html'
+
+                }
+            }
+        })
+        .state('tab.login', {
+            url: '/login',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/pub/login.html'
+
+                }
+            }
+        })
+        //商品列表
+        .state('tab.ProductList1', {
+            url: '/ProductList1',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/ProductList.html',
+                    controller: 'ProductListCtrl'
+                }
+            }
+        })
+        //科室找药的商品列表
+        .state('tab.ProductLista', {
+            url: '/ProductLista',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/ProductList.html',
+                    controller: 'ProductListCtrl'
+                }
+            }
+        })
+        /////////////////////b
+
+        //商品类型列表
+        .state('tab.ProductTypeList', {
+            url: '/ProductTypeList',
+            views: {
+                'tab-b': {
+                    controller: 'ProductTypeListCtrl',
+                    templateUrl: 'views/tab-b/ProductTypeList.html'
+                }
+            }
+        })
+        //商品类型详细
+        .state('tab.ProductType', {
+            url: '/ProductType/:id',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/ProductType.html',
+                    controller: 'ProductTypeCtrl'
+                }
+            }
+        })
+        //商品类型包含商品列表
+        .state('tab.ProductTypeLinkProductList', {
+            url: '/ProductTypeLinkProductList',
+            views: {
+                'tab-b': {
+                    controller: 'ProductTypeLinkProductListCtrl',
+                    templateUrl: 'views/tab-b/ProductTypeLinkProductList.html'
+                }
+            }
+        })
+        //商品类型包含商品详细
+        .state('tab.ProductTypeLinkProduct', {
+            url: '/ProductTypeLinkProduct/:id',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/ProductTypeLinkProduct.html',
+                    controller: 'ProductTypeLinkProductCtrl'
+                }
+            }
+        })
+        //商品列表
+        .state('tab.ProductList', {
+            url: '/ProductList',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/ProductList.html',
+                    controller: 'ProductListCtrl'
+                }
+            }
+        })
+        //分类里面的商品详细
+        .state('tab.Product', {
+            url: '/Product/:id',
+            views: {
+                'tab-b': {
+                    controller: 'ProductCtrl',
+                    templateUrl: 'views/tab-b/ProductB.html'
+                }
+            }
+        })
+        //搜索里面的商品详情
+        .state('tab.Producta', {
+            url: '/Producta/:id',
+            views: {
+                'tab-a': {
+                    controller: 'ProductCtrl',
+                    templateUrl: 'views/tab-b/Product.html'
+                }
+            }
+        })
+//从轻松找药过来的
+        .state('tab.Product1', {
+            url: '/Product1/:id',
+            views: {
+                'tab-a': {
+                    controller: 'ProductCtrl',
+                    templateUrl: 'views/tab-b/Product1.html'
+                }
+            }
+        })
+
+        ////商品详细列表
+        //.state('tab.ProductExtTxtList', {
+        //    url: '/ProductExtTxtList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-b/ProductExtTxtList.html',
+        //            controller: 'ProductExtTxtListCtrl'
+        //        }
+        //    }
+        //})
+        ////商品详细详细
+        //.state('tab.ProductExtTxt', {
+        //    url: '/ProductExtTxt/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-b/ProductExtTxt.html',
+        //            controller: 'ProductExtTxtCtrl'
+        //        }
+        //    }
+        //})
+        //商品目录列表
+        .state('tab.ProductchannelList', {
+            url: '/ProductchannelList',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/ProductchannelList.html',
+                    controller: 'ProductchannelListCtrl'
+                }
+            }
+        })
+        //商品目录详细
+        .state('tab.Productchannel', {
+            url: '/Productchannel/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-b/Productchannel.html',
+                    controller: 'ProductchannelCtrl'
+                }
+            }
+        })
+        ////药品生产厂家列表
+        //.state('tab.ManufacturerList', {
+        //    url: '/ManufacturerList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-O/ManufacturerList.html',
+        //            controller: 'ManufacturerListCtrl'
+        //        }
+        //    }
+        //})
+        ////药品生产厂家详细
+        //.state('tab.Manufacturer', {
+        //    url: '/Manufacturer/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-O/Manufacturer.html',
+        //            controller: 'ManufacturerCtrl'
+        //        }
+        //    }
+        //})
+
+
+        ////个人会员列表
+        //.state('tab.MemberList', {
+        //    url: '/MemberList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-d/MemberList.html',
+        //            controller: 'MemberListCtrl'
+        //        }
+        //    }
+        //})
+        //
+        ////个人会员详细
+        //.state('tab.Member', {
+        //    url: '/Member/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-a/Member.html',
+        //            controller: 'MemberCtrl'
+        //        }
+        //    }
+        //})
+        ////业务员列表
+        //.state('tab.SellerList', {
+        //    url: '/SellerList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-0/SellerList.html',
+        //            controller: 'SellerListCtrl'
+        //        }
+        //    }
+        //})
+        ////业务员详细
+        //.state('tab.Seller', {
+        //    url: '/Seller/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-0/Seller.html',
+        //            controller: 'SellerCtrl'
+        //        }
+        //    }
+        //})
+        ////////////////////////c
+        //购物车列表
+        .state('tab.CartList', {
+            url: '/CartList',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/tab-c/CartList.html',
+                    controller: 'CartListCtrl'
+                }
+            }
+        })
+        //从搜索或轻松找药过来的购物车列表
+        .state('tab.Cart16List', {
+            url: '/Cart16List',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-c/Cart16ListC.html',
+                    controller: 'CartListCtrl'
+                }
+            }
+        })
+        //从分类里面过来的购物车列表
+        .state('tab.Cart16ListB', {
+            url: '/Cart16ListB',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/Cart16ListB.html',
+                    controller: 'CartListCtrl'
+                }
+            }
+        })
+        //订单详细
+        .state('tab.Orderr', {
+            url: '/Orderr/:id',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-c/Orderr.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从分类过来的确认下单
+        .state('tab.Orderr_b', {
+            url: '/Orderr_b/:id',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/Orderrb.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从购物车过来的确认下单
+        .state('tab.Orderr_c', {
+            url: '/Orderr_c/:id',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/tab-c/Orderr.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从轻松找药过来的订单页
+        .state('tab.Orderr_a', {
+            url: '/Orderr_a/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/Orderra.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //购物车详细
+        .state('tab.Cart', {
+            url: '/Cart/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-c/Cart.html',
+                    controller: 'CartCtrl'
+                }
+            }
+        })
+
+        //搜索
+        .state('tab.Sousuoye', {
+            url: '/Sousuoye',
+            views: {
+                'tab-b': {
+                    templateUrl: 'views/tab-b/Sousuoye.html'
+                }
+            }
+        })
+        //
+        //    ////////////////////////d
+        //////我的
+        .state('tab.Merber', {
+            url: '/Member',
+            views: {
+                'tab-d': {
+                    controller: 'MemberCtrl',
+                    templateUrl: 'views/tab-d/Member.html'
+
+                }
+            }
+        })
+        .state('tab.Merber1', {
+            url: '/Member1/:id',
+            views: {
+                'tab-d': {
+                    controller: 'MemberCtrl',
+                    templateUrl: 'views/tab-d/Member.html'
+
+                }
+            }
+        })
+        //全部订单
+        .state('tab.OrderrList', {
+            url: '/OrderrList/:status',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-c/OrderrList.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        .state('tab.OrderrList1', {
+            url: '/OrderrList1/:status',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/tab-c/OrderrList.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        //已完成的订单列表
+        .state('tab.OrderrFinishedList', {
+            url: '/OrderrFinishedList',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-c/OrderrFinishedList.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        ////已完成订单详细
+        .state('tab.OrderrFinished', {
+            url: '/OrderrFinished/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-c/OrderrFinished.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        ////订单详细列表
+        //.state('tab.OrderrdetailList', {
+        //    url: '/OrderrdetailList',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-0/OrderrdetailList.html',
+        //            controller: 'OrderrdetailListCtrl'
+        //        }
+        //    }
+        //})
+        ////订单详细详细
+        //.state('tab.Orderrdetail', {
+        //    url: '/Orderrdetail/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-0/Orderrdetail.html',
+        //            controller: 'OrderrdetailCtrl'
+        //        }
+        //    }
+        //})
+        ////已完成订单详细列表
+        //.state('tab.OrderrdetailFinishedList', {
+        //    url: '/OrderrdetailFinishedList',
+        //    views: {
+        //        'tab-d': {
+        //            templateUrl: 'views/tab-c/OrderrdetailFinishedList.html',
+        //            controller: 'OrderrdetailFinishedListCtrl'
+        //        }
+        //    }
+        //})
+        ////已完成订单详细详细
+        //.state('tab.OrderrdetailFinished', {
+        //    url: '/OrderrdetailFinished/:id',
+        //    views: {
+        //        'tab-a': {
+        //            templateUrl: 'views/tab-a/OrderrdetailFinished.html',
+        //            controller: 'OrderrdetailFinishedCtrl'
+        //        }
+        //    }
+        //})
+
+
+        ////////////////////////0
+        //搜索
+        .state('tab.ProductListSearch', {
+            url: '/ProductListSearch/:kw',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-0/ProductListSearch.html',
+                    controller: 'ProductListSearchCtrl'
+                }
+            }
+        })
+        //药师患者聊天记录列表
+        .state('tab.DgmmsgList', {
+            url: '/DgmmsgList/:fromto/:memberId/:druggistId',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DgmmsgList.html',
+                    controller: 'DgmmsgListCtrl'
+                }
+            }
+        })
+        ////医患关系列表
+        .state('tab.MemberdoctorList', {
+            url: '/MemberdoctorList',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/MemberdoctorList.html',
+                    controller: 'MemberdoctorListCtrl'
+                }
+            }
+        })
+        //原本应该用MemberdoctorList1，不知为何会出错，改成Md2017List
+        .state('tab.Md2017List', {
+            url: '/Md2017List',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/MemberdoctorList.html',
+                    controller: 'MemberdoctorListCtrl'
+                }
+            }
+        })
+        //实体药店列表
+        .state('tab.DrugstoreList', {
+            url: '/DrugstoreList',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/DrugstoreList.html',
+                    controller: 'DrugstoreListCtrl'
+                }
+            }
+        })
+        .state('tab.DrugstoreList1', {
+            url: '/DrugstoreList1',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DrugstoreList.html',
+                    controller: 'DrugstoreListCtrl'
+                }
+            }
+        })
+        //医患关系详细
+        .state('tab.Memberdoctor', {
+            url: '/Memberdoctor/:id',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/Memberdoctor.html',
+                    controller: 'MemberdoctorCtrl'
+                }
+            }
+        })
+
+        .state('tab.Fankui', {
+            url: '/Fankui',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/Fankui.html',
+                    controller: 'SuggestionCtrl'
+                }
+            }
+        })
+        .state('tab.Shezhi', {
+            url: '/Shezhi',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/Shezhi.html',
+                    controller: 'MemberCtrl'
+                }
+            }
+        })
+        ////意见建议列表
+        //.state('tab.SuggestionList', {
+        //    url: '/SuggestionList',
+        //    views: {
+        //        'tab-d': {
+        //            templateUrl: 'views/tab-0/SuggestionList.html',
+        //            controller: 'SuggestionListCtrl'
+        //        }
+        //    }
+        //})
+        .state('tab.Suggestion', {
+            url: '/Suggestion',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-0/Suggestion.html',
+                    controller: 'SuggestionCtrl'
+                }
+            }
+        })
+        ////意见建议详细
+        //.state('tab.Suggestion', {
+        //    url: '/Suggestion/:id',
+        //    views: {
+        //        'tab-d': {
+        //            templateUrl: 'views/tab-0/Suggestion.html',
+        //            controller: 'SuggestionCtrl'
+        //        }
+        //    }
+        //})
+        //////账号信息修改列表
+        //.state('tab.UserList', {
+        //    url: '/UserList',
+        //    views: {
+        //        'tab-d': {
+        //            templateUrl: 'views/tab-a/UserList.html',
+        //            controller: 'UserListCtrl'
+        //        }
+        //    }
+        //})
+        .state('tab.User', {
+            url: '/User/:id',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-a/User.html',
+                    controller: 'UserCtrl'
+                }
+            }
+        })
+        //实体药店列表地图版
+        .state('tab.DrugstoreListMap', {
+            url: '/DrugstoreListMap',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/DrugstoreListMap.html',
+                    controller: 'DrugstoreListMapCtrl'
+                }
+            }
+        })
+
+        //从分类过来的地图
+        .state('tab.DrugstoreListMapb', {
+         url: '/DrugstoreListMapb',
+         views: {
+         'tab-b': {
+         templateUrl: 'views/tab-d/DrugstoreListMap.html',
+         controller: 'DrugstoreListMapCtrl'
+         }
+         }
+         })
+        //从购物车过来的地图
+        .state('tab.DrugstoreListMapC', {
+            url: '/DrugstoreListMapC',
+            views: {
+                'tab-c': {
+                    templateUrl: 'views/tab-d/DrugstoreListMap.html',
+                    controller: 'DrugstoreListMapCtrl'
+                }
+            }
+        })
+        //从搜索或轻松找药过来的地图
+        .state('tab.DrugstoreListMapA', {
+            url: '/DrugstoreListMapA',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/DrugstoreListMap.html',
+                    controller: 'DrugstoreListMapCtrl'
+                }
+            }
+        })
+        //实体药店详细
+        .state('tab.Drugstore', {
+            url: '/Drugstore/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-d/Drugstore.html',
+                    controller: 'DrugstoreCtrl'
+                }
+            }
+        })
+
+        //修改账户
+        .state('tab.Editember', {
+            url: '/Editmember',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/Editmember.html',
+                    controller: 'MemberCtrl'
+                    //controller: 'UserCtrl'
+
+                }
+            }
+        })
+
+
+        //男人模块
+        .state('tab.Man', {
+            url: '/Man',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/Man.html',
+                    controller: 'ManCtrl'
+
+                }
+            }
+        })
+        .state('tab.Women', {
+            url: '/Women',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/Women.html',
+                    controller: 'WomenCtrl'
+                }
+            }
+        })
+        .state('tab.Oldman', {
+            url: '/Oldman',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/Oldman.html',
+                    controller: 'OldmanCtrl'
+                }
+            }
+        })
+        .state('tab.Children', {
+            url: '/Children',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/Children.html',
+                    controller: 'ChildrenCtrl'
+                }
+            }
+        })
+        .state('tab.zhongxiyaopin', {
+            url: '/zhongxiyaopin',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/zhongxiyaopin.html',
+                    controller: 'zhongxiyaopinCtrl'
+                }
+            }
+        })
+        .state('tab.yiliaoqixie', {
+            url: '/yiliaoqixie',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/yiliaoqixie.html',
+                    controller: 'yiliaoqixieCtrl'
+                }
+            }
+        })
+        .state('tab.zibubaojian', {
+            url: '/zibubaojian',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/zibubaojian.html',
+                    controller: 'zibubaojianCtrl'
+                }
+            }
+        })
+        .state('tab.weishensu', {
+            url: '/weishensu',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-a/weishensu.html',
+                    controller: 'weishensuCtrl'
+                }
+            }
+        })
+        .state('tab.Yijian', {
+            url: '/Yijian',
+            views: {
+                'tab-d': {
+                    templateUrl: 'views/tab-d/yijian.html'
+                }
+            }
+        })
+        //医院列表
+        .state('tab.HospitalList', {
+            url: '/HospitalList',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-O/HospitalList.html',
+                    controller: 'HospitalListCtrl'
+                }
+            }
+        })
+        //医院详细
+        .state('tab.Hospital', {
+            url: '/Hospital/:id',
+            views: {
+                'tab-a': {
+                    templateUrl: 'views/tab-0/Hospital.html',
+                    controller: 'HospitalCtrl'
+                }
+            }
+        })
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/tab/Wwwhome');
+});

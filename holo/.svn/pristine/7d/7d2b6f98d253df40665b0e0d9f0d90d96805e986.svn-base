@@ -1,0 +1,74 @@
+<!--Druggist，药剂师详细信息-->
+<ion-view view-title='药剂师' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">执照号码:{{obj.licenseno}}</li>
+		<li class="item">执照照片</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>
+		<li class="item">头像</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>
+		<li class="item">姓名:{{obj.name}}</li>
+		<li class="item">职称:{{obj.dlevelString}}</li>
+		<li class="item">用户性别:{{obj.usersexString}}</li>
+		<li class="item">证件类型:{{obj.idtypeString}}</li>
+		<li class="item">证件号码:{{obj.idnum}}</li>
+		<li class="item">邮编:{{obj.zip}}</li>
+		<li class="item">地址:{{obj.addr}}</li>
+		<li class="item">工作单位:{{obj.company}}</li>
+		<li class="item">手机:{{obj.mobile}}</li>
+		<li class="item">座机:{{obj.tele}}</li>
+		<li class="item">电子邮件:{{obj.email}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">用户ID:<input type="text" placeholder="用户ID"  ng-model="obj.id"></label>
+		<label class="item item-input">执照号码:<input type="text" placeholder="执照号码"  ng-model="obj.licenseno"></label>
+        <label class="item item-input">执照照片:<input type="file" file-model="fileimg1"/><input type="hidden" ng-model="obj.img1"><button class="button icon ion-ios-upload" ng-click="upload(fileimg1,'img1')"></button></label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img1}}" style="height: 120px;"></label>
+        <label class="item item-input">头像:<input type="file" file-model="fileimg2"/><input type="hidden" ng-model="obj.img2"><button class="button icon ion-ios-upload" ng-click="upload(fileimg2,'img2')"></button></label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img2}}" style="height: 120px;"></label>
+		<label class="item item-input">姓名:<input type="text" placeholder="姓名"  ng-model="obj.name"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				职称:
+			</div>
+			<select  ng-model="obj.dlevel">
+				<option ng-repeat="(key,val) in obj.dlevelMap" value="{{key}}" ng-selected="val==obj.dlevel">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				用户性别:
+			</div>
+			<select  ng-model="obj.usersex">
+				<option ng-repeat="(key,val) in obj.usersexMap" value="{{key}}" ng-selected="val==obj.usersex">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				证件类型:
+			</div>
+			<select  ng-model="obj.idtype">
+				<option ng-repeat="(key,val) in obj.idtypeMap" value="{{key}}" ng-selected="val==obj.idtype">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">证件号码:<input type="text" placeholder="证件号码"  ng-model="obj.idnum"></label>
+		<label class="item item-input">邮编:<input type="text" placeholder="邮编"  ng-model="obj.zip"></label>
+		<label class="item item-input">地址:<input type="text" placeholder="地址"  ng-model="obj.addr"></label>
+		<label class="item item-input">工作单位:<input type="text" placeholder="工作单位"  ng-model="obj.company"></label>
+		<label class="item item-input">手机:<input type="text" placeholder="手机"  ng-model="obj.mobile"></label>
+		<label class="item item-input">座机:<input type="text" placeholder="座机"  ng-model="obj.tele"></label>
+		<label class="item item-input">电子邮件:<input type="text" placeholder="电子邮件"  ng-model="obj.email"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

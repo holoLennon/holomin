@@ -1,0 +1,43 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/Dmmsg/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.Dmmsg.readed">
+				<@p.radio label="db.Dmmsg.readed" nameid="readed" value="${dmmsg.readed}" help="" list=dmmsg.readedMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dmmsg.fromto">
+				<@p.radio label="db.Dmmsg.fromto" nameid="fromto" value="${dmmsg.fromto}" help="" list=dmmsg.fromtoMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dmmsg.memberId">
+				<@p.searchforid label="db.Dmmsg.memberId" nameid="memberId" value="${dmmsg.memberId}" stringvalue="${dmmsg.memberIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Member/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dmmsg.doctorId">
+				<@p.searchforid label="db.Dmmsg.doctorId" nameid="doctorId" value="${dmmsg.doctorId}" stringvalue="${dmmsg.doctorIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dmmsg.productId">
+				<@p.searchforid label="db.Dmmsg.productId" nameid="productId" value="${dmmsg.productId}" stringvalue="${dmmsg.productIdString}" help="如果为空表示全科咨询" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dmmsg.msg">
+				<@p.textarea label="db.Dmmsg.msg" nameid="msg" value="${dmmsg.msg}" help="" dataoptions="validType:['length[0,400]',]" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+</div>
+

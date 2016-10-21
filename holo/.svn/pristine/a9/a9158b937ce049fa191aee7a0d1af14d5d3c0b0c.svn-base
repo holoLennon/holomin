@@ -1,0 +1,661 @@
+package com.zmax.yijian.web.controller.spec.pub;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.octo.captcha.service.image.ImageCaptchaService;
+import com.zmax.conf.Addr;
+import com.zmax.conf.AttrStatic;
+import com.zmax.conf.SessionName;
+import com.zmax.exception.BoException;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.string.Md5PwdEncoder;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.common.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecUserService;
+import com.zmax.yijian.biz.service.spec.SpecWxService;
+import com.zmax.yijian.common.conf.Propmy;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.web.controller.base.base.BaseController;
+import com.zmax.yijian.web.utils.SpringInit;
+
+
+
+
+
+/**
+ * 
+ * <br>
+ * <b>类描述:</b>
+ * 
+ * <pre>
+ * 不用登录的页，如：登录，退出
+ * 以及一些共用的页，如：出错页，成功页，消息页
+ * </pre>
+ * 
+ * @see
+ * @since
+ */
+@Controller
+@RequestMapping("/")
+public class SpecPubController extends BaseController{
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(SpecPubController.class);
+
+	@Autowired
+	AlipayPaynotifyService alipayPaynotifyService;
+	@Autowired
+	MemberdoctorService memberdoctorService;
+	@Autowired
+	DoctorProductService doctorProductService;
+	@Autowired
+	DmmsgService dmmsgService;
+	@Autowired
+	DrugstoreService drugstoreService;
+	@Autowired
+	SellerCountService sellerCountService;
+	@Autowired
+	HospitalService hospitalService;
+	@Autowired
+	WaEntityArticleService waEntityArticleService;
+	@Autowired
+	WxmenuService wxmenuService;
+	@Autowired
+	WaRecvmsgService waRecvmsgService;
+	@Autowired
+	WaCustomAudParamService waCustomAudParamService;
+	@Autowired
+	WxmsgtemplateService wxmsgtemplateService;
+	@Autowired
+	WaTemplateAddService waTemplateAddService;
+	@Autowired
+	WxUsergroupService wxUsergroupService;
+	@Autowired
+	WaGeneralNoticeRetService waGeneralNoticeRetService;
+	@Autowired
+	TbfieldService tbfieldService;
+	@Autowired
+	WebsetService websetService;
+	@Autowired
+	MyisoService myisoService;
+	@Autowired
+	MyisouService myisouService;
+	@Autowired
+	OperLogService operLogService;
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+	@Autowired
+	WxcfgService wxcfgService;
+	@Autowired
+	WxrService wxrService;
+	@Autowired
+	WxouserService wxouserService;
+	@Autowired
+	WxousersubscribehisService wxousersubscribehisService;
+	@Autowired
+	WaQrcodeticketSceneService waQrcodeticketSceneService;
+	@Autowired
+	WaQradvService waQradvService;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	ProductExtTxtService productExtTxtService;
+	@Autowired
+	ProductchannelService productchannelService;
+	@Autowired
+	ManufacturerService manufacturerService;
+	@Autowired
+	ProductTypeService productTypeService;
+	@Autowired
+	ProductTypeLinkProductService productTypeLinkProductService;
+	@Autowired
+	SuggestionService suggestionService;
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	WxrbService wxrbService;
+
+	
+	
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+	@Autowired
+	ImageCaptchaService imageCaptchaService;
+	@Autowired
+	DbInit dbInit;
+	@Autowired
+	PermitCheckUtils permitCheckUtils;
+	@Autowired
+	PermitDbSvrUitls permitDbSvrUitls;
+	@Autowired
+	Addr addr;
+	@Autowired
+	Propmy propmy;
+	@Autowired
+	SpecUserService specUserService;	
+
+	@Autowired
+	SpecWxService specWxService;
+	/**
+	 * 初始化数据库
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/user/dbinit",method=RequestMethod.GET)
+	public String dbinit(ModelMap model) {
+		dbInit.doInit();
+		model.addAttribute("errorMsg", "完成");
+		return "/error/msg";
+	}
+	/**
+	 * 初始化或重新更新参数
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/user/paraminit",method=RequestMethod.GET)
+	public String paraminit(ModelMap model) {
+		//权限表字段数据库初始化
+		permitDbSvrUitls.doInit();
+		//权限初始化
+		permitCheckUtils.doInit();
+
+		//微信相关
+		if("true".equals(propmy.getIsRunWxServer())){
+			specWxService.init();
+			specWxService.refreshTokens();
+		}
+		//微信相关
+		if("db".equals(propmy.getIsRunWxServer())){
+			specWxService.init();
+			specWxService.refreshTokensByDb();
+		}
+		if(model!=null)
+			model.addAttribute("errorMsg", "完成");
+		return "/error/msg";
+	}	
+	/**
+	 * 空指令目的是产生session，ajax json版
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/emptysession1",method=RequestMethod.GET)
+	public void emptysession1(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		request.getSession().setAttribute("tmp", 0);
+		if (logger.isDebugEnabled())
+			logger.debug("产生session");
+		writeJson(request, response,new Json(true));
+	}
+	/**
+	 * 清除session，ajax json版
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/cleansession1",method=RequestMethod.GET)
+	public void cleansession1(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		request.getSession().invalidate();;
+		if (logger.isDebugEnabled())
+			logger.debug("清除session");
+		writeJson(request, response,new Json(true));
+	}
+	/**
+	 * 空指令目的是产生session，ajax jsonp版
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/emptysession",method=RequestMethod.GET)
+	public void emptysession(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		request.getSession().setAttribute("tmp", 0);
+		if (logger.isDebugEnabled())
+			logger.debug("产生session");
+		writeJsonR(request, response,new Json(true));
+	}
+	/**
+	 * 清除session，ajax jsonp版
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/cleansession",method=RequestMethod.GET)
+	public void cleansession(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		request.getSession().invalidate();;
+		if (logger.isDebugEnabled())
+			logger.debug("清除session");
+		writeJsonR(request, response,new Json(true));
+	}	
+	/**
+	 * 首页
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/index")
+	public String index(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		return wm(request,null, "/pub/index",null,null);
+	}
+	/**
+	 * 登录 get
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/login",method=RequestMethod.GET)
+	public String loginget(HttpServletRequest request,HttpServletResponse response,ModelMap model,User user) {
+		if(user==null)
+			user=new User();
+		model.addAttribute("user",user);
+		return wm(request,null, "/pub/login",null,null);
+	}
+	/**
+	 * 会员登录
+	 * login post
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/login",method=RequestMethod.POST)
+	public void loginpost(@Valid User user,BindingResult errors,HttpServletRequest request,HttpServletResponse response,HttpSession session,ModelMap model) {
+		/*
+		ZbabiUtils.checkCaptcha(imageCaptchaService, request, errors);
+		if(errors.hasErrors()) {
+			return new Json(false,"验证码错误！");
+		}
+		 */
+		Json jr=loginCheck(request, response,  model, user ,0,false);
+		writeJson(request, response,jr);
+	}	
+	/**
+	 * 登录检查 账密
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param user
+	 * @param isauto 0/null明文,1密文
+	 * @param isFromRest boolean 是否是从rest过来的(rest不需要session)
+	 * @return
+	 */
+	public Json loginCheck(HttpServletRequest request,HttpServletResponse response,ModelMap model,User user,Integer isauto,boolean isFromRest) {
+		String pwd="";
+		if(StringUtilz.integerNullOr0(isauto)){ //明文
+			pwd=Md5PwdEncoder.encodePassword(user.getPassword());
+
+		}else{ //密文
+			pwd=user.getPassword();
+		}
+		User dbuser=(User)userService.getFirst(null,null,"username=? and password=? ", null, new Object[]{user.getUsername(),pwd});
+		if(dbuser==null){
+			return new Json(false,"账号密码错误！");
+		}
+		//有些参数是通过objx传递的
+		dbuser.setObj1(user.getObj1());
+		dbuser.setObj2(user.getObj2());
+		dbuser.setObj3(user.getObj3());
+		return calcuUserAfterLogin(dbuser, request, response, model,isFromRest);
+	}
+	
+
+	/**
+	 * 登录检查账号之不存创建一个会员，只查账号
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param user 必须：username，非必须：password/111111，最好有：openid
+	 * @param isauto 0/null明文,1密文
+	 * @param isFromRest 是否从rest过来的
+	 * @return
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public Json loginCheckCreateUserMember(HttpServletRequest request,HttpServletResponse response,ModelMap model,User user,Integer isauto,boolean isFromRest) throws BoException, Exception {
+		String pwd=StringUtils.isBlank(user.getPassword())?"111111":user.getPassword();
+		if(StringUtilz.integerNullOr0(isauto)){ //明文
+			pwd=Md5PwdEncoder.encodePassword(pwd);
+
+		}
+		user.setPassword(pwd);
+		User dbuser=(User)userService.getFirst(null,null,"username=?", null, new Object[]{user.getUsername()});
+		if(dbuser==null){
+			dbuser = new User(
+					1, //Integer 状态 default=0  {'0':'正在申请','1':'有效','-1':'申请被拒','-2':'删除'}
+					user.getRoleId(), //Integer 角色 default=0 这里如果改变，权限表也要变化 {'0':'超管','1':'一般管理员','4':'企业会员','5':'个人会员','6':'水站'}
+					user.getUsername(), //String 账号  唯一值 
+					user.getPassword(), //String 密码   
+					user.getNickname(), //String 昵称   
+					null, //Integer 隶属于   
+					user.getOpenid() , //String 微信openid   
+					null
+					);
+			if(user.getRoleId().intValue()==AttrStatic.ROLE_MEMBER){
+				//精简构造 个人会员
+				Member member = new Member(
+						user.getNickname() , //String 呢称   
+						null , //String 头像  600x600 
+						20 , //Integer 年纪 default=20 每年自动加1 
+						0 , //Integer 用户性别 default=0  {'0':'男','1':'女'}
+						0 , //Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+						null , //String 证件号码   
+						user.getNickname() , //String 姓名   
+						user.getUsername() , //String 手机   
+						null , //String 邮编   
+						null , //String 地址   
+						null , //String 电子邮件   
+						null , //String 其它联系人姓名   
+						null , //String 其它联系人手机   
+						null , //Integer 首推荐医生 default=0  
+						0 , //Integer 总处方数量 default=0  
+						0.0 , //Double 总消费金额 default=0.0  
+						0 , //Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+						null
+						);			
+				dbuser.setUserobj(member);
+			}
+			userService.saveCreate(null, new User(), dbuser, null, null, true, true);
+
+		}
+		//有些参数是通过objx传递的
+		dbuser.setObj1(user.getObj1());
+		dbuser.setObj2(user.getObj2());
+		dbuser.setObj3(user.getObj3());
+		return calcuUserAfterLogin(dbuser, request, response, model,isFromRest);
+	}
+	/**
+	 * 登录检查
+	 * @param user
+	 * @param errors
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	public Json loginCheckMd5(User user,HttpServletRequest request,HttpServletResponse response,ModelMap model,boolean isFromRest) {
+		User dbuser=(User)userService.getFirst(null,null,"username=? and password=? ", null, new Object[]{user.getUsername(),Md5PwdEncoder.encodePassword(user.getPassword())});
+		if(dbuser==null){
+			return new Json(false,"账号密码错误！");
+		}
+		return calcuUserAfterLogin(dbuser, request, response, model,isFromRest);
+	}
+	/**
+	 * 登录时，数据库检查后，对USER进行处理，并放入session
+	 * @param dbuser
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	public Json calcuUserAfterLogin(User dbuser,HttpServletRequest request,HttpServletResponse response,ModelMap model,boolean isFromRest) {
+		//医生登录需要判断状态
+		if(dbuser.getRoleId().intValue()==AttrStatic.ROLE_DOCTOR){
+			if(dbuser.getStatus().intValue()!=1){
+				return new Json(false,"系统审核中，请稍候！");
+			}
+		}
+		//在spec中，把会员、管理员等用户对象放了进去
+		try {
+			userService.addObj(null,dbuser);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			logger.error(e1);
+		}
+		if(!isFromRest){
+			//权限列表
+			dbuser.setPmtmap(permitCheckUtils.takeMapByRoleId(dbuser.getRoleId()));
+			if (logger.isDebugEnabled()){
+				for(Entry<String, String> entry:dbuser.getPmtmap().entrySet()){ 
+					logger.debug(entry.getKey()+"--->"+entry.getValue()); 
+				}
+			} 
+			HttpSession session=request.getSession();
+			session.setAttribute(SessionName.user, dbuser);
+			//zres
+			if(dbuser.getRoleId()==0){
+				session.setAttribute(SessionName.ZRES_SESSIONUSERTYPE, "admin");
+				session.setAttribute(SessionName.ZRES_SESSIONUSERID, 0);
+			}else{
+				session.setAttribute(SessionName.ZRES_SESSIONUSERTYPE, "user");
+				session.setAttribute(SessionName.ZRES_SESSIONUSERID, dbuser.getUserId());
+			}
+		}
+		specUserService.updateAfterLogin(dbuser);
+
+		Map<String,Object> ret=new HashMap<String, Object>();
+		ret.put("user",dbuser);
+		return new Json(true,"登录成功！",ret);
+	}	
+	/**
+	 * 退出
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/logout",method=RequestMethod.GET)
+	public String logout(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		request.getSession().removeAttribute(SessionName.user);
+		return loginget(request, response, model, null);
+	}		
+	/**
+	 * 注册GET
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param user 基本上是空的
+	 * @param roleId 角色
+	 * @return
+	 */
+	@RequestMapping(value="/reg",method=RequestMethod.GET)
+	public String reg(HttpServletRequest request,HttpServletResponse response,ModelMap model,User user,Integer roleId) {
+		if(user==null)
+			user=new User();
+		if(roleId!=null){
+			user.setRoleId(roleId);
+		}else{
+			//放个默认值
+			user.setRoleId(AttrStatic.ROLE_MEMBER);
+		}
+		//下面的角色，不允许通过注册页注册
+		if(user.getRoleId().intValue()==AttrStatic.ROLE_ADMIN 
+				|| user.getRoleId().intValue()==AttrStatic.ROLE_CADMIN){
+			return err("系统权限限止此项操作，请联系管理员");
+		}
+		try {
+			userService.addString(null, user);
+		} catch (BoException e) {
+			//e.printStackTrace();
+			logger.error(e);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);
+		}
+		model.addAttribute("user",user);
+		return wm(request,null, "/pub/reg",null,null);
+	}	
+	/**
+	 * 注册提交
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/reg",method=RequestMethod.POST)
+	public void create(@Valid User user,BindingResult errors,ModelMap model,HttpServletRequest request,HttpServletResponse response)  {
+		Json jr=regCreate(user, errors, model, request, response);
+		writeJson(request, response, jr);
+	}
+
+	/**
+	 * 注册用户_检查创建
+	 * @param user
+	 * @param errors
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	public Json regCreate(@Valid User user,BindingResult errors,ModelMap model,HttpServletRequest request,HttpServletResponse response)  {
+		if(errors.hasErrors()) {
+			return new Json(false,"格式错误！",errors.getFieldErrors());
+		}
+		if(null!=userService.getFirst(null, null, "username=?", null, new Object[]{user.getUsername()})){
+			return new Json(false,"用户名已经存在",errors.getFieldErrors());
+		}
+
+		if(user.getRoleId()==null){
+			//放个默认值
+			user.setRoleId(AttrStatic.ROLE_MEMBER);
+		}
+		//下面的角色，不允许通过注册页注册
+		if(user.getRoleId().intValue()==AttrStatic.ROLE_ADMIN 
+				|| user.getRoleId().intValue()==AttrStatic.ROLE_CADMIN){
+			return new Json(false,"系统权限限止此项操作，请联系管理员");
+		}		
+
+		try {
+			userService.saveCreate(null, new User(), user, null, null, true, true);
+			specUserService.createDbAfterUser0(user);
+			//如果需要审核，把下面注释掉
+			specUserService.createDbAfterUser1(user);	
+		} catch (Exception e) {
+			logger.error(e);
+			return new Json(false,"注册失败！");
+		}
+		return new Json(true,"注册成功，其它详细信息请进入后台管理员面修改！",user);
+	}
+
+	/**
+	 * AJAX检查是否已经登录之消费者
+	 * <br>TODO:把流量登记一起做掉
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/islogin")
+	public void islogin(HttpServletRequest request,HttpServletResponse response,HttpSession session,ModelMap model) {
+		if(null==session.getAttribute(SessionName.user)){
+			writeJson(request, response,new Json(false,"未登录"));
+			return;
+		}
+
+		writeJson(request, response,new Json(true,"已登录"));
+	}
+	/**
+	 * 删除用户相关，上线后把mapping注释掉
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param model
+	 * @param username
+	 */
+	@RequestMapping(value="/dddeeellluuu")
+	public void dddeeellluuu(HttpServletRequest request,HttpServletResponse response,HttpSession session,ModelMap model,String u) {
+		User user=(User)userService.getFirst(null, null, "username=?", null, new Object[]{u});
+		if(user==null){
+			writeJson(request, response,new Json(true,"user==null"));
+			return;
+		}
+		String msg="";
+		//会员删除user,member,wxouser,wxr     ...
+		if(user.getRoleId().intValue()==AttrStatic.ROLE_MEMBER){
+			userService.deleteById(null, user.getId());
+			msg+=",user,";
+			memberService.deleteById(null, user.getId());
+			msg+="member,";
+			memberdoctorService.executeHql(null, "delete from Memberdoctor where memberId=?", new Object[]{user.getId()});
+			msg+="Memberdoctor,";
+			Wxouser wxouser=(Wxouser)wxouserService.getFirst(null, null, "userId=?", null, new Object[]{user.getId()});
+			if(wxouser!=null){
+				wxrService.executeHql(null, "delete from Wxr where id=?", new Object[]{wxouser.getId()});
+				msg+="Wxr,";
+				wxrbService.executeHql(null, "delete from Wxrb where openid=?", new Object[]{wxouser.getId()});
+				msg+="Wxrb,";
+				wxouserService.executeHql(null, "delete from Wxouser where userId=?", new Object[]{user.getId()});
+				msg+="Wxouser,";
+			}
+			writeJson(request, response,new Json(true,"会员done"+msg));
+			return;
+		}
+		if(user.getRoleId().intValue()==AttrStatic.ROLE_DOCTOR){
+			userService.deleteById(null, user.getId());
+			doctorService.deleteById(null, user.getId());
+			Wxouser wxouser=(Wxouser)wxouserService.getFirst(null, null, "userId=?", null, new Object[]{user.getId()});
+			wxrService.executeHql(null, "delete from Wxr where id=?", new Object[]{wxouser.getId()});
+			wxouserService.executeHql(null, "delete from Wxouser where userId=?", new Object[]{user.getId()});
+			writeJson(request, response,new Json(true,"会员done"));
+			return;
+		}
+		writeJson(request, response,new Json(true,"不是可删除用户"));
+	}
+	/**
+	 * 删除微信相关，上线后把mapping注释掉
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param model
+	 * @param o
+	 */
+	//@RequestMapping(value="/dddeeelllooo")
+	public void dddeeelllooo(HttpServletRequest request,HttpServletResponse response,HttpSession session,ModelMap model,String o) {
+		Wxouser wxouser=(Wxouser)wxouserService.get(null, o);
+		String msg="done";
+		if(wxouser!=null){
+			wxrService.executeHql(null, "delete from Wxr where id=?", new Object[]{wxouser.getId()});
+			wxouserService.delete(null, wxouser);
+		}else{
+
+		}
+		/*
+		List<WaQrcodeticketScene> list=waQrcodeticketSceneService.listfind(null, null, "actDetail like '%"+o+"%'", null, null);
+		for (WaQrcodeticketScene waQrcodeticketScene : list) {
+			int dirNum = specWxService.dirQrNum(waQrcodeticketScene.getId());
+			boolean deled=fileRepository.deleteFile("/res/img/qrcode/f/"+dirNum+"/"+waQrcodeticketScene.getId()+".JPG");
+			waQrcodeticketSceneService.delete(null, waQrcodeticketScene);
+			msg+=",删除二维码:"+dirNum+"("+deled+")";
+		}
+		 */
+		writeJson(request, response,new Json(true,msg));
+		return;
+
+	}
+}

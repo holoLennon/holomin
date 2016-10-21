@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#include "/pages/global/jscss.html"/>
+</head>
+<script type="text/javascript">
+	var thiswin=this;
+	var dataGrid;
+	$(function() {
+		dataGrid = $('#dataGrid').datagrid({
+			url : '${base}/user/Doctor/grid',
+			methord: "get",
+			queryParams : {queryhq:$.trim($('#queryhq').val())},
+			fit : true,
+			fitColumns : true,
+			border : false,
+			pagination : true,
+			idField : 'id',
+			pageSize : 30,
+			pageList : [ 10, 20, 30, 50,100],
+			sortName : 'id',
+			sortOrder : 'desc',
+			checkOnSelect : false,
+			selectOnCheck : false,
+			nowrap : false,
+			striped : true,
+			rownumbers : true,
+			singleSelect : true,
+ 			
+           frozenColumns:[[   
+                    {field:'ck',checkbox:true}   
+            ]],	
+			columns : [ [
+	 	<@z.pmt key="52.Doctor.id">
+		{field : 'id',title : '用户ID',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.productchannelId">
+		{field : 'productchannelIdStringid',title : '医科目录',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.age">
+		{field : 'age',title : '年纪',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.img1">
+		{field : 'img1',title : '头像',width : 100 ,formatter: function(value,row,index){return "<img src='"+value+"' style='height:50px;' />";}}, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.name">
+		{field : 'name',title : '姓名',width : 150  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.hospitalId">
+		{field : 'hospitalIdStringid',title : '所在医院',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.dlevel">
+		{field : 'dlevelString',title : '职称',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.usersex">
+		{field : 'usersexString',title : '用户性别',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.idtype">
+		{field : 'idtypeString',title : '证件类型',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.idnum">
+		{field : 'idnum',title : '证件号码',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.zip">
+		{field : 'zip',title : '邮编',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.addr">
+		{field : 'addr',title : '地址',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.company">
+		{field : 'company',title : '工作单位',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.mobile">
+		{field : 'mobile',title : '手机',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.tele">
+		{field : 'tele',title : '座机',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.email">
+		{field : 'email',title : '电子邮件',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.itype">
+		{field : 'itypeString',title : '医生类型',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.countPrescription">
+		{field : 'countPrescription',title : '总处方数量',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.countOrderr">
+		{field : 'countOrderr',title : '总开方成交金额',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.countFirst">
+		{field : 'countFirst',title : '总首推消费金额',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.qrimg">
+		{field : 'qrimg',title : '二维码',width : 100 ,formatter: function(value,row,index){return "<img src='"+value+"' style='height:50px;' />";}}, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.sellerId">
+		{field : 'sellerIdStringid',title : '所属业务员',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.statusRelation">
+		{field : 'statusRelationString',title : '是否有新医患关系',width : 100 }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.imgqa">
+		{field : 'imgqa',title : '资格证照片',width : 100 ,formatter: function(value,row,index){return "<img src='"+value+"' style='height:50px;' />";}}, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.cidgt">
+		{field : 'cidgt',title : '个推cid',width : 100  }, 
+	</@z.pmt>
+	 	<@z.pmt key="52.Doctor.ilastdev">
+		{field : 'ilastdevString',title : '上个设备',width : 100 }, 
+	</@z.pmt>
+	 			{
+				field : 'action',
+				title : '',
+				width : 0
+			} ] ],
+			toolbar : '#toolbar',
+			onLoadSuccess : function() {
+				$('#searchForm table').show();
+				parent.$.messager.progress('close');
+				$(this).datagrid('tooltip');
+				var retData=$(this).datagrid('getData');
+				if(retData && retData['obj1'])
+					$('#queryhq').val(retData['obj1']);
+			},
+			onRowContextMenu : function(e, rowIndex, rowData) {
+				e.preventDefault();
+				$(this).datagrid('unselectAll');
+				$(this).datagrid('selectRow', rowIndex);
+			}
+		});
+	});
+	function loadData(){
+		dataGrid.datagrid('reload');
+	}
+
+	function searchFun(value,name) {
+		var searchlike=" 0=1 ";
+		queryByHql("("+searchlike+")");
+	}
+
+</script>
+<body class="easyui-layout">
+<div data-options="region:'north',title:'[医生会员]搜索查询',split:true,iconCls:'icon-search'" style="height:100px;">
+<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'brick_delete',plain:true" onclick="cleanSearchFun();">清空查询</a>
+<input id="isearch" class="easyui-searchbox" style="width:300px" data-options="searcher:searchFun,prompt:'请输入搜索值'"></input>
+<br/>
+<@p.searchselecttree label="db.Doctor.productchannelId" nameid="productchannelId" url="${base}/user/Productchannel/tree.html" />
+<@p.searchselect label="db.Doctor.dlevel" nameid="dlevel"  list=doctor.dlevelMap headerKey="" headerValue="全部" />
+<@p.searchselect label="db.Doctor.usersex" nameid="usersex"  list=doctor.usersexMap headerKey="" headerValue="全部" />
+<@p.searchselect label="db.Doctor.idtype" nameid="idtype"  list=doctor.idtypeMap headerKey="" headerValue="全部" />
+<@p.searchselect label="db.Doctor.itype" nameid="itype"  list=doctor.itypeMap headerKey="" headerValue="全部" />
+<@p.searchselect label="db.Doctor.statusRelation" nameid="statusRelation"  list=doctor.statusRelationMap headerKey="" headerValue="全部" />
+<@p.searchselect label="db.Doctor.ilastdev" nameid="ilastdev"  list=doctor.ilastdevMap headerKey="" headerValue="全部" />
+</div>
+<div data-options="region:'center'" style="padding:10px; text-align:left;">
+	<table id="dataGrid" data-options="border:false,fit:true,fitColumns:true,singleSelect:true"></table>
+</div>
+<div id="toolbar" style="display: none;">
+<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'help'" onclick="$('#wHelp').window('open');" >帮助</a>
+
+<@z.pmt key="0.Doctor.edit">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_edit'" onclick="javascript:openW2WithRow('${base}/user/Doctor/edit.html?id=','修改');" >修改</a>
+</@z.pmt>
+
+<@z.pmt key="0.Doctor.del">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'arrow_accept'" onclick="delCn('Doctor');" >删除</a>
+</@z.pmt>
+
+<@z.pmt key="0.Doctor.show">
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_link'" onclick="javascript:openW2WithRow('${base}/user/Doctor/show.html?id=','查看');" >查看</a>
+</@z.pmt>
+<@z.pmt key="0.Doctor.edit">
+   <a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'book_link'" onclick="javascript:selectedDo('${base}/user/Doctor/qr.html',false);" >生成二维码</a>
+</@z.pmt>
+</div>
+<input id="queryhq" name="queryhq" type="hidden" value="${queryhq}"/>
+<input id="newobj" name="newobj" type="hidden" value="${newobj}"/>
+<div id="wHelp" name="wHelp" class="easyui-window" data-options="closed:true,modal:true,title:'帮助'" style="width:600px;height:400px;">医生会员-这里放表的说明<br/></div>
+<div id="w2" name="w2" class="easyui-window" data-options="closed:true,modal:true,title:'窗口'" style="width:600px;height:400px;"></div>
+<div id="w1" name="w1" class="easyui-window" data-options="closed:true,modal:true,title:'窗口'" style="width:700px;height:500px;">
+	<iframe id="show_w1" name="show_w1" frameborder="0" style="border: 0; width: 100%; height: 98%;"></iframe>
+</div>
+
+</body>
+</html>

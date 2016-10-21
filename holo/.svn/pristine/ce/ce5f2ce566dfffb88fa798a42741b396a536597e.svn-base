@@ -1,0 +1,51 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="商品列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Product/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>序号ID:{{obj.id}}</span>
+				<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>
+				<span class="item-note ago" am-time-ago="obj.gmtModified"></span>
+				<span class="item-note ago" am-time-ago="obj.gmtRelease"></span>
+				<span>状态:{{obj.statusApplyPassRefuseString}}</span>
+				<span>是否处方药:{{obj.statusRecipeString}}</span>
+				<span>使用方法:{{obj.statusUsedString}}</span>
+				<span>用法用量:{{obj.usemount}}</span>
+				<span>商品目录:{{obj.productchannelIdString}}</span>
+				<span>厂商产地:{{obj.manufacturerIdString}}</span>
+				<span>排列顺序:{{obj.priority}}</span>
+				<span>商品编号:{{obj.productno}}</span>
+				<span>商品名:{{obj.title}}</span>
+				<span>通用名:{{obj.commonname}}</span>
+				<span>批准文号:{{obj.allowno}}</span>
+				<span>规格型号:{{obj.productstyle}}</span>
+				<span>图1:{{obj.img1}}</span>
+				<span>图2:{{obj.img2}}</span>
+				<span>图3:{{obj.img3}}</span>
+				<span>图4:{{obj.img4}}</span>
+				<span>图5:{{obj.img5}}</span>
+				<span>图6:{{obj.img6}}</span>
+				<span>条码:{{obj.imgbarcode}}</span>
+				<span>点击次数:{{obj.hittimes}}</span>
+				<span>购买次数:{{obj.buytimes}}</span>
+				<span>商品单位:{{obj.punitString}}</span>
+				<span>市场价:{{obj.marketprice}}</span>
+				<span>优惠价:{{obj.price}}</span>
+				<span>运费:{{obj.carriagePrice}}</span>
+				<span>库存:{{obj.store}}</span>
+				<span>功能主治:{{obj.intro}}</span>
+				<span>生成地址:{{obj.genurl}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

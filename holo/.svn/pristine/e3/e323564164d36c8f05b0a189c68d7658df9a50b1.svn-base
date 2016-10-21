@@ -1,0 +1,554 @@
+package com.zmax.yijian.web.controller.restful.spec;
+//import com.google.appengine.repackaged.org.joda.time.LocalDateTime;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSON;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.file.FileNameUtils;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.yijian.web.controller.restful.entity.AngularFileUpEnt;
+import com.zmax.yijian.web.utils.SpringInit;
+import com.zmax.zbabi.files.FileRepository;
+
+
+public class FileUploadServlet extends HttpServlet {
+	private static final long serialVersionUID = -8244073279641189889L;
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(FileUploadServlet.class);
+
+
+	/**key=ipAddress + req.getParameter("name") */
+	static Map<String, AngularFileUpEnt> sizeMap2 = new ConcurrentHashMap<>();
+	int counter;
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		service2(req, res);
+	}
+
+    static Map<String, SizeEntry> sizeMap = new ConcurrentHashMap<>();
+    class SizeEntry {
+        public int size;
+        public Date time;
+    }
+    protected void service3(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        try {
+            clearOldValuesInSizeMap();
+
+            String ipAddress = req.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = req.getRemoteAddr();
+            }
+            if (req.getMethod().equalsIgnoreCase("GET")) {
+                if (req.getParameter("restart") != null) {
+                    sizeMap.remove(ipAddress + req.getParameter("name"));
+                }
+                SizeEntry entry = sizeMap.get(ipAddress + req.getParameter("name"));
+                res.getWriter().write("{\"size\":" + (entry == null ? 0 : entry.size) + "}");
+                res.setContentType("application/json");
+                return;
+            }
+            req.setCharacterEncoding("utf-8");
+            if (!"OPTIONS".equalsIgnoreCase(req.getMethod()) && req.getParameter("errorCode") != null) {
+//				res.getWriter().write(req.getParameter("errorMessage"));
+//				res.getWriter().flush();
+                res.sendError(Integer.parseInt(req.getParameter("errorCode")), req.getParameter("errorMessage"));
+                return;
+            }
+            StringBuilder sb = new StringBuilder("{\"result\": [");
+
+            if (req.getHeader("Content-Type") != null
+                    && req.getHeader("Content-Type").startsWith("multipart/form-data")) {
+				putContent3(ipAddress, sb, req);
+				if (logger.isDebugEnabled())
+					logger.debug("Content-Type !!!!!!!!!!!!!!!!!= null sb.="+sb.toString());
+            } else {
+				String str="{\"size\":\"" + size(ipAddress, req.getInputStream()) + "\"}";
+				if (logger.isDebugEnabled())
+					logger.debug("Content-Type == null sb.append:"+str);
+                sb.append(str);
+            }
+
+            sb.append("]");
+            sb.append(", \"requestHeaders\": {");
+            @SuppressWarnings("unchecked")
+            Enumeration<String> headerNames = req.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String header = headerNames.nextElement();
+                sb.append("\"").append(header).append("\":\"").append(req.getHeader(header)).append("\"");
+                if (headerNames.hasMoreElements()) {
+                    sb.append(",");
+                }
+            }
+            sb.append("}}");
+            res.setCharacterEncoding("utf-8");
+            res.getWriter().write(sb.toString());
+        } catch (Exception ex) {
+            throw new ServletException(ex);
+        }
+    }
+    private void putContent3(String ipAddress,StringBuilder sb,HttpServletRequest req) throws FileUploadException, IOException{
+        ServletFileUpload upload = new ServletFileUpload();
+
+        FileItemIterator iterator = upload.getItemIterator(req);
+
+        while (iterator.hasNext()) {
+            FileItemStream item = iterator.next();
+            sb.append("{");
+            sb.append("\"fieldName\":\"").append(item.getFieldName()).append("\",");
+            if (item.getName() != null) {
+            	sb.append("\"name\":\"").append(item.getName()).append("\",");
+                sb.append("\"size\":\"").append(size(ipAddress + item.getName(), item.openStream())).append("\"");
+            } else {
+                sb.append("\"value\":\"").append(read(item.openStream()).replace("\"", "'")).append("\"");
+            }
+            sb.append("}");
+            if (iterator.hasNext()) {
+                sb.append(",");
+            }
+        }
+    }
+    private void clearOldValuesInSizeMap() {
+        if (counter++ == 100) {
+            for (Map.Entry<String, SizeEntry> entry : sizeMap.entrySet()) {
+                if (entry.getValue().time.before(new Date())) {
+                    sizeMap.remove(entry.getKey());
+                }
+            }
+            counter = 0;
+        }
+    }
+
+    protected int size(String key, InputStream stream) {
+        int length = sizeMap.get(key) == null ? 0 : sizeMap.get(key).size;
+        int size=0;
+        try {
+            byte[] buffer = new byte[200000];
+            while ((size = stream.read(buffer)) != -1) {
+                length += size;
+                SizeEntry entry = new SizeEntry();
+                entry.size = length;
+                entry.time = new Date();
+                sizeMap.put(key, entry);
+                
+//				 for (int i = 0; i < size; i++) {
+//				 System.out.print((char) buffer[i]);
+//				 }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (logger.isDebugEnabled())
+			logger.debug("length=" + length);
+        if (logger.isDebugEnabled())
+			logger.debug("size=" + size);
+
+        return length;
+
+    }   
+    
+    
+	//@Override
+	protected void service2(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		try {
+			clearOldValuesInSizeMap2();
+
+			String ipAddress = req.getHeader("X-FORWARDED-FOR");
+			if (ipAddress == null) {
+				ipAddress = req.getRemoteAddr();
+			}
+			AngularFileUpEnt entry = sizeMap2.get(ipAddress + req.getParameter("name"));
+			if(entry==null){
+				entry=new AngularFileUpEnt();
+				sizeMap2.put(ipAddress + req.getParameter("name"), entry);
+			}
+
+			if (req.getMethod().equalsIgnoreCase("GET")) {
+				if (req.getParameter("restart") != null) {
+					sizeMap2.remove(ipAddress + req.getParameter("name"));
+				}                
+				res.getWriter().write("{\"size\":" + (entry == null ? 0 : entry.getSize()) + "}");
+				res.setContentType("application/json");
+				return;
+			}
+			req.setCharacterEncoding("utf-8");
+			if (!"OPTIONS".equalsIgnoreCase(req.getMethod()) && req.getParameter("errorCode") != null) {
+				//				res.getWriter().write(req.getParameter("errorMessage"));
+				//				res.getWriter().flush();
+				res.sendError(Integer.parseInt(req.getParameter("errorCode")), req.getParameter("errorMessage"));
+				return;
+			}
+
+
+			StringBuilder sb = new StringBuilder("");
+
+			if (req.getHeader("Content-Type") != null
+					&& req.getHeader("Content-Type").startsWith("multipart/form-data")) {
+				//putContent(entry, req);
+				//putContent3(ipAddress, sb, req);
+				sb = new StringBuilder("{\"result\": [");
+				putContent4(entry, sb, req);
+				sb.append("]}");
+
+			} else {
+				sb = new StringBuilder("{\"result\": [{\"size\":0}]}");
+				if (logger.isDebugEnabled())
+					logger.debug("Content-Type == null");
+				putBuff(entry, req.getInputStream(),false);
+			}
+
+			
+			res.setCharacterEncoding("utf-8");
+			res.getWriter().write(sb.toString());
+			
+			if (logger.isDebugEnabled())
+				logger.debug("entry=" + entry.toString());		
+			if(entry.isFinished()){
+				if (logger.isDebugEnabled())
+					logger.debug("isFinished=" + entry.toString());		
+				writeDisk(entry);
+			}
+		} catch (Exception ex) {
+			throw new ServletException(ex);
+		}
+	}
+	private void writeDisk(AngularFileUpEnt entry){
+		User user=new User(0);
+		String sdest=null;
+		sdest=MessageFormat.format(Conf.fileUuploadPath,user.getId(),new SimpleDateFormat("yyyyMM").format(new Date()))
+				+"/"+entry.getFilename();
+		// ex./zweb//userfiles/users/2/201409/20140931235959abcd.png
+		sdest=FileNameUtils.generateRandomUrlYMdHms(sdest);
+		FileRepository fileRepository=(FileRepository)SpringInit.getCtx().getBean("fileRepository");
+		File dest=fileRepository.retrieve(sdest);
+		if(dest.exists())dest.delete();
+
+		//目标目录的父目录，不存在则创建
+		if (!dest.getParentFile().exists()) 
+			dest.getParentFile().mkdirs();
+		try {
+			for (byte[] data : entry.getList()) {
+				FileUtils.writeByteArrayToFile(dest, data, true);	
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
+	}
+	private void clearOldValuesInSizeMap2() {
+		if (counter++ == 100) {
+			for (Map.Entry<String, AngularFileUpEnt> entry : sizeMap2.entrySet()) {
+				//删除1小时前的数据
+				if (new Date().getTime()-entry.getValue().getGmtCreate().getTime()>60*60*1000) {
+					if (logger.isDebugEnabled())
+						logger.debug("sizeMap.remove:"+entry.getKey());
+					sizeMap2.remove(entry.getKey());
+				}
+			}
+			counter = 0;
+		}
+	}
+    private void putContent4(AngularFileUpEnt entry,StringBuilder sb,HttpServletRequest req) throws FileUploadException, IOException{
+        ServletFileUpload upload = new ServletFileUpload();
+
+        FileItemIterator iterator = upload.getItemIterator(req);
+
+        while (iterator.hasNext()) {
+            FileItemStream item = iterator.next();
+            
+			String fieldName=item.getFieldName();
+			String name=item.getName();
+			String cvalue="";
+            
+            sb.append("{");
+            sb.append("\"fieldName\":\"").append(fieldName).append("\",");
+            if (name != null) {
+            	entry.setFilename(name);
+            	int size=putBuff(entry, item.openStream(), true);
+            	sb.append("\"name\":\"").append(name).append("\",");
+            	sb.append("\"size\":\"").append(size).append("\"");
+                //sb.append("\"size\":\"").append(size4(entry, item.openStream())).append("\"");
+                //sb.append("\"size\":\"").append(size("aaa", item.openStream())).append("\"");
+            } else {
+            	cvalue=read(item.openStream()).replace("\"", "'");
+                sb.append("\"value\":\"").append(cvalue).append("\"");
+            }
+            sb.append("}");
+            if (iterator.hasNext()) {
+                sb.append(",");
+            }
+            
+			if(fieldName.equals("_chunkSize")){
+				entry.set_chunkSize(valueOfStr(cvalue));
+			}
+			if(fieldName.equals("_currentChunkSize")){
+				entry.set_currentChunkSize(valueOfStr(cvalue));
+			}
+			if(fieldName.equals("_chunkNumber")){
+				entry.set_chunkNumber(valueOfStr(cvalue));
+			}                    
+			if(fieldName.equals("_totalSize")){
+				entry.set_totalSize(valueOfStr(cvalue));
+			}   
+			
+        }
+    }
+
+	private void putContent(AngularFileUpEnt entry, HttpServletRequest req) throws FileUploadException, IOException{
+		/*
+        Content-Disposition: form-data; name="_chunkSize"
+        100000
+        Content-Disposition: form-data; name="_currentChunkSize"
+        79812
+        Content-Disposition: form-data; name="_chunkNumber"
+        11
+        Content-Disposition: form-data; name="_totalSize"
+        1179812
+        Content-Disposition: form-data; name="file"; filename="56e3fe5107ac7.jpg"
+        Content-Type: application/octet-stream
+        	图片
+		 */
+		ServletFileUpload upload = new ServletFileUpload();
+
+		FileItemIterator iterator = upload.getItemIterator(req);
+
+		while (iterator.hasNext()) {
+			FileItemStream item = iterator.next();
+
+			String fieldName=item.getFieldName();
+			String name=item.getName();
+			String cvalue="";
+			if(name==null){
+				cvalue=read(item.openStream());
+			}else{
+				putBuff(entry, req.getInputStream(),true);
+				if(entry.isFinished()){
+					if (logger.isDebugEnabled())
+						logger.debug("isFinished ,name=" + name);
+
+				}
+			}
+			if(fieldName.equals("_chunkSize")){
+				entry.set_chunkSize(valueOfStr(cvalue));
+			}
+			if(fieldName.equals("_currentChunkSize")){
+				entry.set_currentChunkSize(valueOfStr(cvalue));
+			}
+			if(fieldName.equals("_chunkNumber")){
+				entry.set_chunkNumber(valueOfStr(cvalue));
+			}                    
+			if(fieldName.equals("_totalSize")){
+				entry.set_totalSize(valueOfStr(cvalue));
+			}                   
+
+		}
+	}
+    protected int size4(AngularFileUpEnt entry, InputStream stream) {
+    	int length=0;
+    	int size=0;
+        byte[] buffer = new byte[200000];
+        try {
+        	
+            
+            while ((size = stream.read(buffer)) != -1) {
+                length += size;
+//				 for (int i = 0; i < size; i++) {
+//				 System.out.print((char) buffer[i]);
+//				 }
+            }
+            //entry.getList().add(buffer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        entry.setSize(entry.getSize()+length);
+        if (logger.isDebugEnabled())
+			logger.debug("length=" + length);
+        return length;
+    }
+	protected int putBuff(AngularFileUpEnt entry, InputStream stream,boolean isAdd) {
+    	int length=0;
+    	int size=0;
+        byte[] buffer = new byte[200000];
+        try {
+        	
+            
+            while ((size = stream.read(buffer)) != -1) {
+                length += size;
+//				 for (int i = 0; i < size; i++) {
+//				 System.out.print((char) buffer[i]);
+//				 }
+            }
+            //
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        entry.setSize(entry.getSize()+length);
+        byte[] buf1=new byte[length];
+        System.arraycopy(buffer, 0, buf1, 0, length);
+        if(isAdd && length>0)
+        	entry.getList().add(buf1);
+        if (logger.isDebugEnabled())
+			logger.debug("length=" + length);
+        return length;
+	}
+
+	protected String read(InputStream stream) {
+		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		try {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				//ignore
+			}
+		}
+		return sb.toString();
+	}
+	private int valueOfStr(String str){
+		if(StringUtils.isBlank(str))
+			return 0;
+		try {
+			return Integer.valueOf(str);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			return 0;
+		}
+	}
+
+	//@Override
+	protected void service1(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		try {
+			Json json=new Json(true);
+			if (req.getMethod().equalsIgnoreCase("GET")) {
+				res.getWriter().write("{\"size\":0}");
+				res.setContentType("application/json");
+				return;
+			}
+			req.setCharacterEncoding("utf-8");
+			if (!"OPTIONS".equalsIgnoreCase(req.getMethod()) && req.getParameter("errorCode") != null) {
+				//				res.getWriter().write(req.getParameter("errorMessage"));
+				//				res.getWriter().flush();
+				res.sendError(Integer.parseInt(req.getParameter("errorCode")), req.getParameter("errorMessage"));
+				return;
+			}
+
+			String list="";
+			if (req.getHeader("Content-Type") != null
+					&& req.getHeader("Content-Type").startsWith("multipart/form-data")) {
+				List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(req); 
+
+				for (FileItem item : items) {
+					if (item.isFormField()) {
+						//处理表单内容 ..
+					} else {
+						//处理上传的文件
+						String fileName=storeIOcFileItem(req, item, 0);
+						if(StringUtils.isBlank(list))
+							list+=fileName;
+						else
+							list+=","+fileName;
+					}
+				}
+				if (logger.isDebugEnabled())
+					logger.debug("uploadFile,fileName=" + list);
+				json=new Json(true,list);
+			} else {
+
+			}
+
+
+			res.setCharacterEncoding("utf-8");
+			res.getWriter().write(JSON.toJSONString(json));
+		} catch (Exception ex) {
+			throw new ServletException(ex);
+		}
+	}
+
+
+
+	/**
+	 * 接受图片，保存，并返回url文件名
+	 * @param request
+	 * @param file
+	 * @return
+	 */
+	private String storeIOcFileItem(HttpServletRequest request, FileItem item, Integer act) {
+		User user=new User(0);
+		return userFiles(user, item);
+
+	}
+	/**
+	 * 根据用户+图片保存，并返回
+	 * @param user
+	 * @param item
+	 * @return
+	 */
+	private String userFiles(User user,FileItem item){
+		// 此时的文件名包含了完整的路径，得注意加工一下  
+		String filename = item.getName();
+		logger.info("完整的文件名：" + filename);
+		//System.out.println("完整的文件名：" + filename);  
+		int index = filename.lastIndexOf("\\");  
+		filename = filename.substring(index + 1, filename.length());
+
+		// ex./zweb//userfiles/users/2/201409/aaa.png
+		String sdest=null;
+		sdest=MessageFormat.format(Conf.fileUuploadPath,user.getId(),new SimpleDateFormat("yyyyMM").format(new Date()))
+				+"/"+filename;
+		// ex./zweb//userfiles/users/2/201409/20140931235959abcd.png
+		sdest=FileNameUtils.generateRandomUrlYMdHms(sdest);
+		FileRepository fileRepository=(FileRepository)SpringInit.getCtx().getBean("fileRepository");
+		File dest=fileRepository.retrieve(sdest);
+		if(dest.exists())dest.delete();
+
+		//目标目录的父目录，不存在则创建
+		if (!dest.getParentFile().exists()) 
+			dest.getParentFile().mkdirs();
+		try {
+			item.write(dest);  
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return Conf.base+sdest;	
+	}
+
+}
+
+

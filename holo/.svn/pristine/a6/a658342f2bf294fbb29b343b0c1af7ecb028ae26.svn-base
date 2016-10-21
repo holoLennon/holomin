@@ -1,0 +1,182 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Product.id">
+		<tr><th>序号ID</th><td>
+		${product.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${product.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.gmtModified">
+		<tr><th>修改时间</th><td>
+		${product.gmtModifiedString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.gmtRelease">
+		<tr><th>发布时间</th><td>
+		${product.gmtReleaseString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.statusApplyPassRefuse">
+		<tr><th>状态</th><td>
+		${product.statusApplyPassRefuseString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.statusRecipe">
+		<tr><th>是否处方药</th><td>
+		${product.statusRecipeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.statusUsed">
+		<tr><th>使用方法</th><td>
+		${product.statusUsedString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.usemount">
+		<tr><th>用法用量</th><td>
+		${product.usemount}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.productchannelId">
+		<tr><th>商品目录</th><td>
+		${product.productchannelIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.manufacturerId">
+		<tr><th>厂商产地</th><td>
+		${product.manufacturerIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.priority">
+		<tr><th>排列顺序</th><td>
+		${product.priority}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.productno">
+		<tr><th>商品编号</th><td>
+		${product.productno}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.title">
+		<tr><th>商品名</th><td>
+		${product.title}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.commonname">
+		<tr><th>通用名</th><td>
+		${product.commonname}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.allowno">
+		<tr><th>批准文号</th><td>
+		${product.allowno}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.productstyle">
+		<tr><th>规格型号</th><td>
+		${product.productstyle}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img1">
+		<tr><th>图1</th><td>
+		${product.img1}
+		<br/><img src="${product.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img2">
+		<tr><th>图2</th><td>
+		${product.img2}
+		<br/><img src="${product.img2}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img3">
+		<tr><th>图3</th><td>
+		${product.img3}
+		<br/><img src="${product.img3}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img4">
+		<tr><th>图4</th><td>
+		${product.img4}
+		<br/><img src="${product.img4}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img5">
+		<tr><th>图5</th><td>
+		${product.img5}
+		<br/><img src="${product.img5}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.img6">
+		<tr><th>图6</th><td>
+		${product.img6}
+		<br/><img src="${product.img6}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.imgbarcode">
+		<tr><th>条码</th><td>
+		${product.imgbarcode}
+		<br/><img src="${product.imgbarcode}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.hittimes">
+		<tr><th>点击次数</th><td>
+		${product.hittimes}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.buytimes">
+		<tr><th>购买次数</th><td>
+		${product.buytimes}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.punit">
+		<tr><th>商品单位</th><td>
+		${product.punitString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.marketprice">
+		<tr><th>市场价</th><td>
+		${product.marketprice}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.price">
+		<tr><th>优惠价</th><td>
+		${product.price}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.carriagePrice">
+		<tr><th>运费</th><td>
+		${product.carriagePrice}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.store">
+		<tr><th>库存</th><td>
+		${product.store}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.intro">
+		<tr><th>功能主治</th><td>
+		${product.intro}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Product.genurl">
+		<tr><th>生成地址</th><td>
+		<a href="${product.genurl}" target="_blank">${product.genurl}</a>
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

@@ -1,0 +1,184 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.Myiso;
+import com.zmax.yijian.web.utils.SpringInit;
+import com.zmax.conf.AttrStatic;
+import com.zmax.utils.string.JsonUtil;
+/**
+ * 一些HashMap集合的单例，来自全站Iso表加myiso表
+ * @author zmax
+ *
+ */
+public class IsoInstance {
+
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(IsoInstance.class);
+	private static IsoInstance instance = null;   
+	//单例
+	public static IsoInstance getInstance(){   
+		if(null == instance ) {
+			synchronized(IsoInstance.class){ 
+				if(null == instance) 
+					instance = new IsoInstance(); 
+			} 
+		} 
+		return instance;
+	}
+	/**Map[String,Map[String,String]]版配置列表*/
+	private Map<String,Map<String,String>> mymap=new HashMap<String, Map<String,String>>();
+	/**Map[String,List[Myiso]]版配置列表*/
+	private Map<String,List<Myiso>> mymap2=new HashMap<String, List<Myiso>>();
+	//初始化
+	private IsoInstance(){
+		init();
+	}
+	public Map<String, Map<String, String>> getMymap() {
+		return mymap;
+	}
+	public void setMymap(Map<String, Map<String, String>> mymap) {
+		this.mymap = mymap;
+	}  
+	/**
+	 * 初始化
+	 */
+	public void init(){
+		//MyMap.initMap(mymap);
+		//从数据库中获取配置列表
+		//如果是json，则将cvalue转换为map1，=>map<ckey,map1>
+		//如果不是json，则将ckey[],cvalue[]转换为map1<ckey,cvalue>，=>map<ctype,map1>
+		//增加MapDb
+		mymap.putAll(MapDb.getInstance().mymap);
+		//增加MapSpec
+		//mymap.putAll(MapSpec.getInstance().mymap);
+		//增加Conf
+		mymap.putAll(AttrStatic.getMap());
+		MyisoService myisoService=(MyisoService)SpringInit.getCtx().getBean("myisoService");
+		
+		List<Myiso> list=myisoService.listAll();
+		for (Myiso myiso : list) {
+			String key=null;
+			Map<String, String> value=null;
+			key=myiso.getCkey();
+			value=JsonUtil.getMapFromJson(myiso.getCvalue());
+			if(StringUtils.isNotBlank(key)&&value!=null)
+				mymap.put(key,value);
+		}
+		genList();
+		logger.info("初始化 iso.size="+mymap.size());
+	}
+	/**
+	 * 根据KEY获取整个map
+	 * @param key
+	 * @return
+	 */
+	public Map<String, String> getMap(String key) {
+		Map<String, String> ret=mymap.get(key);
+		if(ret==null)
+			return new HashMap<String, String>();
+		return ret;
+	}
+	/**
+	 * 根据key获取map1,再从map1中根据key1获取value
+	 * @param key
+	 * @param key1
+	 * @return
+	 */
+	public String getMapString(String key,String key1){
+		return getMap(key).get(key1);
+	}
+	/**
+	 * 根据key获取list
+	 * @param key
+	 * @return
+	 */
+	public List<Myiso> getList(String key) {
+		List<Myiso> ret=mymap2.get(key);
+		if(ret==null)
+			return new ArrayList<Myiso>();
+		return ret;
+	}
+	
+	/**
+	 * 生成mymap2
+	 */
+	private void genList(){
+		mymap2.clear();
+		Iterator<Entry<String,Map<String,String>>> iter = mymap.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String,Map<String,String>> entry = (Entry<String,Map<String,String>>) iter.next();
+			String key = entry.getKey();
+			Map<String,String> val = entry.getValue();
+			List<Myiso> list=map2list(val);
+			mymap2.put(key, list);
+		}		
+	}
+	/**
+	 * map[String,String]转list[Myiso]
+	 * @param val
+	 * @return
+	 */
+	private List<Myiso> map2list(Map<String,String> map){
+		List<Myiso> list=new ArrayList<Myiso>();
+		Iterator<Entry<String,String>> iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String,String> entry = (Entry<String,String>) iter.next();
+			String key = entry.getKey();
+			String val = entry.getValue();
+			Myiso myiso=new Myiso();
+			myiso.setCkey(key);
+			myiso.setCvalue(val);
+			list.add(myiso);
+		}
+		return list;
+	}
+	
+	/**
+	 * 从整个列表中找出相同ctype的map
+	 * @param list
+	 * @param ctype
+	 * @return
+	 */
+	private Map<String, String> getMapFromList(List<Myiso> list,String ctype) {
+		Map<String, String> map=new HashMap<String, String>();
+		for (Myiso myiso : list) {
+			String key=null;
+			String value=null;
+			if(ctype.equals(myiso.getCtype())){
+				key=myiso.getCkey();
+				value=myiso.getCvalue();
+				if(StringUtils.isNotBlank(key)&&StringUtils.isNotBlank(value))
+					map.put(key,value);
+			}
+		}
+		return map;
+	}
+	/**
+	 * 从整个列表中找出相同ctype的list
+	 * @param list
+	 * @param ctype
+	 * @return
+	 */
+	private List<Myiso> getListFromList(List<Myiso> list,String ctype) {
+		List<Myiso> list1=new ArrayList<Myiso>();
+		for (Myiso myiso : list) {
+			String key=null;
+			String value=null;
+			if(ctype.equals(myiso.getCtype())){
+					list1.add(myiso);
+			}
+		}
+		return list1;
+	}
+
+}

@@ -1,0 +1,152 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecUserService;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.*;
+import com.zmax.yijian.common.utils.MyUtils;
+
+import com.zmax.conf.SessionName;
+import com.zmax.exception.*;
+import com.zmax.utils.beans.Sele;
+import com.zmax.utils.beans.StrObj;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.utils.string.Md5PwdEncoder;
+import com.zmax.utils.tree.TreeNode;
+import com.zmax.utils.tree.TreeNodeUtils;
+import com.zmax.utils.page.Pagination;
+
+
+
+@Component
+public class CommonzSvrUitls {
+	static int LISTMAX=1000;
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Autowired
+	PermitCheckUtils permitCheckUtils;
+	
+	public CommonzSvrUitls(){
+
+	}
+	
+	/**
+	 * new Post写表前
+	 * @param oldobj 老对象，session中或db中的对象
+	 * @param obj 目标及返回对象
+	 * @param className
+	 * @param sessionUser
+	 * @throws Exception
+	 */
+	public void createBefore(Object oldobj,Object obj,String className,User sessionUser) throws Exception{
+		if(obj==null)return;
+		String key=null;
+		Object newdata=null;
+		key="gmtCreate";
+		ClassUtils.setFieldValue(obj, key, new Date());
+		ClassUtils.setFieldValue(oldobj, key, new Date());
+		key="gmtModified";
+		ClassUtils.setFieldValue(obj, key, new Date());
+		ClassUtils.setFieldValue(oldobj, key, new Date());
+	
+		key="password";
+		newdata=ClassUtils.getFieldValue(obj, key);
+		if(newdata!=null){
+			ClassUtils.setFieldValue(obj, key, Md5PwdEncoder.encodePassword(newdata.toString()));
+			ClassUtils.setFieldValue(oldobj, key, Md5PwdEncoder.encodePassword(newdata.toString()));
+		}
+
+		if(sessionUser==null)
+			return;
+		//计算41.
+		permitCheckUtils.createWithDefaultValue(className, sessionUser,oldobj, obj);
+	}
+
+	/**
+	 * Edit Post，写库前
+	 * @param oldobj 老对象从内存中取出的id，从表中取出，未来保存到表中的也是这个
+	 * @param newobj 新对象由用户提交
+	 * @param request
+	 * @param response
+	 */
+	public void updateBefore(Object oldobj,Object obj,String className,User sessionUser) throws Exception{
+		if(obj==null)return;
+
+		Object olddata=null;
+		Object newdata=null;
+		String key=null;
+
+		key="id";
+		olddata=ClassUtils.getFieldValue(oldobj, key);
+		ClassUtils.setFieldValue(obj, key, olddata);
+
+		key="gmtCreate";
+		olddata=ClassUtils.getFieldValue(oldobj, key);
+		ClassUtils.setFieldValue(obj, key, olddata);
+
+		key="gmtModified";
+		ClassUtils.setFieldValue(obj, key, new Date());	
+		
+		key="password";
+		newdata=ClassUtils.getFieldValue(obj, key);
+		olddata=ClassUtils.getFieldValue(oldobj, key);
+		if(newdata!=null&&!newdata.equals(olddata)){
+			ClassUtils.setFieldValue(obj, key, Md5PwdEncoder.encodePassword(newdata.toString()));
+		}
+
+		if(sessionUser==null)
+			return;
+		//计算42.1
+		permitCheckUtils.updateWithDefaultValue(className, sessionUser, oldobj, obj);
+		//计算42.0 42.9
+		if(SpecUserService.isAdmin(sessionUser)){
+			
+		}else{
+			//计算42.9
+			Set<String> skp=permitCheckUtils.keepSessionByPermit(className, sessionUser);
+			if(skp.size()==0){
+				//完全无权
+				obj=oldobj;
+				return;
+			}else if(skp.contains("91all")){
+				//完全有权，把页面提交的数据全部复制到老对象中
+				//ClassUtils.beanDeepCopy(obj, oldobj);
+			}else{
+				//所有字段
+				String[] newfields=ClassUtils.getAllClassFields(oldobj.getClass());
+				for (String newfield : newfields) {
+					if(!skp.contains(newfield)){ //如果不能改，从老数据中复制
+						olddata=ClassUtils.getFieldValue(oldobj, newfield);
+						ClassUtils.setFieldValue(obj, newfield, olddata);			
+					}
+				}
+			}
+		}
+	}
+}

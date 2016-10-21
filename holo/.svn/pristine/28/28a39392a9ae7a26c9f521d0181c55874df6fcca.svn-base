@@ -1,0 +1,27 @@
+<!--ProductTypeLinkProductList，商品类型包含商品列表-->
+<ion-view view-title="首页" cache-view='false' hide-tabs='false'>
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <button class="button icon-left ion-home">诊室坐诊</button>
+        <button class="button icon-left ion-home">药品服务</button>
+        <button class="button icon-left ion-home">诊室坐诊</button>
+        <button class="button icon-left ion-home">药品服务</button>
+        <button class="button icon-left ion-home">诊室坐诊</button>
+        <button class="button icon-left ion-home">药品服务</button>
+
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product/{{obj.productId}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.productIdProductObj.img1}}" reset-img />
+                <h2>{{obj.productIdProductObj.myname}}</h2>
+                <p>
+				<span>{{obj.productIdProductObj.productstyle}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

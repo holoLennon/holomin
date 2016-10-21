@@ -1,0 +1,15 @@
+<!--Hospital，医院详细信息-->
+<ion-view view-title='医院' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">地区:{{obj.areaidString}}</li>
+		<li class="item">名称:{{obj.cname}}</li>
+		<li class="item">地址:{{obj.addr}}</li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

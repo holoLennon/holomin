@@ -1,0 +1,32 @@
+package com.zmax.yijian.web.controller.restful;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import com.zmax.yijian.common.dal.bean.*;
+
+/**
+ * RestFul对象检查工具 
+ * 
+ * 
+ *
+ */
+@Component
+public class RestClazzUtils {
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(RestClazzUtils.class);
+	/**
+	 * 是否需要TOKEN，默认都需要检查，不需要的话，自己列一下
+	 * @param obj
+	 * @param funcName 函数名 增删改查
+	 * @return boolean
+	 */
+	public boolean isNeedToken(Object obj,String funcName){
+		if(obj instanceof Wwwhome)return false;
+		if(obj instanceof ProductType)return false;
+		if(obj instanceof ProductTypeLinkProduct)return false;
+		if(obj instanceof Productchannel)return false;
+		if(obj instanceof Product)return false;
+		return true;
+	} 
+}

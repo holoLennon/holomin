@@ -1,0 +1,33 @@
+package com.zmax.yijian.web.utils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zmax.utils.page.Pagination;
+//import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.utils.string.JsonUtil;
+
+public class Test {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		testJson();
+	}
+	public static void testJson(){
+		String json="{\"firstPage\":true,\"firstResult\":0,\"lastPage\":true,\"list\":[{\"bclass\":null,\"bclassId\":3,\"bclasss\":[],\"gmtCreate\":{\"date\":11,\"day\":4,\"hours\":20,\"minutes\":25,\"month\":9,\"nanos\":0,\"seconds\":25,\"time\":1349958325000,\"timezoneOffset\":-480,\"year\":112},\"gmtCreateString\":\"2012-10-11\",\"gmtModified\":{\"date\":12,\"day\":5,\"hours\":16,\"minutes\":6,\"month\":9,\"nanos\":0,\"seconds\":36,\"time\":1350029196000,\"timezoneOffset\":-480,\"year\":112},\"gmtModifiedString\":\"2012-10-12\",\"gradeid\":2,\"gradeidString\":\"\",\"id\":2,\"inschool\":null,\"inschools\":[],\"myname\":\"小朋\",\"parents\":null,\"parentss\":[],\"school\":null,\"schoolId\":1,\"schools\":[],\"status\":1,\"statusList\":null,\"statusString\":\"\",\"studentExt\":null,\"studentExts\":[],\"user\":null,\"userId\":1,\"users\":[],\"xbm\":\"2\",\"xbmMap\":{},\"xbmString\":\"\",\"xh\":\"2\",\"xm\":\"小朋\",\"xzqhm\":\"431230\",\"xzqhmString\":\"\"}],\"nextPage\":1,\"pageNo\":1,\"pageSize\":1,\"prePage\":1,\"totalCount\":1,\"totalPage\":1}";
+		Map<String,Object> map=new HashMap<String,Object>();
+/*
+		map.put("list", Student.class);
+		Pagination pageRet=(Pagination)JsonUtil.getDTO(json, Pagination.class,map);
+		List listStudent=pageRet.getList();
+		for (Object object : listStudent) {
+			User cst=(User)object;
+			System.out.println(cst);
+		}
+*/
+	}
+}

@@ -1,0 +1,177 @@
+appctrl.controller('MemberCtrl', function($scope, $rootScope, $log, $timeout,
+                                          $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                          $location, $state,
+                                          $cordovaNetwork, $cordovaGoogleAnalytics,
+                                          $stateParams,
+                                          ENV,CommonService,MemberService,Storage) {
+    $log.debug("enter Member ctrl");
+    /**参数*/
+    var me;
+    var id = $stateParams.id;
+    /**对象*/
+    $scope.obj={};
+
+   //var id =2;
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    if(id==='0')
+        $scope.vm.isedit=true;
+
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Member ctrl beforeEnter");
+        me=Storage.get(LOGINED_USER);
+        if(me){
+            id = me.id;
+            $scope.obj=me.userobj;
+        }
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Member ctrl afterEnter");
+        if (ctrlReinitMap.get('MemberCtrl')) {
+            ctrlReinitMap.remove('MemberCtrl');
+            $log.debug("Member ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Member ctrl init id="+id);
+        $scope.checklogin();
+        $scope.get();
+    };
+    /**
+     * 获取本地对象
+     */
+    $scope.getlocal=function(){
+        $log.debug("Member ctrl getlocal id="+id);
+        if(isblank0(id)){
+            $scope.obj= _.clone(_Member);
+        }else{
+            $scope.obj=MemberService.getlocal(id);
+        }
+        $log.debug($scope.obj);
+    };
+    /**
+     * 获取网络对象
+     */
+    $scope.get=function(){
+        $log.debug("Member ctrl get id="+id);
+        if(isblank0(id)) {
+            MemberService.newget(id).then(function (data) {
+                $log.debug("Member ctrl newget then");
+                $scope.obj=data;
+            });
+        }else{
+            MemberService.get(id).then(function (data) {
+                $log.debug("Member ctrl get then");
+                $scope.obj=data;
+            });
+        }
+    };
+    /**
+     * 保存
+     */
+    $scope.save=function(){
+        $log.debug("Member ctrl get id="+id);
+        $log.debug($scope.obj)
+        if(isblank0(id)) {
+            MemberService.create($scope.obj).then(function (data) {
+                $log.debug("Member ctrl save then");
+                $scope.obj=data;
+                $location.path("/tab/Member1/"+$scope.obj.id);
+            });
+        }else{
+            MemberService.update($scope.obj).then(function (data) {
+                $log.debug("Member ctrl update then");
+                $scope.obj=data;
+                $location.path("/tab/Member1/"+$scope.obj.id);
+            });
+        }
+    };
+
+    /**
+     * 上传图片
+     * @param file
+     * @param dest
+     */
+    $scope.upload=function(file,dest){
+        $log.debug("upload ="+file);
+        FileUploadService.upload(file).then(function (data) {
+            $log.debug("upload then");
+            $log.debug(data);
+            $scope.obj[dest]=data.msg;
+        });
+    };
+    ///**
+    // * 上拉刷新
+    // */
+    //$scope.doRefresh=function(){
+    //    $scope.init();
+    //};
+    /**
+     * 打开登录窗口
+     */
+    $scope.login=function(){
+        $rootScope.$broadcast('event.NeedLoginException','member');
+    };
+    /**
+     * 收到登录成功的通知
+     */
+    $scope.$on('event.logined', function(event,data) {
+        $log.debug("收到通知：event.logined,data="+data);
+        $scope.checklogin();
+    });
+    /**
+     * 登录检查
+     */
+    $scope.checklogin=function(){
+        me=Storage.get(LOGINED_USER);
+        if(me){
+            $log.debug(me);
+            id = me.id;
+            $scope.obj=me.userobj;
+            $log.debug($scope.obj);
+        }
+    };
+    /**
+     * 退出
+     */
+    $scope.logout=function(){
+        CommonService.confirm('确认退出？').then(function(res) {if(res) {
+            $scope.user=null;
+            Storage.remove(LOGINED_USER);
+            var clientInfo=Storage.get(CLIENT_INFO);
+            clientInfo.token=null;
+            Storage.set(CLIENT_INFO,clientInfo);
+            //$location.path("/tab/WWWhome/");
+            $location.path("/tab/Member1/"+$scope.obj.id);
+
+        } else {}});
+    };
+    /**
+     * 清除缓存
+     */
+    $scope.clear=function(){
+        Storage.clear();
+        CommonService.alertm('清除缓存');
+        $scope.init();
+    };
+    /**
+     * 找回密码
+     */
+    $scope.editpassword=function(){
+        CommonService.alertm('请与客服联系，我们确认后给你重新分配初始密码');
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('MemberCtrl');
+});

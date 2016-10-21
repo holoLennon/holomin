@@ -1,0 +1,35 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Oper.id">
+		<tr><th>用户ID</th><td>
+		${oper.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Oper.drugstoreId">
+		<tr><th>取药点</th><td>
+		${oper.drugstoreIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Oper.name">
+		<tr><th>姓名</th><td>
+		${oper.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Oper.idcard">
+		<tr><th>身份证号</th><td>
+		${oper.idcard}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

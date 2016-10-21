@@ -1,0 +1,112 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/Product/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.Product.statusApplyPassRefuse">
+				<@p.radio label="db.Product.statusApplyPassRefuse" nameid="statusApplyPassRefuse" value="${product.statusApplyPassRefuse}" help="有效就是上架，无效就是下架" list=product.statusApplyPassRefuseMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.statusRecipe">
+				<@p.radio label="db.Product.statusRecipe" nameid="statusRecipe" value="${product.statusRecipe}" help="" list=product.statusRecipeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.statusUsed">
+				<@p.radio label="db.Product.statusUsed" nameid="statusUsed" value="${product.statusUsed}" help="" list=product.statusUsedMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.usemount">
+				<@p.text label="db.Product.usemount" nameid="usemount"  value="${product.usemount}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.productchannelId">
+				<@p.selecttree  label="db.Product.productchannelId" nameid="productchannelId" url="${base}/user/Productchannel/tree.html" multiple="" headerKey="${product.productchannelId}" headerValue="${product.productchannelIdString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.manufacturerId">
+				<@p.searchforid label="db.Product.manufacturerId" nameid="manufacturerId" value="${product.manufacturerId}" stringvalue="${product.manufacturerIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Manufacturer/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.priority">
+				<@p.textnumber label="db.Product.priority" nameid="priority"  value="${product.priority}" help="数字越小排名越前" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.productno">
+				<@p.text label="db.Product.productno" nameid="productno"  value="${product.productno}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.title">
+				<@p.text label="db.Product.title" nameid="title"  value="${product.title}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.commonname">
+				<@p.text label="db.Product.commonname" nameid="commonname"  value="${product.commonname}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.allowno">
+				<@p.text label="db.Product.allowno" nameid="allowno"  value="${product.allowno}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.productstyle">
+				<@p.text label="db.Product.productstyle" nameid="productstyle"  value="${product.productstyle}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Product.img1">
+					<@p.ckfimg label="db.Product.img1" nameid="img1"  value="${product.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.img2">
+					<@p.ckfimg label="db.Product.img2" nameid="img2"  value="${product.img2}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.img3">
+					<@p.ckfimg label="db.Product.img3" nameid="img3"  value="${product.img3}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.img4">
+					<@p.ckfimg label="db.Product.img4" nameid="img4"  value="${product.img4}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.img5">
+					<@p.ckfimg label="db.Product.img5" nameid="img5"  value="${product.img5}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.img6">
+					<@p.ckfimg label="db.Product.img6" nameid="img6"  value="${product.img6}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.imgbarcode">
+					<@p.ckfimg label="db.Product.imgbarcode" nameid="imgbarcode"  value="${product.imgbarcode}" help=""  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.hittimes">
+				<@p.textnumber label="db.Product.hittimes" nameid="hittimes"  value="${product.hittimes}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.buytimes">
+				<@p.textnumber label="db.Product.buytimes" nameid="buytimes"  value="${product.buytimes}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.punit">
+				<@p.radio label="db.Product.punit" nameid="punit" value="${product.punit}" help="" list=product.punitMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.marketprice">
+				<@p.textnumber label="db.Product.marketprice" nameid="marketprice"  value="${product.marketprice}" help="看看的" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.price">
+				<@p.textnumber label="db.Product.price" nameid="price"  value="${product.price}" help="就是正在销售的价格" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.carriagePrice">
+				<@p.textnumber label="db.Product.carriagePrice" nameid="carriagePrice"  value="${product.carriagePrice}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.store">
+				<@p.textnumber label="db.Product.store" nameid="store"  value="${product.store}" help="如果要是有属性库存，这里数字会被属性库存的和更新" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Product.intro">
+				<@p.textarea label="db.Product.intro" nameid="intro" value="${product.intro}" help="" dataoptions="validType:['length[0,400]',]" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

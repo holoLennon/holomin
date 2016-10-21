@@ -1,0 +1,36 @@
+<!--Wwwhome，手机页首页配置详细信息-->
+<ion-view view-title='服务' hide-nav-bar="true" class="allweb" style="background-color: #eeeeee">
+    <div class="bar bar-header bar-positive ">
+
+        <div class="title">服务</div>
+
+    </div>
+
+    <div class="bar bar-subheader" style="background-color: #eeeeee;border: none;">
+        <li class="row" style="width: 120%;margin-left: -10px;border: none;margin-top: -8px">
+            <a class="ion-b-c_01"></a>
+        </li>
+            <li class="row" style="margin-top: -5px">
+                <a class="ion-b_yixuezazhi" href="#/tab/Madingpagefuwu"></a>
+                <a class="ion-b_tuwenzixun" href="#/tab/Madingpagefuwu"></a>
+                <a class="ion-b_dianhuazixun" ng-click="dianhuazixun()"></a>
+                <a class=""></a>
+            </li>
+        <li class="row" style="width: 120%;margin-left: -10px;border: none">
+            <a class="ion-b-c_02"></a>
+        </li>
+            <li class="row">
+
+            </li>
+        <!--<li class="row" style="width: 120%;margin-left: -10px;border: none">-->
+            <!--<a class="ion-b-c_03"></a>-->
+        <!--</li>-->
+        <!--<li class="row">-->
+            <!--<a class="ion-b_huatijifen"></a>-->
+            <!--<a class="ion-b_dianpingzhongcai"></a>-->
+            <!--<a class=""></a>-->
+            <!--<a class=""></a>-->
+        <!--</li>-->
+
+    </div>
+</ion-view>

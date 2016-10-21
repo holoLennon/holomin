@@ -1,0 +1,32 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/TopicProduct/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${topicProduct.id}" />
+	<@z.pmt key="42.TopicProduct.topicId">
+				<@p.searchforid label="db.TopicProduct.topicId" nameid="topicId" value="${topicProduct.topicId}" stringvalue="${topicProduct.topicIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Topic/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.TopicProduct.productId">
+				<@p.searchforid label="db.TopicProduct.productId" nameid="productId" value="${topicProduct.productId}" stringvalue="${topicProduct.productIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.TopicProduct.priority">
+				<@p.textnumber label="db.TopicProduct.priority" nameid="priority"  value="${topicProduct.priority}" help="数字小排名前" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

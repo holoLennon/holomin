@@ -1,0 +1,145 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.AlipayPaynotify.id">
+		<tr><th>序号</th><td>
+		${alipayPaynotify.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.notifyTime">
+		<tr><th>通知时间</th><td>
+		${alipayPaynotify.notifyTimeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.notifyType">
+		<tr><th>通知类型</th><td>
+		${alipayPaynotify.notifyType}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.notifyId">
+		<tr><th>通知校验ID</th><td>
+		${alipayPaynotify.notifyId}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.signType">
+		<tr><th>签名方式</th><td>
+		${alipayPaynotify.signType}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.sign">
+		<tr><th>签名</th><td>
+		${alipayPaynotify.sign}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.outTradeNo">
+		<tr><th>商户网站唯一订单号</th><td>
+		${alipayPaynotify.outTradeNo}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.subject">
+		<tr><th>商品名称</th><td>
+		${alipayPaynotify.subject}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.paymentType">
+		<tr><th>支付类型</th><td>
+		${alipayPaynotify.paymentType}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.tradeNo">
+		<tr><th>支付宝交易号</th><td>
+		${alipayPaynotify.tradeNo}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.tradeStatus">
+		<tr><th>交易状态</th><td>
+		${alipayPaynotify.tradeStatus}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.sellerId">
+		<tr><th>卖家支付宝用户号</th><td>
+		${alipayPaynotify.sellerId}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.sellerEmail">
+		<tr><th>卖家支付宝账号</th><td>
+		${alipayPaynotify.sellerEmail}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.buyerId">
+		<tr><th>买家支付宝用户号</th><td>
+		${alipayPaynotify.buyerId}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.buyerEmail">
+		<tr><th>买家支付宝账号</th><td>
+		${alipayPaynotify.buyerEmail}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.totalFee">
+		<tr><th>交易金额</th><td>
+		${alipayPaynotify.totalFee}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.quantity">
+		<tr><th>购买数量</th><td>
+		${alipayPaynotify.quantity}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.price">
+		<tr><th>商品单价</th><td>
+		${alipayPaynotify.price}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.body">
+		<tr><th>商品描述</th><td>
+		${alipayPaynotify.body}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.gmtCreate">
+		<tr><th>交易创建时间</th><td>
+		${alipayPaynotify.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.gmtPayment">
+		<tr><th>交易付款时间</th><td>
+		${alipayPaynotify.gmtPaymentString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.isTotalFeeAdjust">
+		<tr><th>是否调整总价</th><td>
+		${alipayPaynotify.isTotalFeeAdjust}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.useCoupon">
+		<tr><th>是否使用红包买家</th><td>
+		${alipayPaynotify.useCoupon}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.discount">
+		<tr><th>折扣</th><td>
+		${alipayPaynotify.discount}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.refundStatus">
+		<tr><th>退款状态</th><td>
+		${alipayPaynotify.refundStatus}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.AlipayPaynotify.gmtRefund">
+		<tr><th>退款时间</th><td>
+		${alipayPaynotify.gmtRefundString}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

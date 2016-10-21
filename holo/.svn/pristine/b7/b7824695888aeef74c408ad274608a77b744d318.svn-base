@@ -1,0 +1,12 @@
+/**
+author :zmax
+ **/
+$(document).bind("mobileinit", function(){ 	
+	$.mobile.transitionFallbacks.slide = "none";
+	$.mobile.buttonMarkup.hoverDelay = "false";
+	$.mobile.loadingMessageTextVisible = true;
+	$.mobile.loadingMessage ="加载中...";	
+	$.mobile.pageLoadErrorMessage ="服务器有点忙...";
+}); 
+
+

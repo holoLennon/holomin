@@ -1,0 +1,36 @@
+<!--SellerList，业务员列表-->
+<ion-view view-title="业务员列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Seller/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Seller/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>用户ID:{{obj.id}}</span>
+				<span>级别:{{obj.dlevelString}}</span>
+				<span>姓名:{{obj.name}}</span>
+				<span>身份证号:{{obj.idcard}}</span>
+				<span>年龄:{{obj.age}}</span>
+				<span>性别:{{obj.usersexString}}</span>
+				<span class="item-note ago" am-time-ago="obj.gmtIn"></span>
+				<span class="item-note ago" am-time-ago="obj.gmtWork"></span>
+				<span>所在区域:{{obj.area}}</span>
+				<span>直接销售总额:{{obj.mmoney}}</span>
+				<span>下属团队销售总额:{{obj.mmoneyteam}}</span>
+				<span>总销售金额:{{obj.mmoneyall}}</span>
+				<span>上级:{{obj.parentidString}}</span>
+				<span>排列顺序:{{obj.priority}}</span>
+				<span>孩子数量:{{obj.childrennum}}</span>
+				<span>祖先:{{obj.family}}</span>
+				<span>二维码:{{obj.qrimg}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

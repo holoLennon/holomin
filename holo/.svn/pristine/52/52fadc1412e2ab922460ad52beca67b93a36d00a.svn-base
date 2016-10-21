@@ -1,0 +1,530 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+
+
+/**
+ * 商品类型包含商品
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "product_type_link_product")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class ProductTypeLinkProduct extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "商品类型包含商品";
+
+	//date formats
+	
+	//columns START
+	/**序号 Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**商品ID Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer productId = 0;
+	/**商品类型ID Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer productTypeId = 0;
+	/**排列顺序 Integer default=99 数字越小排名越前 */
+	@Max(999L)
+	
+	private Integer priority = 99;
+	/**状态 Integer default=1  */
+	@Max(999L)
+	
+	private Integer statusValidOrNot = 1;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(ProductTypeLinkProduct _this){
+		_this.productId=0;
+		_this.productTypeId=0;
+		_this.priority=99;
+		_this.statusValidOrNot=1;
+	}
+	public ProductTypeLinkProduct(){
+		makedefault(this);
+	}
+	public ProductTypeLinkProduct(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param productId Integer 商品ID default=0  
+	 * @param productTypeId Integer 商品类型ID default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param statusValidOrNot Integer 状态 default=1  
+	* @param notuse String 没用
+	 */
+	public ProductTypeLinkProduct(Integer productId ,Integer productTypeId ,Integer priority ,Integer statusValidOrNot ,String notuse) {
+		super();
+		this.productId = productId;
+		this.productTypeId = productTypeId;
+		this.priority = priority;
+		this.statusValidOrNot = statusValidOrNot;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号   
+	 * @param productId Integer 商品ID default=0  
+	 * @param productTypeId Integer 商品类型ID default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param statusValidOrNot Integer 状态 default=1  
+	* @param notuse String 没用
+	 */
+	public ProductTypeLinkProduct(Integer id ,Integer productId ,Integer productTypeId ,Integer priority ,Integer statusValidOrNot ,String notuse) {
+		super();
+		this.id = id;
+		this.productId = productId;
+		this.productTypeId = productTypeId;
+		this.priority = priority;
+		this.statusValidOrNot = statusValidOrNot;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号   
+	 * @param productId Integer 商品ID default=0  
+	 * @param productTypeId Integer 商品类型ID default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param statusValidOrNot Integer 状态 default=1  
+	* @param notuse String 没用
+	 */
+	public ProductTypeLinkProduct(Integer id ,Integer productId ,Integer productTypeId ,Integer priority ,Integer statusValidOrNot ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.productId = productId;
+		this.productTypeId = productTypeId;
+		this.priority = priority;
+		this.statusValidOrNot = statusValidOrNot;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取商品ID  */
+	
+
+	@Column(name = "product_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductId() {
+		return this.productId;
+	}
+	/**设置商品ID  */
+
+	public void setProductId(Integer value) {
+		this.productId = value;
+	}
+	/**获取商品类型ID  */
+	
+
+	@Column(name = "product_type_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductTypeId() {
+		return this.productTypeId;
+	}
+	/**设置商品类型ID  */
+
+	public void setProductTypeId(Integer value) {
+		this.productTypeId = value;
+	}
+	/**获取排列顺序 数字越小排名越前 */
+	
+
+	@Column(name = "priority", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getPriority() {
+		return this.priority;
+	}
+	/**设置排列顺序 数字越小排名越前 */
+
+	public void setPriority(Integer value) {
+		this.priority = value;
+	}
+	/**获取状态  */
+	
+
+	@Column(name = "status_valid_or_not", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusValidOrNot() {
+		return this.statusValidOrNot;
+	}
+	/**设置状态  */
+
+	public void setStatusValidOrNot(Integer value) {
+		this.statusValidOrNot = value;
+	}
+	/**商品IDString*/
+	private String productIdString;
+	/**获取商品IDString*/
+	@Transient
+	
+	public String getProductIdString() {
+		return productIdString;
+	}
+	/**设置商品IDString*/
+	public void setProductIdString(String value) {
+		this.productIdString=value;
+	}
+	/**Product - productIdProductObj*/
+	private Product productIdProductObj;
+	/**获取 Product - productIdProductObj*/
+	@Transient
+	
+	public Product getProductIdProductObj() {
+		return productIdProductObj;
+	}
+	/**设置 Product - 商品IDObj*/
+	public void setProductIdProductObj(Product value) {
+		this.productIdProductObj=value;
+	}
+	/**商品IDStringid*/
+	private String productIdStringid;
+	/**获取商品IDStringid*/
+	@Transient
+	
+	public String getProductIdStringid() {
+		return productIdStringid;
+	}
+	/**设置商品IDStringid*/
+	public void setProductIdStringid(String value) {
+		this.productIdStringid=value;
+	}
+	/**商品类型IDString*/
+	private String productTypeIdString;
+	/**获取商品类型IDString*/
+	@Transient
+	
+	public String getProductTypeIdString() {
+		return productTypeIdString;
+	}
+	/**设置商品类型IDString*/
+	public void setProductTypeIdString(String value) {
+		this.productTypeIdString=value;
+	}
+	/**ProductType - productTypeIdProductTypeObj*/
+	private ProductType productTypeIdProductTypeObj;
+	/**获取 ProductType - productTypeIdProductTypeObj*/
+	@Transient
+	
+	public ProductType getProductTypeIdProductTypeObj() {
+		return productTypeIdProductTypeObj;
+	}
+	/**设置 ProductType - 商品类型IDObj*/
+	public void setProductTypeIdProductTypeObj(ProductType value) {
+		this.productTypeIdProductTypeObj=value;
+	}
+	/**商品类型IDStringid*/
+	private String productTypeIdStringid;
+	/**获取商品类型IDStringid*/
+	@Transient
+	
+	public String getProductTypeIdStringid() {
+		return productTypeIdStringid;
+	}
+	/**设置商品类型IDStringid*/
+	public void setProductTypeIdStringid(String value) {
+		this.productTypeIdStringid=value;
+	}
+	/**状态String*/
+	private String statusValidOrNotString;
+	/**获取状态String*/
+	@Transient
+	
+	public String getStatusValidOrNotString() {
+		return statusValidOrNotString;
+	}
+	/**设置状态String*/
+	public void setStatusValidOrNotString(String value) {
+		this.statusValidOrNotString=value;
+	}
+	/**状态Map*/
+	private Map<String, Object> statusValidOrNotMap;
+	/**获取状态Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusValidOrNotMap() {
+		return statusValidOrNotMap;
+	}
+	/**设置状态Map*/
+	public void setStatusValidOrNotMap(Map<String, Object> value) {
+		this.statusValidOrNotMap=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.productIdProductObj=null; //Product
+		this.productTypeIdProductTypeObj=null; //ProductType
+		this.statusValidOrNotMap=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getProductId())
+			.append(getProductTypeId())
+			.append(getPriority())
+			.append(getStatusValidOrNot())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof ProductTypeLinkProduct == false) return false;
+		if(this == obj) return true;
+		ProductTypeLinkProduct other = (ProductTypeLinkProduct)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",ProductId:",getProductId())
+			.append(",ProductTypeId:",getProductTypeId())
+			.append(",Priority:",getPriority())
+			.append(",StatusValidOrNot:",getStatusValidOrNot())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","productIdString","productIdProductObj","productIdStringid","productTypeIdString","productTypeIdProductTypeObj","productTypeIdStringid","statusValidOrNotString","statusValidOrNotMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","productIdString","productIdProductObj","productIdStringid","productTypeIdString","productTypeIdProductTypeObj","productTypeIdStringid","statusValidOrNotString","statusValidOrNotMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 商品类型包含商品
+ProductTypeLinkProduct productTypeLinkProduct = new ProductTypeLinkProduct(
+	productId , //Integer 商品ID default=0  
+	productTypeId , //Integer 商品类型ID default=0  
+	priority , //Integer 排列顺序 default=99 数字越小排名越前 
+	statusValidOrNot , //Integer 状态 default=1  
+	null
+);
+*/
+}

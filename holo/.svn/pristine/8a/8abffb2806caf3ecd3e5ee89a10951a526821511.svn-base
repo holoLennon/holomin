@@ -1,0 +1,74 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zmax.yijian.biz.service.my.WebsetService;
+import com.zmax.yijian.common.dal.bean.Webset;
+import com.zmax.yijian.web.utils.SpringInit;
+
+/**
+ * 从webset表里取的运行时参数配置
+ * 规则是key=static.webset.xxx ,value=(String)value
+ * @author zmax
+ *
+ */
+public class RtCfgUtils {
+	private static final String SW="runtime.webset.";
+	/**Map[String,String]版webset配置列表,规则是key=static.webset.xxx ,value=(String)value*/
+	private static Map<String,String> websetMap=new HashMap<String,String>();
+	private static boolean isInited=false;
+	static WebsetService websetService;
+	public static void init(){
+		websetService=(WebsetService)SpringInit.getCtx().getBean("websetService");
+		if(websetService==null)
+			return;
+		List<Webset> list=websetService.listfind(null, null, " ckey like '"+SW+"%' ", null, null);
+		if(list==null || list.size()==0)
+			return;
+		websetMap.clear();
+		for (Webset webset : list) {
+			websetMap.put(webset.getCkey(), webset.getCvalue());
+		}
+		isInited=true;
+	}
+	/**
+	 * 获取配置值，前面不用加static.webset.了，直接用xxx，会取得static.webset.xxx的配置内容
+	 * @param key
+	 * @return
+	 */
+	public static String getValue(String key){
+		if(!isInited)init();
+		return websetMap.get(SW+key);
+	}
+	/**
+	 * 布尔版，值==1?
+	 * @param key
+	 * @return
+	 */
+	public static boolean isOn(String key){
+		if(!isInited)init();
+		return ("1").equals(websetMap.get(SW+key));
+	}
+	/**
+	 * 设置值
+	 * @param key 不需要加static.webset.
+	 * @param value
+	 * @param name
+	 */
+	public static void setValue(String key,String value,String name){
+		if(!isInited)init();
+		key=SW+key;
+		Webset webset=(Webset)websetService.getFirst(null, null, "ckey=?", null, new Object[]{key});
+		if(webset==null){
+			webset=new Webset();
+		}
+		webset.setCkey(key);
+		webset.setCvalue(value);
+		if(name!=null)
+			webset.setCname(name);
+		websetService.saveOrUpdate(null,webset);
+		websetMap.put(webset.getCkey(), webset.getCvalue());
+	}
+}

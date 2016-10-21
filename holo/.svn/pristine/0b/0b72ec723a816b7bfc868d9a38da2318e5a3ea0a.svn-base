@@ -1,0 +1,1344 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 商品
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "product")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Product extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "商品";
+
+	//date formats
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	public static final String FORMAT_GMT_MODIFIED = DATE_FORMAT;
+	public static final String FORMAT_GMT_RELEASE = DATE_FORMAT;
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**修改时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtModified;
+	/**发布时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtRelease;
+	/**状态 Integer default=1 有效就是上架，无效就是下架 */
+	@Max(999L)
+	
+	private Integer statusApplyPassRefuse = 1;
+	/**是否处方药 Integer default=1  map={'0':'非处方药','1':'处方药'}*/
+	@Max(999L)
+	
+	private Integer statusRecipe = 1;
+	/**使用方法 Integer default=1  map={'0':'外用','1':'口服','2':'含服','3':'咀嚼'}*/
+	@Max(999L)
+	
+	private Integer statusUsed = 1;
+	/**用法用量 String   */
+	@Length(max=100)
+	
+	private String usemount;
+	/**商品目录 Integer   */
+	@Max(99999999999L)
+	
+	private Integer productchannelId;
+	/**厂商产地 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer manufacturerId = 0;
+	/**排列顺序 Integer default=99 数字越小排名越前 */
+	@Max(99999999999L)
+	
+	private Integer priority = 99;
+	/**商品编号 String   */
+	@Length(max=50)
+	
+	private String productno;
+	/**商品名 String   */
+	@Length(max=100)
+	
+	private String title;
+	/**通用名 String   */
+	@Length(max=100)
+	
+	private String commonname;
+	/**批准文号 String   */
+	@Length(max=100)
+	
+	private String allowno;
+	/**规格型号 String   */
+	@Length(max=50)
+	
+	private String productstyle;
+	/**图1 String  600x600 */
+	@Length(max=200)
+	
+	private String img1;
+	/**图2 String  600x600 */
+	@Length(max=200)
+	
+	private String img2;
+	/**图3 String  600x600 */
+	@Length(max=200)
+	
+	private String img3;
+	/**图4 String  600x600 */
+	@Length(max=200)
+	
+	private String img4;
+	/**图5 String  600x600 */
+	@Length(max=200)
+	
+	private String img5;
+	/**图6 String  600x600 */
+	@Length(max=200)
+	
+	private String img6;
+	/**条码 String   */
+	@Length(max=200)
+	
+	private String imgbarcode;
+	/**点击次数 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer hittimes = 0;
+	/**购买次数 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer buytimes = 0;
+	/**商品单位 Integer default=0  map={'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}*/
+	@Max(999L)
+	
+	private Integer punit = 0;
+	/**市场价 Double default=0.0 看看的 */
+	
+	
+	private Double marketprice;
+	/**优惠价 Double default=0.0 就是正在销售的价格 */
+	
+	
+	private Double price;
+	/**运费 Double default=0.0  */
+	
+	
+	private Double carriagePrice;
+	/**库存 Integer default=1 如果要是有属性库存，这里数字会被属性库存的和更新 */
+	@Max(99999999999L)
+	
+	private Integer store = 1;
+	/**功能主治 String   */
+	@Length(max=400)
+	
+	private String intro;
+	/**生成地址 String   */
+	@Length(max=200)
+	
+	private String genurl;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Product _this){
+		_this.gmtCreate=new Date();
+		_this.statusApplyPassRefuse=1;
+		_this.statusRecipe=1;
+		_this.statusUsed=1;
+		_this.manufacturerId=0;
+		_this.priority=99;
+		_this.hittimes=0;
+		_this.buytimes=0;
+		_this.punit=0;
+		_this.marketprice=0.0;
+		_this.price=0.0;
+		_this.carriagePrice=0.0;
+		_this.store=1;
+	}
+	public Product(){
+		makedefault(this);
+	}
+	public Product(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param gmtRelease Date 发布时间   
+	 * @param statusApplyPassRefuse Integer 状态 default=1 有效就是上架，无效就是下架 
+	 * @param statusRecipe Integer 是否处方药 default=1  {'0':'非处方药','1':'处方药'}
+	 * @param statusUsed Integer 使用方法 default=1  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}
+	 * @param usemount String 用法用量   
+	 * @param productchannelId Integer 商品目录   
+	 * @param manufacturerId Integer 厂商产地 default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param productno String 商品编号   
+	 * @param title String 商品名   
+	 * @param commonname String 通用名   
+	 * @param allowno String 批准文号   
+	 * @param productstyle String 规格型号   
+	 * @param img1 String 图1  600x600 
+	 * @param img2 String 图2  600x600 
+	 * @param img3 String 图3  600x600 
+	 * @param img4 String 图4  600x600 
+	 * @param img5 String 图5  600x600 
+	 * @param img6 String 图6  600x600 
+	 * @param imgbarcode String 条码   
+	 * @param hittimes Integer 点击次数 default=0  
+	 * @param buytimes Integer 购买次数 default=0  
+	 * @param punit Integer 商品单位 default=0  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}
+	 * @param marketprice Double 市场价 default=0.0 看看的 
+	 * @param price Double 优惠价 default=0.0 就是正在销售的价格 
+	 * @param carriagePrice Double 运费 default=0.0  
+	 * @param store Integer 库存 default=1 如果要是有属性库存，这里数字会被属性库存的和更新 
+	 * @param intro String 功能主治   
+	 * @param genurl String 生成地址   
+	* @param notuse String 没用
+	 */
+	public Product(Date gmtRelease ,Integer statusApplyPassRefuse ,Integer statusRecipe ,Integer statusUsed ,String usemount ,Integer productchannelId ,Integer manufacturerId ,Integer priority ,String productno ,String title ,String commonname ,String allowno ,String productstyle ,String img1 ,String img2 ,String img3 ,String img4 ,String img5 ,String img6 ,String imgbarcode ,Integer hittimes ,Integer buytimes ,Integer punit ,Double marketprice ,Double price ,Double carriagePrice ,Integer store ,String intro ,String genurl ,String notuse) {
+		super();
+		this.gmtRelease = gmtRelease;
+		this.statusApplyPassRefuse = statusApplyPassRefuse;
+		this.statusRecipe = statusRecipe;
+		this.statusUsed = statusUsed;
+		this.usemount = usemount;
+		this.productchannelId = productchannelId;
+		this.manufacturerId = manufacturerId;
+		this.priority = priority;
+		this.productno = productno;
+		this.title = title;
+		this.commonname = commonname;
+		this.allowno = allowno;
+		this.productstyle = productstyle;
+		this.img1 = img1;
+		this.img2 = img2;
+		this.img3 = img3;
+		this.img4 = img4;
+		this.img5 = img5;
+		this.img6 = img6;
+		this.imgbarcode = imgbarcode;
+		this.hittimes = hittimes;
+		this.buytimes = buytimes;
+		this.punit = punit;
+		this.marketprice = marketprice;
+		this.price = price;
+		this.carriagePrice = carriagePrice;
+		this.store = store;
+		this.intro = intro;
+		this.genurl = genurl;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param gmtModified Date 修改时间   
+	 * @param gmtRelease Date 发布时间   
+	 * @param statusApplyPassRefuse Integer 状态 default=1 有效就是上架，无效就是下架 
+	 * @param statusRecipe Integer 是否处方药 default=1  {'0':'非处方药','1':'处方药'}
+	 * @param statusUsed Integer 使用方法 default=1  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}
+	 * @param usemount String 用法用量   
+	 * @param productchannelId Integer 商品目录   
+	 * @param manufacturerId Integer 厂商产地 default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param productno String 商品编号   
+	 * @param title String 商品名   
+	 * @param commonname String 通用名   
+	 * @param allowno String 批准文号   
+	 * @param productstyle String 规格型号   
+	 * @param img1 String 图1  600x600 
+	 * @param img2 String 图2  600x600 
+	 * @param img3 String 图3  600x600 
+	 * @param img4 String 图4  600x600 
+	 * @param img5 String 图5  600x600 
+	 * @param img6 String 图6  600x600 
+	 * @param imgbarcode String 条码   
+	 * @param hittimes Integer 点击次数 default=0  
+	 * @param buytimes Integer 购买次数 default=0  
+	 * @param punit Integer 商品单位 default=0  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}
+	 * @param marketprice Double 市场价 default=0.0 看看的 
+	 * @param price Double 优惠价 default=0.0 就是正在销售的价格 
+	 * @param carriagePrice Double 运费 default=0.0  
+	 * @param store Integer 库存 default=1 如果要是有属性库存，这里数字会被属性库存的和更新 
+	 * @param intro String 功能主治   
+	 * @param genurl String 生成地址   
+	* @param notuse String 没用
+	 */
+	public Product(Integer id ,Date gmtModified ,Date gmtRelease ,Integer statusApplyPassRefuse ,Integer statusRecipe ,Integer statusUsed ,String usemount ,Integer productchannelId ,Integer manufacturerId ,Integer priority ,String productno ,String title ,String commonname ,String allowno ,String productstyle ,String img1 ,String img2 ,String img3 ,String img4 ,String img5 ,String img6 ,String imgbarcode ,Integer hittimes ,Integer buytimes ,Integer punit ,Double marketprice ,Double price ,Double carriagePrice ,Integer store ,String intro ,String genurl ,String notuse) {
+		super();
+		this.id = id;
+		this.gmtCreate = new Date();
+		this.gmtModified = gmtModified;
+		this.gmtRelease = gmtRelease;
+		this.statusApplyPassRefuse = statusApplyPassRefuse;
+		this.statusRecipe = statusRecipe;
+		this.statusUsed = statusUsed;
+		this.usemount = usemount;
+		this.productchannelId = productchannelId;
+		this.manufacturerId = manufacturerId;
+		this.priority = priority;
+		this.productno = productno;
+		this.title = title;
+		this.commonname = commonname;
+		this.allowno = allowno;
+		this.productstyle = productstyle;
+		this.img1 = img1;
+		this.img2 = img2;
+		this.img3 = img3;
+		this.img4 = img4;
+		this.img5 = img5;
+		this.img6 = img6;
+		this.imgbarcode = imgbarcode;
+		this.hittimes = hittimes;
+		this.buytimes = buytimes;
+		this.punit = punit;
+		this.marketprice = marketprice;
+		this.price = price;
+		this.carriagePrice = carriagePrice;
+		this.store = store;
+		this.intro = intro;
+		this.genurl = genurl;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param gmtCreate Date 创建时间   
+	 * @param gmtModified Date 修改时间   
+	 * @param gmtRelease Date 发布时间   
+	 * @param statusApplyPassRefuse Integer 状态 default=1 有效就是上架，无效就是下架 
+	 * @param statusRecipe Integer 是否处方药 default=1  {'0':'非处方药','1':'处方药'}
+	 * @param statusUsed Integer 使用方法 default=1  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}
+	 * @param usemount String 用法用量   
+	 * @param productchannelId Integer 商品目录   
+	 * @param manufacturerId Integer 厂商产地 default=0  
+	 * @param priority Integer 排列顺序 default=99 数字越小排名越前 
+	 * @param productno String 商品编号   
+	 * @param title String 商品名   
+	 * @param commonname String 通用名   
+	 * @param allowno String 批准文号   
+	 * @param productstyle String 规格型号   
+	 * @param img1 String 图1  600x600 
+	 * @param img2 String 图2  600x600 
+	 * @param img3 String 图3  600x600 
+	 * @param img4 String 图4  600x600 
+	 * @param img5 String 图5  600x600 
+	 * @param img6 String 图6  600x600 
+	 * @param imgbarcode String 条码   
+	 * @param hittimes Integer 点击次数 default=0  
+	 * @param buytimes Integer 购买次数 default=0  
+	 * @param punit Integer 商品单位 default=0  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}
+	 * @param marketprice Double 市场价 default=0.0 看看的 
+	 * @param price Double 优惠价 default=0.0 就是正在销售的价格 
+	 * @param carriagePrice Double 运费 default=0.0  
+	 * @param store Integer 库存 default=1 如果要是有属性库存，这里数字会被属性库存的和更新 
+	 * @param intro String 功能主治   
+	 * @param genurl String 生成地址   
+	* @param notuse String 没用
+	 */
+	public Product(Integer id ,Date gmtCreate ,Date gmtModified ,Date gmtRelease ,Integer statusApplyPassRefuse ,Integer statusRecipe ,Integer statusUsed ,String usemount ,Integer productchannelId ,Integer manufacturerId ,Integer priority ,String productno ,String title ,String commonname ,String allowno ,String productstyle ,String img1 ,String img2 ,String img3 ,String img4 ,String img5 ,String img6 ,String imgbarcode ,Integer hittimes ,Integer buytimes ,Integer punit ,Double marketprice ,Double price ,Double carriagePrice ,Integer store ,String intro ,String genurl ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.gmtCreate = gmtCreate;
+		this.gmtModified = gmtModified;
+		this.gmtRelease = gmtRelease;
+		this.statusApplyPassRefuse = statusApplyPassRefuse;
+		this.statusRecipe = statusRecipe;
+		this.statusUsed = statusUsed;
+		this.usemount = usemount;
+		this.productchannelId = productchannelId;
+		this.manufacturerId = manufacturerId;
+		this.priority = priority;
+		this.productno = productno;
+		this.title = title;
+		this.commonname = commonname;
+		this.allowno = allowno;
+		this.productstyle = productstyle;
+		this.img1 = img1;
+		this.img2 = img2;
+		this.img3 = img3;
+		this.img4 = img4;
+		this.img5 = img5;
+		this.img6 = img6;
+		this.imgbarcode = imgbarcode;
+		this.hittimes = hittimes;
+		this.buytimes = buytimes;
+		this.punit = punit;
+		this.marketprice = marketprice;
+		this.price = price;
+		this.carriagePrice = carriagePrice;
+		this.store = store;
+		this.intro = intro;
+		this.genurl = genurl;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?""+title+" ":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]"+title+" ":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取修改时间  */
+	
+
+	@Column(name = "gmt_modified", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtModified() {
+		return this.gmtModified;
+	}
+	/**设置修改时间  */
+
+	public void setGmtModified(Date value) {
+		this.gmtModified = value;
+	}
+	/**获取发布时间  */
+	
+
+	@Column(name = "gmt_release", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtRelease() {
+		return this.gmtRelease;
+	}
+	/**设置发布时间  */
+
+	public void setGmtRelease(Date value) {
+		this.gmtRelease = value;
+	}
+	/**获取状态 有效就是上架，无效就是下架 */
+	
+
+	@Column(name = "status_apply_pass_refuse", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusApplyPassRefuse() {
+		return this.statusApplyPassRefuse;
+	}
+	/**设置状态 有效就是上架，无效就是下架 */
+
+	public void setStatusApplyPassRefuse(Integer value) {
+		this.statusApplyPassRefuse = value;
+	}
+	/**获取是否处方药  {'0':'非处方药','1':'处方药'}*/
+	
+
+	@Column(name = "status_recipe", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusRecipe() {
+		return this.statusRecipe;
+	}
+	/**设置是否处方药  {'0':'非处方药','1':'处方药'}*/
+
+	public void setStatusRecipe(Integer value) {
+		this.statusRecipe = value;
+	}
+	/**获取使用方法  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}*/
+	
+
+	@Column(name = "status_used", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusUsed() {
+		return this.statusUsed;
+	}
+	/**设置使用方法  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}*/
+
+	public void setStatusUsed(Integer value) {
+		this.statusUsed = value;
+	}
+	/**获取用法用量  */
+	
+
+	@Column(name = "usemount", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getUsemount() {
+		return this.usemount;
+	}
+	/**设置用法用量  */
+
+	public void setUsemount(String value) {
+		this.usemount = value;
+	}
+	/**获取商品目录  */
+	
+
+	@Column(name = "productchannel_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductchannelId() {
+		return this.productchannelId;
+	}
+	/**设置商品目录  */
+
+	public void setProductchannelId(Integer value) {
+		this.productchannelId = value;
+	}
+	/**获取厂商产地  */
+	
+
+	@Column(name = "manufacturer_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getManufacturerId() {
+		return this.manufacturerId;
+	}
+	/**设置厂商产地  */
+
+	public void setManufacturerId(Integer value) {
+		this.manufacturerId = value;
+	}
+	/**获取排列顺序 数字越小排名越前 */
+	
+
+	@Column(name = "priority", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getPriority() {
+		return this.priority;
+	}
+	/**设置排列顺序 数字越小排名越前 */
+
+	public void setPriority(Integer value) {
+		this.priority = value;
+	}
+	/**获取商品编号  */
+	
+
+	@Column(name = "productno", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getProductno() {
+		return this.productno;
+	}
+	/**设置商品编号  */
+
+	public void setProductno(String value) {
+		this.productno = value;
+	}
+	/**获取商品名  */
+	
+
+	@Column(name = "title", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getTitle() {
+		return this.title;
+	}
+	/**设置商品名  */
+
+	public void setTitle(String value) {
+		this.title = value;
+	}
+	/**获取通用名  */
+	
+
+	@Column(name = "commonname", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getCommonname() {
+		return this.commonname;
+	}
+	/**设置通用名  */
+
+	public void setCommonname(String value) {
+		this.commonname = value;
+	}
+	/**获取批准文号  */
+	
+
+	@Column(name = "allowno", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getAllowno() {
+		return this.allowno;
+	}
+	/**设置批准文号  */
+
+	public void setAllowno(String value) {
+		this.allowno = value;
+	}
+	/**获取规格型号  */
+	
+
+	@Column(name = "productstyle", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getProductstyle() {
+		return this.productstyle;
+	}
+	/**设置规格型号  */
+
+	public void setProductstyle(String value) {
+		this.productstyle = value;
+	}
+	/**获取图1 600x600 */
+	
+
+	@Column(name = "img1", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg1() {
+		return this.img1;
+	}
+	/**设置图1 600x600 */
+
+	public void setImg1(String value) {
+		this.img1 = value;
+	}
+	/**获取图2 600x600 */
+	
+
+	@Column(name = "img2", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg2() {
+		return this.img2;
+	}
+	/**设置图2 600x600 */
+
+	public void setImg2(String value) {
+		this.img2 = value;
+	}
+	/**获取图3 600x600 */
+	
+
+	@Column(name = "img3", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg3() {
+		return this.img3;
+	}
+	/**设置图3 600x600 */
+
+	public void setImg3(String value) {
+		this.img3 = value;
+	}
+	/**获取图4 600x600 */
+	
+
+	@Column(name = "img4", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg4() {
+		return this.img4;
+	}
+	/**设置图4 600x600 */
+
+	public void setImg4(String value) {
+		this.img4 = value;
+	}
+	/**获取图5 600x600 */
+	
+
+	@Column(name = "img5", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg5() {
+		return this.img5;
+	}
+	/**设置图5 600x600 */
+
+	public void setImg5(String value) {
+		this.img5 = value;
+	}
+	/**获取图6 600x600 */
+	
+
+	@Column(name = "img6", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg6() {
+		return this.img6;
+	}
+	/**设置图6 600x600 */
+
+	public void setImg6(String value) {
+		this.img6 = value;
+	}
+	/**获取条码  */
+	
+
+	@Column(name = "imgbarcode", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImgbarcode() {
+		return this.imgbarcode;
+	}
+	/**设置条码  */
+
+	public void setImgbarcode(String value) {
+		this.imgbarcode = value;
+	}
+	/**获取点击次数  */
+	
+
+	@Column(name = "hittimes", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getHittimes() {
+		return this.hittimes;
+	}
+	/**设置点击次数  */
+
+	public void setHittimes(Integer value) {
+		this.hittimes = value;
+	}
+	/**获取购买次数  */
+	
+
+	@Column(name = "buytimes", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getBuytimes() {
+		return this.buytimes;
+	}
+	/**设置购买次数  */
+
+	public void setBuytimes(Integer value) {
+		this.buytimes = value;
+	}
+	/**获取商品单位  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}*/
+	
+
+	@Column(name = "punit", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getPunit() {
+		return this.punit;
+	}
+	/**设置商品单位  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}*/
+
+	public void setPunit(Integer value) {
+		this.punit = value;
+	}
+	/**获取市场价 看看的 */
+	
+
+	@Column(name = "marketprice", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getMarketprice() {
+		return this.marketprice;
+	}
+	/**设置市场价 看看的 */
+
+	public void setMarketprice(Double value) {
+		this.marketprice = value;
+	}
+	/**获取优惠价 就是正在销售的价格 */
+	
+
+	@Column(name = "price", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getPrice() {
+		return this.price;
+	}
+	/**设置优惠价 就是正在销售的价格 */
+
+	public void setPrice(Double value) {
+		this.price = value;
+	}
+	/**获取运费  */
+	
+
+	@Column(name = "carriage_price", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCarriagePrice() {
+		return this.carriagePrice;
+	}
+	/**设置运费  */
+
+	public void setCarriagePrice(Double value) {
+		this.carriagePrice = value;
+	}
+	/**获取库存 如果要是有属性库存，这里数字会被属性库存的和更新 */
+	
+
+	@Column(name = "store", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getStore() {
+		return this.store;
+	}
+	/**设置库存 如果要是有属性库存，这里数字会被属性库存的和更新 */
+
+	public void setStore(Integer value) {
+		this.store = value;
+	}
+	/**获取功能主治  */
+	
+
+	@Column(name = "intro", unique = false, nullable = true, insertable = true, updatable = true, length = 400)
+	public String getIntro() {
+		return this.intro;
+	}
+	/**设置功能主治  */
+
+	public void setIntro(String value) {
+		this.intro = value;
+	}
+	/**获取生成地址  */
+	
+
+	@Column(name = "genurl", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getGenurl() {
+		return this.genurl;
+	}
+	/**设置生成地址  */
+
+	public void setGenurl(String value) {
+		this.genurl = value;
+	}
+	/**创建时间String*/
+	private String gmtCreateString;
+	/**获取创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**修改时间String*/
+	private String gmtModifiedString;
+	/**获取修改时间String*/
+	@Transient
+	
+	public String getGmtModifiedString() {
+		if(gmtModifiedString==null && gmtModified!=null)
+			gmtModifiedString=new SimpleDateFormat(DATE_FORMAT).format(gmtModified);
+		return gmtModifiedString;
+	}
+	/**设置修改时间String*/
+	public void setGmtModifiedString(String value) {
+		this.gmtModifiedString=value;
+	}
+	/**发布时间String*/
+	private String gmtReleaseString;
+	/**获取发布时间String*/
+	@Transient
+	
+	public String getGmtReleaseString() {
+		if(gmtReleaseString==null && gmtRelease!=null)
+			gmtReleaseString=new SimpleDateFormat(DATE_FORMAT).format(gmtRelease);
+		return gmtReleaseString;
+	}
+	/**设置发布时间String*/
+	public void setGmtReleaseString(String value) {
+		this.gmtReleaseString=value;
+	}
+	/**状态String*/
+	private String statusApplyPassRefuseString;
+	/**获取状态String*/
+	@Transient
+	
+	public String getStatusApplyPassRefuseString() {
+		return statusApplyPassRefuseString;
+	}
+	/**设置状态String*/
+	public void setStatusApplyPassRefuseString(String value) {
+		this.statusApplyPassRefuseString=value;
+	}
+	/**状态Map*/
+	private Map<String, Object> statusApplyPassRefuseMap;
+	/**获取状态Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusApplyPassRefuseMap() {
+		return statusApplyPassRefuseMap;
+	}
+	/**设置状态Map*/
+	public void setStatusApplyPassRefuseMap(Map<String, Object> value) {
+		this.statusApplyPassRefuseMap=value;
+	}
+	/**是否处方药String*/
+	private String statusRecipeString;
+	/**获取是否处方药String*/
+	@Transient
+	
+	public String getStatusRecipeString() {
+		return statusRecipeString;
+	}
+	/**设置是否处方药String*/
+	public void setStatusRecipeString(String value) {
+		this.statusRecipeString=value;
+	}
+	/**是否处方药Map*/
+	private Map<String, Object> statusRecipeMap;
+	/**获取是否处方药Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusRecipeMap() {
+		return statusRecipeMap;
+	}
+	/**设置是否处方药Map*/
+	public void setStatusRecipeMap(Map<String, Object> value) {
+		this.statusRecipeMap=value;
+	}
+	/**使用方法String*/
+	private String statusUsedString;
+	/**获取使用方法String*/
+	@Transient
+	
+	public String getStatusUsedString() {
+		return statusUsedString;
+	}
+	/**设置使用方法String*/
+	public void setStatusUsedString(String value) {
+		this.statusUsedString=value;
+	}
+	/**使用方法Map*/
+	private Map<String, Object> statusUsedMap;
+	/**获取使用方法Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusUsedMap() {
+		return statusUsedMap;
+	}
+	/**设置使用方法Map*/
+	public void setStatusUsedMap(Map<String, Object> value) {
+		this.statusUsedMap=value;
+	}
+	/**商品目录String*/
+	private String productchannelIdString;
+	/**获取商品目录String*/
+	@Transient
+	
+	public String getProductchannelIdString() {
+		return productchannelIdString;
+	}
+	/**设置商品目录String*/
+	public void setProductchannelIdString(String value) {
+		this.productchannelIdString=value;
+	}
+	/**Productchannel - productchannelIdProductchannelObj*/
+	private Productchannel productchannelIdProductchannelObj;
+	/**获取 Productchannel - productchannelIdProductchannelObj*/
+	@Transient
+	
+	public Productchannel getProductchannelIdProductchannelObj() {
+		return productchannelIdProductchannelObj;
+	}
+	/**设置 Productchannel - 商品目录Obj*/
+	public void setProductchannelIdProductchannelObj(Productchannel value) {
+		this.productchannelIdProductchannelObj=value;
+	}
+	/**商品目录Stringid*/
+	private String productchannelIdStringid;
+	/**获取商品目录Stringid*/
+	@Transient
+	
+	public String getProductchannelIdStringid() {
+		return productchannelIdStringid;
+	}
+	/**设置商品目录Stringid*/
+	public void setProductchannelIdStringid(String value) {
+		this.productchannelIdStringid=value;
+	}
+	/**厂商产地String*/
+	private String manufacturerIdString;
+	/**获取厂商产地String*/
+	@Transient
+	
+	public String getManufacturerIdString() {
+		return manufacturerIdString;
+	}
+	/**设置厂商产地String*/
+	public void setManufacturerIdString(String value) {
+		this.manufacturerIdString=value;
+	}
+	/**Manufacturer - manufacturerIdManufacturerObj*/
+	private Manufacturer manufacturerIdManufacturerObj;
+	/**获取 Manufacturer - manufacturerIdManufacturerObj*/
+	@Transient
+	
+	public Manufacturer getManufacturerIdManufacturerObj() {
+		return manufacturerIdManufacturerObj;
+	}
+	/**设置 Manufacturer - 厂商产地Obj*/
+	public void setManufacturerIdManufacturerObj(Manufacturer value) {
+		this.manufacturerIdManufacturerObj=value;
+	}
+	/**厂商产地Stringid*/
+	private String manufacturerIdStringid;
+	/**获取厂商产地Stringid*/
+	@Transient
+	
+	public String getManufacturerIdStringid() {
+		return manufacturerIdStringid;
+	}
+	/**设置厂商产地Stringid*/
+	public void setManufacturerIdStringid(String value) {
+		this.manufacturerIdStringid=value;
+	}
+	/**商品单位String*/
+	private String punitString;
+	/**获取商品单位String*/
+	@Transient
+	
+	public String getPunitString() {
+		return punitString;
+	}
+	/**设置商品单位String*/
+	public void setPunitString(String value) {
+		this.punitString=value;
+	}
+	/**商品单位Map*/
+	private Map<String, Object> punitMap;
+	/**获取商品单位Map*/
+	@Transient
+	
+	public Map<String, Object> getPunitMap() {
+		return punitMap;
+	}
+	/**设置商品单位Map*/
+	public void setPunitMap(Map<String, Object> value) {
+		this.punitMap=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.statusApplyPassRefuseMap=null;
+		this.statusRecipeMap=null;
+		this.statusUsedMap=null;
+		this.productchannelIdProductchannelObj=null; //Productchannel
+		this.manufacturerIdManufacturerObj=null; //Manufacturer
+		this.punitMap=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**扩展对象ProductExtTxt*/
+	private ProductExtTxt productExtTxt;
+	/**扩展对象ProductExtTxt*/
+	@Transient
+	
+	public ProductExtTxt getProductExtTxt() {
+		return  productExtTxt;
+	}
+	/**
+	 * 扩展对象ProductExtTxt
+	 * @return  productExtTxt
+	 */
+	public void setProductExtTxt(ProductExtTxt productExtTxt) {
+		this. productExtTxt =  productExtTxt;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getGmtCreate())
+			.append(getGmtModified())
+			.append(getGmtRelease())
+			.append(getStatusApplyPassRefuse())
+			.append(getStatusRecipe())
+			.append(getStatusUsed())
+			.append(getUsemount())
+			.append(getProductchannelId())
+			.append(getManufacturerId())
+			.append(getPriority())
+			.append(getProductno())
+			.append(getTitle())
+			.append(getCommonname())
+			.append(getAllowno())
+			.append(getProductstyle())
+			.append(getImg1())
+			.append(getImg2())
+			.append(getImg3())
+			.append(getImg4())
+			.append(getImg5())
+			.append(getImg6())
+			.append(getImgbarcode())
+			.append(getHittimes())
+			.append(getBuytimes())
+			.append(getPunit())
+			.append(getMarketprice())
+			.append(getPrice())
+			.append(getCarriagePrice())
+			.append(getStore())
+			.append(getIntro())
+			.append(getGenurl())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Product == false) return false;
+		if(this == obj) return true;
+		Product other = (Product)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",GmtModified:",getGmtModified())
+			.append(",GmtRelease:",getGmtRelease())
+			.append(",StatusApplyPassRefuse:",getStatusApplyPassRefuse())
+			.append(",StatusRecipe:",getStatusRecipe())
+			.append(",StatusUsed:",getStatusUsed())
+			.append(",Usemount:",getUsemount())
+			.append(",ProductchannelId:",getProductchannelId())
+			.append(",ManufacturerId:",getManufacturerId())
+			.append(",Priority:",getPriority())
+			.append(",Productno:",getProductno())
+			.append(",Title:",getTitle())
+			.append(",Commonname:",getCommonname())
+			.append(",Allowno:",getAllowno())
+			.append(",Productstyle:",getProductstyle())
+			.append(",Img1:",getImg1())
+			.append(",Img2:",getImg2())
+			.append(",Img3:",getImg3())
+			.append(",Img4:",getImg4())
+			.append(",Img5:",getImg5())
+			.append(",Img6:",getImg6())
+			.append(",Imgbarcode:",getImgbarcode())
+			.append(",Hittimes:",getHittimes())
+			.append(",Buytimes:",getBuytimes())
+			.append(",Punit:",getPunit())
+			.append(",Marketprice:",getMarketprice())
+			.append(",Price:",getPrice())
+			.append(",CarriagePrice:",getCarriagePrice())
+			.append(",Store:",getStore())
+			.append(",Intro:",getIntro())
+			.append(",Genurl:",getGenurl())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtModifiedString","gmtReleaseString","statusApplyPassRefuseString","statusApplyPassRefuseMap","statusRecipeString","statusRecipeMap","statusUsedString","statusUsedMap","productchannelIdString","productchannelIdProductchannelObj","productchannelIdStringid","manufacturerIdString","manufacturerIdManufacturerObj","manufacturerIdStringid","punitString","punitMap","productExtTxt","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtModifiedString","gmtReleaseString","statusApplyPassRefuseString","statusApplyPassRefuseMap","statusRecipeString","statusRecipeMap","statusUsedString","statusUsedMap","productchannelIdString","productchannelIdProductchannelObj","productchannelIdStringid","manufacturerIdString","manufacturerIdManufacturerObj","manufacturerIdStringid","punitString","punitMap","productExtTxt","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 商品
+Product product = new Product(
+	gmtRelease , //Date 发布时间   
+	statusApplyPassRefuse , //Integer 状态 default=1 有效就是上架，无效就是下架 
+	statusRecipe , //Integer 是否处方药 default=1  {'0':'非处方药','1':'处方药'}
+	statusUsed , //Integer 使用方法 default=1  {'0':'外用','1':'口服','2':'含服','3':'咀嚼'}
+	usemount , //String 用法用量   
+	productchannelId , //Integer 商品目录   
+	manufacturerId , //Integer 厂商产地 default=0  
+	priority , //Integer 排列顺序 default=99 数字越小排名越前 
+	productno , //String 商品编号   
+	title , //String 商品名   
+	commonname , //String 通用名   
+	allowno , //String 批准文号   
+	productstyle , //String 规格型号   
+	img1 , //String 图1  600x600 
+	img2 , //String 图2  600x600 
+	img3 , //String 图3  600x600 
+	img4 , //String 图4  600x600 
+	img5 , //String 图5  600x600 
+	img6 , //String 图6  600x600 
+	imgbarcode , //String 条码   
+	hittimes , //Integer 点击次数 default=0  
+	buytimes , //Integer 购买次数 default=0  
+	punit , //Integer 商品单位 default=0  {'0':'件','1':'个','2':'箱','3':'盒','4':'瓶','5':'片'}
+	marketprice , //Double 市场价 default=0.0 看看的 
+	price , //Double 优惠价 default=0.0 就是正在销售的价格 
+	carriagePrice , //Double 运费 default=0.0  
+	store , //Integer 库存 default=1 如果要是有属性库存，这里数字会被属性库存的和更新 
+	intro , //String 功能主治   
+	genurl , //String 生成地址   
+	null
+);
+*/
+}

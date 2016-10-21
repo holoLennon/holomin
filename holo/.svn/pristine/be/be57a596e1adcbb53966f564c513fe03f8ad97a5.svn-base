@@ -1,0 +1,47 @@
+<!--Manufacturer，药品生产厂家详细信息-->
+<ion-view view-title='药品生产厂家'  cache-view='false' hide-tabs="false">
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">用户ID:{{obj.id}}</li>
+		<li class="item">创建时间:{{obj.gmtCreateString}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+		<li class="item">名称:{{obj.name}}</li>
+		<li class="item">图</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img}}' style="height:120px"></li>
+		<li class="item">营业执照号:{{obj.idbiz}}</li>
+		<li class="item">联系人:{{obj.contentname}}</li>
+		<li class="item">联系电话:{{obj.tele}}</li>
+		<li class="item">传真:{{obj.fax}}</li>
+		<li class="item">手机号:{{obj.mobile}}</li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">用户ID:<input type="text" placeholder="用户ID"  ng-model="obj.id"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				状态:
+			</div>
+			<select  ng-model="obj.statusValidOrNot">
+				<option ng-repeat="(key,val) in obj.statusValidOrNotMap" value="{{key}}" ng-selected="val==obj.statusValidOrNot">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">名称:<input type="text" placeholder="名称"  ng-model="obj.name"></label>
+        <label class="item item-input">图:<input type="file" file-model="fileimg"/><input type="hidden" ng-model="obj.img"><button class="button icon ion-ios-upload" ng-click="upload(fileimg,'img')"></button></label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img}}" style="height: 120px;"></label>
+		<label class="item item-input">营业执照号:<input type="text" placeholder="营业执照号"  ng-model="obj.idbiz"></label>
+		<label class="item item-input">联系人:<input type="text" placeholder="联系人"  ng-model="obj.contentname"></label>
+		<label class="item item-input">联系电话:<input type="text" placeholder="联系电话"  ng-model="obj.tele"></label>
+		<label class="item item-input">传真:<input type="text" placeholder="传真"  ng-model="obj.fax"></label>
+		<label class="item item-input">手机号:<input type="text" placeholder="手机号"  ng-model="obj.mobile"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

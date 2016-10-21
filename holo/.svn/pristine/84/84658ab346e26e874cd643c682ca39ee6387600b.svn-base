@@ -1,0 +1,49 @@
+<!--ProductTypeList，商品类型列表-->
+<ion-view  view-title="分类"hide-nav-bar="true" class="allweb" >
+    <ion-header-bar class="bar-positive " style="opacity: 0.8;">
+        <label class="item-input-wrapper">
+            <input style="height: 90%" class="ion-beijing" type="text" placeholder="请输入药品名称首汉字搜索" ng-model="searchData" >
+        </label>
+        <i class="icon ion-ios-search placeholder-icon"  ng-click="search()" style="position: relative;left: -15px;top: 8px;"></i>
+    </ion-header-bar>
+    <div id="main" class="h100" >
+        <ion-content class="has-tabs navig">
+            <div class="navigation">
+                <ul class="nav am-ft-darkgray" >
+                    <li ng-repeat="cat in list" ng-click="changeNavCat($index,cat.id)" ng-class="{active : isSelected($index)}">{{cat.channelName}}</li>
+                </ul>
+            </div>
+        </ion-content>
+        <ion-content class="has-tabs home_nav">
+            <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+            <div class="nav_content">
+                <!-- 右列表 -->
+
+                <div am-mode="flat chip" ng-class="{'am-list':true, active: isSelected($index)}"  ng-repeat="cat in list" style="background-color: white" >
+
+                    <div ng-repeat="cat2 in cat.children">
+                        <div class="item item-divider" style="background-color: white">
+                            <span ng-bind="cat2.channelName"></span>
+                        </div>
+                        <div class="row row-wrap">
+                            <div class="col col-33"  ng-repeat="cat3 in cat2.children">
+                                <a class="item" ng-click="gotoUrlProductTypeLinkProductList(cat3)" style="border: none;" >
+                                    <ul>
+                                        <li style="text-align: center">
+                                            <img ng-src="{{cat3.img}}" reset-img style="width: 80%;">
+                                        </li>
+                                        <li style="font-size: 12px;text-align: center">
+                                            <span ng-bind="cat3.channelName"></span>
+                                        </li>
+                                    </ul>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page[selected-1].hasNextPage" >下拉加载更多</ion-infinite-scroll>
+        </ion-content>
+    </div>
+</ion-view>

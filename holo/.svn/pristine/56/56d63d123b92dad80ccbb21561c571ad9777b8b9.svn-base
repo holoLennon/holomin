@@ -1,0 +1,444 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+package com.zmax.yijian.biz.service.my;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
+
+import com.zmax.entity.*;
+import com.zmax.exception.*;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.EasyUiUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.easyui.Tree;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.conf.AttrStatic;
+
+import com.zmax.yijian.biz.service.base.BaseService;
+import com.zmax.yijian.biz.service.common.*;
+import com.zmax.yijian.biz.service.spec.SpecService;
+import com.zmax.yijian.common.dal.bean.*;
+
+/**
+ * 
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+@Service
+public class DrugstoreService extends BaseService<Drugstore> {
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(DrugstoreService.class);
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+	@Autowired
+	CommonzSvrUitlsSpec commonzSvrUitlsSpec;
+	@Autowired
+	SpecService specService;
+
+	/**
+	 * 创建时的保存
+	 * @param sessionUser 
+	 * @param oldobj 旧对象，创建时通常是个空对象
+	 * @param obj 新对象，也就是需要保存的对象
+	 * @param copyfrom 从哪个表复制对象
+	 * @param copyfromwhere 复制的条件
+	 * @param needBefore 是否需要做写表前操作
+	 * @param needAfter 是否需要写表后操作
+	 * @throws Exception
+	 */
+	public void saveCreate(User sessionUser,Drugstore oldobj,Drugstore obj,String copyfrom,String copyfromwhere,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		//用于做复制新增的检查
+		if(StringUtils.isNotBlank(copyfrom)&&StringUtils.isNotBlank(copyfromwhere)){
+			Object objsrc=specService.getFirst(copyfrom, copyfromwhere, null);
+			commonzSvrUitlsSpec.obj2objcheck(sessionUser,objsrc, obj ,copyfrom ,"Drugstore");
+		}		
+		if(needBefore){
+			//创建_写表前操作之通用
+			commonzSvrUitls.createBefore(oldobj,obj,"Drugstore",sessionUser);
+			//创建_写表前操作之本地
+			createAndUpdateBefore(sessionUser,"create",oldobj, obj);
+			//创建_写表前操作之自定义，目的是修改obj
+			commonzSvrUitlsSpec.createAndUpdateBefore("create",oldobj, obj,sessionUser);
+		}
+		save(obj);
+		//TODO:lang
+		if(needAfter){
+			//创建_写表后操作之本地
+			createAndUpdateAfter(sessionUser,"create",obj,new Drugstore());
+			//创建_写表后操作之自定义
+			commonzSvrUitlsSpec.createAndUpdateAfter("create",obj,new Drugstore(),sessionUser);
+		}
+	}
+	/**
+	 * 更新
+	 * 流程：从DB取出DB对象，对提交对象进行修正，将修正对象复制到DB对象，保存
+	 * @param sessionUser 
+	 * @param obj
+	 * @param id 这个id通常是从session中获取的
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void updateUpdate(User sessionUser,Drugstore obj,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		//数据库表里取出的对象，要把页面对象obj里的内容，放进来进行保存
+		Drugstore dbobj=get(sessionUser, id);
+		if(dbobj==null)
+			throw new BoException("数据库中数据找不到");
+		if(needBefore){
+			//更新_写表前操作之通用，目的是修改obj
+			commonzSvrUitls.updateBefore(dbobj,obj,"Drugstore",sessionUser);
+			//更新_写表前操作之本地，目的是修改obj
+			createAndUpdateBefore(sessionUser,"update",dbobj, obj);
+			//更新_写表前操作之自定义，目的是修改obj
+			commonzSvrUitlsSpec.createAndUpdateBefore("update", dbobj, obj, sessionUser);
+		}
+		//复制一下老数据库对象，给createAndUpdateAfter用
+		Drugstore olddbobj=new Drugstore();
+		ClassUtils.beanDeepCopy(dbobj, olddbobj);
+		//把页面传进来的对象obj复制到数据库里产生的对象dbobj,之后保存数据库产生的对象dbobj
+		ClassUtils.beanDeepCopy(obj, dbobj);
+		update(sessionUser,dbobj);
+		if(needAfter){
+			//更新_写表后操作之本地
+			createAndUpdateAfter(sessionUser,"update",dbobj,olddbobj);
+			//更新_写表后操作之自定义
+			commonzSvrUitlsSpec.createAndUpdateAfter("update",dbobj,olddbobj,sessionUser);
+		}
+	}
+
+	/**
+	 * 根据IDS批量更新某些数据
+	 * @param sessionUser 
+	 * @param ids
+	 * @param setfield
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void updateBatchByIds(User sessionUser,String[] ids,String setfield,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		String hql= "update Drugstore set "+setfield +" where "+StringUtilz.whereIn(ids);
+		executeHql(sessionUser, hql, null);
+		if(needAfter)
+			commonzSvrUitlsSpec.batchupdateAfter(sessionUser,"Drugstore", setfield, ids);
+	}
+	/**
+	 * 根据ID删除一个
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void deleteOneById(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		if(needBefore)
+			commonzSvrUitlsSpec.deleteByIdBefore(sessionUser,"Drugstore", id);
+		deleteById(sessionUser,id);
+		if(needAfter)
+			commonzSvrUitlsSpec.deleteByIdAfter(sessionUser,"Drugstore", id);
+		//TODO:lang
+	}
+	/**
+	 * 根据IDs删除批量
+	 * @param sessionUser 
+	 * @param ids
+	 * @param needBefore
+	 * @param needAfter
+	 * @throws Exception
+	 */
+	public void deleteBatch(User sessionUser,String[] ids,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		
+		for (String string : ids) {
+			Integer id=Integer.valueOf(string);
+			if(needBefore)
+				commonzSvrUitlsSpec.deleteByIdBefore(sessionUser,"Drugstore", id);
+			deleteById(sessionUser,id);
+			if(needAfter)
+				commonzSvrUitlsSpec.deleteByIdAfter(sessionUser,"Drugstore", id);
+		}
+	}
+	/**
+	 * 首页
+	 * @param sessionUser 
+	 * @param obj 在index时会传一个新对象进来，用于添加搜索条件用的列表
+	 * @param needBefore
+	 * @param needAfter
+	 * @param act 更多的操作 "nullCreate"=如果是空列表创建一个新对象
+	 */
+	public void csindex(User sessionUser,Drugstore obj,boolean needBefore,boolean needAfter,String act) throws BoException,Exception{
+		if(StringUtils.equals(act, "nullCreate")){
+			if(obj==null)
+				throw new Exception("无法创建空对象");
+			Drugstore dbobj=get(sessionUser, obj.getId());
+			if(dbobj==null){
+				//创建_写表前操作之自定义，目的是修改obj
+				commonzSvrUitlsSpec.createAndUpdateBefore("create",new Drugstore(), obj,sessionUser);
+				save(obj);
+			}
+		}
+		if(needAfter){
+			indexAfter(sessionUser,obj); //给搜索用
+		}
+	}
+	/**
+	 * 表格
+	 * @param sessionUser 
+	 * @param search
+	 * @param ph
+	 * @param queryhq
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Grid csgrid(User sessionUser,Drugstore search, PageHelper ph,String queryhq,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		String order=(ph.realSort()+" "+ph.getOrder()).trim();
+		List<Object> params = new ArrayList<Object>();
+		if(needBefore)
+			gridBefore(sessionUser,search);
+		String searchwhere=commonzSvrUitlsSpec.makeWhere(sessionUser,search, queryhq, params);
+		String where=StringUtilz.whereAdd(searchwhere, queryhq);
+		Grid page = listPagedQuery(sessionUser, where, order, ph.getPage(), ph.getRows(), params.toArray());
+		page.setObj1(queryhq);
+		if(needAfter)
+			gridAfter(sessionUser,page.getRows());	
+		
+		return page;
+	}
+	/**
+	 * 详情
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Drugstore csshow(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		Drugstore drugstore=get(sessionUser, id);
+		if(needAfter)
+			showAfter(sessionUser,drugstore);
+		return (drugstore==null)?new Drugstore():drugstore;
+	}
+	/**
+	 * 新建GET
+	 * @param sessionUser 
+	 * @param drugstore 初始用户
+	 * @param copyfrom 从其它表复制的表名
+	 * @param copyfromwhere 从其它表复制的条件
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 */
+	public Drugstore csnewget(User sessionUser,Drugstore drugstore,String copyfrom,String copyfromwhere,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		if(drugstore==null)
+			drugstore=new Drugstore();
+		//如果是从其它表复制过来的
+		if(StringUtils.isNotBlank(copyfrom)&&StringUtils.isNotBlank(copyfromwhere)){
+			Object objsrc=specService.getFirst(copyfrom, copyfromwhere, null);
+			commonzSvrUitlsSpec.obj2obj(sessionUser,objsrc, drugstore,copyfrom ,"Drugstore");
+			drugstore.setId(null);
+		}
+		if(needBefore)
+			commonzSvrUitlsSpec.newgetBefore(sessionUser,drugstore);
+		if(needAfter)
+			newgetAfter(sessionUser,drugstore);
+		return drugstore;
+	}
+	/**
+	 * 修改时的请求
+	 * @param sessionUser 
+	 * @param id
+	 * @param needBefore
+	 * @param needAfter
+	 * @return
+	 * @throws Exception
+	 */
+	public Drugstore csedit(User sessionUser,Integer id,boolean needBefore,boolean needAfter) throws BoException,Exception{
+		
+		Drugstore drugstore=get(sessionUser, id);
+		if(drugstore==null){
+			throw new Exception("数据找不到");
+		}
+			
+		if(needBefore)
+			commonzSvrUitlsSpec.editBefore(sessionUser,drugstore);
+		if(needAfter)
+			editAfter(sessionUser,drugstore);
+		return drugstore;
+	}
+	////////下面是系列补充与检查
+
+	/**
+	 * 创建更新，写表前，如计算总价之类，通常都是一样的操作
+	 * @param sessionUser
+	 * @param simb
+	 * @param dbobj update更新时是数据库里取出的老对象，create创建时是个new Object()
+	 * @param obj 主要目的是修改这个对象
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void createAndUpdateBefore(User sessionUser,String simb,Drugstore dbobj,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		//create update 共用
+		//create 独有
+		if("create".equals(simb)){
+		}
+		//update 独有
+		if("update".equals(simb)){
+			
+		}
+	}	
+	/**
+	 * 创建更新，有可能要改变其它表，或本表的其它数据，通常都是一样的操作
+	 * @param sessionUser
+	 * @param simb
+	 * @param obj 已经db保存过的对象
+	 * @param olddbobj update更新时是复制过的数据库老对象，create创建时是个new Object()
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void createAndUpdateAfter(User sessionUser,String simb,Drugstore obj,Drugstore olddbobj) throws BoException,Exception{
+		if(obj==null)return;
+		//create 独有
+		if("create".equals(simb)){
+		}
+		//update 独有
+		if("update".equals(simb)){
+		}
+	}	
+
+
+	/**
+	 * 获取index，创建新对象后，返回页面之前
+	 * @param obj
+	 */
+	public void indexAfter(User sessionUser,Drugstore obj) throws BoException,Exception{
+		addList(sessionUser,obj); //给搜索用
+		commonzSvrUitlsSpec.indexAfter(sessionUser,obj);
+	}	
+	/**
+	 * 列表，读库前
+	 * @param obj
+	 */
+	public void gridBefore(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		commonzSvrUitlsSpec.gridBefore(sessionUser,obj);
+
+	}	
+	/**
+	 * 列表，读库后
+	 * @param list
+	 */
+	public void gridAfter(User sessionUser,List<Drugstore> list) throws BoException,Exception{
+		if(list==null||list.size()==0) return;
+		for (int i = 0; i < list.size(); i++) {
+			gridOneAfter(sessionUser,list.get(i));	
+		}
+		commonzSvrUitlsSpec.gridAfter(sessionUser,list);
+	}
+	/**
+	 * 列表中的单项，读库后
+	 * @param obj
+	 */
+	public void gridOneAfter(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		addString(sessionUser,obj);	
+		
+	}	
+	/**
+	 * show，读库后
+	 * @param obj
+	 */
+	public void showAfter(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		addObj(sessionUser,obj);
+		addString(sessionUser,obj);
+		commonzSvrUitlsSpec.show(sessionUser,obj);
+	}
+	/**
+	 * newGet，对象产生之后，返回页面之前，可能还会在对象中放一些允许用户修改的，从其它表复制过来的数据，目的是为了方便用户
+	 * @param obj
+	 * @throws Exception
+	 */
+	public void newgetAfter(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		addList(sessionUser,obj);
+		addString(sessionUser,obj);
+		commonzSvrUitlsSpec.newgetAfter(sessionUser,obj);
+	}	
+	/**
+	 * Edit Get，获取对象之后，返回页面之前
+	 * @param obj
+	 */
+	public void editAfter(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		addList(sessionUser,obj);
+		addString(sessionUser,obj);	
+		commonzSvrUitlsSpec.editAfter(sessionUser,obj);
+	}
+	
+	////////下面是各类补充
+	/**
+	 * 加上各类对象
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addObj(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		commonzSvrUitlsSpec.addObj(sessionUser,obj);		
+	}
+
+	/**
+	 * 给对象加上list,map，用于radio选择，combox搜索
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addList(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		obj.setAttrMap((Map)IsoInstance.getInstance().getMap("Drugstore.Attr"));
+		commonzSvrUitlsSpec.addList(sessionUser,obj);
+	}
+
+	/**
+	 * 加文本
+	 * @param sessionUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws Exception
+	 */
+	public void addString(User sessionUser,Drugstore obj) throws BoException,Exception{
+		if(obj==null)return;
+		 //这里不要查session
+		String value="";
+		obj.setAreaidString(AreaUtils.takeName(obj.getAreaid()));
+		value=(String)IsoInstance.getInstance().getMapString("Drugstore.Attr", ""+obj.getAttr());
+		if(StringUtils.isEmpty(value))
+			value=""+obj.getAttr();
+		obj.setAttrString(value);
+		commonzSvrUitlsSpec.addString(sessionUser,obj);
+	}
+}

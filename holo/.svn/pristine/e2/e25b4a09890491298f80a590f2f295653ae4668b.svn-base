@@ -1,0 +1,55 @@
+<ion-view view-title="注册" hide-back-button="true">
+<ion-content>
+
+<div class="container ng-scope">
+            <div class="ng-scope conter">
+                <form class="f_reg ng-pristine ng-valid">
+                    <div class="relative">
+                        <input type="text" placeholder="请输入注册手机号码" ng-model="user.username" class="inputcheck ng-pristine ng-valid" readonly >
+                    </div>
+                    <div class="code clearfix">
+                        <input type="text" ng-model="vm.smscode" placeholder="请输入短信验证码" class="ng-pristine ng-valid pull-left" style="padding:0 15px;">
+                        <a ng-click="getSMS(username);" id="getCaptcha" class="btn ng-binding pull-left" style="float:right;width:100px;">{{countNum||"获取短信验证码"}}</a>
+                    </div>
+                    <div class="">
+                        <input type="text" placeholder="请输入您的昵称" ng-model="nickname" class="ng-pristine ng-valid">
+                    </div>
+                   <!--
+                   <div class="code clearfix" style="font-size:11px;">
+                        <input type="text" ng-model="vm.imgcaptcha" placeholder="请输入图形验证码" class="ng-pristine ng-valid left" style="padding:0 1px 0 10px;">
+                        <img width="80" height="35" class="left" ng-click="getImgCaptcha()" ng-src='{{vm.imgcaptchaUrl}}'>
+                        <a ng-click="getImgCaptcha()">点击图片更换</a>
+                    </div>
+
+                    <div class="clearfix">
+                        <input type="password" placeholder="请输入密码(至少6个字符)" ng-model="password" class="ng-pristine ng-valid">
+                    </div>
+                    <div class="clearfix">
+                        <input type="password" placeholder="确认密码" ng-model="repassword" class="ng-pristine ng-valid">
+                    </div>
+                    <div class="code clearfix">
+                        <input type="text" ng-model="code" placeholder="请输入短信验证码" class="ng-pristine ng-valid pull-left" style="padding:0 15px;">
+                        <a ng-click="getCaptcha(imgcaptcha,username);" id="getCaptcha" class="btn ng-binding pull-left" style="float:right;width:100px;">{{countNum||"获取短信验证码"}}</a>
+                    </div>
+                    <div class="shangquan clearfix" style="padding-top:20px;"><label class="shsq">生活商圈</label>
+                        <select  ng-model="province"  ng-change="selectCity(province)" ng-options="key.areaname for key in division">
+                            <option value="">省</option>
+                        </select>
+                        <select ng-model="city" ng-options="key.areaname for key in CityList"  ng-change="selectCountyOrDistrict(city)">
+                            <option value="">市</option>
+                        </select>
+                        <select  ng-model="countyOrDistrict" ng-options="key.areaname for key in AreaList" style="border-radius:0 3px 3px 0;">
+                            <option value="">区</option>
+                        </select>
+                    </div>-->
+                    <div class="clearfix" style="border:0px;">
+                        <!--<a class="btn btn-positive btn-block buy2" ng-click="regPost(nickname,code,password,repassword,countyOrDistrict.id);">提交</a>-->
+                        <a class="btn btn-positive btn-block buy2" ng-click="regbCommit(nickname,code);">下一步</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+
+

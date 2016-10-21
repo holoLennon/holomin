@@ -1,0 +1,77 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Seller/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${seller.id}" />
+	<@z.pmt key="42.Seller.dlevel">
+				<@p.radio label="db.Seller.dlevel" nameid="dlevel" value="${seller.dlevel}" help="" list=seller.dlevelMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.name">
+				<@p.text label="db.Seller.name" nameid="name"  value="${seller.name}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Seller.idcard">
+				<@p.text label="db.Seller.idcard" nameid="idcard"  value="${seller.idcard}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Seller.age">
+				<@p.textnumber label="db.Seller.age" nameid="age"  value="${seller.age}" help="每年加1" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.usersex">
+				<@p.radio label="db.Seller.usersex" nameid="usersex" value="${seller.usersex}" help="" list=seller.usersexMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.gmtIn">
+				<@p.date label="db.Seller.gmtIn" nameid="gmtIn"  value="${seller.gmtInString}" help="" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.gmtWork">
+				<@p.date label="db.Seller.gmtWork" nameid="gmtWork"  value="${seller.gmtWorkString}" help="" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.area">
+				<@p.text label="db.Seller.area" nameid="area"  value="${seller.area}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Seller.mmoney">
+				<@p.textnumber label="db.Seller.mmoney" nameid="mmoney"  value="${seller.mmoney}" help="正数是收入，负数是支出" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.mmoneyteam">
+				<@p.textnumber label="db.Seller.mmoneyteam" nameid="mmoneyteam"  value="${seller.mmoneyteam}" help="正数是收入，负数是支出" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.mmoneyall">
+				<@p.textnumber label="db.Seller.mmoneyall" nameid="mmoneyall"  value="${seller.mmoneyall}" help="直接+团队" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.parentid">
+				<@p.selecttree  label="db.Seller.parentid" nameid="parentid" url="${base}/user/Seller/tree.html" multiple="" headerKey="${seller.parentid}" headerValue="${seller.parentidString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Seller.priority">
+				<@p.textnumber label="db.Seller.priority" nameid="priority"  value="${seller.priority}" help="数字越小排名越前" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.childrennum">
+				<@p.textnumber label="db.Seller.childrennum" nameid="childrennum"  value="${seller.childrennum}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.family">
+				<@p.label label="db.Seller.family" nameid="family" value="${seller.family}" help="逗号分开" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Seller.qrimg">
+					<@p.ckfimg label="db.Seller.qrimg" nameid="qrimg"  value="${seller.qrimg}" help="600x600"  moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

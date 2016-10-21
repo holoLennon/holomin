@@ -1,0 +1,54 @@
+/**
+ * Wwwhome，手机页首页配置详细
+ */
+appctrl.controller('WwwhomeCtrl', function($scope, $rootScope, $log, $timeout,
+                                           $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                           $location, $state,
+                                           $cordovaNetwork, $cordovaGoogleAnalytics,
+                                           $stateParams,$log,
+                                           ENV,CommonService,WwwhomeService) {
+    $log.debug("enter Wwwhome ctrl");
+    /**页面对象*/
+    $scope.vm={};
+    $scope.vm.isedit=false;
+    /**对象*/
+    $scope.obj={};
+    /**搜索关键字*/
+    $scope.searchData='';
+
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("Wwwhome ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("Wwwhome ctrl afterEnter");
+        if (ctrlReinitMap.get('WwwhomeCtrl')) {
+            ctrlReinitMap.remove('WwwhomeCtrl');
+            $log.debug("Wwwhome ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("Wwwhome ctrl init");
+     };
+      /**
+     * 搜索
+     */
+    $scope.search=function(){
+        $log.debug("kw ="+$scope.searchData);
+        if(isblank($scope.searchData))
+            return;
+        $location.path("/tab/ProductListSearch/"+$scope.searchData);
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('WwwhomeCtrl');
+});

@@ -1,0 +1,16 @@
+#单服务器版true/多服务器版false
+isCkf=true
+#域名
+rootdomain=zjjnyd.com
+#包的根域名
+packagedomain=com.zmax
+#tmpMainByHand中的内容
+handMain=
+#更多内容：tmpMorebeanByHand,
+handMore=
+#/**更多BEANONLY*/
+morebean=wx
+#/**更多BEANALL*/
+morebeanAll=
+#/**附加 rest,innercs*/
+attach=rest

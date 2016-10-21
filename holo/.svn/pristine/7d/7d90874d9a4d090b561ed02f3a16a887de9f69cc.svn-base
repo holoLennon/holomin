@@ -1,0 +1,83 @@
+<style type="text/css">
+	#map{position:absolute;top:60px;bottom:0;width:100%;}
+	#gaode_container_shopdrugstore{
+		height: 80%;
+		width: 100%;
+	}
+	.AMapArea{
+		height: 75%!important;
+		margin: 0px;
+		padding: 0px;
+	}
+	.amap-adcontent-body {
+		width: 90%;
+	}
+	.info-title{
+		color: white;
+		font-size: 14px;
+		background-color: rgba(0,155,255,0.8);
+		line-height: 26px;
+		padding: 0px 0 0 6px;
+		font-weight: lighter;
+		letter-spacing: 1px
+	}
+	.info-content{
+		padding: 4px;
+		color: #666666;
+		line-height: 23px;
+	}
+	.info-content img{
+		float: left;
+		margin: 3px;
+	}
+	#panelSearchRet {
+		position: fixed;
+		background-color: white;
+		max-height: 90%;
+		overflow-y: auto;
+		top: 10px;
+		right: 10px;
+		width: 280px;
+		border-bottom: solid 1px silver;
+	}
+
+</style>
+<!--Park，停车场地图-->
+<ion-view view-title="药店"  cache-view="false" hide-tabs="false " >
+	<ion-content class="has-tabs has-header">
+		<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+		<div class="AMapArea" id="amap">
+			<div id="gaode_container_shopdrugstore" tabindex="0"></div>
+			<div id='panelSearchRet'></div>
+			<ion-list class="list">
+				<ion-item class="item-avatar" bindonce collection-repeat="obj in list" collection-item-width="'100%'" collection-item-height="80px" style="margin-top: 10px" ng-click="yaodianlianxi()">
+					<!--<img ng-src="{{obj.img1}}" reset-img />-->
+					<img src="res/img/yaofang.png"  />
+
+					<div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -25px;background-color: snow">
+						<span style="font-size: 14px;color: black">{{obj.cname}}</span><br>
+						<span>地址:{{obj.addr}}</span>
+						<br>
+						<span>联系客服:400-1234-1234</span>
+					</div>
+					<!--<p>-->
+						<!--<span>序号ID:{{obj.id}}</span>-->
+						<!--<span>地区:{{obj.areaidString}}</span>-->
+						<!--<span>药房名称:{{obj.cname}}</span>-->
+						<!--<span>药房地址:{{obj.addr}}</span>-->
+						<!--<span>药房电话:{{obj.tele}}</span>-->
+						<!--<span>药房性质:{{obj.attrString}}</span>-->
+						<!--<span>咨询药师姓名:{{obj.docname}}</span>-->
+						<!--<span>咨询药师电话:{{obj.doctele}}</span>-->
+						<!--<span>药房咨询QQ:{{obj.docqq}}</span>-->
+						<!--<span>经度lng:{{obj.centerlng}}</span>-->
+						<!--<span>维度lat:{{obj.centerlat}}</span>-->
+						<!--<span>图1:{{obj.img1}}</span>-->
+						<!--<span>图2:{{obj.img2}}</span>-->
+					<!--</p>-->
+				</ion-item>
+			</ion-list>
+		</div>
+
+	</ion-content>
+</ion-view>

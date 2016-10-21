@@ -1,0 +1,126 @@
+/**
+ * FuWu，服务
+ * @param act 0:从我的过来，看看，1;从开药方过来，要求返回药id的
+ */
+appctrl.controller('FuWuCtrl', function($scope, $rootScope,$timeout,
+                                           $ionicTabsDelegate, $ionicPopover, $ionicModal, $ionicLoading,
+                                           $location, $state,$stateParams,
+                                           $cordovaNetwork, $cordovaGoogleAnalytics,$log,Storage,$ionicHistory,
+                                           ENV,DoctorProductService,zspecService,CommonService) {
+    $log.debug("enterFuWu ctrl");
+    /**参数*/
+    $scope.act = $stateParams.act;
+    /**页码*/
+    $scope.page=_.clone(_Page);
+    /**页面显示的列表*/
+    $scope.list=[];
+    /**
+     * 进入前
+     */
+    $scope.$on('$ionicView.beforeEnter', function() {
+        $log.debug("FuWu ctrl beforeEnter");
+    });
+    /**
+     * 进入后
+     */
+    $scope.$on('$ionicView.afterEnter', function() {
+        $log.debug("FuWu ctrl afterEnter");
+        if (ctrlReinitMap.get('FuWuCtrl')) {
+            ctrlReinitMap.remove('FuWuCtrl');
+            $log.debug("FuWu ctrl afterEnter init");
+            $scope.init();
+        }
+    });
+
+    /**
+     * 初始化
+     */
+    $scope.init=function(){
+        $log.debug("FuWu ctrl init ");
+	    $scope.page.where=Storage.get("FuWu"+"QueryWhere");
+		$scope.page.pageNo=1;
+        $scope.page.hasNextPage=false;
+        $scope.list=[];
+        $scope.first();
+    };
+    /**
+     * 上拉刷新
+     */
+    $scope.doRefresh=function(){
+        $scope.init();
+    };
+    /**
+     * 给list上加数据
+     * @param data
+     */
+    $scope.addList=function(data){
+        angular.forEach(data, function (item) {
+            $scope.list.push(item);
+        });
+        if(data && data.length < $scope.page.pageSize){
+            $scope.page.hasNextPage=false;
+        }else{
+            $scope.page.hasNextPage=true;
+        }
+    };
+
+    /**
+     * 第一次查询
+     */
+    $scope.first=function(){
+        DoctorProductService.first(null,$scope.page).then(function (data) {
+            $log.debug("FuWu ctrl query then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.refreshComplete');
+        });
+
+    };
+
+    /**
+     * 下拉加载更多查询
+     */
+    $scope.more=function(){
+        $log.debug("FuWu ctrl more=========");
+        if(!$scope.page.hasNextPage){
+            return;
+        }
+        DoctorProductService.more($scope.page).then(function (data) {
+            $log.debug("FuWu ctrl more then");
+            $scope.addList(data);
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+    };
+    /**
+     * 选择这样产品
+     * @param doctorProduct
+     */
+    $scope.chooseThis=function(doctorProduct){
+        $scope.cartAdd(doctorProduct.productIdProductObj);
+        $ionicHistory.goBack();
+
+    };
+    /**
+     * 删除yaojian
+     * @param id
+     */
+    $scope.delDoctorProduct=function(id){
+        CommonService.confirm('确认删除？').then(function(res) {if(res) {
+            zspecService.delDoctorProduct(id).then(function (data) {
+                $log.debug("delDoctorProduct then");
+                $scope.init();
+            });
+
+        } else {}});
+
+    };
+
+    /**
+     * 电话咨询
+     */
+    $scope.dianhuazixun=function(){
+        CommonService.alertm('客服电话：1888888888');
+    };
+
+    $scope.init();
+    ctrlReinitMap.remove('FuWuCtrl');
+});

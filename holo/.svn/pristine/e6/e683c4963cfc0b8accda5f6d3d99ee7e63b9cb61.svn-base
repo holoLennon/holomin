@@ -1,0 +1,70 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/Druggist/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.Druggist.licenseno">
+				<@p.text label="db.Druggist.licenseno" nameid="licenseno"  value="${druggist.licenseno}" help="" dataoptions="validType:['length[0,30]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.img1">
+					<@p.ckfimg label="db.Druggist.img1" nameid="img1"  value="${druggist.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.img2">
+					<@p.ckfimg label="db.Druggist.img2" nameid="img2"  value="${druggist.img2}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.dlevel">
+				<@p.radio label="db.Druggist.dlevel" nameid="dlevel" value="${druggist.dlevel}" help="" list=druggist.dlevelMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.usersex">
+				<@p.radio label="db.Druggist.usersex" nameid="usersex" value="${druggist.usersex}" help="" list=druggist.usersexMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.idtype">
+				<@p.radio label="db.Druggist.idtype" nameid="idtype" value="${druggist.idtype}" help="" list=druggist.idtypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.idnum">
+				<@p.text label="db.Druggist.idnum" nameid="idnum"  value="${druggist.idnum}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.zip">
+				<@p.text label="db.Druggist.zip" nameid="zip"  value="${druggist.zip}" help="" dataoptions="validType:['length[0,6]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.addr">
+				<@p.text label="db.Druggist.addr" nameid="addr"  value="${druggist.addr}" help="" dataoptions="validType:['length[0,200]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.company">
+				<@p.text label="db.Druggist.company" nameid="company"  value="${druggist.company}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.mobile">
+				<@p.text label="db.Druggist.mobile" nameid="mobile"  value="${druggist.mobile}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.tele">
+				<@p.text label="db.Druggist.tele" nameid="tele"  value="${druggist.tele}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Druggist.email">
+				<@p.text label="db.Druggist.email" nameid="email"  value="${druggist.email}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

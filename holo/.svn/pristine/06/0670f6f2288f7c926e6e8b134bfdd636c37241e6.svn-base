@@ -1,0 +1,52 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/Productchannel/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.Productchannel.channelName">
+				<@p.text label="db.Productchannel.channelName" nameid="channelName"  value="${productchannel.channelName}" help="" dataoptions="validType:['length[0,100]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.statusValidOrNot">
+				<@p.radio label="db.Productchannel.statusValidOrNot" nameid="statusValidOrNot" value="${productchannel.statusValidOrNot}" help="" list=productchannel.statusValidOrNotMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.parentid">
+				<@p.selecttree  label="db.Productchannel.parentid" nameid="parentid" url="${base}/user/Productchannel/tree.html" multiple="" headerKey="${productchannel.parentid}" headerValue="${productchannel.parentidString}" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.priority">
+				<@p.textnumber label="db.Productchannel.priority" nameid="priority"  value="${productchannel.priority}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.childrennum">
+				<@p.textnumber label="db.Productchannel.childrennum" nameid="childrennum"  value="${productchannel.childrennum}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.icon">
+				<@p.text label="db.Productchannel.icon" nameid="icon"  value="${productchannel.icon}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="41.Productchannel.img">
+					<@p.ckfimg label="db.Productchannel.img" nameid="img"  value="${productchannel.img}" help=""  moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

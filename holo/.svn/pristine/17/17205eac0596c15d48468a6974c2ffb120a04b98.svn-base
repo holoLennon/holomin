@@ -1,0 +1,50 @@
+<!--ProductType，商品类型详细信息-->
+<ion-view view-title='商品类型' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj && vm.isedit==false">
+		<li class="item">序号ID:{{obj.id}}</li>
+		<li class="item">关键字:{{obj.ckey}}</li>
+		<li class="item">名称:{{obj.channelName}}</li>
+		<li class="item">状态:{{obj.statusValidOrNotString}}</li>
+		<li class="item">父ID:{{obj.parentidString}}</li>
+		<li class="item">排列顺序:{{obj.priority}}</li>
+		<li class="item">孩子数量:{{obj.childrennum}}</li>
+		<li class="item">祖先:{{obj.family}}</li>
+		<li class="item">生成地址:{{obj.genurl}}</li>
+		<li class="item">图标名称:{{obj.icon}}</li>
+		<li class="item">图</li>
+		<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img}}' style="height:120px"></li>
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<label class="item item-input">序号ID:<input type="text" placeholder="序号ID"  ng-model="obj.id"></label>
+		<label class="item item-input">关键字:<input type="text" placeholder="关键字"  ng-model="obj.ckey"></label>
+		<label class="item item-input">名称:<input type="text" placeholder="名称"  ng-model="obj.channelName"></label>
+		<label class="item item-input item-select">
+			<div class="input-label">
+				状态:
+			</div>
+			<select  ng-model="obj.statusValidOrNot">
+				<option ng-repeat="(key,val) in obj.statusValidOrNotMap" value="{{key}}" ng-selected="val==obj.statusValidOrNot">{{val}}</option>
+			</select>
+		</label>
+		<label class="item item-input">父ID:<input type="text" placeholder="父ID"  ng-model="obj.parentid"></label>
+		<label class="item item-input">排列顺序:<input type="text" placeholder="排列顺序"  ng-model="obj.priority"></label>
+		<label class="item item-input">孩子数量:<input type="text" placeholder="孩子数量"  ng-model="obj.childrennum"></label>
+		<label class="item item-input">祖先:<input type="text" placeholder="祖先"  ng-model="obj.family"></label>
+		<label class="item item-input">生成地址:<input type="text" placeholder="生成地址"  ng-model="obj.genurl"></label>
+		<label class="item item-input">图标名称:<input type="text" placeholder="图标名称"  ng-model="obj.icon"></label>
+        <label class="item item-input">图:<input type="file" file-model="fileimg"/><input type="hidden" ng-model="obj.img"><button class="button icon ion-ios-upload" ng-click="upload(fileimg,'img')"></button></label>
+        <label class="item item-input" style="height: 120px;"><img ng-src="{{obj.img}}" style="height: 120px;"></label>
+		<li class="item"><a ng-click="vm.isedit=false;save()" class="button button-full button-balanced"><i class="icon ion-checkmark"></i>保存</a></li>
+		<li class="item"><a ng-click="vm.isedit=false" class="button button-full button-dark"><i class="icon ion-close"></i>取消</a></li>
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

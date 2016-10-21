@@ -1,0 +1,1164 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+
+
+/**
+ * 医生会员<br/>这里放表的说明
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "doctor")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Doctor extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "医生会员";
+
+	//date formats
+	
+	//columns START
+	/**用户ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**医科目录 Integer   */
+	@Max(99999999999L)
+	
+	private Integer productchannelId;
+	/**年纪 Integer default=20 每年自动加1 */
+	@Max(999L)
+	
+	private Integer age = 20;
+	/**头像 String  600x600 */
+	@Length(max=200)
+	
+	private String img1;
+	/**姓名 String   */
+	@Length(max=20)
+	
+	private String name;
+	/**所在医院 Integer   */
+	@Max(99999999999L)
+	
+	private Integer hospitalId;
+	/**职称 Integer default=0  map={'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}*/
+	@Max(999L)
+	
+	private Integer dlevel = 0;
+	/**用户性别 Integer default=0  map={'0':'男','1':'女'}*/
+	@Max(999L)
+	
+	private Integer usersex = 0;
+	/**证件类型 Integer default=0  map={'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+	@Max(999L)
+	
+	private Integer idtype = 0;
+	/**证件号码 String   */
+	@Length(max=20)
+	
+	private String idnum;
+	/**邮编 String   */
+	@Length(max=6)
+	
+	private String zip;
+	/**地址 String   */
+	@Length(max=200)
+	
+	private String addr;
+	/**工作单位 String   */
+	@Length(max=50)
+	
+	private String company;
+	/**手机 String   */
+	@Length(max=20)
+	
+	private String mobile;
+	/**座机 String   */
+	@Length(max=20)
+	
+	private String tele;
+	/**电子邮件 String   */
+	@Length(max=50)
+	
+	private String email;
+	/**医生类型 Integer default=0 平台医生就是客服 map={'0':'医院医生','1':'平台医生'}*/
+	@Max(999L)
+	
+	private Integer itype = 0;
+	/**总处方数量 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer countPrescription = 0;
+	/**总开方成交金额 Double default=0.0  */
+	
+	
+	private Double countOrderr;
+	/**总首推消费金额 Double default=0.0  */
+	
+	
+	private Double countFirst;
+	/**二维码 String  600x600 */
+	@Length(max=200)
+	
+	private String qrimg;
+	/**所属业务员 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer sellerId = 0;
+	/**是否有新医患关系 Integer default=0  map={'0':'无','1':'有'}*/
+	@Max(999L)
+	
+	private Integer statusRelation = 0;
+	/**资格证照片 String  600x600 */
+	@Length(max=200)
+	
+	private String imgqa;
+	/**我的推荐医生id*/
+	private Integer wasmy;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Doctor _this){
+		_this.age=20;
+		_this.dlevel=0;
+		_this.usersex=0;
+		_this.idtype=0;
+		_this.itype=0;
+		_this.countPrescription=0;
+		_this.countOrderr=0.0;
+		_this.countFirst=0.0;
+		_this.sellerId=0;
+		_this.statusRelation=0;
+		_this.wasmy=0;
+	}
+	public Doctor(){
+		makedefault(this);
+	}
+	public Doctor(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param productchannelId Integer 医科目录   
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param img1 String 头像  600x600 
+	 * @param name String 姓名   
+	 * @param hospitalId Integer 所在医院   
+	 * @param dlevel Integer 职称 default=0  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param company String 工作单位   
+	 * @param mobile String 手机   
+	 * @param tele String 座机   
+	 * @param email String 电子邮件   
+	 * @param itype Integer 医生类型 default=0 平台医生就是客服 {'0':'医院医生','1':'平台医生'}
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总开方成交金额 default=0.0  
+	 * @param countFirst Double 总首推消费金额 default=0.0  
+	 * @param qrimg String 二维码  600x600 
+	 * @param sellerId Integer 所属业务员 default=0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param imgqa String 资格证照片  600x600 
+	* @param notuse String 没用
+	 */
+	public Doctor(Integer productchannelId ,Integer age ,String img1 ,String name ,Integer hospitalId ,Integer dlevel ,Integer usersex ,Integer idtype ,String idnum ,String zip ,String addr ,String company ,String mobile ,String tele ,String email ,Integer itype ,Integer countPrescription ,Double countOrderr ,Double countFirst ,String qrimg ,Integer sellerId ,Integer statusRelation ,String imgqa ,String notuse) {
+		super();
+		this.productchannelId = productchannelId;
+		this.age = age;
+		this.img1 = img1;
+		this.name = name;
+		this.hospitalId = hospitalId;
+		this.dlevel = dlevel;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.zip = zip;
+		this.addr = addr;
+		this.company = company;
+		this.mobile = mobile;
+		this.tele = tele;
+		this.email = email;
+		this.itype = itype;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.countFirst = countFirst;
+		this.qrimg = qrimg;
+		this.sellerId = sellerId;
+		this.statusRelation = statusRelation;
+		this.imgqa = imgqa;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 用户ID   
+	 * @param productchannelId Integer 医科目录   
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param img1 String 头像  600x600 
+	 * @param name String 姓名   
+	 * @param hospitalId Integer 所在医院   
+	 * @param dlevel Integer 职称 default=0  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param company String 工作单位   
+	 * @param mobile String 手机   
+	 * @param tele String 座机   
+	 * @param email String 电子邮件   
+	 * @param itype Integer 医生类型 default=0 平台医生就是客服 {'0':'医院医生','1':'平台医生'}
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总开方成交金额 default=0.0  
+	 * @param countFirst Double 总首推消费金额 default=0.0  
+	 * @param qrimg String 二维码  600x600 
+	 * @param sellerId Integer 所属业务员 default=0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param imgqa String 资格证照片  600x600 
+	* @param notuse String 没用
+	 */
+	public Doctor(Integer id ,Integer productchannelId ,Integer age ,String img1 ,String name ,Integer hospitalId ,Integer dlevel ,Integer usersex ,Integer idtype ,String idnum ,String zip ,String addr ,String company ,String mobile ,String tele ,String email ,Integer itype ,Integer countPrescription ,Double countOrderr ,Double countFirst ,String qrimg ,Integer sellerId ,Integer statusRelation ,String imgqa ,String notuse) {
+		super();
+		this.id = id;
+		this.productchannelId = productchannelId;
+		this.age = age;
+		this.img1 = img1;
+		this.name = name;
+		this.hospitalId = hospitalId;
+		this.dlevel = dlevel;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.zip = zip;
+		this.addr = addr;
+		this.company = company;
+		this.mobile = mobile;
+		this.tele = tele;
+		this.email = email;
+		this.itype = itype;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.countFirst = countFirst;
+		this.qrimg = qrimg;
+		this.sellerId = sellerId;
+		this.statusRelation = statusRelation;
+		this.imgqa = imgqa;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 用户ID   
+	 * @param productchannelId Integer 医科目录   
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param img1 String 头像  600x600 
+	 * @param name String 姓名   
+	 * @param hospitalId Integer 所在医院   
+	 * @param dlevel Integer 职称 default=0  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param company String 工作单位   
+	 * @param mobile String 手机   
+	 * @param tele String 座机   
+	 * @param email String 电子邮件   
+	 * @param itype Integer 医生类型 default=0 平台医生就是客服 {'0':'医院医生','1':'平台医生'}
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总开方成交金额 default=0.0  
+	 * @param countFirst Double 总首推消费金额 default=0.0  
+	 * @param qrimg String 二维码  600x600 
+	 * @param sellerId Integer 所属业务员 default=0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param imgqa String 资格证照片  600x600 
+	 * @param wasmy Integer 我的推荐医生id default=0 0或空表示不是推荐医生 
+	* @param notuse String 没用
+	 */
+	public Doctor(Integer id ,Integer productchannelId ,Integer age ,String img1 ,String name ,Integer hospitalId ,Integer dlevel ,Integer usersex ,Integer idtype ,String idnum ,String zip ,String addr ,String company ,String mobile ,String tele ,String email ,Integer itype ,Integer countPrescription ,Double countOrderr ,Double countFirst ,String qrimg ,Integer sellerId ,Integer statusRelation ,String imgqa ,Integer wasmy ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.productchannelId = productchannelId;
+		this.age = age;
+		this.img1 = img1;
+		this.name = name;
+		this.hospitalId = hospitalId;
+		this.dlevel = dlevel;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.zip = zip;
+		this.addr = addr;
+		this.company = company;
+		this.mobile = mobile;
+		this.tele = tele;
+		this.email = email;
+		this.itype = itype;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.countFirst = countFirst;
+		this.qrimg = qrimg;
+		this.sellerId = sellerId;
+		this.statusRelation = statusRelation;
+		this.imgqa = imgqa;
+		this.wasmy = wasmy;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?""+name+" ":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]"+name+" ":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id 
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取医科目录  */
+	
+
+	@Column(name = "productchannel_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductchannelId() {
+		return this.productchannelId;
+	}
+	/**设置医科目录  */
+
+	public void setProductchannelId(Integer value) {
+		this.productchannelId = value;
+	}
+	/**获取年纪 每年自动加1 */
+	
+
+	@Column(name = "age", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getAge() {
+		return this.age;
+	}
+	/**设置年纪 每年自动加1 */
+
+	public void setAge(Integer value) {
+		this.age = value;
+	}
+	/**获取头像 600x600 */
+	
+
+	@Column(name = "img1", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg1() {
+		return this.img1;
+	}
+	/**设置头像 600x600 */
+
+	public void setImg1(String value) {
+		this.img1 = value;
+	}
+	/**获取姓名  */
+	
+
+	@Column(name = "name", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getName() {
+		return this.name;
+	}
+	/**设置姓名  */
+
+	public void setName(String value) {
+		this.name = value;
+	}
+	/**获取所在医院  */
+	
+
+	@Column(name = "hospital_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getHospitalId() {
+		return this.hospitalId;
+	}
+	/**设置所在医院  */
+
+	public void setHospitalId(Integer value) {
+		this.hospitalId = value;
+	}
+	/**获取职称  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}*/
+	
+
+	@Column(name = "dlevel", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getDlevel() {
+		return this.dlevel;
+	}
+	/**设置职称  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}*/
+
+	public void setDlevel(Integer value) {
+		this.dlevel = value;
+	}
+	/**获取用户性别  {'0':'男','1':'女'}*/
+	
+
+	@Column(name = "usersex", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getUsersex() {
+		return this.usersex;
+	}
+	/**设置用户性别  {'0':'男','1':'女'}*/
+
+	public void setUsersex(Integer value) {
+		this.usersex = value;
+	}
+	/**获取证件类型  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+	
+
+	@Column(name = "idtype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getIdtype() {
+		return this.idtype;
+	}
+	/**设置证件类型  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+
+	public void setIdtype(Integer value) {
+		this.idtype = value;
+	}
+	/**获取证件号码  */
+	
+
+	@Column(name = "idnum", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getIdnum() {
+		return this.idnum;
+	}
+	/**设置证件号码  */
+
+	public void setIdnum(String value) {
+		this.idnum = value;
+	}
+	/**获取邮编  */
+	
+
+	@Column(name = "zip", unique = false, nullable = true, insertable = true, updatable = true, length = 6)
+	public String getZip() {
+		return this.zip;
+	}
+	/**设置邮编  */
+
+	public void setZip(String value) {
+		this.zip = value;
+	}
+	/**获取地址  */
+	
+
+	@Column(name = "addr", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getAddr() {
+		return this.addr;
+	}
+	/**设置地址  */
+
+	public void setAddr(String value) {
+		this.addr = value;
+	}
+	/**获取工作单位  */
+	
+
+	@Column(name = "company", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getCompany() {
+		return this.company;
+	}
+	/**设置工作单位  */
+
+	public void setCompany(String value) {
+		this.company = value;
+	}
+	/**获取手机  */
+	
+
+	@Column(name = "mobile", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getMobile() {
+		return this.mobile;
+	}
+	/**设置手机  */
+
+	public void setMobile(String value) {
+		this.mobile = value;
+	}
+	/**获取座机  */
+	
+
+	@Column(name = "tele", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getTele() {
+		return this.tele;
+	}
+	/**设置座机  */
+
+	public void setTele(String value) {
+		this.tele = value;
+	}
+	/**获取电子邮件  */
+	
+
+	@Column(name = "email", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getEmail() {
+		return this.email;
+	}
+	/**设置电子邮件  */
+
+	public void setEmail(String value) {
+		this.email = value;
+	}
+	/**获取医生类型 平台医生就是客服 {'0':'医院医生','1':'平台医生'}*/
+	
+
+	@Column(name = "itype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getItype() {
+		return this.itype;
+	}
+	/**设置医生类型 平台医生就是客服 {'0':'医院医生','1':'平台医生'}*/
+
+	public void setItype(Integer value) {
+		this.itype = value;
+	}
+	/**获取总处方数量  */
+	
+
+	@Column(name = "count_prescription", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getCountPrescription() {
+		return this.countPrescription;
+	}
+	/**设置总处方数量  */
+
+	public void setCountPrescription(Integer value) {
+		this.countPrescription = value;
+	}
+	/**获取总开方成交金额  */
+	
+
+	@Column(name = "count_orderr", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCountOrderr() {
+		return this.countOrderr;
+	}
+	/**设置总开方成交金额  */
+
+	public void setCountOrderr(Double value) {
+		this.countOrderr = value;
+	}
+	/**获取总首推消费金额  */
+	
+
+	@Column(name = "count_first", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCountFirst() {
+		return this.countFirst;
+	}
+	/**设置总首推消费金额  */
+
+	public void setCountFirst(Double value) {
+		this.countFirst = value;
+	}
+	/**获取二维码 600x600 */
+	
+
+	@Column(name = "qrimg", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getQrimg() {
+		return this.qrimg;
+	}
+	/**设置二维码 600x600 */
+
+	public void setQrimg(String value) {
+		this.qrimg = value;
+	}
+	/**获取所属业务员  */
+	
+
+	@Column(name = "seller_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getSellerId() {
+		return this.sellerId;
+	}
+	/**设置所属业务员  */
+
+	public void setSellerId(Integer value) {
+		this.sellerId = value;
+	}
+	/**获取是否有新医患关系  {'0':'无','1':'有'}*/
+	
+
+	@Column(name = "status_relation", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusRelation() {
+		return this.statusRelation;
+	}
+	/**设置是否有新医患关系  {'0':'无','1':'有'}*/
+
+	public void setStatusRelation(Integer value) {
+		this.statusRelation = value;
+	}
+	/**获取资格证照片 600x600 */
+	
+
+	@Column(name = "imgqa", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImgqa() {
+		return this.imgqa;
+	}
+	/**设置资格证照片 600x600 */
+
+	public void setImgqa(String value) {
+		this.imgqa = value;
+	}
+	/**对象 获取我的推荐医生id 0或空表示不是推荐医生 */
+	@Transient
+	
+
+	public Integer getWasmy() {
+		return this.wasmy;
+	}
+	/**设置我的推荐医生id 0或空表示不是推荐医生 */
+
+	public void setWasmy(Integer value) {
+		this.wasmy = value;
+	}
+	/**医科目录String*/
+	private String productchannelIdString;
+	/**获取医科目录String*/
+	@Transient
+	
+	public String getProductchannelIdString() {
+		return productchannelIdString;
+	}
+	/**设置医科目录String*/
+	public void setProductchannelIdString(String value) {
+		this.productchannelIdString=value;
+	}
+	/**Productchannel - productchannelIdProductchannelObj*/
+	private Productchannel productchannelIdProductchannelObj;
+	/**获取 Productchannel - productchannelIdProductchannelObj*/
+	@Transient
+	
+	public Productchannel getProductchannelIdProductchannelObj() {
+		return productchannelIdProductchannelObj;
+	}
+	/**设置 Productchannel - 医科目录Obj*/
+	public void setProductchannelIdProductchannelObj(Productchannel value) {
+		this.productchannelIdProductchannelObj=value;
+	}
+	/**医科目录Stringid*/
+	private String productchannelIdStringid;
+	/**获取医科目录Stringid*/
+	@Transient
+	
+	public String getProductchannelIdStringid() {
+		return productchannelIdStringid;
+	}
+	/**设置医科目录Stringid*/
+	public void setProductchannelIdStringid(String value) {
+		this.productchannelIdStringid=value;
+	}
+	/**所在医院String*/
+	private String hospitalIdString;
+	/**获取所在医院String*/
+	@Transient
+	
+	public String getHospitalIdString() {
+		return hospitalIdString;
+	}
+	/**设置所在医院String*/
+	public void setHospitalIdString(String value) {
+		this.hospitalIdString=value;
+	}
+	/**Hospital - hospitalIdHospitalObj*/
+	private Hospital hospitalIdHospitalObj;
+	/**获取 Hospital - hospitalIdHospitalObj*/
+	@Transient
+	
+	public Hospital getHospitalIdHospitalObj() {
+		return hospitalIdHospitalObj;
+	}
+	/**设置 Hospital - 所在医院Obj*/
+	public void setHospitalIdHospitalObj(Hospital value) {
+		this.hospitalIdHospitalObj=value;
+	}
+	/**所在医院Stringid*/
+	private String hospitalIdStringid;
+	/**获取所在医院Stringid*/
+	@Transient
+	
+	public String getHospitalIdStringid() {
+		return hospitalIdStringid;
+	}
+	/**设置所在医院Stringid*/
+	public void setHospitalIdStringid(String value) {
+		this.hospitalIdStringid=value;
+	}
+	/**职称String*/
+	private String dlevelString;
+	/**获取职称String*/
+	@Transient
+	
+	public String getDlevelString() {
+		return dlevelString;
+	}
+	/**设置职称String*/
+	public void setDlevelString(String value) {
+		this.dlevelString=value;
+	}
+	/**职称Map*/
+	private Map<String, Object> dlevelMap;
+	/**获取职称Map*/
+	@Transient
+	
+	public Map<String, Object> getDlevelMap() {
+		return dlevelMap;
+	}
+	/**设置职称Map*/
+	public void setDlevelMap(Map<String, Object> value) {
+		this.dlevelMap=value;
+	}
+	/**用户性别String*/
+	private String usersexString;
+	/**获取用户性别String*/
+	@Transient
+	
+	public String getUsersexString() {
+		return usersexString;
+	}
+	/**设置用户性别String*/
+	public void setUsersexString(String value) {
+		this.usersexString=value;
+	}
+	/**用户性别Map*/
+	private Map<String, Object> usersexMap;
+	/**获取用户性别Map*/
+	@Transient
+	
+	public Map<String, Object> getUsersexMap() {
+		return usersexMap;
+	}
+	/**设置用户性别Map*/
+	public void setUsersexMap(Map<String, Object> value) {
+		this.usersexMap=value;
+	}
+	/**证件类型String*/
+	private String idtypeString;
+	/**获取证件类型String*/
+	@Transient
+	
+	public String getIdtypeString() {
+		return idtypeString;
+	}
+	/**设置证件类型String*/
+	public void setIdtypeString(String value) {
+		this.idtypeString=value;
+	}
+	/**证件类型Map*/
+	private Map<String, Object> idtypeMap;
+	/**获取证件类型Map*/
+	@Transient
+	
+	public Map<String, Object> getIdtypeMap() {
+		return idtypeMap;
+	}
+	/**设置证件类型Map*/
+	public void setIdtypeMap(Map<String, Object> value) {
+		this.idtypeMap=value;
+	}
+	/**医生类型String*/
+	private String itypeString;
+	/**获取医生类型String*/
+	@Transient
+	
+	public String getItypeString() {
+		return itypeString;
+	}
+	/**设置医生类型String*/
+	public void setItypeString(String value) {
+		this.itypeString=value;
+	}
+	/**医生类型Map*/
+	private Map<String, Object> itypeMap;
+	/**获取医生类型Map*/
+	@Transient
+	
+	public Map<String, Object> getItypeMap() {
+		return itypeMap;
+	}
+	/**设置医生类型Map*/
+	public void setItypeMap(Map<String, Object> value) {
+		this.itypeMap=value;
+	}
+	/**所属业务员String*/
+	private String sellerIdString;
+	/**获取所属业务员String*/
+	@Transient
+	
+	public String getSellerIdString() {
+		return sellerIdString;
+	}
+	/**设置所属业务员String*/
+	public void setSellerIdString(String value) {
+		this.sellerIdString=value;
+	}
+	/**Seller - sellerIdSellerObj*/
+	private Seller sellerIdSellerObj;
+	/**获取 Seller - sellerIdSellerObj*/
+	@Transient
+	
+	public Seller getSellerIdSellerObj() {
+		return sellerIdSellerObj;
+	}
+	/**设置 Seller - 所属业务员Obj*/
+	public void setSellerIdSellerObj(Seller value) {
+		this.sellerIdSellerObj=value;
+	}
+	/**所属业务员Stringid*/
+	private String sellerIdStringid;
+	/**获取所属业务员Stringid*/
+	@Transient
+	
+	public String getSellerIdStringid() {
+		return sellerIdStringid;
+	}
+	/**设置所属业务员Stringid*/
+	public void setSellerIdStringid(String value) {
+		this.sellerIdStringid=value;
+	}
+	/**是否有新医患关系String*/
+	private String statusRelationString;
+	/**获取是否有新医患关系String*/
+	@Transient
+	
+	public String getStatusRelationString() {
+		return statusRelationString;
+	}
+	/**设置是否有新医患关系String*/
+	public void setStatusRelationString(String value) {
+		this.statusRelationString=value;
+	}
+	/**是否有新医患关系Map*/
+	private Map<String, Object> statusRelationMap;
+	/**获取是否有新医患关系Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusRelationMap() {
+		return statusRelationMap;
+	}
+	/**设置是否有新医患关系Map*/
+	public void setStatusRelationMap(Map<String, Object> value) {
+		this.statusRelationMap=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.productchannelIdProductchannelObj=null; //Productchannel
+		this.hospitalIdHospitalObj=null; //Hospital
+		this.dlevelMap=null;
+		this.usersexMap=null;
+		this.idtypeMap=null;
+		this.itypeMap=null;
+		this.sellerIdSellerObj=null; //Seller
+		this.statusRelationMap=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getProductchannelId())
+			.append(getAge())
+			.append(getImg1())
+			.append(getName())
+			.append(getHospitalId())
+			.append(getDlevel())
+			.append(getUsersex())
+			.append(getIdtype())
+			.append(getIdnum())
+			.append(getZip())
+			.append(getAddr())
+			.append(getCompany())
+			.append(getMobile())
+			.append(getTele())
+			.append(getEmail())
+			.append(getItype())
+			.append(getCountPrescription())
+			.append(getCountOrderr())
+			.append(getCountFirst())
+			.append(getQrimg())
+			.append(getSellerId())
+			.append(getStatusRelation())
+			.append(getImgqa())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Doctor == false) return false;
+		if(this == obj) return true;
+		Doctor other = (Doctor)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",ProductchannelId:",getProductchannelId())
+			.append(",Age:",getAge())
+			.append(",Img1:",getImg1())
+			.append(",Name:",getName())
+			.append(",HospitalId:",getHospitalId())
+			.append(",Dlevel:",getDlevel())
+			.append(",Usersex:",getUsersex())
+			.append(",Idtype:",getIdtype())
+			.append(",Idnum:",getIdnum())
+			.append(",Zip:",getZip())
+			.append(",Addr:",getAddr())
+			.append(",Company:",getCompany())
+			.append(",Mobile:",getMobile())
+			.append(",Tele:",getTele())
+			.append(",Email:",getEmail())
+			.append(",Itype:",getItype())
+			.append(",CountPrescription:",getCountPrescription())
+			.append(",CountOrderr:",getCountOrderr())
+			.append(",CountFirst:",getCountFirst())
+			.append(",Qrimg:",getQrimg())
+			.append(",SellerId:",getSellerId())
+			.append(",StatusRelation:",getStatusRelation())
+			.append(",Imgqa:",getImgqa())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","productchannelIdString","productchannelIdProductchannelObj","productchannelIdStringid","hospitalIdString","hospitalIdHospitalObj","hospitalIdStringid","dlevelString","dlevelMap","usersexString","usersexMap","idtypeString","idtypeMap","itypeString","itypeMap","sellerIdString","sellerIdSellerObj","sellerIdStringid","statusRelationString","statusRelationMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","productchannelIdString","productchannelIdProductchannelObj","productchannelIdStringid","hospitalIdString","hospitalIdHospitalObj","hospitalIdStringid","dlevelString","dlevelMap","usersexString","usersexMap","idtypeString","idtypeMap","itypeString","itypeMap","sellerIdString","sellerIdSellerObj","sellerIdStringid","statusRelationString","statusRelationMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 医生会员
+Doctor doctor = new Doctor(
+	productchannelId , //Integer 医科目录   
+	age , //Integer 年纪 default=20 每年自动加1 
+	img1 , //String 头像  600x600 
+	name , //String 姓名   
+	hospitalId , //Integer 所在医院   
+	dlevel , //Integer 职称 default=0  {'0':'医师','1':'主治医生','2':'副主任医师','3':'主任医师'}
+	usersex , //Integer 用户性别 default=0  {'0':'男','1':'女'}
+	idtype , //Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	idnum , //String 证件号码   
+	zip , //String 邮编   
+	addr , //String 地址   
+	company , //String 工作单位   
+	mobile , //String 手机   
+	tele , //String 座机   
+	email , //String 电子邮件   
+	itype , //Integer 医生类型 default=0 平台医生就是客服 {'0':'医院医生','1':'平台医生'}
+	countPrescription , //Integer 总处方数量 default=0  
+	countOrderr , //Double 总开方成交金额 default=0.0  
+	countFirst , //Double 总首推消费金额 default=0.0  
+	qrimg , //String 二维码  600x600 
+	sellerId , //Integer 所属业务员 default=0  
+	statusRelation , //Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	imgqa , //String 资格证照片  600x600 
+	null
+);
+*/
+}

@@ -1,0 +1,495 @@
+package com.zmax.yijian.biz.service.base;
+
+/**
+ * zmax 2013
+ */
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.common.PermitCheckUtils;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+
+
+/**
+ * 基础Service，其它都从此扩展
+ * @author zmax
+ *
+ */
+
+public class BaseService<T> {
+	private static final Logger logger = Logger.getLogger(BaseService.class);
+	
+
+	@Autowired
+	public BaseDao<T> baseDao;
+	@Autowired
+	public PermitCheckUtils permitCheckUtils;
+
+
+	public Class<T> entityClass;
+
+	/**
+	 * 通过反射获取子类确定的泛型类
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public BaseService() {
+//		Type genType = getClass().getGenericSuperclass();
+//		Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+//		entityClass = (Class) params[0];
+		//entityClass = GenericsUtils.getSuperClassGenricType(getClass());
+		//entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+//		if (logger.isDebugEnabled())
+//			logger.debug("entityClass.getSimpleName()="
+//					+ entityClass.getSimpleName());
+	}
+	/**
+	 * 对象转数值之Double
+	 * @param param Double
+	 * @return double
+	 */
+	public double doublev(Double param){
+		if(param==null)
+		return 0.00;
+			return param.doubleValue();
+	}
+	/**
+	 * 对象转数值之Integer
+	 * @param param Integer
+	 * @return int
+	 */
+	public int intv(Integer param){
+		if(param==null)
+			return 0;
+		return param.intValue();
+	}
+	/**
+	 * 对象转数值之Long
+	 * @param param Long
+	 * @return long
+	 */
+	public long longv(Long param){
+		if(param==null)
+			return 0l;
+		return param.longValue();
+	}
+	/**
+	 * 批量保存PO，给管理员用的
+	 * 
+	 * @param entity
+	 */
+	@SuppressWarnings("rawtypes")
+	public void saveOrUpdateAll(Collection entities) {
+		if(entities==null)
+			return;
+		baseDao.saveOrUpdateAll(entities);
+	}
+	/**
+	 * 获取PO的所有对象
+	 * 
+	 * @return
+	 */
+	public List<T> listAll() {
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		return baseDao.listAll(c);
+	}
+	/**
+	 * 保存PO
+	 * @param entity
+	 * @return ID
+	 */
+	public Serializable save(T entity) {
+		if(entity==null)
+			return null;
+		return baseDao.save(entity);
+	}
+
+	/**
+	 * 保存或更新PO
+	 * 
+	 * @param entity
+	 */
+	public void saveOrUpdate(User sessionUser,T entity) {
+		if(entity==null)
+			return ;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		if(!permitCheckUtils.checkObj(sessionUser, entity,c.getSimpleName())) return;
+		baseDao.saveOrUpdate(entity);
+	}
+
+	/**
+	 * 根据关键字=值做为条件，查找有无此对象，没有的话进行保存
+	 * @param sessionUser
+	 * @param entity 需要保存的对象
+	 * @param keyfield 查找的关键字
+	 * @param value 关键字对应的值
+	 * @param hqle 排序条件等
+	 * @param params 其它参数
+	 */
+	public T saveIfNotExists(User sessionUser,T entity,String keyfield,Object value,String hqle, Object[] params) {
+		if(entity==null)
+			return null;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		if(!permitCheckUtils.checkObj(sessionUser, entity,c.getSimpleName())) return entity;
+		Object obj=getFirst(sessionUser, null, keyfield+"='"+value.toString()+"'", hqle, params);
+		if(obj==null){
+			baseDao.save(entity);
+			return entity;
+		}
+		return (T)obj;
+	}
+	/**
+	 * 根据Hql，查找有无此对象，没有的话进行保存
+	 * @param sessionUser
+	 * @param entity 需要保存的对象
+	 * @param hql
+	 * @param params
+	 */
+	public T saveIfNotExistsHql(User sessionUser,T entity,String hql, Object[] params) {
+		if(entity==null)
+			return null;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		Object obj=getFirst(sessionUser, null, hql, null, params);
+		if(obj==null){
+			baseDao.save(entity);
+			return entity;
+		}
+		return (T)obj;
+	}
+	/**
+	 * 更新PO
+	 * 
+	 * @param entity
+	 */
+	public void update(User sessionUser,T entity) {
+		if(entity==null)
+			return ;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		if(!permitCheckUtils.checkObj(sessionUser, entity,c.getSimpleName())) return;
+		baseDao.update(entity);
+	}	
+	/**
+	 * 根据ID删除PO
+	 * 
+	 * @param entity
+	 */
+	public boolean deleteById(User sessionUser,Serializable id) {
+		if(id==null)
+			return true;
+		delete(sessionUser,get(sessionUser,id));
+		return true;
+	}
+	/**
+	 * 根据对象删除PO
+	 * 
+	 * @param entity
+	 */
+	public boolean delete(User sessionUser,T entity) {
+		if(entity==null)
+			return true;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		if(!permitCheckUtils.checkObj(sessionUser, entity,c.getSimpleName())) return false;
+		logger.info("删除表数据	" + entity.toString());
+		baseDao.delete(entity);
+		return true;
+	}
+	/**
+	 * 批量删除
+	 * @param entities
+	 */
+	public boolean deleteAll(User sessionUser,List<T> entities) {
+		if(entities==null||entities.size()<1)
+			return true;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		for (T t : entities) {
+			if(!permitCheckUtils.checkObj(sessionUser, t,c.getSimpleName())) return false;	
+		}
+		baseDao.deleteAll(entities);
+		return true;
+	}
+	/**
+	 * 根据ID获取PO实例
+	 * 
+	 * @param id
+	 * @return 返回相应的持久化PO实例
+	 */
+	public T get(User sessionUser,Serializable id) {
+		if(id==null)
+			return null;
+		if(id instanceof Integer && ((Integer)id).intValue()==0)
+			return null;
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		Object obj= (T) baseDao.get(c,id);
+		if(obj==null)return null;
+		if(!permitCheckUtils.checkObj(sessionUser, obj,c.getSimpleName())) return null;
+		return (T)obj;
+	}
+
+
+
+	/**
+	 * 返回第一个查询结果
+	 * @param hqlb where 前
+	 * @param where 不要带" where ",ex:a=1
+	 * @param hqle where 后
+	 * @param params
+	 * @return
+	 */
+	public Object getFirst(User sessionUser,String hqlb,String where,String hqle,Object[] params){
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		hqlb=makeHqlb(hqlb,c.getSimpleName());
+		hqle=(hqle==null)?"":hqle;
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		
+		return baseDao.getFirstNoC(hqlb+" "+where+" "+hqle, params);
+	}
+	/**
+	 * 获取数量
+	 * @param sessionUser
+	 * @param hqlb
+	 * @param where
+	 * @param hqle
+	 * @param params
+	 * @return
+	 */
+	public int getTableCount(User sessionUser,String hqlb,String where,String hqle,Object[] params){
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		hqlb=makeHqlb(hqlb,c.getSimpleName());
+		hqle=(hqle==null)?"":hqle;
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		return baseDao.getTableCount(c, where, params);
+	}
+	/**
+	 * 执行Sql语句
+	 * @param sqlb where 前
+	 * @param where
+	 * @param sqle where 后
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public int executeSqlNotUsed(User sessionUser,String sqlb,String where,String sqle,Object[] params){
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		sqlb=makeHqlb(sqlb,c.getSimpleName());
+		sqle=(sqle==null)?"":sqle;
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		
+		return baseDao.executeSqlNotUsed(sqlb+" "+where+" "+sqle, params);
+	}
+	/**
+	 * 执行Hql语句
+	 * @param sessionUser
+	 * @param hql ex. "update Admin set username=1 where id=1"
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public int executeHql(User sessionUser,String hql,Object[] params){
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		String where=StringUtilz.whereAdd("",permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		
+		return baseDao.executeHql(hql, params);
+	}
+	/**
+	 * 执行带参的HQL查询
+	 * 
+	 * @param hqlb where 前
+	 * @param where
+	 * @param hqle where 后
+	 * @param params
+	 * @return 查询结果
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> listfind(User sessionUser,String hqlb,String where,String hqle,Object[] params) {
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		hqlb=makeHqlb(hqlb,c.getSimpleName());
+		hqle=(hqle==null)?"":hqle;
+		where=whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		
+		return baseDao.listfind(hqlb+" "+where+" "+hqle,params);
+	}
+	/**
+	 * 执行HQL查询，样式为 where id in('1','2','3') 
+	 * @param sessionUser
+	 * @param ids ex.('1','2','3')
+	 * @param more ex."and status=1 order by id desc" or "or userid=1" 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> listfindIdByInAndMore(User sessionUser,Object[] ids,String more) {
+		if(ids==null || ids.length==0)
+			return new ArrayList();
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		String where=" id in ("+ids[0];
+		for (int i = 1; i < ids.length; i++) {
+			where+=","+ids[i];
+		}
+		where+=")";
+		where +=" "+more;
+		return listfind(sessionUser,null,where,null,null);
+	}	
+	/**
+	 * 执行HQL查询id in ，样式为 where id in('1','2','3') 
+	 * @param sessionUser
+	 * @param ids Object[]
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> listfindByIn(User sessionUser,Object[] ids) {
+		if(ids==null || ids.length==0)
+			return new ArrayList();
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		String where=" id in ("+ids[0];
+		for (int i = 1; i < ids.length; i++) {
+			where+=","+ids[i];
+		}
+		where+=")";
+	
+		return listfind(sessionUser,null,where,null,null);
+	}
+	
+	/**
+	 * 执行带where order的查询
+	 * @param sessionUser
+	 * @param where 可以带"where",也可以不
+	 * @param order
+	 * @param params
+	 * @return
+	 */
+	public List<T> listfindWithWhereOrder(User sessionUser,String where,String order,Object[] params) {
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		return baseDao.listfindWithWhereOrder(c,"",where,order,params);
+	}
+
+	/**
+	 * 执行带参的HQL查询加分页输入
+	 * @param hqlb where 前
+	 * @param where
+	 * @param hqle where 后
+	 * @param page
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> listfindWithpage(User sessionUser,String hqlb,String where,String hqle, Pagination page, Object[] params) {
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		hqlb=makeHqlb(hqlb,c.getSimpleName());
+		hqle=(hqle==null)?"":hqle;
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		
+		return baseDao.listfindWithpage(c,hqlb+" "+where+" "+hqle,page, params);
+	}
+
+
+	/**
+	 * 分页查询函数，使用hql.
+	 * @param where 
+	 * @param order 
+	 * @param pageNo
+	 * @param pageSize
+	 * @param params
+	 * 示例
+	 * pagedQuery("a=?","id desc",null,null,1)
+	 * pagedQuery("a=1",null,null,null)
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public Grid listPagedQuery(User sessionUser,String where,String order, Integer pageNo, Integer pageSize, Object[] params) {
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		where=StringUtilz.whereAdd(where,permitCheckUtils.addWhere(sessionUser,c.getSimpleName()));
+		return baseDao.listPagedQuery(c,where, order, pageNo, pageSize, params);
+	}
+	/**
+	 * 清除二级缓存
+	 */
+	public void cleanSecondCache(){
+		Class<T> c = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		
+		try {
+			baseDao.update(c.newInstance());
+		} catch (InstantiationException e) {
+			// e.printStackTrace();
+			logger.error(e);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			logger.error(e);
+		}
+		//baseDao.cleanSecondCache(c);	
+	}
+	/**
+	 * 补全hql,在前面加上from xxx
+	 * @param hqlb
+	 * @param tbname
+	 * @return
+	 */
+	private String makeHqlb(String hqlb,String tbname){
+		if(StringUtils.isBlank(hqlb)){
+			hqlb="from "+tbname;
+		}
+		hqlb=hqlb.trim();
+		if(hqlb.indexOf("from "+tbname)==-1){
+			hqlb="from "+tbname+" "+hqlb;
+		}
+		return hqlb;
+	}
+	private String makeSqlb(String sqlb,String tbname){
+		if(StringUtils.isBlank(sqlb)){
+			sqlb="select * from "+tbname;
+		}
+		return sqlb;
+	}
+	/**
+	 * 两个where相加,where1和2的格式是 " where xxx" 或 "xxx"
+	 * @param where1
+	 * @param where2
+	 * @return where where1 and where2 
+	 */
+	public static String whereAdd(String where1,String where2){
+		String retwhere="";
+		if(!StringUtils.isBlank(where1)){
+			where1=where1.trim();
+			if(where1.indexOf("where")==0)
+				where1=where1.substring(5);
+		}
+		if(!StringUtils.isBlank(where2)){
+			where2=where2.trim();
+			if(where2.indexOf("where")==0)
+				where2=where2.substring(5);
+		}
+
+		if(StringUtils.isBlank(where1)){
+			if(StringUtils.isBlank(where2)){
+				retwhere= "";
+			}else{
+				retwhere= where2;
+			}
+		}else{
+			if(StringUtils.isBlank(where2)){
+				retwhere= where1;
+			}else{
+				retwhere= where1 +" and "+where2;
+			}
+		}
+		retwhere=retwhere.trim();
+		if(StringUtils.isBlank(retwhere))
+			return "";
+		if(retwhere.equals("where"))
+			return "";
+		if(retwhere.indexOf("where")!=0)
+			retwhere=" where "+retwhere;
+		return retwhere;
+	}
+}

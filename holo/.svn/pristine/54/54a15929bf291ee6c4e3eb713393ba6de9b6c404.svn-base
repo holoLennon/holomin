@@ -1,0 +1,151 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.*;
+
+import com.zmax.utils.string.JsonUtil;
+
+
+/**
+ * 初始化数据库表spec
+ * @author zmax
+ *
+ */
+@Component
+public class DbSpecInit {
+	static int LISTMAX=1000;
+	private static final Logger logger = Logger.getLogger(DbSpecInit.class);
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Autowired
+	AlipayPaynotifyService alipayPaynotifyService;
+	@Autowired
+	MemberdoctorService memberdoctorService;
+	@Autowired
+	DoctorProductService doctorProductService;
+	@Autowired
+	DmmsgService dmmsgService;
+	@Autowired
+	DrugstoreService drugstoreService;
+	@Autowired
+	SellerCountService sellerCountService;
+	@Autowired
+	HospitalService hospitalService;
+	@Autowired
+	WaEntityArticleService waEntityArticleService;
+	@Autowired
+	WxmenuService wxmenuService;
+	@Autowired
+	WaRecvmsgService waRecvmsgService;
+	@Autowired
+	WaCustomAudParamService waCustomAudParamService;
+	@Autowired
+	WxmsgtemplateService wxmsgtemplateService;
+	@Autowired
+	WaTemplateAddService waTemplateAddService;
+	@Autowired
+	WxUsergroupService wxUsergroupService;
+	@Autowired
+	WaGeneralNoticeRetService waGeneralNoticeRetService;
+	@Autowired
+	TbfieldService tbfieldService;
+	@Autowired
+	WebsetService websetService;
+	@Autowired
+	MyisoService myisoService;
+	@Autowired
+	MyisouService myisouService;
+	@Autowired
+	OperLogService operLogService;
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+	@Autowired
+	WxcfgService wxcfgService;
+	@Autowired
+	WxrService wxrService;
+	@Autowired
+	WxouserService wxouserService;
+	@Autowired
+	WxousersubscribehisService wxousersubscribehisService;
+	@Autowired
+	WaQrcodeticketSceneService waQrcodeticketSceneService;
+	@Autowired
+	WaQradvService waQradvService;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	ProductExtTxtService productExtTxtService;
+	@Autowired
+	ProductchannelService productchannelService;
+	@Autowired
+	ManufacturerService manufacturerService;
+	@Autowired
+	ProductTypeService productTypeService;
+	@Autowired
+	ProductTypeLinkProductService productTypeLinkProductService;
+	@Autowired
+	SuggestionService suggestionService;
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+
+	public DbSpecInit(){
+
+	}
+	public void doInit(){
+		//自己加吧
+	
+	}
+	/**
+	 * 增加或更新webset
+	 * @param ckey
+	 * @param cvalue
+	 * @param cname
+	 * @return
+	 */
+	public int souWebset(String ckey,String cvalue,String cname){
+		Webset webset=(Webset)websetService.getFirst(null, null, "ckey=?", null, new Object[]{ckey});
+		if(webset==null)
+			webset=new Webset();
+		webset.setCkey(ckey);
+		webset.setCvalue(cvalue);
+		if(StringUtils.isNotBlank(cname))
+		webset.setCname(StringUtils.substring(cname,0,20));
+		websetService.saveOrUpdate(null, webset);
+		if (logger.isDebugEnabled())
+			logger.debug("webset.ckey=" + ckey+",cvalue="+cvalue);
+		return webset.getId();
+	}	
+}
+

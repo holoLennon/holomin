@@ -1,0 +1,43 @@
+
+
+<script type="text/javascript">
+$(function() {
+	newHtmlInit('${base}/user/Dgmmsg/create.html');
+});
+
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<#if copyfrom??><input name="copyfrom" type="hidden" value="${copyfrom}"></#if>
+			<#if copyfromwhere??><input name="copyfromwhere" type="hidden" value="${copyfromwhere}"></#if>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+	<@z.pmt key="41.Dgmmsg.readed">
+				<@p.radio label="db.Dgmmsg.readed" nameid="readed" value="${dgmmsg.readed}" help="" list=dgmmsg.readedMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dgmmsg.fromto">
+				<@p.radio label="db.Dgmmsg.fromto" nameid="fromto" value="${dgmmsg.fromto}" help="" list=dgmmsg.fromtoMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dgmmsg.memberId">
+				<@p.searchforid label="db.Dgmmsg.memberId" nameid="memberId" value="${dgmmsg.memberId}" stringvalue="${dgmmsg.memberIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Member/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dgmmsg.druggistId">
+				<@p.searchforid label="db.Dgmmsg.druggistId" nameid="druggistId" value="${dgmmsg.druggistId}" stringvalue="${dgmmsg.druggistIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Druggist/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dgmmsg.productId">
+				<@p.searchforid label="db.Dgmmsg.productId" nameid="productId" value="${dgmmsg.productId}" stringvalue="${dgmmsg.productIdString}" help="如果为空表示全科咨询" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="41.Dgmmsg.msg">
+				<@p.textarea label="db.Dgmmsg.msg" nameid="msg" value="${dgmmsg.msg}" help="" dataoptions="validType:['length[0,400]',]" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			</form>
+	</div>
+</div>
+

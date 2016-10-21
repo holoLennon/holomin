@@ -1,0 +1,1014 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 支付宝支付结果回调
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "alipay_paynotify")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class AlipayPaynotify extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "支付宝支付结果回调";
+
+	//date formats
+	public static final String FORMAT_NOTIFY_TIME = DATE_FORMAT;
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	public static final String FORMAT_GMT_PAYMENT = DATE_FORMAT;
+	public static final String FORMAT_GMT_REFUND = DATE_FORMAT;
+	
+	//columns START
+	/**序号 Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**通知时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date notifyTime;
+	/**通知类型 String   */
+	@Length(max=20)
+	
+	private String notifyType;
+	/**通知校验ID String   */
+	@Length(max=20)
+	
+	private String notifyId;
+	/**签名方式 String   */
+	@Length(max=20)
+	
+	private String signType;
+	/**签名 String   */
+	@Length(max=20)
+	
+	private String sign;
+	/**商户网站唯一订单号 String   */
+	@Length(max=64)
+	
+	private String outTradeNo;
+	/**商品名称 String   */
+	@Length(max=128)
+	
+	private String subject;
+	/**支付类型 String   */
+	@Length(max=4)
+	
+	private String paymentType;
+	/**支付宝交易号 String   */
+	@Length(max=64)
+	
+	private String tradeNo;
+	/**交易状态 String  WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  */
+	@Length(max=20)
+	
+	private String tradeStatus;
+	/**卖家支付宝用户号 String   */
+	@Length(max=30)
+	
+	private String sellerId;
+	/**卖家支付宝账号 String   */
+	@Length(max=100)
+	
+	private String sellerEmail;
+	/**买家支付宝用户号 String   */
+	@Length(max=30)
+	
+	private String buyerId;
+	/**买家支付宝账号 String   */
+	@Length(max=100)
+	
+	private String buyerEmail;
+	/**交易金额 Double default=0.0  */
+	
+	
+	private Double totalFee;
+	/**购买数量 Double default=0.0  */
+	
+	
+	private Double quantity;
+	/**商品单价 Double default=0.0  */
+	
+	
+	private Double price;
+	/**商品描述 String   */
+	@Length(max=512)
+	
+	private String body;
+	/**交易创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**交易付款时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtPayment;
+	/**是否调整总价 String   */
+	@Length(max=1)
+	
+	private String isTotalFeeAdjust;
+	/**是否使用红包买家 String   */
+	@Length(max=1)
+	
+	private String useCoupon;
+	/**折扣 String   */
+	@Length(max=20)
+	
+	private String discount;
+	/**退款状态 String   */
+	@Length(max=20)
+	
+	private String refundStatus;
+	/**退款时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtRefund;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(AlipayPaynotify _this){
+		_this.totalFee=0.0;
+		_this.quantity=0.0;
+		_this.price=0.0;
+		_this.gmtCreate=new Date();
+	}
+	public AlipayPaynotify(){
+		makedefault(this);
+	}
+	public AlipayPaynotify(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param notifyTime Date 通知时间   
+	 * @param notifyType String 通知类型   
+	 * @param notifyId String 通知校验ID   
+	 * @param signType String 签名方式   
+	 * @param sign String 签名   
+	 * @param outTradeNo String 商户网站唯一订单号   
+	 * @param subject String 商品名称   
+	 * @param paymentType String 支付类型   
+	 * @param tradeNo String 支付宝交易号   
+	 * @param tradeStatus String 交易状态  WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  
+	 * @param sellerId String 卖家支付宝用户号   
+	 * @param sellerEmail String 卖家支付宝账号   
+	 * @param buyerId String 买家支付宝用户号   
+	 * @param buyerEmail String 买家支付宝账号   
+	 * @param totalFee Double 交易金额 default=0.0  
+	 * @param quantity Double 购买数量 default=0.0  
+	 * @param price Double 商品单价 default=0.0  
+	 * @param body String 商品描述   
+	 * @param gmtPayment Date 交易付款时间   
+	 * @param isTotalFeeAdjust String 是否调整总价   
+	 * @param useCoupon String 是否使用红包买家   
+	 * @param discount String 折扣   
+	 * @param refundStatus String 退款状态   
+	 * @param gmtRefund Date 退款时间   
+	* @param notuse String 没用
+	 */
+	public AlipayPaynotify(Date notifyTime ,String notifyType ,String notifyId ,String signType ,String sign ,String outTradeNo ,String subject ,String paymentType ,String tradeNo ,String tradeStatus ,String sellerId ,String sellerEmail ,String buyerId ,String buyerEmail ,Double totalFee ,Double quantity ,Double price ,String body ,Date gmtPayment ,String isTotalFeeAdjust ,String useCoupon ,String discount ,String refundStatus ,Date gmtRefund ,String notuse) {
+		super();
+		this.notifyTime = notifyTime;
+		this.notifyType = notifyType;
+		this.notifyId = notifyId;
+		this.signType = signType;
+		this.sign = sign;
+		this.outTradeNo = outTradeNo;
+		this.subject = subject;
+		this.paymentType = paymentType;
+		this.tradeNo = tradeNo;
+		this.tradeStatus = tradeStatus;
+		this.sellerId = sellerId;
+		this.sellerEmail = sellerEmail;
+		this.buyerId = buyerId;
+		this.buyerEmail = buyerEmail;
+		this.totalFee = totalFee;
+		this.quantity = quantity;
+		this.price = price;
+		this.body = body;
+		this.gmtPayment = gmtPayment;
+		this.isTotalFeeAdjust = isTotalFeeAdjust;
+		this.useCoupon = useCoupon;
+		this.discount = discount;
+		this.refundStatus = refundStatus;
+		this.gmtRefund = gmtRefund;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号   
+	 * @param notifyTime Date 通知时间   
+	 * @param notifyType String 通知类型   
+	 * @param notifyId String 通知校验ID   
+	 * @param signType String 签名方式   
+	 * @param sign String 签名   
+	 * @param outTradeNo String 商户网站唯一订单号   
+	 * @param subject String 商品名称   
+	 * @param paymentType String 支付类型   
+	 * @param tradeNo String 支付宝交易号   
+	 * @param tradeStatus String 交易状态  WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  
+	 * @param sellerId String 卖家支付宝用户号   
+	 * @param sellerEmail String 卖家支付宝账号   
+	 * @param buyerId String 买家支付宝用户号   
+	 * @param buyerEmail String 买家支付宝账号   
+	 * @param totalFee Double 交易金额 default=0.0  
+	 * @param quantity Double 购买数量 default=0.0  
+	 * @param price Double 商品单价 default=0.0  
+	 * @param body String 商品描述   
+	 * @param gmtPayment Date 交易付款时间   
+	 * @param isTotalFeeAdjust String 是否调整总价   
+	 * @param useCoupon String 是否使用红包买家   
+	 * @param discount String 折扣   
+	 * @param refundStatus String 退款状态   
+	 * @param gmtRefund Date 退款时间   
+	* @param notuse String 没用
+	 */
+	public AlipayPaynotify(Integer id ,Date notifyTime ,String notifyType ,String notifyId ,String signType ,String sign ,String outTradeNo ,String subject ,String paymentType ,String tradeNo ,String tradeStatus ,String sellerId ,String sellerEmail ,String buyerId ,String buyerEmail ,Double totalFee ,Double quantity ,Double price ,String body ,Date gmtPayment ,String isTotalFeeAdjust ,String useCoupon ,String discount ,String refundStatus ,Date gmtRefund ,String notuse) {
+		super();
+		this.id = id;
+		this.notifyTime = notifyTime;
+		this.notifyType = notifyType;
+		this.notifyId = notifyId;
+		this.signType = signType;
+		this.sign = sign;
+		this.outTradeNo = outTradeNo;
+		this.subject = subject;
+		this.paymentType = paymentType;
+		this.tradeNo = tradeNo;
+		this.tradeStatus = tradeStatus;
+		this.sellerId = sellerId;
+		this.sellerEmail = sellerEmail;
+		this.buyerId = buyerId;
+		this.buyerEmail = buyerEmail;
+		this.totalFee = totalFee;
+		this.quantity = quantity;
+		this.price = price;
+		this.body = body;
+		this.gmtCreate = new Date();
+		this.gmtPayment = gmtPayment;
+		this.isTotalFeeAdjust = isTotalFeeAdjust;
+		this.useCoupon = useCoupon;
+		this.discount = discount;
+		this.refundStatus = refundStatus;
+		this.gmtRefund = gmtRefund;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号   
+	 * @param notifyTime Date 通知时间   
+	 * @param notifyType String 通知类型   
+	 * @param notifyId String 通知校验ID   
+	 * @param signType String 签名方式   
+	 * @param sign String 签名   
+	 * @param outTradeNo String 商户网站唯一订单号   
+	 * @param subject String 商品名称   
+	 * @param paymentType String 支付类型   
+	 * @param tradeNo String 支付宝交易号   
+	 * @param tradeStatus String 交易状态  WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  
+	 * @param sellerId String 卖家支付宝用户号   
+	 * @param sellerEmail String 卖家支付宝账号   
+	 * @param buyerId String 买家支付宝用户号   
+	 * @param buyerEmail String 买家支付宝账号   
+	 * @param totalFee Double 交易金额 default=0.0  
+	 * @param quantity Double 购买数量 default=0.0  
+	 * @param price Double 商品单价 default=0.0  
+	 * @param body String 商品描述   
+	 * @param gmtCreate Date 交易创建时间   
+	 * @param gmtPayment Date 交易付款时间   
+	 * @param isTotalFeeAdjust String 是否调整总价   
+	 * @param useCoupon String 是否使用红包买家   
+	 * @param discount String 折扣   
+	 * @param refundStatus String 退款状态   
+	 * @param gmtRefund Date 退款时间   
+	* @param notuse String 没用
+	 */
+	public AlipayPaynotify(Integer id ,Date notifyTime ,String notifyType ,String notifyId ,String signType ,String sign ,String outTradeNo ,String subject ,String paymentType ,String tradeNo ,String tradeStatus ,String sellerId ,String sellerEmail ,String buyerId ,String buyerEmail ,Double totalFee ,Double quantity ,Double price ,String body ,Date gmtCreate ,Date gmtPayment ,String isTotalFeeAdjust ,String useCoupon ,String discount ,String refundStatus ,Date gmtRefund ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.notifyTime = notifyTime;
+		this.notifyType = notifyType;
+		this.notifyId = notifyId;
+		this.signType = signType;
+		this.sign = sign;
+		this.outTradeNo = outTradeNo;
+		this.subject = subject;
+		this.paymentType = paymentType;
+		this.tradeNo = tradeNo;
+		this.tradeStatus = tradeStatus;
+		this.sellerId = sellerId;
+		this.sellerEmail = sellerEmail;
+		this.buyerId = buyerId;
+		this.buyerEmail = buyerEmail;
+		this.totalFee = totalFee;
+		this.quantity = quantity;
+		this.price = price;
+		this.body = body;
+		this.gmtCreate = gmtCreate;
+		this.gmtPayment = gmtPayment;
+		this.isTotalFeeAdjust = isTotalFeeAdjust;
+		this.useCoupon = useCoupon;
+		this.discount = discount;
+		this.refundStatus = refundStatus;
+		this.gmtRefund = gmtRefund;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取通知时间  */
+	
+
+	@Column(name = "notify_time", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getNotifyTime() {
+		return this.notifyTime;
+	}
+	/**设置通知时间  */
+
+	public void setNotifyTime(Date value) {
+		this.notifyTime = value;
+	}
+	/**获取通知类型  */
+	
+
+	@Column(name = "notify_type", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getNotifyType() {
+		return this.notifyType;
+	}
+	/**设置通知类型  */
+
+	public void setNotifyType(String value) {
+		this.notifyType = value;
+	}
+	/**获取通知校验ID  */
+	
+
+	@Column(name = "notify_id", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getNotifyId() {
+		return this.notifyId;
+	}
+	/**设置通知校验ID  */
+
+	public void setNotifyId(String value) {
+		this.notifyId = value;
+	}
+	/**获取签名方式  */
+	
+
+	@Column(name = "sign_type", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getSignType() {
+		return this.signType;
+	}
+	/**设置签名方式  */
+
+	public void setSignType(String value) {
+		this.signType = value;
+	}
+	/**获取签名  */
+	
+
+	@Column(name = "sign", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getSign() {
+		return this.sign;
+	}
+	/**设置签名  */
+
+	public void setSign(String value) {
+		this.sign = value;
+	}
+	/**获取商户网站唯一订单号  */
+	
+
+	@Column(name = "out_trade_no", unique = false, nullable = true, insertable = true, updatable = true, length = 64)
+	public String getOutTradeNo() {
+		return this.outTradeNo;
+	}
+	/**设置商户网站唯一订单号  */
+
+	public void setOutTradeNo(String value) {
+		this.outTradeNo = value;
+	}
+	/**获取商品名称  */
+	
+
+	@Column(name = "subject", unique = false, nullable = true, insertable = true, updatable = true, length = 128)
+	public String getSubject() {
+		return this.subject;
+	}
+	/**设置商品名称  */
+
+	public void setSubject(String value) {
+		this.subject = value;
+	}
+	/**获取支付类型  */
+	
+
+	@Column(name = "payment_type", unique = false, nullable = true, insertable = true, updatable = true, length = 4)
+	public String getPaymentType() {
+		return this.paymentType;
+	}
+	/**设置支付类型  */
+
+	public void setPaymentType(String value) {
+		this.paymentType = value;
+	}
+	/**获取支付宝交易号  */
+	
+
+	@Column(name = "trade_no", unique = false, nullable = true, insertable = true, updatable = true, length = 64)
+	public String getTradeNo() {
+		return this.tradeNo;
+	}
+	/**设置支付宝交易号  */
+
+	public void setTradeNo(String value) {
+		this.tradeNo = value;
+	}
+	/**获取交易状态 WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  */
+	
+
+	@Column(name = "trade_status", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getTradeStatus() {
+		return this.tradeStatus;
+	}
+	/**设置交易状态 WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  */
+
+	public void setTradeStatus(String value) {
+		this.tradeStatus = value;
+	}
+	/**获取卖家支付宝用户号  */
+	
+
+	@Column(name = "seller_id", unique = false, nullable = true, insertable = true, updatable = true, length = 30)
+	public String getSellerId() {
+		return this.sellerId;
+	}
+	/**设置卖家支付宝用户号  */
+
+	public void setSellerId(String value) {
+		this.sellerId = value;
+	}
+	/**获取卖家支付宝账号  */
+	
+
+	@Column(name = "seller_email", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getSellerEmail() {
+		return this.sellerEmail;
+	}
+	/**设置卖家支付宝账号  */
+
+	public void setSellerEmail(String value) {
+		this.sellerEmail = value;
+	}
+	/**获取买家支付宝用户号  */
+	
+
+	@Column(name = "buyer_id", unique = false, nullable = true, insertable = true, updatable = true, length = 30)
+	public String getBuyerId() {
+		return this.buyerId;
+	}
+	/**设置买家支付宝用户号  */
+
+	public void setBuyerId(String value) {
+		this.buyerId = value;
+	}
+	/**获取买家支付宝账号  */
+	
+
+	@Column(name = "buyer_email", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public String getBuyerEmail() {
+		return this.buyerEmail;
+	}
+	/**设置买家支付宝账号  */
+
+	public void setBuyerEmail(String value) {
+		this.buyerEmail = value;
+	}
+	/**获取交易金额  */
+	
+
+	@Column(name = "total_fee", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getTotalFee() {
+		return this.totalFee;
+	}
+	/**设置交易金额  */
+
+	public void setTotalFee(Double value) {
+		this.totalFee = value;
+	}
+	/**获取购买数量  */
+	
+
+	@Column(name = "quantity", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getQuantity() {
+		return this.quantity;
+	}
+	/**设置购买数量  */
+
+	public void setQuantity(Double value) {
+		this.quantity = value;
+	}
+	/**获取商品单价  */
+	
+
+	@Column(name = "price", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getPrice() {
+		return this.price;
+	}
+	/**设置商品单价  */
+
+	public void setPrice(Double value) {
+		this.price = value;
+	}
+	/**获取商品描述  */
+	
+
+	@Column(name = "body", unique = false, nullable = true, insertable = true, updatable = true, length = 512)
+	public String getBody() {
+		return this.body;
+	}
+	/**设置商品描述  */
+
+	public void setBody(String value) {
+		this.body = value;
+	}
+	/**获取交易创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置交易创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取交易付款时间  */
+	
+
+	@Column(name = "gmt_payment", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtPayment() {
+		return this.gmtPayment;
+	}
+	/**设置交易付款时间  */
+
+	public void setGmtPayment(Date value) {
+		this.gmtPayment = value;
+	}
+	/**获取是否调整总价  */
+	
+
+	@Column(name = "is_total_fee_adjust", unique = false, nullable = true, insertable = true, updatable = true, length = 1)
+	public String getIsTotalFeeAdjust() {
+		return this.isTotalFeeAdjust;
+	}
+	/**设置是否调整总价  */
+
+	public void setIsTotalFeeAdjust(String value) {
+		this.isTotalFeeAdjust = value;
+	}
+	/**获取是否使用红包买家  */
+	
+
+	@Column(name = "use_coupon", unique = false, nullable = true, insertable = true, updatable = true, length = 1)
+	public String getUseCoupon() {
+		return this.useCoupon;
+	}
+	/**设置是否使用红包买家  */
+
+	public void setUseCoupon(String value) {
+		this.useCoupon = value;
+	}
+	/**获取折扣  */
+	
+
+	@Column(name = "discount", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDiscount() {
+		return this.discount;
+	}
+	/**设置折扣  */
+
+	public void setDiscount(String value) {
+		this.discount = value;
+	}
+	/**获取退款状态  */
+	
+
+	@Column(name = "refund_status", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getRefundStatus() {
+		return this.refundStatus;
+	}
+	/**设置退款状态  */
+
+	public void setRefundStatus(String value) {
+		this.refundStatus = value;
+	}
+	/**获取退款时间  */
+	
+
+	@Column(name = "gmt_refund", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtRefund() {
+		return this.gmtRefund;
+	}
+	/**设置退款时间  */
+
+	public void setGmtRefund(Date value) {
+		this.gmtRefund = value;
+	}
+	/**通知时间String*/
+	private String notifyTimeString;
+	/**获取通知时间String*/
+	@Transient
+	
+	public String getNotifyTimeString() {
+		if(notifyTimeString==null && notifyTime!=null)
+			notifyTimeString=new SimpleDateFormat(DATE_FORMAT).format(notifyTime);
+		return notifyTimeString;
+	}
+	/**设置通知时间String*/
+	public void setNotifyTimeString(String value) {
+		this.notifyTimeString=value;
+	}
+	/**交易创建时间String*/
+	private String gmtCreateString;
+	/**获取交易创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置交易创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**交易付款时间String*/
+	private String gmtPaymentString;
+	/**获取交易付款时间String*/
+	@Transient
+	
+	public String getGmtPaymentString() {
+		if(gmtPaymentString==null && gmtPayment!=null)
+			gmtPaymentString=new SimpleDateFormat(DATE_FORMAT).format(gmtPayment);
+		return gmtPaymentString;
+	}
+	/**设置交易付款时间String*/
+	public void setGmtPaymentString(String value) {
+		this.gmtPaymentString=value;
+	}
+	/**退款时间String*/
+	private String gmtRefundString;
+	/**获取退款时间String*/
+	@Transient
+	
+	public String getGmtRefundString() {
+		if(gmtRefundString==null && gmtRefund!=null)
+			gmtRefundString=new SimpleDateFormat(DATE_FORMAT).format(gmtRefund);
+		return gmtRefundString;
+	}
+	/**设置退款时间String*/
+	public void setGmtRefundString(String value) {
+		this.gmtRefundString=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getNotifyTime())
+			.append(getNotifyType())
+			.append(getNotifyId())
+			.append(getSignType())
+			.append(getSign())
+			.append(getOutTradeNo())
+			.append(getSubject())
+			.append(getPaymentType())
+			.append(getTradeNo())
+			.append(getTradeStatus())
+			.append(getSellerId())
+			.append(getSellerEmail())
+			.append(getBuyerId())
+			.append(getBuyerEmail())
+			.append(getTotalFee())
+			.append(getQuantity())
+			.append(getPrice())
+			.append(getBody())
+			.append(getGmtCreate())
+			.append(getGmtPayment())
+			.append(getIsTotalFeeAdjust())
+			.append(getUseCoupon())
+			.append(getDiscount())
+			.append(getRefundStatus())
+			.append(getGmtRefund())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof AlipayPaynotify == false) return false;
+		if(this == obj) return true;
+		AlipayPaynotify other = (AlipayPaynotify)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",NotifyTime:",getNotifyTime())
+			.append(",NotifyType:",getNotifyType())
+			.append(",NotifyId:",getNotifyId())
+			.append(",SignType:",getSignType())
+			.append(",Sign:",getSign())
+			.append(",OutTradeNo:",getOutTradeNo())
+			.append(",Subject:",getSubject())
+			.append(",PaymentType:",getPaymentType())
+			.append(",TradeNo:",getTradeNo())
+			.append(",TradeStatus:",getTradeStatus())
+			.append(",SellerId:",getSellerId())
+			.append(",SellerEmail:",getSellerEmail())
+			.append(",BuyerId:",getBuyerId())
+			.append(",BuyerEmail:",getBuyerEmail())
+			.append(",TotalFee:",getTotalFee())
+			.append(",Quantity:",getQuantity())
+			.append(",Price:",getPrice())
+			.append(",Body:",getBody())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",GmtPayment:",getGmtPayment())
+			.append(",IsTotalFeeAdjust:",getIsTotalFeeAdjust())
+			.append(",UseCoupon:",getUseCoupon())
+			.append(",Discount:",getDiscount())
+			.append(",RefundStatus:",getRefundStatus())
+			.append(",GmtRefund:",getGmtRefund())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","notifyTimeString","gmtCreateString","gmtPaymentString","gmtRefundString","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","notifyTimeString","gmtCreateString","gmtPaymentString","gmtRefundString","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 支付宝支付结果回调
+AlipayPaynotify alipayPaynotify = new AlipayPaynotify(
+	notifyTime , //Date 通知时间   
+	notifyType , //String 通知类型   
+	notifyId , //String 通知校验ID   
+	signType , //String 签名方式   
+	sign , //String 签名   
+	outTradeNo , //String 商户网站唯一订单号   
+	subject , //String 商品名称   
+	paymentType , //String 支付类型   
+	tradeNo , //String 支付宝交易号   
+	tradeStatus , //String 交易状态  WAIT_BUYER_PAY  交易创建，等待买家付款。TRADE_CLOSED 在指定时间段内未支付时关闭的交易;TRADE_SUCCESS  交易成功。 TRADE_FINISHED 交易成功且结束。  
+	sellerId , //String 卖家支付宝用户号   
+	sellerEmail , //String 卖家支付宝账号   
+	buyerId , //String 买家支付宝用户号   
+	buyerEmail , //String 买家支付宝账号   
+	totalFee , //Double 交易金额 default=0.0  
+	quantity , //Double 购买数量 default=0.0  
+	price , //Double 商品单价 default=0.0  
+	body , //String 商品描述   
+	gmtPayment , //Date 交易付款时间   
+	isTotalFeeAdjust , //String 是否调整总价   
+	useCoupon , //String 是否使用红包买家   
+	discount , //String 折扣   
+	refundStatus , //String 退款状态   
+	gmtRefund , //Date 退款时间   
+	null
+);
+*/
+}

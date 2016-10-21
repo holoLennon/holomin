@@ -1,0 +1,86 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/Member/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${member.id}" />
+	<@z.pmt key="42.Member.name">
+				<@p.text label="db.Member.name" nameid="name"  value="${member.name}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.img1">
+					<@p.ckfimg label="db.Member.img1" nameid="img1"  value="${member.img1}" help="600x600"  moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.age">
+				<@p.textnumber label="db.Member.age" nameid="age"  value="${member.age}" help="每年自动加1" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.usersex">
+				<@p.radio label="db.Member.usersex" nameid="usersex" value="${member.usersex}" help="" list=member.usersexMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.idtype">
+				<@p.radio label="db.Member.idtype" nameid="idtype" value="${member.idtype}" help="" list=member.idtypeMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.idnum">
+				<@p.text label="db.Member.idnum" nameid="idnum"  value="${member.idnum}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.realname">
+				<@p.text label="db.Member.realname" nameid="realname"  value="${member.realname}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.mobile">
+				<@p.text label="db.Member.mobile" nameid="mobile"  value="${member.mobile}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.zip">
+				<@p.text label="db.Member.zip" nameid="zip"  value="${member.zip}" help="" dataoptions="validType:['length[0,6]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.addr">
+				<@p.text label="db.Member.addr" nameid="addr"  value="${member.addr}" help="" dataoptions="validType:['length[0,200]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.email">
+				<@p.text label="db.Member.email" nameid="email"  value="${member.email}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.realname1">
+				<@p.text label="db.Member.realname1" nameid="realname1"  value="${member.realname1}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.mobile1">
+				<@p.text label="db.Member.mobile1" nameid="mobile1"  value="${member.mobile1}" help="" dataoptions="validType:['length[0,20]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.doctorId">
+				<@p.searchforid label="db.Member.doctorId" nameid="doctorId" value="${member.doctorId}" stringvalue="${member.doctorIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.countPrescription">
+				<@p.textnumber label="db.Member.countPrescription" nameid="countPrescription"  value="${member.countPrescription}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.countOrderr">
+				<@p.textnumber label="db.Member.countOrderr" nameid="countOrderr"  value="${member.countOrderr}" help="" dataoptions="min:-999999999,max:999999999,precision:2," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.statusRelation">
+				<@p.radio label="db.Member.statusRelation" nameid="statusRelation" value="${member.statusRelation}" help="" list=member.statusRelationMap moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.Member.cidgt">
+				<@p.text label="db.Member.cidgt" nameid="cidgt"  value="${member.cidgt}" help="" dataoptions="validType:['length[0,32]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.Member.ilastdev">
+				<@p.radio label="db.Member.ilastdev" nameid="ilastdev" value="${member.ilastdev}" help="" list=member.ilastdevMap moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+<!-- 资源管理器ckf start-->
+<script type="text/javascript">
+	var finder = new CKFinder();
+	finder.basePath = '${zres}/';
+</script>
+<!-- 资源管理器ckf end-->
+</div>
+

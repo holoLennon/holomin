@@ -1,0 +1,29 @@
+/**
+ * 
+ */
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.yijian.common.dal.bean.Myiso;
+
+/**
+ * 程序员需要时，可以在这里加自己加的map
+ * @author zmax
+ *
+ */
+public class MapSpec {
+	/**
+	 * 这里是程序员自已增加map的地方
+	 */
+	public static void init(Map<String,Map<String,String>> mymap){
+		//mymap.put("test.test",JsonUtil.getMapFromJson("{'0':'未支付','1':'支付成功','-1':'支付失败'}"));
+		//mymap.put("User.RoleId",JsonUtil.getMapFromJson("{'0':'超管','1':'一般管理员','2':'店家','3':'店小二','5':'会员','6':'代理商','7':'商品提供商'}"));
+	}
+}

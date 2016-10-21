@@ -1,0 +1,60 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.SellerCount.id">
+		<tr><th>序号ID</th><td>
+		${sellerCount.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${sellerCount.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.gmtCount">
+		<tr><th>被统计日或月</th><td>
+		${sellerCount.gmtCountString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.itype">
+		<tr><th>类型</th><td>
+		${sellerCount.itypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.sellerId">
+		<tr><th>业务员</th><td>
+		${sellerCount.sellerIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.mmoney">
+		<tr><th>直接销售金额</th><td>
+		${sellerCount.mmoney}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.mmoneyteam">
+		<tr><th>下属团队销售金额</th><td>
+		${sellerCount.mmoneyteam}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.mmoneyall">
+		<tr><th>总销售金额</th><td>
+		${sellerCount.mmoneyall}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.SellerCount.cmemo">
+		<tr><th>备注</th><td>
+		${sellerCount.cmemo}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

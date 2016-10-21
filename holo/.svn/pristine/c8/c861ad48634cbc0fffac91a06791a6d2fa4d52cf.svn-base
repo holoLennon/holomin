@@ -1,0 +1,13 @@
+<!--Product，商品详细信息-->
+<ion-view view-title='易健中心' cache-view="false" hide-tabs="false">
+
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+    <ion-content class="has-header" >
+
+                <img src='res/img/yijian.jpg'  style="width: 100%" >
+
+
+
+</ion-view>
+

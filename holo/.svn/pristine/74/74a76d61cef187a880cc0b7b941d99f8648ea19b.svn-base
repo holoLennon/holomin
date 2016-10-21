@@ -1,0 +1,219 @@
+package com.zmax.yijian.biz.service.spec;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.gexin.rp.sdk.base.IPushResult;
+import com.gexin.rp.sdk.base.ITemplate;
+import com.gexin.rp.sdk.base.impl.ListMessage;
+import com.gexin.rp.sdk.base.impl.Target;
+import com.gexin.rp.sdk.base.payload.APNPayload;
+import com.gexin.rp.sdk.http.IGtPush;
+import com.gexin.rp.sdk.template.APNTemplate;
+import com.gexin.rp.sdk.template.TransmissionTemplate;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+
+import com.zmax.conf.AttrStatic;
+import com.zmax.exception.BoException;
+
+/**
+ * 个推推送Service
+ * 
+ * 
+ * @author zmax
+ *
+ */
+@Service
+public class SpecGetuiService {
+
+	private static final Logger logger = Logger.getLogger(SpecGetuiService.class);
+
+
+
+	//【医药一键通】
+	private static String appId = "bti0OEK4EI9ibdlG54FYi2";    
+	private static String appKey = "9nmOAl7jYY7ij4VZMPMvT";    
+	private static String appSecret = "hADyK1hIi978rXAfvffQr7";    
+	private static String masterSecret = "T3YAM795NGAeEptKykbZd7";
+	//【医药一键通医生版】
+	private static String appId2 = "XjVibm3yMJ7YfulTf3XhB1";    
+	private static String appKey2 = "q8neNdYK9r7eoxNTAAme26";    
+	private static String appSecret2 = "3oqg7jdHuB7GsbK8Jp4Pg4";    
+	private static String masterSecret2 = "3vayCSut7B9XBVMUPHvAi4";   
+
+	private static String url = "http://sdk.open.api.igexin.com/serviceex";
+
+
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	
+
+
+	/**
+	 * 清除个推推送cid，如果数据库中cid与传入的cid不匹配则不操作
+	 * @param tokenUser
+	 * @param cid
+	 * @throws BoException 
+	 */
+	public void removeCid(User tokenUser, String cid) throws BoException {
+
+	}
+
+	/**
+	 * 保存个推推送cid
+	 * @param tokenUser
+	 * @param cid
+	 * @throws BoException 
+	 */
+	public void putCid(User tokenUser, String cid, Integer device) throws Exception,BoException {
+		Member member=memberService.get(null, tokenUser.getId());
+		if(member==null)
+			throw new BoException("患者不存在");
+		member.setCidgt(cid);
+		member.setIlastdev(device);
+		memberService.update(null, member);
+	}
+	
+
+	/**
+	 * 发送个推推送消息
+	 * @param orderr
+	 */
+	public void sendGetuiPush(Orderr orderr) {
+		// 新建一个IGtPush实例，传入调用接口网址，appkey和masterSecret
+		IGtPush push = new IGtPush(url, appKey, masterSecret);
+		try {
+			push.connect();
+		} catch (IOException e) {
+			logger.error("推送接口连接失败");
+			e.printStackTrace();
+			return;
+		}
+
+		// 推送目标用户列表
+		List<Target> listTarget = generateListTarget(orderr);
+		if (listTarget.isEmpty()) {
+			return;
+		}
+
+		// 新建一个推送模版, 以链接模板为例子，就是说在通知栏显示一条含图标、标题等的通知，用户点击可打开您指定的网页
+		ITemplate template = generateTemplate(orderr);
+		List<String> appIds = new ArrayList<String>();
+		appIds.add(appId);
+
+		// 模板设置好后塞进message里并设置，同时设置推送的app id,还可以配置这条message是否支持离线，以及过期时间等
+		ListMessage message = new ListMessage();
+		message.setData(template);
+		message.setOffline(true);
+		message.setOfflineExpireTime(24 * 3600 * 1000);
+
+		//使用taskID对目标进行推送
+		String taskId = push.getContentId(message);
+		IPushResult ret = push.pushMessageToList(taskId, listTarget);
+
+		if (logger.isDebugEnabled())
+			logger.debug("个推返回结果: " + ret.getResponse().toString());
+	}
+
+	/**
+	 * 发送APN推送
+	 * @param orderr
+	 */
+	public void sendGetuiPushAPN(Orderr orderr) {
+		// 新建一个IGtPush实例，传入调用接口网址，appkey和masterSecret
+		IGtPush push = new IGtPush(url, appKey, masterSecret);
+		try {
+			push.connect();
+		} catch (IOException e) {
+			logger.error("推送接口连接失败");
+			e.printStackTrace();
+			return;
+		}
+
+		// 目标用户列表
+		List<String> listTarget= generateListTargetAPN(orderr);
+		if (listTarget.isEmpty()) {
+			return;
+		}
+
+		// 设置推送消息
+		APNTemplate template = generateTemplateAPN(orderr);
+		ListMessage message = new ListMessage();
+		message.setData(template);
+		String contentId = push.getAPNContentId(appId, message);
+
+		// 推送
+		System.setProperty("gexin.rp.sdk.pushlist.needDetails", "true");
+		IPushResult ret = push.pushAPNMessageToList(appId, contentId, listTarget);
+
+		if (logger.isDebugEnabled())
+			logger.debug("个推返回结果: " + ret.getResponse().toString());
+	}
+
+	/**
+	 * 生成消息模板
+	 * @param orderr
+	 * @return
+	 */
+	private ITemplate generateTemplate(Orderr orderr) {
+		// 新建一个推送模版, 以链接模板为例子，就是说在通知栏显示一条含图标、标题等的通知，用户点击可打开您指定的网页
+		TransmissionTemplate template = new TransmissionTemplate();
+		// 设置APPID与APPKEY
+		template.setAppId(appId);
+		template.setAppkey(appKey);
+
+		template.setTransmissionType(2);
+		template.setTransmissionContent("{\"title\":\"新订单\",\"content\":\"点击查看订单\",\"orderId\":\"" + orderr.getId() +"\",\"noticeType\":\"processing_order\"}");
+		return template;
+	}
+
+	/**
+	 * 生成APN模板
+	 * @param orderr
+	 * @return
+	 */
+	private APNTemplate generateTemplateAPN(Orderr orderr) {
+		APNTemplate template = new APNTemplate();
+		APNPayload apnpayload = new APNPayload();
+		apnpayload.setSound("notification_1.caf");
+		APNPayload.DictionaryAlertMsg alertMsg = new APNPayload.DictionaryAlertMsg();
+		alertMsg.setTitle("新订单");
+		alertMsg.setBody("点击查看订单");
+		alertMsg.setTitleLocKey("新订单");
+		alertMsg.setActionLocKey("点击查看订单");
+		apnpayload.setAlertMsg(alertMsg);
+		template.setAPNInfo(apnpayload);
+		return template;
+	}
+
+	/**
+	 * 生成安卓推送目标用户列表
+	 * @param orderr
+	 * @return
+	 */
+	private List<Target> generateListTarget(Orderr orderr) {
+		List<Target> listTarget = new ArrayList<>();
+		return null;
+	}
+
+	/**
+	 * 生成iOS推送目标用户列表
+	 * @param orderr
+	 * @return
+	 */
+	private List<String> generateListTargetAPN(Orderr orderr) {
+		List<String> listTarget = new ArrayList<>();
+		return listTarget;
+	}
+}

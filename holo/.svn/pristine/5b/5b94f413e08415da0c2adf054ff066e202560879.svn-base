@@ -1,0 +1,100 @@
+package com.zmax.yijian.common.utils;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+
+
+
+
+
+
+import com.zmax.entity.Sele;
+import com.zmax.exception.BoException;
+import com.zmax.utils.string.JsonUtil;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.common.conf.RtCfg;
+import com.zmax.yijian.common.dal.bean.Wxcfg;
+
+public class MyUtils {
+	private static final Logger logger = Logger.getLogger(MyUtils.class);
+	/**
+	 * 属性，从JSON转成HTML的select格式
+	 * 属性变成<option></option><option></option>...<option></option>
+	 * @param pname 属性名
+	 * @param prop ex.[{"id":"红","iindex":"1"},{"id":"黄","iindex":"3"},{"id":"兰","iindex":"2"},{"id":"绿","iindex":"4"},{"id":"白","iindex":"5"}]
+	 * @return <option value='属性名_红'>红</option>
+	 */
+	public static String propToOptions(String pname,String prop){
+		String ret="";
+		List<Sele> listSele=JsonUtil.getDTOList(prop, Sele.class);
+		for (Sele sele : listSele) {
+			//ret+="<option value='"+pname+"_"+sele.getId()+"'>"+sele.getId()+"</option>";
+			ret+="<option value='"+pname+"_"+sele.getValue()+"'>"+sele.getId()+"</option>";
+		}
+		return ret;
+	}
+	/**
+	 * 从运行环境中找到微信配置
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public static Wxcfg takeWxcfg(Integer id) throws BoException{
+		if(StringUtilz.integerNullOr0(id))
+			throw new BoException("微信配置ID为空");
+		Wxcfg wxcfg=RtCfg.wxcfgMap.get(id);
+		//logger.debug("RtCfg.wxcfgMap="+RtCfg.wxcfgMap);
+		if(wxcfg==null)
+			throw new BoException("id为"+id+"微信配置文件找不到");
+		return wxcfg;
+	}
+	/**
+	 * 从url中获取域名
+	 * http://test2.aaa.com/bo/pub/wx/support/1.html --> http://test2.maykeys.com
+	 * @param url
+	 * @return http://test2.aaa.com
+	 */
+	public static String domainFromUrl(String url){
+		String ret=url;
+		if(StringUtils.countMatches(url, "/")<3)
+			return url;
+		int atg=0;
+		if(url.indexOf("http://")==0)
+			atg=url.indexOf("/", "http://".length());
+		if(url.indexOf("https://")==0)
+			atg=url.indexOf("/", "https://".length());
+		if(atg!=0)
+			ret=url.substring(0,atg);
+		return ret;
+	}
+	
+	public static String wxUrl(HttpServletRequest request){
+		return (null==request.getQueryString())?request.getRequestURL().toString():request.getRequestURL().toString()+ "?" + (request.getQueryString()); 
+	}
+	
+	public static String urlRemoveUri(String url,String uri){
+		return url;
+	}
+	public static void main(String[] args) {
+		String u1="http://test2.maykeys.com/bo/pub/wx/support/1.html";
+		String u2="https://test2.maykeys.com/";
+		String u3="http://test2.maykeys.com";
+		String u4="https://test2.maykeys.com";
+		String url=domainFromUrl(u1);
+		System.out.println("url=" + url);
+		url=domainFromUrl(u2);
+		System.out.println("url=" + url);
+		url=domainFromUrl(u3);
+		System.out.println("url=" + url);
+		url=domainFromUrl(u4);
+		System.out.println("url=" + url);
+	}
+}

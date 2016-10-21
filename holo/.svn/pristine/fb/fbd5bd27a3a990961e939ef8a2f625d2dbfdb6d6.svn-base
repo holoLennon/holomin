@@ -1,0 +1,35 @@
+appctrl.controller('ztestCtrl', function($scope, $timeout, $cordovaGoogleAnalytics,$stateParams
+    ,Storage) {
+    console.log("enter ztest ctrl");
+    var id = $stateParams.id;
+    var p1 = $stateParams.p1;
+    $scope.$on('$ionicView.beforeEnter', function() {
+        console.log("ztest ctrl beforeEnter");
+    });
+
+    $scope.$on('$ionicView.afterEnter', function() {
+
+        console.log("ztest ctrl afterEnter");
+    });
+    $scope.pageinit=function(){
+        console.log("ztest pageinit ");
+    };
+    $scope.init=function(){
+        console.log("ztest init "+id+","+p1);
+        if(id==1){
+            $scope.testOpenid(p1);
+        }
+    };
+    $scope.testOpenid=function(openid){
+        console.log("ztest testOpenid");
+        /**客户端信息*/
+        var clientInfo=Storage.get(CLIENT_INFO);
+        if(!clientInfo){
+            clientInfo=_.clone(_ClientInfo);
+        }
+        clientInfo.openid=openid;
+        Storage.set(CLIENT_INFO,clientInfo);
+        console.log(clientInfo);
+    };
+    $scope.init();
+});

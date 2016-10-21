@@ -1,0 +1,186 @@
+package com.zmax.yijian.biz.service.common;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.conf.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.*;
+
+import com.zmax.utils.beans.StrObj;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.utils.string.Md5PwdEncoder;
+import com.zmax.utils.tree.TreeNode;
+import com.zmax.utils.tree.TreeNodeUtils;
+import com.zmax.utils.page.Pagination;
+
+
+/**
+ * 初始化数据库表
+ * @author zmax
+ *
+ */
+@Component
+public class DbInit {
+	private static final Logger logger = Logger.getLogger(DbInit.class);
+	static int LISTMAX=1000;
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Autowired
+	AlipayPaynotifyService alipayPaynotifyService;
+	@Autowired
+	MemberdoctorService memberdoctorService;
+	@Autowired
+	DoctorProductService doctorProductService;
+	@Autowired
+	DmmsgService dmmsgService;
+	@Autowired
+	DrugstoreService drugstoreService;
+	@Autowired
+	SellerCountService sellerCountService;
+	@Autowired
+	HospitalService hospitalService;
+	@Autowired
+	WaEntityArticleService waEntityArticleService;
+	@Autowired
+	WxmenuService wxmenuService;
+	@Autowired
+	WaRecvmsgService waRecvmsgService;
+	@Autowired
+	WaCustomAudParamService waCustomAudParamService;
+	@Autowired
+	WxmsgtemplateService wxmsgtemplateService;
+	@Autowired
+	WaTemplateAddService waTemplateAddService;
+	@Autowired
+	WxUsergroupService wxUsergroupService;
+	@Autowired
+	WaGeneralNoticeRetService waGeneralNoticeRetService;
+	@Autowired
+	TbfieldService tbfieldService;
+	@Autowired
+	WebsetService websetService;
+	@Autowired
+	MyisoService myisoService;
+	@Autowired
+	MyisouService myisouService;
+	@Autowired
+	OperLogService operLogService;
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+	@Autowired
+	WxcfgService wxcfgService;
+	@Autowired
+	WxrService wxrService;
+	@Autowired
+	WxouserService wxouserService;
+	@Autowired
+	WxousersubscribehisService wxousersubscribehisService;
+	@Autowired
+	WaQrcodeticketSceneService waQrcodeticketSceneService;
+	@Autowired
+	WaQradvService waQradvService;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	ProductExtTxtService productExtTxtService;
+	@Autowired
+	ProductchannelService productchannelService;
+	@Autowired
+	ManufacturerService manufacturerService;
+	@Autowired
+	ProductTypeService productTypeService;
+	@Autowired
+	ProductTypeLinkProductService productTypeLinkProductService;
+	@Autowired
+	SuggestionService suggestionService;
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+	@Autowired
+	DbSpecInit dbSpecInit;
+
+	@Autowired
+	Prop prop;
+	@Autowired
+	Propmy propmy;	
+
+	public DbInit(){
+
+	}
+	/**
+	 * 进行初始化工作，加管理员表，资源表等等。
+	 */
+	public void doInit(){
+		otherInit();
+		userInit();
+		dbSpecInit.doInit();
+
+	}
+	/**
+	 * 其它
+	 */
+	public void otherInit(){
+	}
+	/**
+	 * 用户
+	 */
+	public void userInit(){
+		//管理员
+		User user=(User)userService.getFirst(null, null, "username=?", null, new Object[]{"admin"});
+		if(user==null){
+			String pwd=StringUtils.isBlank(propmy.getDefaultAdminPwd())?"admin123":propmy.getDefaultAdminPwd();
+			user=new User();
+			user.setUsername("admin");
+			user.setPassword(pwd);
+			user.setNickname("管理员");
+			user.setRoleId(0);
+			user.setStatus(1);
+			try {
+				commonzSvrUitls.createBefore(new User(), user, "User",null);
+			} catch (Exception e) {
+				// e.printStackTrace();
+				logger.error(e);
+			}
+			userService.save(user);
+		}
+	}
+}

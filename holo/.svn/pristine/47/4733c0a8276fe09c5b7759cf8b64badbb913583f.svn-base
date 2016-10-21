@@ -1,0 +1,88 @@
+<!--Orderr，订单详细信息-->
+<ion-view view-title='订单' cache-view='false' cache-view="false" hide-tabs="false">
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <!--<a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>-->
+
+  </ion-nav-buttons>
+  <ion-content class="has-header" style="background: none">
+	<ul class="list" ng-if="obj && vm.isedit==false" style="margin-top: 10px">
+
+		<p style="font-size: 13px;margin-left: 10px;color: #8c8c8c">
+			<span>订单号：{{obj.sn}}</span><br>
+			<span>{{obj.gmtCreateString}}    下单</span>
+		</p>
+		<li style="background-color: white;margin-top: -5px;height: 25px">
+			<span style="margin-left: 10px">订单状态：</span><span style="margin-left: 50%;font-size: 12px;color: #8c8c8c">{{obj.statusString}}</span>
+		</li>
+		<div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+		<ion-item   ng-repeat="obj1 in obj.listorderrdetail">
+			<li style="background-color: white">
+				<img ng-src="{{obj1.img1}}" reset-img style="height: 60px;margin-left: 10px"/>
+				<div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -70px;background: none;margin-left: 80px">
+					<span>{{obj1.title}}</span><br>
+					<!--<span>供货方： {{obj1.manufacturerIdString}}</span></br>-->
+					<span>数量： {{obj1.num}}</span>
+					<span>单价： {{obj1.price}}</span>
+
+
+				</div>
+			</li>
+		</ion-item>
+		<p style="font-size: 13px;margin-left: 10px;">
+			<span>商品小计</span>
+		</p>
+		<li style="background-color: white;font-size: 12px;color: #8c8c8c;height: 25px">
+			<span style="margin-left: 10px;margin-top: 5px">商品数量： {{obj.productnums}}</span>
+		</li>
+		<li style="background-color: white;font-size: 12px;color: #8c8c8c;height: 25px">
+			<span style="margin-left: 10px;margin-top: 5px">商品总金额： ￥{{obj.sumprice}}</span>
+		</li>
+		<li style="background-color: white;font-size: 12px;color: #8c8c8c">
+			<span style="margin-left: 10px">运费： ￥0</span>
+		</li>
+		<div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+		<li style="background-color: white;font-size: 12px;color: #8c8c8c;height: 25px">
+			<span style="margin-left: 10px">订单总金额： ￥{{obj.sumprice}}</span>
+		</li>
+		<li style="background-color: white;font-size: 14px;color: #8c8c8c;height: 25px;">
+			<span style="margin-left: 75%"><a href="#/tab/DrugstoreListMapA" style="color:#DA0E0E !important;" >附近药店</a></span>
+		</li>
+		<!--<li style="background-color: white;font-size: 12px;color: #8c8c8c;margin-top: -10px;height: 25px">-->
+			<!--<span style="margin-left: 10px;margin-top: 5px;color: black">{{obj.memberIdString}}</span><span style="margin-left: 50%;margin-top: 5px">{{obj.memberIdMemberObj.mobile}}</span>-->
+		<!--</li>-->
+		<!--<li style="background-color: white;font-size: 12px;color: #8c8c8c">-->
+			<!--<span style="margin-left: 10px">{{obj.memberIdMemberObj.addr}}</span>-->
+		<!--</li>-->
+		<!--<li class="item">序号ID:{{obj.id}}</li>-->
+		<!--<li class="item">创建时间:{{obj.gmtCreateString}}</li>-->
+		<!--<li class="item">支付时间:{{obj.gmtPayString}}</li>-->
+		<!--<li class="item">开单类型:{{obj.iotypeString}}</li>-->
+		<!--<li class="item">支付状态:{{obj.statusString}}</li>-->
+		<!--<li class="item">收发货状态:{{obj.statusgoodsString}}</li>-->
+		<!--<li class="item">提货方式:{{obj.statusCarriageTypeString}}</li>-->
+		<!--<li class="item">会员:{{obj.memberIdString}}</li>-->
+		<!--<li class="item">总价:{{obj.sumprice}}</li>-->
+		<!--<li class="item">商品名:{{obj.title}}</li>-->
+		<!--<li class="item">图1</li>-->
+		<!--<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>-->
+		<!--<li class="item">取药点:{{obj.drugstoreIdString}}</li>-->
+		<!--<li class="item">推荐医生:{{obj.doctorIdString}}</li>-->
+		<!--<li class="item">所属业务员:{{obj.sellerIdString}}</li>-->
+		<!--<li class="item">取药操作员:{{obj.operIdString}}</li>-->
+		<!--<li class="item">诊断:{{obj.diagnose}}</li>-->
+	</ul>
+	<!--修改-->
+	<ul class="list" ng-if="obj && vm.isedit==true">
+		<!--<li style="color: #808080;text-align: right;margin-top: 5px">请点击下方方取药点，选择离您较近的药房。</li>-->
+		<!--<label style="height: 50px;margin-top: 10px" class="item item-input" ng-click="open_pop_mdrugstorelist();">取药点:{{drugstore.cname}}<input type="hidden" placeholder="取药点"  ng-model="obj.drugstoreId"></label>-->
+
+		<!--<li class="item" style="margin-top: 180px;height: 80px;border: none;background-color: #f6f5f5">-->
+			<p style="margin-top: 45%;text-align: center;font-size: 16px;">亲，你是要确定下单么！</p>
+			<a  ng-click="vm.isedit=false;save()" class="button button-full button-balanced" style="width: 70%;border: none; position:relative;top:15em;left: 16%;background-color: #008cad"></i>确定</a>
+		</li>
+
+	</ul>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,29 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/DoctorProduct/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${doctorProduct.id}" />
+	<@z.pmt key="42.DoctorProduct.doctorId">
+				<@p.searchforid label="db.DoctorProduct.doctorId" nameid="doctorId" value="${doctorProduct.doctorId}" stringvalue="${doctorProduct.doctorIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Doctor/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.DoctorProduct.productId">
+				<@p.searchforid label="db.DoctorProduct.productId" nameid="productId" value="${doctorProduct.productId}" stringvalue="${doctorProduct.productIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/Product/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

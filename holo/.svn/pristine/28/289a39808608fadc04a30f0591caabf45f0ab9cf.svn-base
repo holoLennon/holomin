@@ -1,0 +1,48 @@
+<ion-view view-title="我的资料" hide-nav-bar="true" class="allweb" style="background-color: #f5f5f5">
+	<div class="bar bar-header bar-positive" style="border: none">
+		<a class="ion-logo" href="#/tab/Yijian"></a>
+		<div class="title" style="width: 80px;margin: auto">我的资料</div>
+		<a class="ion-shezhi_b pull-right" href="#/tab/Shezhi_b">设置</a>
+	</div>
+
+	<div class="login"  ng-click="login()" ng-if="!user" style="height: 100px">
+		<div class="login_info" style="margin-top: 100px">
+			<p>
+				<span style="margin-left: 20%;color: #8c8f96">您还未登录，请登录查看信息</span>
+			</p>
+			<dt>立即登录</dt>
+		</div>
+	</div>
+
+	<div class="login"  ng-if="user" style="margin-top: 40px;">
+		<div class="login_info" style="background-color: #008cad;height: 160px">
+			<img src="res/img/touxiang.png" width="80" style="margin-left: 36%"/>
+			<dd style="font-size: 16px;color: white"><span>{{meuser.myname}}</span><span> </span></dd>
+		</div>
+	</div>
+	<div style="font-size: 14px;height: 20px;margin-top: -40px">
+		<a style="color: #707070;margin-left: 10px">诊所服务</a>
+	</div>
+	<!--<li class="row" style="margin-top: -15px">-->
+	<!--<a class="item" href="#/tab/DoctorProductList/0">-->
+	<!--<div class="item_content">我的药架</div>-->
+	<!--<div class="item_arrow"></div>-->
+	<!--</a>-->
+	<!--</li>-->
+	<li class="row" style="width:100%">
+		<a class="ion-b_shourujiesuan" href="#/tab/Doctor_count" style="width:30%"></a>
+		<!--<a class="ion-b_zhuyeliulan"></a>-->
+		<a class="ion-b_wodedingdan" href="#/tab/OrderrListme1/3/0"  style="width:30%"></a>
+		<a class="ion-b_fabuhuati" href="#/tab/Madingpageme"  style="width:30%"></a>
+	</li>
+	<div style="font-size: 14px;height: 20px;margin-bottom: 10px">
+		<a style="color: #707070;margin-left: 10px">其他服务</a>
+	</div>
+	<li class="row" style="margin-top: -10px;width:100%">
+		<!--<a class="ion-b_wentigonglue"href="#/tab/Problem"></a>-->
+		<a class="ion-b_erweima" href="#/tab/Doctor_qrcode/{{meuser.id}}"  style="width:30%" ></a>
+		<a class="ion-b_gonggaozixun"href="#/tab/Proclamation" style="width:30%"></a>
+		<a class="ion-b_gerenxinxi"href="#/tab/Editdoctor" style="width:30%;"></a>
+	</li>
+
+</ion-view>

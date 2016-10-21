@@ -1,0 +1,49 @@
+/*
+ * zmax 2013
+ * 
+ */
+
+
+package com.zmax.yijian.web.controller.spec.user;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.zmax.conf.SessionName;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.common.CommonzSvrUitls;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.web.controller.base.base.BaseController;
+
+/**
+ * <pre>
+ * 如果一般增删改不够了，代码写这，如果要使用，把下面的两个@注释去掉
+ * </pre>
+ * 
+ * @see
+ * @since
+ */
+@Controller
+@RequestMapping("/member")
+public class SpecMemberController extends BaseController{
+
+	public static String SESSIONLISTORDERIDS="listOrderIds";
+	public String NOW_PAGE="/member";
+	
+	
+
+}

@@ -1,0 +1,32 @@
+<!--DrugstoreList，实体药店列表-->
+<ion-view view-title="实体药店列表"  >
+	<ion-nav-buttons side="right">
+		<h4></h4><a class="button icon ion-plus-round" href="#/tab/Drugstore/0"></a>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Drugstore/{{obj.id}}" collection-item-width="'100%'" collection-item-height="65px">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <p>
+				<span>序号ID:{{obj.id}}</span>
+				<span>地区:{{obj.areaidString}}</span>
+				<span>药房名称:{{obj.cname}}</span>
+				<span>药房地址:{{obj.addr}}</span>
+				<span>药房电话:{{obj.tele}}</span>
+				<span>药房性质:{{obj.attrString}}</span>
+				<span>咨询药师姓名:{{obj.docname}}</span>
+				<span>咨询药师电话:{{obj.doctele}}</span>
+				<span>药房咨询QQ:{{obj.docqq}}</span>
+				<span>经度lng:{{obj.centerlng}}</span>
+				<span>维度lat:{{obj.centerlat}}</span>
+				<span>图1:{{obj.img1}}</span>
+				<span>图2:{{obj.img2}}</span>
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

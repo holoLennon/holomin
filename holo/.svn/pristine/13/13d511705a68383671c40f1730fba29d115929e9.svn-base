@@ -1,0 +1,250 @@
+/*
+ * zmax 
+ * 
+ */
+
+package com.zmax.yijian.web.controller.restful.my;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zmax.exception.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.utils.AESUtil;
+import com.zmax.yijian.web.controller.restful.*;
+import com.zmax.yijian.web.controller.restful.entity.ClientInfo;
+import com.zmax.yijian.web.controller.restful.entity.RestPage;
+import com.zmax.utils.easyui.Grid;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.easyui.Tree;
+
+/**
+ * RestFul控制 
+ * 业务员
+ * 
+ *
+ */
+@Controller
+@RequestMapping("/rest/Seller")
+public class SellerRestController {
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(SellerRestController.class);
+
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	RestUtils restUtils;
+	@Autowired
+	RestSpecUtils restSpecUtils;
+	/**
+	 *  查询获取列表
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @return List<Seller>
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/query", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Seller> query(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage) throws BoException, NeedLoginException, RightException, Exception {
+		restPage.fix();
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage,new Seller(),"query");
+
+		List<Seller> list=new ArrayList<Seller>();
+		PageHelper ph=new PageHelper(restPage.getPageNo(), restPage.getPageSize());
+		ph.setSort(restPage.getOrderstr());
+		restSpecUtils.queryBefore(request, clientInfo, restPage, tokenUser, "Seller", ph);
+		Grid page = sellerService.csgrid(tokenUser, null, ph, restPage.getWhere(), true, true);
+		list=(List<Seller>)page.getRows();
+		for (Seller seller : list) {
+			sellerService.addObj(null, seller);
+		}
+		restSpecUtils.queryAfter(request, clientInfo, restPage, tokenUser, "Seller", ph, list);
+		return list;
+	}
+	/**
+	 * 获取一个新对象，加上各种LIST让用户选择
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param seller 给的默认值，可以为空
+	 * @return Seller
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/getnew", method = RequestMethod.GET)
+	@ResponseBody
+	public Seller getnew(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,Seller seller) throws BoException, NeedLoginException, RightException, Exception {
+		if(seller==null)
+			seller=new Seller();
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, seller,"new");
+		seller=sellerService.csnewget(tokenUser, seller, null, null, true, true);
+		return seller;
+	}
+	/**
+	 * 新对象提交
+	 * @param request
+	 * @param clientInfo
+	 * @param restPage 页面信息
+	 * @param seller 页面提交的对象
+	 * @return Seller
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@ResponseBody
+	public Seller create(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,Seller seller) throws BoException, NeedLoginException, RightException, Exception {
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, seller,"create");
+		restSpecUtils.createBefore(request, clientInfo, restPage, tokenUser, seller);
+		sellerService.saveCreate(tokenUser,new Seller(),seller, null, null, true, true);
+		restSpecUtils.createAfter(request, clientInfo, restPage, tokenUser, seller);
+		return seller;
+	}
+	/**
+	 * 获取对象
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param id
+	 * @return Seller
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Seller get(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,@PathVariable Integer id) throws BoException, NeedLoginException, RightException, Exception {
+		if(id==null || id.toString().equals("0")){
+			return getnew(request, clientInfo, restPage, null);
+		}
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, new Seller(),"get");
+		restSpecUtils.ggetBefore(request, clientInfo, restPage, tokenUser, "Seller", id);
+		Seller seller=sellerService.csshow(tokenUser, id, true, true);
+		restSpecUtils.ggetAfter(request, clientInfo, restPage, tokenUser, seller);
+		return seller;
+	}
+	/**
+	 * 获取对象Edit版
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param id
+	 * @return Seller
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/getedit/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Seller getedit(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,@PathVariable Integer id) throws BoException, NeedLoginException, RightException, Exception {
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, new Seller(),"get");
+		restSpecUtils.ggeteditBefore(request, clientInfo, restPage, tokenUser, "Seller", id);
+		Seller seller=sellerService.csedit(tokenUser, id, true, true);
+		restSpecUtils.ggeteditAfter(request, clientInfo, restPage, tokenUser, seller);
+		return seller;
+	}
+	/**
+	 * 提交更新
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param seller
+	 * @return Seller
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST) 
+	@ResponseBody
+	public Seller update(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,Seller seller) throws BoException, NeedLoginException, RightException, Exception {
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, new Seller(),"update");
+		restSpecUtils.updateBefore(request, clientInfo, restPage, tokenUser, seller);
+		sellerService.updateUpdate(tokenUser, seller, seller.getId(), true, true);
+		sellerService.addList(tokenUser,seller);
+		sellerService.addString(tokenUser,seller);	
+		restSpecUtils.updateAfter(request, clientInfo, restPage, tokenUser, seller);
+		return seller;
+	}
+	/**
+	 * 删除对象
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param id
+	 * @return Boolean
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/del/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Boolean del(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,@PathVariable Integer id) throws BoException, NeedLoginException, RightException, Exception {
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage, new Seller(),"del");
+		Boolean ret=sellerService.deleteById(tokenUser, id);
+		return ret;
+	}
+	/**
+	 * 查询获取列表树
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @return List[Seller]
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/tree", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Seller> tree(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage) throws BoException, NeedLoginException, RightException, Exception {
+		restPage.fix();
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage,new Seller(),"query");
+		PageHelper ph=new PageHelper(restPage.getPageNo(), restPage.getPageSize());
+		ph.setSort(restPage.getOrderstr());
+		restSpecUtils.queryBefore(request, clientInfo, restPage, tokenUser, "Seller", ph);
+		List<Seller> list=sellerService.listWithTree(false);
+		return list;
+	}
+	/**
+	 * 查询获取pid名下的列表树
+	 * @param request
+	 * @param clientInfo 客户端信息
+	 * @param restPage 页面信息
+	 * @param pid 父母id
+	 * @return List[Seller]
+	 * @throws BoException 可以显示给客户的错
+	 * @throws NeedLoginException 没登录
+	 * @throws Exception 内部错
+	 */
+	@RequestMapping(value = "/treebypid", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Seller> treebypid(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage,Integer pid) throws BoException, NeedLoginException, RightException, Exception {
+		restPage.fix();
+		User tokenUser=restUtils.checkAccessToken(clientInfo, restPage,new Seller(),"query");
+		PageHelper ph=new PageHelper(restPage.getPageNo(), restPage.getPageSize());
+		ph.setSort(restPage.getOrderstr());
+		restSpecUtils.queryBefore(request, clientInfo, restPage, tokenUser, "Seller", ph);
+		List<Seller> list=sellerService.listWithTreeByPid(pid,false);
+		return list;
+	}
+}

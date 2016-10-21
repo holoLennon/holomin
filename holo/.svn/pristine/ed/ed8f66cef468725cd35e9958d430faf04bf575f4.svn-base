@@ -1,0 +1,98 @@
+<!--Wwwhome，手机页首页配置详细信息-->
+<ion-view view-title='首页' hide-nav-bar="true" class="allweb" >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-header-bar class="bar-positive " style="opacity: 0.8;">
+		<a class="ion-logo" href="#/tab/Wwwhome">
+		</a>
+		<label class="item-input-wrapper">
+			<input style="height: 90%" class="ion-beijing" type="text" placeholder="请输入药品名称首汉字搜索" ng-model="searchData" >
+		</label>
+		<i class="icon ion-ios-search placeholder-icon"  ng-click="search()" style="position: relative;left: -15px;top: 8px;"></i>
+		<button class="ion-xiaoxi" ></button>
+	</ion-header-bar>
+	<ion-content has-bouncing="false">
+		<ul class="list" ng-if="obj && vm.isedit==false">
+			<!--<li class="item" style="height:120px"><img ng-src='{{obj.headimg1}}'reset-img style="height:120px"></li>-->
+			<li class="gund" >
+				<ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+					<ion-slide>
+						<div class="box blue" ng-click="jumpPage('Product1/3')">
+							<img src="http://yijian.zjjnyd.com/yijian/userfiles/images/306988.jpg" width="100%">
+						</div>
+					</ion-slide>
+					<ion-slide>
+						<div class="box blue" ng-click="jumpPage('Product1/5')">
+							<img src="http://yijian.zjjnyd.com/yijian/userfiles/images/507786.jpg" width="100%">
+						</div>
+					</ion-slide>
+					<ion-slide>
+						<div class="box blue" ng-click="jumpPage('Product1/27')">
+							<img src="http://yijian.zjjnyd.com/yijian/userfiles/images/270978.jpg" width="100%">
+						</div>
+					</ion-slide>
+				</ion-slide-box>
+			</li>
+			<li class="row">
+				<a class="ion-qingsongzhaoyao" href="#/tab/Freefinddrug"></a>
+				<a class="ion-yaoshizixun"href="#/tab/DruggistList"></a>
+				<a class="ion-kongzhongzhenshi"href="#/tab/Madingpage" ></a>
+				<a class="ion-sirenyisheng" href="#/tab/Md2017List"></a>
+			</li>
+			<li class="row" style="margin-top: 10px">
+				<a class="ion-nanxing"  href="#/tab/Man"> </a>
+				<a class="ion-nvxing" href="#/tab/Women"></a>
+				<a class="ion-laoren" href="#/tab/Oldman"></a>
+				<a class="ion-ertong" href="#/tab/Children"></a>
+			</li>
+			<li class="item" style="height:90px;border: none">
+				<a href=""><img src='res/img/shouye_09.png' style="height:90px;width: 100%;position:absolute; right:0%;top:0%;"></a>
+			</li>
+			<li class="item">
+				<a style=" position:absolute; right:0%;top:0%;"><img src='res/img/remaifenlei.png' style="height:40px;width: 80%;margin-bottom: 5px"></a>
+			</li>
+			<li class="row" style="height: 60px;margin-top: -10px">
+				<a class="ion-zhongxiyaopin" href="#/tab/zhongxiyaopin" > </a>
+
+				<a class="ion-yiliaoqixie" href="#/tab/yiliaoqixie"></a>
+			</li>
+			<li class="row" style="height: 60px">
+				<a class="ion-zibubaojian" href="#/tab/zibubaojian" > </a>
+
+				<a class="ion-weishengsu" href="#/tab/weishensu"></a>
+			</li>
+			<li class="row" style="height: 80px" >
+				<a class="ion-yigan" href="#/tab/zibubaojian" > </a>
+
+				<a class="ion-sangao" href="#/tab/zibubaojian" ></a>
+			</li>
+			<li class="row" style="margin-top: -17px;height: 100px">
+				<a class="ion-dianxian" style="border-color: white" href="#/tab/zibubaojian" > </a>
+				<a class="ion-xiaochuan" href="#/tab/zibubaojian" ></a>
+				<a class="ion-yiyu" href="#/tab/zibubaojian" ></a>
+				<a class="ion-tangniaobing" href="#/tab/zibubaojian" ></a>
+			</li>
+			<div style="width: 100%;height: 8px;background-color: #eeeeee;margin-top: -40px"></div>
+			<li class="row" style="height: 60px;">
+				<a class="ion-tongrentang" href="#/tab/zibubaojian" > </a>
+
+				<a class="ion-bishengyuan" href="#/tab/zibubaojian" ></a>
+			</li>
+			<li class="row" style="margin-top: -10px" href="#/tab/zibubaojian" >
+				<a class="ion-miandan" href="#/tab/zibubaojian" ></a>
+				<a class="ion-19" href="#/tab/zibubaojian" ></a>
+				<a class="ion-haoli"  href="#/tab/zibubaojian" ></a>
+				<a class="ion-wanren" href="#/tab/zibubaojian" ></a>
+			</li>
+			<!--<li class="item">图说明2:{{obj.headimgtxt2}}</li>-->
+			<!--<li class="item">图链接2:{{obj.headimglink2}}</li>-->
+			<!--<li class="item">图3</li>-->
+			<!--<li class="item" style="height:120px"><img src='{{obj.headimg3}}' style="height:120px"></li>-->
+			<!--<li class="item">图说明3:{{obj.headimgtxt3}}</li>-->
+			<!--<li class="item">图链接3:{{obj.headimglink3}}</li>-->
+		</ul>
+		<ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+		<div style="height: 50px;border: none"></div>
+	</ion-content>
+</ion-view>

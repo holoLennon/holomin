@@ -1,0 +1,138 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Doctor.id">
+		<tr><th>用户ID</th><td>
+		${doctor.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.productchannelId">
+		<tr><th>医科目录</th><td>
+		${doctor.productchannelIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.age">
+		<tr><th>年纪</th><td>
+		${doctor.age}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.img1">
+		<tr><th>头像</th><td>
+		${doctor.img1}
+		<br/><img src="${doctor.img1}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.name">
+		<tr><th>姓名</th><td>
+		${doctor.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.hospitalId">
+		<tr><th>所在医院</th><td>
+		${doctor.hospitalIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.dlevel">
+		<tr><th>职称</th><td>
+		${doctor.dlevelString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.usersex">
+		<tr><th>用户性别</th><td>
+		${doctor.usersexString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.idtype">
+		<tr><th>证件类型</th><td>
+		${doctor.idtypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.idnum">
+		<tr><th>证件号码</th><td>
+		${doctor.idnum}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.zip">
+		<tr><th>邮编</th><td>
+		${doctor.zip}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.addr">
+		<tr><th>地址</th><td>
+		${doctor.addr}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.company">
+		<tr><th>工作单位</th><td>
+		${doctor.company}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.mobile">
+		<tr><th>手机</th><td>
+		${doctor.mobile}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.tele">
+		<tr><th>座机</th><td>
+		${doctor.tele}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.email">
+		<tr><th>电子邮件</th><td>
+		${doctor.email}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.itype">
+		<tr><th>医生类型</th><td>
+		${doctor.itypeString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.countPrescription">
+		<tr><th>总处方数量</th><td>
+		${doctor.countPrescription}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.countOrderr">
+		<tr><th>总开方成交金额</th><td>
+		${doctor.countOrderr}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.countFirst">
+		<tr><th>总首推消费金额</th><td>
+		${doctor.countFirst}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.qrimg">
+		<tr><th>二维码</th><td>
+		${doctor.qrimg}
+		<br/><img src="${doctor.qrimg}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.sellerId">
+		<tr><th>所属业务员</th><td>
+		${doctor.sellerIdStringid}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.statusRelation">
+		<tr><th>是否有新医患关系</th><td>
+		${doctor.statusRelationString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Doctor.imgqa">
+		<tr><th>资格证照片</th><td>
+		${doctor.imgqa}
+		<br/><img src="${doctor.imgqa}" />
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

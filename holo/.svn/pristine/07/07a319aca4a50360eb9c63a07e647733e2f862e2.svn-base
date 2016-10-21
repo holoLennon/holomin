@@ -1,0 +1,247 @@
+/*
+        user.roleId=5;
+        user.isauto=0; * AreacnController Powered By 张闽昕
+ * 
+ * 
+ * Since 2008 - 2012
+ */
+
+package com.zmax.yijian.web.controller.spec.user;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.octo.captcha.service.image.ImageCaptchaService;
+import com.zmax.conf.Addr;
+import com.zmax.conf.AttrStatic;
+import com.zmax.conf.SessionName;
+import com.zmax.exception.BoException;
+import com.zmax.exception.NeedLoginException;
+import com.zmax.utils.easyui.Json;
+import com.zmax.utils.string.Md5PwdEncoder;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.common.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecUserService;
+import com.zmax.yijian.biz.service.spec.SpecWxQrService;
+import com.zmax.yijian.biz.service.spec.SpecYjService;
+import com.zmax.yijian.common.conf.Propmy;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.web.controller.base.BaseAdminController;
+import com.zmax.yijian.web.controller.base.BaseCadminController;
+import com.zmax.yijian.web.controller.base.BaseDoctorController;
+import com.zmax.yijian.web.controller.base.BaseDruggistController;
+import com.zmax.yijian.web.controller.base.BaseMemberController;
+import com.zmax.yijian.web.controller.base.BaseOperController;
+import com.zmax.yijian.web.controller.base.base.BaseController;
+import com.zmax.yijian.web.utils.SpringInit;
+
+
+
+
+/**
+ * 需要登录后台控制器
+ * 
+ * @author 张闽昕
+ * @Since - 2012-09-18
+ */
+
+@Controller
+@RequestMapping("/user")
+public class SpecYijianUserController extends BaseController{
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(SpecYijianUserController.class);
+
+	@Autowired
+	TbfieldService tbfieldService;
+	@Autowired
+	WebsetService websetService;
+	@Autowired
+	MyisoService myisoService;
+	@Autowired
+	MyisouService myisouService;
+
+	@Autowired
+	PermittableService permittableService;
+	@Autowired
+	PermitfieldService permitfieldService;
+
+	@Autowired
+	UserService userService;
+	@Autowired
+	AdminService adminService;
+	@Autowired
+	CadminService cadminService;
+	@Autowired
+	OperService operService;
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;
+	@Autowired
+	DruggistService druggistService;
+	@Autowired
+	SellerService sellerService;
+	@Autowired
+	WxrService wxrService;
+	
+	
+	@Autowired
+	CommonzSvrUitls commonzSvrUitls;
+	@Autowired
+	CommonzSvrUitlsSpec commonzSvrUitlsSpec;
+	@Autowired
+	ImageCaptchaService imageCaptchaService;
+	@Autowired
+	SpecUserService specUserService;
+	@Autowired
+	SpecWxQrService specWxQrService;
+	@Autowired
+	SpecYjService specYjService;
+	
+	@Autowired
+	SessionUserUtils sessionUserUtils;
+	/**
+	 * 店操作员为用户取药
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/Orderr/takedrug")
+	public void orderrTakedrug(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id) {
+		try {
+			//目前只有超管和操作员能做这事
+			Oper oper=sessionUserUtils.operFromRequest(request);
+			if(oper==null||oper.getId()==null){
+				writeJson(request, response, new Json(false,"只有超管和操作员有此权限！"));	
+				return;
+			}
+			specYjService.updateTakeDrug(oper, id);
+			writeJson(request, response, new Json(true,"完成"));	
+		} catch (BoException e) {
+			logger.error(e);
+			writeJson(request, response, new Json(false,e.getMessage()));	
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);
+			writeJson(request, response, new Json(false,"系统异常，请稍后！"));	
+		}
+	}
+	
+	/**
+	 * 医生的关注二维码，更新一下二维码
+	 * 根据doctor.id找到wxr，根据wxr生成图 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 */
+	@RequestMapping(value="/Doctor/qr")
+	public void doctorQr(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id) {
+
+		try {
+			Wxr wxr=null;
+			Doctor doctor=doctorService.get(null, id);
+			if(doctor==null){
+				writeJson(request, response, new Json(false,"操作失败！医生不存在"));
+				return;
+			}
+			wxr=(Wxr)wxrService.getFirst(null, null, "userId=?", null, new Object[]{doctor.getId()});
+			if(wxr==null){
+				writeJson(request, response, new Json(false,"操作失败！微信关系wxr不存在平台绑定用户"));
+				return;
+			}
+			specWxQrService.createOrUpdateWxrQr(request, wxr);
+			if(StringUtils.isNotBlank(wxr.getImgqr())){
+				doctor.setQrimg(wxr.getImgqr());
+				doctorService.update(null, doctor);
+			}
+		} catch (BoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} catch (NeedLoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} catch(ConstraintViolationException e){
+			e.printStackTrace();
+			logger.error(e.getConstraintViolations().toArray()[0]);
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		writeJson(request, response, new Json(true,"成功，刷新一下数据"));
+
+	}
+	/**
+	 * 业务员的关注二维码，更新一下二维码
+	 * 根据seller.id找到wxr，根据wxr生成图 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 */
+	@RequestMapping(value="/Seller/qr")
+	public void sellerQr(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id) {
+
+		try {
+			Wxr wxr=null;
+			Seller seller=sellerService.get(null, id);
+			if(seller==null){
+				writeJson(request, response, new Json(false,"操作失败！业务员不存在"));
+				return;
+			}
+			wxr=(Wxr)wxrService.getFirst(null, null, "userId=?", null, new Object[]{seller.getId()});
+			if(wxr==null){
+				writeJson(request, response, new Json(false,"操作失败！微信关系wxr不存在平台绑定用户"));
+				return;
+			}
+			specWxQrService.createOrUpdateWxrQr(request, wxr);
+			if(StringUtils.isNotBlank(wxr.getImgqr())){
+				seller.setQrimg(wxr.getImgqr());
+				sellerService.update(null, seller);
+			}
+		} catch (BoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} catch (NeedLoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} catch(ConstraintViolationException e){
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		writeJson(request, response, new Json(true,"成功，刷新一下数据"));
+
+	}
+
+}

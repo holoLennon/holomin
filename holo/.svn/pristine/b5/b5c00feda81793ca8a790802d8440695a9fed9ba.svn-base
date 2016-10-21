@@ -1,0 +1,258 @@
+
+/*
+ * Powered By 张闽昕
+ * 
+ * 
+ * Since 2008 - 2012
+ */
+
+package com.zmax.yijian.common.entity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Max;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
+
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+import com.zmax.utils.date.DateConvertUtils;
+
+
+
+
+/**
+ * @author 张闽昕
+ * @version 1.0
+ * @since 2012年06月29日
+ */
+
+
+@Entity
+@Table(name = "template")
+public class Template extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "模板";
+	public static final String ALIAS_ID = "id";
+	public static final String ALIAS_PARENTID = "父母ID";
+	public static final String ALIAS_TEMPLATE_NAME = "文件名";
+	public static final String ALIAS_URLPATH = "路径";
+	public static final String ALIAS_SIZE = "大小";
+	public static final String ALIAS_LASTDATE = "最后修改时间";
+	public static final String ALIAS_IS_DIRECTORY = "是否为文件夹";
+	public static final String ALIAS_TXT = "文本";
+	
+	//date formats
+	public static final String FORMAT_LASTDATE = DATE_FORMAT;
+	
+
+	//可以直接使用: @Length(max=50,message="用户名长度不能大于50")显示错误消息
+	//columns START
+	/**id*/
+	@Max(9999999999L)
+	private java.lang.Integer id;
+	/**父母ID*/
+	@Max(9999999999L)
+	private java.lang.Integer parentid;
+	/**文件名*/
+	@Length(max=100)
+	private java.lang.String templateName;
+	/**路径*/
+	@Length(max=255)
+	private java.lang.String urlpath;
+	/**大小*/
+	@Max(9999999999L)
+	private java.lang.Integer size;
+	/**最后修改时间*/
+	
+	private java.util.Date lastdate;
+	/**是否为文件夹*/
+	
+	private java.lang.Boolean isDirectory;
+	/**文本*/
+	@Length(max=2147483647)
+	private java.lang.String txt;
+	//columns END
+
+
+	public Template(){
+	}
+	
+
+	public void setId(java.lang.Integer value) {
+		this.id = value;
+	}
+	
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "increment")
+	@Column(name = "id", unique = true, nullable = false, insertable = true, updatable = true, length = 10)
+	public java.lang.Integer getId() {
+		return this.id;
+	}
+	
+	/**获取父母ID*/
+	@Column(name = "parentid", unique = false, nullable = true, insertable = true, updatable = true, length = 10)
+	public java.lang.Integer getParentid() {
+		return this.parentid;
+	}
+
+	/**设置父母ID*/
+	public void setParentid(java.lang.Integer value) {
+		this.parentid = value;
+	}
+
+	/**获取文件名*/
+	@Column(name = "template_name", unique = false, nullable = true, insertable = true, updatable = true, length = 100)
+	public java.lang.String getTemplateName() {
+		return this.templateName;
+	}
+
+	/**设置文件名*/
+	public void setTemplateName(java.lang.String value) {
+		this.templateName = value;
+	}
+
+	/**获取路径*/
+	@Column(name = "urlpath", unique = false, nullable = true, insertable = true, updatable = true, length = 255)
+	public java.lang.String getUrlpath() {
+		return this.urlpath;
+	}
+
+	/**设置路径*/
+	public void setUrlpath(java.lang.String value) {
+		this.urlpath = value;
+	}
+
+	/**获取大小*/
+	@Column(name = "size", unique = false, nullable = true, insertable = true, updatable = true, length = 10)
+	public java.lang.Integer getSize() {
+		return this.size;
+	}
+
+	/**设置大小*/
+	public void setSize(java.lang.Integer value) {
+		this.size = value;
+	}
+
+	@Transient
+	public String getLastdateString() {
+		return DateConvertUtils.format(getLastdate(), FORMAT_LASTDATE);
+	}
+	public void setLastdateString(String value) {
+		setLastdate(DateConvertUtils.parse(value, FORMAT_LASTDATE,java.util.Date.class));
+	}
+	
+	/**获取最后修改时间*/
+	@Column(name = "lastdate", unique = false, nullable = true, insertable = true, updatable = true, length = 19)
+	public java.util.Date getLastdate() {
+		return this.lastdate;
+	}
+
+	/**设置最后修改时间*/
+	public void setLastdate(java.util.Date value) {
+		this.lastdate = value;
+	}
+
+	/**获取是否为文件夹*/
+	@Column(name = "is_directory", unique = false, nullable = true, insertable = true, updatable = true, length = 0)
+	public java.lang.Boolean getIsDirectory() {
+		return this.isDirectory;
+	}
+
+	/**设置是否为文件夹*/
+	public void setIsDirectory(java.lang.Boolean value) {
+		this.isDirectory = value;
+	}
+
+	/**获取文本*/
+	@Column(name = "txt", unique = false, nullable = true, insertable = true, updatable = true, length = 2147483647)
+	public java.lang.String getTxt() {
+		return this.txt;
+	}
+
+	/**设置文本*/
+	public void setTxt(java.lang.String value) {
+		this.txt = value;
+	}
+
+
+	/**孩子*/
+	private List<Template> child=new ArrayList<Template>();
+	/**获取孩子*/
+	
+	public List<Template> getChild() {
+		return child;
+	}
+	/**设置孩子*/
+	public void setChild(List<Template> child) {
+		this.child = child;
+	}
+	/**父母*/
+	private Template parent;
+	/**获取父母*/
+	@Transient
+	public Template getParent() {
+		return parent;
+	}
+	/**设置父母*/
+	public void setParent(Template parent) {
+		this.parent = parent;
+	}
+	/**父母List*/
+	private List<Template> parentList;
+	/**获取父母*/
+	
+	public List<Template> getParentList() {
+		return parentList;
+	}
+	/**设置父母*/
+	public void setParentList(List<Template> value) {
+		this.parentList = value;
+	}
+
+	
+	//zmax add
+	
+	private byte[] bbyte;
+	public byte[] getBbyte() {
+		return bbyte;
+	}
+	public void setBbyte(byte[] bbyte) {
+		this.bbyte = bbyte;
+	}
+	
+	private String ext;
+
+
+	public String getExt() {
+		return ext;
+	}
+
+
+	public void setExt(String ext) {
+		this.ext = ext;
+	}
+	
+	private boolean imgExt;
+	public boolean isImgExt() {
+		return imgExt;
+	}
+
+
+	public void setImgExt(boolean imgExt) {
+		this.imgExt = imgExt;
+	}
+	
+	
+
+
+}
+

@@ -1,0 +1,824 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+ 
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+/**
+ * 医患关系
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "memberdoctor")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Memberdoctor extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "医患关系";
+
+	//date formats
+	public static final String FORMAT_GMT_CREATE = DATE_FORMAT;
+	public static final String FORMAT_GMT_MODIFIED = DATE_FORMAT;
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**创建时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtCreate;
+	/**修改时间 Date   */
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date gmtModified;
+	/**关系 Integer default=0 用户发消息后创建临时关系，医生回复后变成正式 map={'0':'临时关系','1':'正式关系'}*/
+	@Max(999L)
+	
+	private Integer statusDm = 0;
+	/**是否为首推 Integer default=0 以患者表为主 map={'0':'否','1':'是'}*/
+	@Max(999L)
+	
+	private Integer itypeFirst = 0;
+	/**医生类型 Integer default=0 平台医生就是客服 */
+	@Max(999L)
+	
+	private Integer itype = 0;
+	/**患者 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer memberId = 0;
+	/**医生 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer doctorId = 0;
+	/**处方数量 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer countPrescription = 0;
+	/**消费金额 Double default=0.0  */
+	
+	
+	private Double countOrderr;
+	/**会员姓名 String   */
+	@Length(max=20)
+	
+	private String mname;
+	/**医生姓名 String   */
+	@Length(max=20)
+	
+	private String dname;
+	/**医科目录 Integer   */
+	@Max(99999999999L)
+	
+	private Integer productchannelId;
+	/**会员未读消息 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer mmsgnotread = 0;
+	/**医生未读消息 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer dmsgnotread = 0;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Memberdoctor _this){
+		_this.gmtCreate=new Date();
+		_this.statusDm=0;
+		_this.itypeFirst=0;
+		_this.itype=0;
+		_this.memberId=0;
+		_this.doctorId=0;
+		_this.countPrescription=0;
+		_this.countOrderr=0.0;
+		_this.mmsgnotread=0;
+		_this.dmsgnotread=0;
+	}
+	public Memberdoctor(){
+		makedefault(this);
+	}
+	public Memberdoctor(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param statusDm Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+	 * @param itypeFirst Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+	 * @param memberId Integer 患者 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param countPrescription Integer 处方数量 default=0  
+	 * @param countOrderr Double 消费金额 default=0.0  
+	 * @param mmsgnotread Integer 会员未读消息 default=0  
+	 * @param dmsgnotread Integer 医生未读消息 default=0  
+	* @param notuse String 没用
+	 */
+	public Memberdoctor(Integer statusDm ,Integer itypeFirst ,Integer memberId ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,Integer mmsgnotread ,Integer dmsgnotread ,String notuse) {
+		super();
+		this.statusDm = statusDm;
+		this.itypeFirst = itypeFirst;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.mmsgnotread = mmsgnotread;
+		this.dmsgnotread = dmsgnotread;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param gmtModified Date 修改时间   
+	 * @param statusDm Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+	 * @param itypeFirst Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+	 * @param itype Integer 医生类型 default=0 平台医生就是客服 
+	 * @param memberId Integer 患者 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param countPrescription Integer 处方数量 default=0  
+	 * @param countOrderr Double 消费金额 default=0.0  
+	 * @param mname String 会员姓名   
+	 * @param dname String 医生姓名   
+	 * @param productchannelId Integer 医科目录   
+	 * @param mmsgnotread Integer 会员未读消息 default=0  
+	 * @param dmsgnotread Integer 医生未读消息 default=0  
+	* @param notuse String 没用
+	 */
+	public Memberdoctor(Integer id ,Date gmtModified ,Integer statusDm ,Integer itypeFirst ,Integer itype ,Integer memberId ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,String mname ,String dname ,Integer productchannelId ,Integer mmsgnotread ,Integer dmsgnotread ,String notuse) {
+		super();
+		this.id = id;
+		this.gmtCreate = new Date();
+		this.gmtModified = gmtModified;
+		this.statusDm = statusDm;
+		this.itypeFirst = itypeFirst;
+		this.itype = itype;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.mname = mname;
+		this.dname = dname;
+		this.productchannelId = productchannelId;
+		this.mmsgnotread = mmsgnotread;
+		this.dmsgnotread = dmsgnotread;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param gmtCreate Date 创建时间   
+	 * @param gmtModified Date 修改时间   
+	 * @param statusDm Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+	 * @param itypeFirst Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+	 * @param itype Integer 医生类型 default=0 平台医生就是客服 
+	 * @param memberId Integer 患者 default=0  
+	 * @param doctorId Integer 医生 default=0  
+	 * @param countPrescription Integer 处方数量 default=0  
+	 * @param countOrderr Double 消费金额 default=0.0  
+	 * @param mname String 会员姓名   
+	 * @param dname String 医生姓名   
+	 * @param productchannelId Integer 医科目录   
+	 * @param mmsgnotread Integer 会员未读消息 default=0  
+	 * @param dmsgnotread Integer 医生未读消息 default=0  
+	* @param notuse String 没用
+	 */
+	public Memberdoctor(Integer id ,Date gmtCreate ,Date gmtModified ,Integer statusDm ,Integer itypeFirst ,Integer itype ,Integer memberId ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,String mname ,String dname ,Integer productchannelId ,Integer mmsgnotread ,Integer dmsgnotread ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.gmtCreate = gmtCreate;
+		this.gmtModified = gmtModified;
+		this.statusDm = statusDm;
+		this.itypeFirst = itypeFirst;
+		this.itype = itype;
+		this.memberId = memberId;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.mname = mname;
+		this.dname = dname;
+		this.productchannelId = productchannelId;
+		this.mmsgnotread = mmsgnotread;
+		this.dmsgnotread = dmsgnotread;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取创建时间  */
+	
+
+	@Column(name = "gmt_create", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtCreate() {
+		return this.gmtCreate;
+	}
+	/**设置创建时间  */
+
+	public void setGmtCreate(Date value) {
+		this.gmtCreate = value;
+	}
+	/**获取修改时间  */
+	
+
+	@Column(name = "gmt_modified", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public Date getGmtModified() {
+		return this.gmtModified;
+	}
+	/**设置修改时间  */
+
+	public void setGmtModified(Date value) {
+		this.gmtModified = value;
+	}
+	/**获取关系 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}*/
+	
+
+	@Column(name = "status_dm", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusDm() {
+		return this.statusDm;
+	}
+	/**设置关系 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}*/
+
+	public void setStatusDm(Integer value) {
+		this.statusDm = value;
+	}
+	/**获取是否为首推 以患者表为主 {'0':'否','1':'是'}*/
+	
+
+	@Column(name = "itype_first", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getItypeFirst() {
+		return this.itypeFirst;
+	}
+	/**设置是否为首推 以患者表为主 {'0':'否','1':'是'}*/
+
+	public void setItypeFirst(Integer value) {
+		this.itypeFirst = value;
+	}
+	/**获取医生类型 平台医生就是客服 */
+	
+
+	@Column(name = "itype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getItype() {
+		return this.itype;
+	}
+	/**设置医生类型 平台医生就是客服 */
+
+	public void setItype(Integer value) {
+		this.itype = value;
+	}
+	/**获取患者  */
+	
+
+	@Column(name = "member_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getMemberId() {
+		return this.memberId;
+	}
+	/**设置患者  */
+
+	public void setMemberId(Integer value) {
+		this.memberId = value;
+	}
+	/**获取医生  */
+	
+
+	@Column(name = "doctor_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDoctorId() {
+		return this.doctorId;
+	}
+	/**设置医生  */
+
+	public void setDoctorId(Integer value) {
+		this.doctorId = value;
+	}
+	/**获取处方数量  */
+	
+
+	@Column(name = "count_prescription", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getCountPrescription() {
+		return this.countPrescription;
+	}
+	/**设置处方数量  */
+
+	public void setCountPrescription(Integer value) {
+		this.countPrescription = value;
+	}
+	/**获取消费金额  */
+	
+
+	@Column(name = "count_orderr", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCountOrderr() {
+		return this.countOrderr;
+	}
+	/**设置消费金额  */
+
+	public void setCountOrderr(Double value) {
+		this.countOrderr = value;
+	}
+	/**获取会员姓名  */
+	
+
+	@Column(name = "mname", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getMname() {
+		return this.mname;
+	}
+	/**设置会员姓名  */
+
+	public void setMname(String value) {
+		this.mname = value;
+	}
+	/**获取医生姓名  */
+	
+
+	@Column(name = "dname", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDname() {
+		return this.dname;
+	}
+	/**设置医生姓名  */
+
+	public void setDname(String value) {
+		this.dname = value;
+	}
+	/**获取医科目录  */
+	
+
+	@Column(name = "productchannel_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getProductchannelId() {
+		return this.productchannelId;
+	}
+	/**设置医科目录  */
+
+	public void setProductchannelId(Integer value) {
+		this.productchannelId = value;
+	}
+	/**获取会员未读消息  */
+	
+
+	@Column(name = "mmsgnotread", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getMmsgnotread() {
+		return this.mmsgnotread;
+	}
+	/**设置会员未读消息  */
+
+	public void setMmsgnotread(Integer value) {
+		this.mmsgnotread = value;
+	}
+	/**获取医生未读消息  */
+	
+
+	@Column(name = "dmsgnotread", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDmsgnotread() {
+		return this.dmsgnotread;
+	}
+	/**设置医生未读消息  */
+
+	public void setDmsgnotread(Integer value) {
+		this.dmsgnotread = value;
+	}
+	/**创建时间String*/
+	private String gmtCreateString;
+	/**获取创建时间String*/
+	@Transient
+	
+	public String getGmtCreateString() {
+		if(gmtCreateString==null && gmtCreate!=null)
+			gmtCreateString=new SimpleDateFormat(DATE_FORMAT).format(gmtCreate);
+		return gmtCreateString;
+	}
+	/**设置创建时间String*/
+	public void setGmtCreateString(String value) {
+		this.gmtCreateString=value;
+	}
+	/**修改时间String*/
+	private String gmtModifiedString;
+	/**获取修改时间String*/
+	@Transient
+	
+	public String getGmtModifiedString() {
+		if(gmtModifiedString==null && gmtModified!=null)
+			gmtModifiedString=new SimpleDateFormat(DATE_FORMAT).format(gmtModified);
+		return gmtModifiedString;
+	}
+	/**设置修改时间String*/
+	public void setGmtModifiedString(String value) {
+		this.gmtModifiedString=value;
+	}
+	/**关系String*/
+	private String statusDmString;
+	/**获取关系String*/
+	@Transient
+	
+	public String getStatusDmString() {
+		return statusDmString;
+	}
+	/**设置关系String*/
+	public void setStatusDmString(String value) {
+		this.statusDmString=value;
+	}
+	/**关系Map*/
+	private Map<String, Object> statusDmMap;
+	/**获取关系Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusDmMap() {
+		return statusDmMap;
+	}
+	/**设置关系Map*/
+	public void setStatusDmMap(Map<String, Object> value) {
+		this.statusDmMap=value;
+	}
+	/**是否为首推String*/
+	private String itypeFirstString;
+	/**获取是否为首推String*/
+	@Transient
+	
+	public String getItypeFirstString() {
+		return itypeFirstString;
+	}
+	/**设置是否为首推String*/
+	public void setItypeFirstString(String value) {
+		this.itypeFirstString=value;
+	}
+	/**是否为首推Map*/
+	private Map<String, Object> itypeFirstMap;
+	/**获取是否为首推Map*/
+	@Transient
+	
+	public Map<String, Object> getItypeFirstMap() {
+		return itypeFirstMap;
+	}
+	/**设置是否为首推Map*/
+	public void setItypeFirstMap(Map<String, Object> value) {
+		this.itypeFirstMap=value;
+	}
+	/**患者String*/
+	private String memberIdString;
+	/**获取患者String*/
+	@Transient
+	
+	public String getMemberIdString() {
+		return memberIdString;
+	}
+	/**设置患者String*/
+	public void setMemberIdString(String value) {
+		this.memberIdString=value;
+	}
+	/**Member - memberIdMemberObj*/
+	private Member memberIdMemberObj;
+	/**获取 Member - memberIdMemberObj*/
+	@Transient
+	
+	public Member getMemberIdMemberObj() {
+		return memberIdMemberObj;
+	}
+	/**设置 Member - 患者Obj*/
+	public void setMemberIdMemberObj(Member value) {
+		this.memberIdMemberObj=value;
+	}
+	/**患者Stringid*/
+	private String memberIdStringid;
+	/**获取患者Stringid*/
+	@Transient
+	
+	public String getMemberIdStringid() {
+		return memberIdStringid;
+	}
+	/**设置患者Stringid*/
+	public void setMemberIdStringid(String value) {
+		this.memberIdStringid=value;
+	}
+	/**医生String*/
+	private String doctorIdString;
+	/**获取医生String*/
+	@Transient
+	
+	public String getDoctorIdString() {
+		return doctorIdString;
+	}
+	/**设置医生String*/
+	public void setDoctorIdString(String value) {
+		this.doctorIdString=value;
+	}
+	/**Doctor - doctorIdDoctorObj*/
+	private Doctor doctorIdDoctorObj;
+	/**获取 Doctor - doctorIdDoctorObj*/
+	@Transient
+	
+	public Doctor getDoctorIdDoctorObj() {
+		return doctorIdDoctorObj;
+	}
+	/**设置 Doctor - 医生Obj*/
+	public void setDoctorIdDoctorObj(Doctor value) {
+		this.doctorIdDoctorObj=value;
+	}
+	/**医生Stringid*/
+	private String doctorIdStringid;
+	/**获取医生Stringid*/
+	@Transient
+	
+	public String getDoctorIdStringid() {
+		return doctorIdStringid;
+	}
+	/**设置医生Stringid*/
+	public void setDoctorIdStringid(String value) {
+		this.doctorIdStringid=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.statusDmMap=null;
+		this.itypeFirstMap=null;
+		this.memberIdMemberObj=null; //Member
+		this.doctorIdDoctorObj=null; //Doctor
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getGmtCreate())
+			.append(getGmtModified())
+			.append(getStatusDm())
+			.append(getItypeFirst())
+			.append(getItype())
+			.append(getMemberId())
+			.append(getDoctorId())
+			.append(getCountPrescription())
+			.append(getCountOrderr())
+			.append(getMname())
+			.append(getDname())
+			.append(getProductchannelId())
+			.append(getMmsgnotread())
+			.append(getDmsgnotread())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Memberdoctor == false) return false;
+		if(this == obj) return true;
+		Memberdoctor other = (Memberdoctor)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",GmtCreate:",getGmtCreate())
+			.append(",GmtModified:",getGmtModified())
+			.append(",StatusDm:",getStatusDm())
+			.append(",ItypeFirst:",getItypeFirst())
+			.append(",Itype:",getItype())
+			.append(",MemberId:",getMemberId())
+			.append(",DoctorId:",getDoctorId())
+			.append(",CountPrescription:",getCountPrescription())
+			.append(",CountOrderr:",getCountOrderr())
+			.append(",Mname:",getMname())
+			.append(",Dname:",getDname())
+			.append(",ProductchannelId:",getProductchannelId())
+			.append(",Mmsgnotread:",getMmsgnotread())
+			.append(",Dmsgnotread:",getDmsgnotread())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtModifiedString","statusDmString","statusDmMap","itypeFirstString","itypeFirstMap","memberIdString","memberIdMemberObj","memberIdStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","gmtCreateString","gmtModifiedString","statusDmString","statusDmMap","itypeFirstString","itypeFirstMap","memberIdString","memberIdMemberObj","memberIdStringid","doctorIdString","doctorIdDoctorObj","doctorIdStringid","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 医患关系
+Memberdoctor memberdoctor = new Memberdoctor(
+	statusDm , //Integer 关系 default=0 用户发消息后创建临时关系，医生回复后变成正式 {'0':'临时关系','1':'正式关系'}
+	itypeFirst , //Integer 是否为首推 default=0 以患者表为主 {'0':'否','1':'是'}
+	memberId , //Integer 患者 default=0  
+	doctorId , //Integer 医生 default=0  
+	countPrescription , //Integer 处方数量 default=0  
+	countOrderr , //Double 消费金额 default=0.0  
+	mmsgnotread , //Integer 会员未读消息 default=0  
+	dmsgnotread , //Integer 医生未读消息 default=0  
+	null
+);
+*/
+}

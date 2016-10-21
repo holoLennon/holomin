@@ -1,0 +1,48 @@
+<!--Product，商品详细信息-->
+<ion-view view-title='商品' cache-view='false'>
+  <ion-nav-buttons side="right">
+		<h4></h4>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+	<ul class="list" ng-if="obj">
+		<li class="gund" style="background-color: white" >
+			<ion-slide-box  on-slide-changed="slideHasChanged($index)" auto-play="true" does-continue="true" slide-interval=2000 show-pager="true" pager-click="pageClick(index)" active-slide="model.activeIndex" delegate-handle="delegateHandler">
+				<ion-slide>
+					<div class="box blue">
+						<img reset-img ng-src='{{obj.img1}}' style="height :250px;width:100% ">
+					</div>
+				</ion-slide>
+				<ion-slide>
+					<div class="box blue">
+						<img reset-img ng-src='{{obj.img2}}' style="height :250px;width: 100%">
+					</div>
+				</ion-slide>
+				<ion-slide>
+					<div class="box blue">
+						<img reset-img ng-src='{{obj.img3}}' style="height :250px;width: 100%">
+					</div>
+				</ion-slide>
+			</ion-slide-box>
+		</li>
+		<li class="item" style="font-size: 20px;color: black;border: none">{{obj.myname}}<span style="font-size: 12px">{{obj.productstyle}}</span></li>
+		<li class="item" style="font-size: 12px;color: #8c8c8c">
+			<span style="color: red;font-size: 16px">单价：￥{{obj.price}}</span><br>
+			<!--<b>￥{{obj.marketprice}}</b>-->
+			<span>运费:{{obj.carriagePrice}}</span><br>
+			<span>{{obj.intro}}</span>
+		</li>
+		<li class="item" style="font-size: 12px;white-space:nowrap;color: #8c8c8c">本商品由江南药都自营提供现货</li>
+		<li class="item" style="font-size: 12px;color: #8c8c8c">联系客服:400-1234-1234</li>
+		<div style="font-size:12px;color: #8c8c8c;background-color:#ffffff;" >
+			<span ng-bind-html="obj.productExtTxt.txt"></span>
+	</div>
+	</ul>
+	  <div style="height: 55px"></div>
+    <ion-spinner class="topic-spinner ng-hide" ng-show="!obj" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+  </ion-content>
+	<div class="bar bar-subfooter" style="margin-bottom: 11px;border: 1px">
+		<ion-item style="height: 40px;border: none;">
+			<button class="button icon-left" ng-click="addToDoctorProduct(obj)" style="margin-top: -15px;margin-left: 60%">加入我的药架</button>
+		</ion-item>
+	</div>
+</ion-view>

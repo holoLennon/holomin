@@ -1,0 +1,50 @@
+<!--DmmsgList，医患聊天记录列表-->
+<ion-view view-title="医患聊天" cache-view='false' hide-tabs='false' >
+	<ion-nav-buttons side="right">
+		<h4></h4><div ng-if="obj.fromto==1"><a href="#/tab/OrderrList/0/{{meuser.id}}}" style="color: white;font-size: 12px;margin-top: 10px">病人病史</a><div style="width: 1px;height: 20px"></div>
+        <a href="#/tab/Orderr/0" style="color: #008cad;font-size: 12px">开药笺</a></div>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header" style="margin-bottom: 60px">
+        <div style="height: 10px"></div>
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list border-none" ng-if="obj.fromto==0">
+            <ion-item class="item" bindonce collection-repeat="obj in list"  collection-item-width="'100%'" >
+                <div class="ago" am-time-ago="obj.gmtCreate"></div>
+                <div class="item item-avatar-s chat-friend" ng-if="obj.fromto==1">
+                    <img ng-src="{{obj.memberIdMemberObj.img1}}" reset-img />
+                    <p class="chat-text stable-bg"> {{obj.msg}}</p>
+                </div>
+                <div class="item item-avatar-right-s chat-me text-right" ng-if="obj.fromto==0">
+                    <img ng-src="{{obj.memberIdMemberObj.img1}}" reset-img />
+                    <p class="chat-text positive-bg"> {{obj.msg}}</p>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-list class="list">
+        <ion-list class="list border-none" ng-if="obj.fromto==1">
+            <ion-item class="item" bindonce collection-repeat="obj in list"  collection-item-width="'100%'">
+                <div class="ago" am-time-ago="obj.gmtCreate"></div>
+                <div class="item item-avatar-s chat-friend" ng-if="obj.fromto==0">
+                    <img ng-src="{{obj.memberIdMemberObj.img1}}" reset-img  />
+                    <p class="chat-text stable-bg" > {{obj.msg}}</p>
+                </div>
+                <div class="item item-avatar-right-s chat-me text-right" ng-if="obj.fromto==1">
+                    <img ng-src="{{obj.doctorIdDoctorObj.img1}}" reset-img />
+                    <p class="chat-text positive-bg"> {{obj.msg}}</p>
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+    <div class="bar bar-subfooter">
+        <div class="item item-input-inset" style="margin-top: -25px">
+            <label class="item-input-wrapper">
+                <input type="text" placeholder="消息" ng-model="obj.msg">
+            </label>
+            <button class="button button-small" ng-click="save();">
+                提交
+            </button>
+        </div>
+    </div>
+</ion-view>

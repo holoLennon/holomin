@@ -1,0 +1,126 @@
+package com.zmax.yijian.web.controller.restful;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.zmax.conf.AttrStatic;
+import com.zmax.exception.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.bean.Member;
+import com.zmax.yijian.common.dal.bean.User;
+import com.zmax.yijian.common.dal.bean.WaQrcodeticketScene;
+import com.zmax.yijian.common.dal.bean.Wxouser;
+import com.zmax.yijian.common.dal.bean.wx.WaJsapiPaymentParam;
+import com.zmax.yijian.common.utils.AESUtil;
+import com.zmax.yijian.web.controller.restful.entity.ClientInfo;
+import com.zmax.yijian.web.controller.restful.entity.RestPage;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.string.StringUtilz;
+/**
+ * RestFul控制 
+ * 企业
+ * 
+ *
+ */
+@Component
+public class RestUtils {
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(RestUtils.class);
+
+	@Autowired
+	RestClazzUtils restClazzUtils;
+
+
+
+	/**
+	 * Token检查，根据Token创建Token用户
+	 * @param clientInfo
+	 * @param restPage
+	 * @param obj
+	 * @param funcName
+	 * @return User
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public User checkAccessToken(ClientInfo clientInfo,RestPage restPage,Object obj,String funcName) throws BoException, NeedLoginException, RightException, Exception{
+		//if(funcName.equals("del")) throw new Exception("not allowed");
+		if(restClazzUtils.isNeedToken(obj,funcName)){
+			if(StringUtils.isBlank(clientInfo.getToken()))
+				throw new NeedLoginException(); 
+				User tokenUser=null;
+				try {
+					tokenUser = AESUtil.getInstance().decryptUser(clientInfo.getToken());
+				} catch (Exception e) {
+					throw new NeedLoginException();
+				}
+				if(tokenUser==null)
+					throw new NeedLoginException();
+				if(StringUtils.isNotBlank(clientInfo.getOpenid()))
+					tokenUser.setOpenid(clientInfo.getOpenid());
+				return tokenUser;
+		}
+		//return new User(1, null, 0, 0, null, null, null, null, null, null);
+		return new User(1, null, 0, 0, null, null, null, null, null, null);
+		
+		//return tokenUser;
+	}
+	/**
+	 * Token检查，根据Token创建Token用户，不抛错版
+	 * @param clientInfo
+	 * @param restPage
+	 * @param obj
+	 * @param funcName
+	 * @return
+	 */
+	public User checkAccessTokenNoException(ClientInfo clientInfo,RestPage restPage,Object obj,String funcName) {
+		if(funcName.equals("del"))
+			return null;
+		if(restClazzUtils.isNeedToken(obj,funcName)){
+			if(StringUtils.isBlank(clientInfo.getToken()))
+				return null; 
+				User tokenUser=null;
+				try {
+					tokenUser = AESUtil.getInstance().decryptUser(clientInfo.getToken());
+				} catch (Exception e) {
+					return null; 
+				}
+				if(tokenUser==null)
+					return null; 
+				if(StringUtils.isNotBlank(clientInfo.getOpenid()))
+					tokenUser.setOpenid(clientInfo.getOpenid());
+				return tokenUser;
+		}
+		return null; 
+	}
+	/**
+	 * 是否是会员
+	 * @param tokenUser
+	 * @return
+	 */
+	public boolean isMember(User tokenUser){
+		if(tokenUser==null || tokenUser.getRoleId()==null)
+			return false;
+		return tokenUser.getRoleId().intValue()==AttrStatic.ROLE_MEMBER;
+	}
+	/**
+	 * 是否是医生
+	 * @param tokenUser
+	 * @return
+	 */
+	public boolean isDoctor(User tokenUser){
+		if(tokenUser==null || tokenUser.getRoleId()==null)
+			return false;
+		return tokenUser.getRoleId().intValue()==AttrStatic.ROLE_DOCTOR;
+	}
+}

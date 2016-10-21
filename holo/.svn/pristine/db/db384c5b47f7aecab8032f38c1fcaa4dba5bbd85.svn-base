@@ -1,0 +1,946 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+
+
+/**
+ * 个人会员<br/>这里放表的说明
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "member")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Member extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "个人会员";
+
+	//date formats
+	
+	//columns START
+	/**用户ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**呢称 String   */
+	@Length(max=20)
+	
+	private String name;
+	/**头像 String  600x600 */
+	@Length(max=200)
+	
+	private String img1;
+	/**年纪 Integer default=20 每年自动加1 */
+	@Max(999L)
+	
+	private Integer age = 20;
+	/**用户性别 Integer default=0  map={'0':'男','1':'女'}*/
+	@Max(999L)
+	
+	private Integer usersex = 0;
+	/**证件类型 Integer default=0  map={'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+	@Max(999L)
+	
+	private Integer idtype = 0;
+	/**证件号码 String   */
+	@Length(max=20)
+	
+	private String idnum;
+	/**姓名 String   */
+	@Length(max=20)
+	
+	private String realname;
+	/**手机 String   */
+	@Length(max=20)
+	
+	private String mobile;
+	/**邮编 String   */
+	@Length(max=6)
+	
+	private String zip;
+	/**地址 String   */
+	@Length(max=200)
+	
+	private String addr;
+	/**电子邮件 String   */
+	@Length(max=50)
+	
+	private String email;
+	/**其它联系人姓名 String   */
+	@Length(max=20)
+	
+	private String realname1;
+	/**其它联系人手机 String   */
+	@Length(max=20)
+	
+	private String mobile1;
+	/**首推荐医生 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer doctorId = 0;
+	/**总处方数量 Integer default=0  */
+	@Max(99999999999L)
+	
+	private Integer countPrescription = 0;
+	/**总消费金额 Double default=0.0  */
+	
+	
+	private Double countOrderr;
+	/**是否有新医患关系 Integer default=0  map={'0':'无','1':'有'}*/
+	@Max(999L)
+	
+	private Integer statusRelation = 0;
+	/**个推cid String   */
+	@Length(max=32)
+	
+	private String cidgt;
+	/**上个设备 Integer default=0  map={'1':'安卓','2':'苹果'}*/
+	@Max(999L)
+	
+	private Integer ilastdev = 0;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Member _this){
+		_this.age=20;
+		_this.usersex=0;
+		_this.idtype=0;
+		_this.doctorId=0;
+		_this.countPrescription=0;
+		_this.countOrderr=0.0;
+		_this.statusRelation=0;
+		_this.ilastdev=0;
+	}
+	public Member(){
+		makedefault(this);
+	}
+	public Member(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param name String 呢称   
+	 * @param img1 String 头像  600x600 
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param realname String 姓名   
+	 * @param mobile String 手机   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param email String 电子邮件   
+	 * @param realname1 String 其它联系人姓名   
+	 * @param mobile1 String 其它联系人手机   
+	 * @param doctorId Integer 首推荐医生 default=0  
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总消费金额 default=0.0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param cidgt String 个推cid   
+	 * @param ilastdev Integer 上个设备 default=0  {'1':'安卓','2':'苹果'}
+	* @param notuse String 没用
+	 */
+	public Member(String name ,String img1 ,Integer age ,Integer usersex ,Integer idtype ,String idnum ,String realname ,String mobile ,String zip ,String addr ,String email ,String realname1 ,String mobile1 ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,Integer statusRelation ,String cidgt ,Integer ilastdev ,String notuse) {
+		super();
+		this.name = name;
+		this.img1 = img1;
+		this.age = age;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.realname = realname;
+		this.mobile = mobile;
+		this.zip = zip;
+		this.addr = addr;
+		this.email = email;
+		this.realname1 = realname1;
+		this.mobile1 = mobile1;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.statusRelation = statusRelation;
+		this.cidgt = cidgt;
+		this.ilastdev = ilastdev;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 用户ID   
+	 * @param name String 呢称   
+	 * @param img1 String 头像  600x600 
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param realname String 姓名   
+	 * @param mobile String 手机   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param email String 电子邮件   
+	 * @param realname1 String 其它联系人姓名   
+	 * @param mobile1 String 其它联系人手机   
+	 * @param doctorId Integer 首推荐医生 default=0  
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总消费金额 default=0.0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param cidgt String 个推cid   
+	 * @param ilastdev Integer 上个设备 default=0  {'1':'安卓','2':'苹果'}
+	* @param notuse String 没用
+	 */
+	public Member(Integer id ,String name ,String img1 ,Integer age ,Integer usersex ,Integer idtype ,String idnum ,String realname ,String mobile ,String zip ,String addr ,String email ,String realname1 ,String mobile1 ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,Integer statusRelation ,String cidgt ,Integer ilastdev ,String notuse) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.img1 = img1;
+		this.age = age;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.realname = realname;
+		this.mobile = mobile;
+		this.zip = zip;
+		this.addr = addr;
+		this.email = email;
+		this.realname1 = realname1;
+		this.mobile1 = mobile1;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.statusRelation = statusRelation;
+		this.cidgt = cidgt;
+		this.ilastdev = ilastdev;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 用户ID   
+	 * @param name String 呢称   
+	 * @param img1 String 头像  600x600 
+	 * @param age Integer 年纪 default=20 每年自动加1 
+	 * @param usersex Integer 用户性别 default=0  {'0':'男','1':'女'}
+	 * @param idtype Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	 * @param idnum String 证件号码   
+	 * @param realname String 姓名   
+	 * @param mobile String 手机   
+	 * @param zip String 邮编   
+	 * @param addr String 地址   
+	 * @param email String 电子邮件   
+	 * @param realname1 String 其它联系人姓名   
+	 * @param mobile1 String 其它联系人手机   
+	 * @param doctorId Integer 首推荐医生 default=0  
+	 * @param countPrescription Integer 总处方数量 default=0  
+	 * @param countOrderr Double 总消费金额 default=0.0  
+	 * @param statusRelation Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	 * @param cidgt String 个推cid   
+	 * @param ilastdev Integer 上个设备 default=0  {'1':'安卓','2':'苹果'}
+	* @param notuse String 没用
+	 */
+	public Member(Integer id ,String name ,String img1 ,Integer age ,Integer usersex ,Integer idtype ,String idnum ,String realname ,String mobile ,String zip ,String addr ,String email ,String realname1 ,String mobile1 ,Integer doctorId ,Integer countPrescription ,Double countOrderr ,Integer statusRelation ,String cidgt ,Integer ilastdev ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.img1 = img1;
+		this.age = age;
+		this.usersex = usersex;
+		this.idtype = idtype;
+		this.idnum = idnum;
+		this.realname = realname;
+		this.mobile = mobile;
+		this.zip = zip;
+		this.addr = addr;
+		this.email = email;
+		this.realname1 = realname1;
+		this.mobile1 = mobile1;
+		this.doctorId = doctorId;
+		this.countPrescription = countPrescription;
+		this.countOrderr = countOrderr;
+		this.statusRelation = statusRelation;
+		this.cidgt = cidgt;
+		this.ilastdev = ilastdev;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?""+name+" ":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]"+name+" ":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id 
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取呢称  */
+	
+
+	@Column(name = "name", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getName() {
+		return this.name;
+	}
+	/**设置呢称  */
+
+	public void setName(String value) {
+		this.name = value;
+	}
+	/**获取头像 600x600 */
+	
+
+	@Column(name = "img1", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg1() {
+		return this.img1;
+	}
+	/**设置头像 600x600 */
+
+	public void setImg1(String value) {
+		this.img1 = value;
+	}
+	/**获取年纪 每年自动加1 */
+	
+
+	@Column(name = "age", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getAge() {
+		return this.age;
+	}
+	/**设置年纪 每年自动加1 */
+
+	public void setAge(Integer value) {
+		this.age = value;
+	}
+	/**获取用户性别  {'0':'男','1':'女'}*/
+	
+
+	@Column(name = "usersex", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getUsersex() {
+		return this.usersex;
+	}
+	/**设置用户性别  {'0':'男','1':'女'}*/
+
+	public void setUsersex(Integer value) {
+		this.usersex = value;
+	}
+	/**获取证件类型  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+	
+
+	@Column(name = "idtype", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getIdtype() {
+		return this.idtype;
+	}
+	/**设置证件类型  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}*/
+
+	public void setIdtype(Integer value) {
+		this.idtype = value;
+	}
+	/**获取证件号码  */
+	
+
+	@Column(name = "idnum", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getIdnum() {
+		return this.idnum;
+	}
+	/**设置证件号码  */
+
+	public void setIdnum(String value) {
+		this.idnum = value;
+	}
+	/**获取姓名  */
+	
+
+	@Column(name = "realname", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getRealname() {
+		return this.realname;
+	}
+	/**设置姓名  */
+
+	public void setRealname(String value) {
+		this.realname = value;
+	}
+	/**获取手机  */
+	
+
+	@Column(name = "mobile", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getMobile() {
+		return this.mobile;
+	}
+	/**设置手机  */
+
+	public void setMobile(String value) {
+		this.mobile = value;
+	}
+	/**获取邮编  */
+	
+
+	@Column(name = "zip", unique = false, nullable = true, insertable = true, updatable = true, length = 6)
+	public String getZip() {
+		return this.zip;
+	}
+	/**设置邮编  */
+
+	public void setZip(String value) {
+		this.zip = value;
+	}
+	/**获取地址  */
+	
+
+	@Column(name = "addr", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getAddr() {
+		return this.addr;
+	}
+	/**设置地址  */
+
+	public void setAddr(String value) {
+		this.addr = value;
+	}
+	/**获取电子邮件  */
+	
+
+	@Column(name = "email", unique = false, nullable = true, insertable = true, updatable = true, length = 50)
+	public String getEmail() {
+		return this.email;
+	}
+	/**设置电子邮件  */
+
+	public void setEmail(String value) {
+		this.email = value;
+	}
+	/**获取其它联系人姓名  */
+	
+
+	@Column(name = "realname1", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getRealname1() {
+		return this.realname1;
+	}
+	/**设置其它联系人姓名  */
+
+	public void setRealname1(String value) {
+		this.realname1 = value;
+	}
+	/**获取其它联系人手机  */
+	
+
+	@Column(name = "mobile1", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getMobile1() {
+		return this.mobile1;
+	}
+	/**设置其它联系人手机  */
+
+	public void setMobile1(String value) {
+		this.mobile1 = value;
+	}
+	/**获取首推荐医生  */
+	
+
+	@Column(name = "doctor_id", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getDoctorId() {
+		return this.doctorId;
+	}
+	/**设置首推荐医生  */
+
+	public void setDoctorId(Integer value) {
+		this.doctorId = value;
+	}
+	/**获取总处方数量  */
+	
+
+	@Column(name = "count_prescription", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getCountPrescription() {
+		return this.countPrescription;
+	}
+	/**设置总处方数量  */
+
+	public void setCountPrescription(Integer value) {
+		this.countPrescription = value;
+	}
+	/**获取总消费金额  */
+	
+
+	@Column(name = "count_orderr", columnDefinition="double(11,2) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCountOrderr() {
+		return this.countOrderr;
+	}
+	/**设置总消费金额  */
+
+	public void setCountOrderr(Double value) {
+		this.countOrderr = value;
+	}
+	/**获取是否有新医患关系  {'0':'无','1':'有'}*/
+	
+
+	@Column(name = "status_relation", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getStatusRelation() {
+		return this.statusRelation;
+	}
+	/**设置是否有新医患关系  {'0':'无','1':'有'}*/
+
+	public void setStatusRelation(Integer value) {
+		this.statusRelation = value;
+	}
+	/**获取个推cid  */
+	
+
+	@Column(name = "cidgt", unique = false, nullable = true, insertable = true, updatable = true, length = 32)
+	public String getCidgt() {
+		return this.cidgt;
+	}
+	/**设置个推cid  */
+
+	public void setCidgt(String value) {
+		this.cidgt = value;
+	}
+	/**获取上个设备  {'1':'安卓','2':'苹果'}*/
+	
+
+	@Column(name = "ilastdev", unique = false, nullable = true, insertable = true, updatable = true, length = 3)
+	public Integer getIlastdev() {
+		return this.ilastdev;
+	}
+	/**设置上个设备  {'1':'安卓','2':'苹果'}*/
+
+	public void setIlastdev(Integer value) {
+		this.ilastdev = value;
+	}
+	/**用户性别String*/
+	private String usersexString;
+	/**获取用户性别String*/
+	@Transient
+	
+	public String getUsersexString() {
+		return usersexString;
+	}
+	/**设置用户性别String*/
+	public void setUsersexString(String value) {
+		this.usersexString=value;
+	}
+	/**用户性别Map*/
+	private Map<String, Object> usersexMap;
+	/**获取用户性别Map*/
+	@Transient
+	
+	public Map<String, Object> getUsersexMap() {
+		return usersexMap;
+	}
+	/**设置用户性别Map*/
+	public void setUsersexMap(Map<String, Object> value) {
+		this.usersexMap=value;
+	}
+	/**证件类型String*/
+	private String idtypeString;
+	/**获取证件类型String*/
+	@Transient
+	
+	public String getIdtypeString() {
+		return idtypeString;
+	}
+	/**设置证件类型String*/
+	public void setIdtypeString(String value) {
+		this.idtypeString=value;
+	}
+	/**证件类型Map*/
+	private Map<String, Object> idtypeMap;
+	/**获取证件类型Map*/
+	@Transient
+	
+	public Map<String, Object> getIdtypeMap() {
+		return idtypeMap;
+	}
+	/**设置证件类型Map*/
+	public void setIdtypeMap(Map<String, Object> value) {
+		this.idtypeMap=value;
+	}
+	/**首推荐医生String*/
+	private String doctorIdString;
+	/**获取首推荐医生String*/
+	@Transient
+	
+	public String getDoctorIdString() {
+		return doctorIdString;
+	}
+	/**设置首推荐医生String*/
+	public void setDoctorIdString(String value) {
+		this.doctorIdString=value;
+	}
+	/**Doctor - doctorIdDoctorObj*/
+	private Doctor doctorIdDoctorObj;
+	/**获取 Doctor - doctorIdDoctorObj*/
+	@Transient
+	
+	public Doctor getDoctorIdDoctorObj() {
+		return doctorIdDoctorObj;
+	}
+	/**设置 Doctor - 首推荐医生Obj*/
+	public void setDoctorIdDoctorObj(Doctor value) {
+		this.doctorIdDoctorObj=value;
+	}
+	/**首推荐医生Stringid*/
+	private String doctorIdStringid;
+	/**获取首推荐医生Stringid*/
+	@Transient
+	
+	public String getDoctorIdStringid() {
+		return doctorIdStringid;
+	}
+	/**设置首推荐医生Stringid*/
+	public void setDoctorIdStringid(String value) {
+		this.doctorIdStringid=value;
+	}
+	/**是否有新医患关系String*/
+	private String statusRelationString;
+	/**获取是否有新医患关系String*/
+	@Transient
+	
+	public String getStatusRelationString() {
+		return statusRelationString;
+	}
+	/**设置是否有新医患关系String*/
+	public void setStatusRelationString(String value) {
+		this.statusRelationString=value;
+	}
+	/**是否有新医患关系Map*/
+	private Map<String, Object> statusRelationMap;
+	/**获取是否有新医患关系Map*/
+	@Transient
+	
+	public Map<String, Object> getStatusRelationMap() {
+		return statusRelationMap;
+	}
+	/**设置是否有新医患关系Map*/
+	public void setStatusRelationMap(Map<String, Object> value) {
+		this.statusRelationMap=value;
+	}
+	/**上个设备String*/
+	private String ilastdevString;
+	/**获取上个设备String*/
+	@Transient
+	
+	public String getIlastdevString() {
+		return ilastdevString;
+	}
+	/**设置上个设备String*/
+	public void setIlastdevString(String value) {
+		this.ilastdevString=value;
+	}
+	/**上个设备Map*/
+	private Map<String, Object> ilastdevMap;
+	/**获取上个设备Map*/
+	@Transient
+	
+	public Map<String, Object> getIlastdevMap() {
+		return ilastdevMap;
+	}
+	/**设置上个设备Map*/
+	public void setIlastdevMap(Map<String, Object> value) {
+		this.ilastdevMap=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.usersexMap=null;
+		this.idtypeMap=null;
+		this.doctorIdDoctorObj=null; //Doctor
+		this.statusRelationMap=null;
+		this.ilastdevMap=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getName())
+			.append(getImg1())
+			.append(getAge())
+			.append(getUsersex())
+			.append(getIdtype())
+			.append(getIdnum())
+			.append(getRealname())
+			.append(getMobile())
+			.append(getZip())
+			.append(getAddr())
+			.append(getEmail())
+			.append(getRealname1())
+			.append(getMobile1())
+			.append(getDoctorId())
+			.append(getCountPrescription())
+			.append(getCountOrderr())
+			.append(getStatusRelation())
+			.append(getCidgt())
+			.append(getIlastdev())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Member == false) return false;
+		if(this == obj) return true;
+		Member other = (Member)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",Name:",getName())
+			.append(",Img1:",getImg1())
+			.append(",Age:",getAge())
+			.append(",Usersex:",getUsersex())
+			.append(",Idtype:",getIdtype())
+			.append(",Idnum:",getIdnum())
+			.append(",Realname:",getRealname())
+			.append(",Mobile:",getMobile())
+			.append(",Zip:",getZip())
+			.append(",Addr:",getAddr())
+			.append(",Email:",getEmail())
+			.append(",Realname1:",getRealname1())
+			.append(",Mobile1:",getMobile1())
+			.append(",DoctorId:",getDoctorId())
+			.append(",CountPrescription:",getCountPrescription())
+			.append(",CountOrderr:",getCountOrderr())
+			.append(",StatusRelation:",getStatusRelation())
+			.append(",Cidgt:",getCidgt())
+			.append(",Ilastdev:",getIlastdev())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","usersexString","usersexMap","idtypeString","idtypeMap","doctorIdString","doctorIdDoctorObj","doctorIdStringid","statusRelationString","statusRelationMap","ilastdevString","ilastdevMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","usersexString","usersexMap","idtypeString","idtypeMap","doctorIdString","doctorIdDoctorObj","doctorIdStringid","statusRelationString","statusRelationMap","ilastdevString","ilastdevMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 个人会员
+Member member = new Member(
+	name , //String 呢称   
+	img1 , //String 头像  600x600 
+	age , //Integer 年纪 default=20 每年自动加1 
+	usersex , //Integer 用户性别 default=0  {'0':'男','1':'女'}
+	idtype , //Integer 证件类型 default=0  {'0':'身份证','1':'军官证','2':'士兵证','3':'护照'}
+	idnum , //String 证件号码   
+	realname , //String 姓名   
+	mobile , //String 手机   
+	zip , //String 邮编   
+	addr , //String 地址   
+	email , //String 电子邮件   
+	realname1 , //String 其它联系人姓名   
+	mobile1 , //String 其它联系人手机   
+	doctorId , //Integer 首推荐医生 default=0  
+	countPrescription , //Integer 总处方数量 default=0  
+	countOrderr , //Double 总消费金额 default=0.0  
+	statusRelation , //Integer 是否有新医患关系 default=0  {'0':'无','1':'有'}
+	cidgt , //String 个推cid   
+	ilastdev , //Integer 上个设备 default=0  {'1':'安卓','2':'苹果'}
+	null
+);
+*/
+}

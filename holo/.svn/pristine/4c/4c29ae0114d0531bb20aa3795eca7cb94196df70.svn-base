@@ -1,0 +1,44 @@
+package com.zmax.test;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.dao.base.BaseDao;
+
+public class TestZ1 extends BaseService{
+	
+	@Autowired 		//会自动注入 default by type
+	public BaseDao<User> userDao;
+	//@Resource
+	@Autowired  
+	public UserService userService;
+	/**
+	 * 显示1号用户
+	 */
+	@Test
+	public void showUser1(){
+		//Assert.assertNotNull(userDao);
+		//Assert.assertNotNull(userService);
+		User user;
+		user=userDao.get(User.class, 1);
+		System.out.println("user.toString()=" + user.toString());
+		user=userService.get(null, 1);
+		System.out.println("user.toString()=" + user.toString());
+	}
+	/**
+	 * 显示2号用户
+	 */
+	@Test
+	public void showUser2(){
+		//Assert.assertNotNull(userDao);
+		//Assert.assertNotNull(userService);
+		User user;
+		user=userDao.get(User.class, 2);
+		System.out.println("user.toString()=" + user.toString());
+		user=userService.get(null, 2);
+		System.out.println("user.toString()=" + user.toString());
+	}
+	
+}

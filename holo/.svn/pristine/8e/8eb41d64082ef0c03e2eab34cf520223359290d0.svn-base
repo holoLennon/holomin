@@ -1,0 +1,17 @@
+<ion-view view-title="注册" hide-back-button="true">
+
+    <ion-content>
+        <div class="list listreg">
+            <label class="item-input item-floating-label">
+                <span class="input-label">注册手机号码</span>
+                <input type="text" placeholder="请输入正确的手机号码" ng-model="user.username" style="border-bottom:solid 1px #ccc;">
+            </label>
+            <a class="button button-block button-calm" ng-click="regaCommit()" style="margin-top:30px;">
+            下一步
+            </a>
+
+        </div>
+
+    </ion-content>
+</ion-view>
+

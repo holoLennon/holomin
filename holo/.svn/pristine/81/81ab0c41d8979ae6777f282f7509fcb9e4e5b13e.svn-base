@@ -1,0 +1,666 @@
+/*
+ * zmax 
+ * 
+ */
+
+
+//  
+package com.zmax.yijian.common.dal.bean;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.*;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
+import javax.persistence.Entity;
+import com.zmax.utils.string.JsonUtilAli;
+
+import org.apache.commons.lang.builder.*;
+import java.text.*;
+import java.util.*;
+import com.zmax.yijian.common.dal.bean.base.BaseEntity;
+
+
+/**
+ * 实体药店
+ * @author zmax
+ * @version 1.0
+ * @since 
+ */
+
+@Entity
+@Table(name = "drugstore")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)//可读可写
+public class Drugstore extends BaseEntity{
+	
+	//alias
+	public static final String TABLE_ALIAS = "实体药店";
+
+	//date formats
+	
+	//columns START
+	/**序号ID Integer   */
+	@Max(99999999999L)
+	
+	private Integer id;
+	/**地区 Integer   */
+	@Max(99999999999L)
+	
+	private Integer areaid;
+	/**药房名称 String   */
+	@Length(max=80)
+	
+	private String cname;
+	/**药房地址 String   */
+	@Length(max=80)
+	
+	private String addr;
+	/**药房电话 String   */
+	@Length(max=30)
+	
+	private String tele;
+	/**药房性质 String  （加盟、直营、签约） map={'加盟':'加盟','直营':'直营','签约':'签约'}*/
+	@Length(max=20)
+	
+	private String attr;
+	/**咨询药师姓名 String   */
+	@Length(max=20)
+	
+	private String docname;
+	/**咨询药师电话 String   */
+	@Length(max=30)
+	
+	private String doctele;
+	/**药房咨询QQ String   */
+	@Length(max=20)
+	
+	private String docqq;
+	/**经度lng Double default=0.0  */
+	
+	
+	private Double centerlng;
+	/**维度lat Double default=0.0  */
+	
+	
+	private Double centerlat;
+	/**图1 String  320x320 */
+	@Length(max=200)
+	
+	private String img1;
+	/**图2 String  320x320 */
+	@Length(max=200)
+	
+	private String img2;
+	//columns END
+	/**
+	 * 设置默认值
+	 * @param _this
+	 */
+	public void makedefault(Drugstore _this){
+		_this.centerlng=0.0;
+		_this.centerlat=0.0;
+	}
+	public Drugstore(){
+		makedefault(this);
+	}
+	public Drugstore(Integer _id){
+		this.id=_id;
+		makedefault(this);
+	}
+	/**
+	 * 精简版构造，在创建提交数据库时应该使用saveCreate
+	 * @param areaid Integer 地区   
+	 * @param cname String 药房名称   
+	 * @param addr String 药房地址   
+	 * @param tele String 药房电话   
+	 * @param attr String 药房性质  （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}
+	 * @param docname String 咨询药师姓名   
+	 * @param doctele String 咨询药师电话   
+	 * @param docqq String 药房咨询QQ   
+	 * @param centerlng Double 经度lng default=0.0  
+	 * @param centerlat Double 维度lat default=0.0  
+	 * @param img1 String 图1  320x320 
+	 * @param img2 String 图2  320x320 
+	* @param notuse String 没用
+	 */
+	public Drugstore(Integer areaid ,String cname ,String addr ,String tele ,String attr ,String docname ,String doctele ,String docqq ,Double centerlng ,Double centerlat ,String img1 ,String img2 ,String notuse) {
+		super();
+		this.areaid = areaid;
+		this.cname = cname;
+		this.addr = addr;
+		this.tele = tele;
+		this.attr = attr;
+		this.docname = docname;
+		this.doctele = doctele;
+		this.docqq = docqq;
+		this.centerlng = centerlng;
+		this.centerlat = centerlat;
+		this.img1 = img1;
+		this.img2 = img2;
+	}
+	/**
+	 * 不包括自动变量的构造
+	 * @param id Integer 序号ID   
+	 * @param areaid Integer 地区   
+	 * @param cname String 药房名称   
+	 * @param addr String 药房地址   
+	 * @param tele String 药房电话   
+	 * @param attr String 药房性质  （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}
+	 * @param docname String 咨询药师姓名   
+	 * @param doctele String 咨询药师电话   
+	 * @param docqq String 药房咨询QQ   
+	 * @param centerlng Double 经度lng default=0.0  
+	 * @param centerlat Double 维度lat default=0.0  
+	 * @param img1 String 图1  320x320 
+	 * @param img2 String 图2  320x320 
+	* @param notuse String 没用
+	 */
+	public Drugstore(Integer id ,Integer areaid ,String cname ,String addr ,String tele ,String attr ,String docname ,String doctele ,String docqq ,Double centerlng ,Double centerlat ,String img1 ,String img2 ,String notuse) {
+		super();
+		this.id = id;
+		this.areaid = areaid;
+		this.cname = cname;
+		this.addr = addr;
+		this.tele = tele;
+		this.attr = attr;
+		this.docname = docname;
+		this.doctele = doctele;
+		this.docqq = docqq;
+		this.centerlng = centerlng;
+		this.centerlat = centerlat;
+		this.img1 = img1;
+		this.img2 = img2;
+	}
+	/**
+	 * 全部数据的构造，包括了对象字段
+	 * @param id Integer 序号ID   
+	 * @param areaid Integer 地区   
+	 * @param cname String 药房名称   
+	 * @param addr String 药房地址   
+	 * @param tele String 药房电话   
+	 * @param attr String 药房性质  （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}
+	 * @param docname String 咨询药师姓名   
+	 * @param doctele String 咨询药师电话   
+	 * @param docqq String 药房咨询QQ   
+	 * @param centerlng Double 经度lng default=0.0  
+	 * @param centerlat Double 维度lat default=0.0  
+	 * @param img1 String 图1  320x320 
+	 * @param img2 String 图2  320x320 
+	* @param notuse String 没用
+	 */
+	public Drugstore(Integer id ,Integer areaid ,String cname ,String addr ,String tele ,String attr ,String docname ,String doctele ,String docqq ,Double centerlng ,Double centerlat ,String img1 ,String img2 ,String notuse,Object notuse2) {
+		super();
+		this.id = id;
+		this.areaid = areaid;
+		this.cname = cname;
+		this.addr = addr;
+		this.tele = tele;
+		this.attr = attr;
+		this.docname = docname;
+		this.doctele = doctele;
+		this.docqq = docqq;
+		this.centerlng = centerlng;
+		this.centerlat = centerlat;
+		this.img1 = img1;
+		this.img2 = img2;
+	}
+
+	/**我的中文名称*/
+	private String myname;
+	/**我的中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMyname() {
+		myname=(myname==null)?"":myname;
+		return myname;
+	}
+	/**我的中文名称*/
+	public void setMyname(String myname) {
+		this.myname = myname;
+	}
+	/**我的带id中文名称*/
+	private String mynameid;
+	/**我的带id中文名称*/
+	@Transient
+	
+	//@JSONField(serialize = false)
+	public String getMynameid() {
+		mynameid=(mynameid==null)?"["+id+"]":mynameid;
+		return mynameid;
+	}
+	/**我的带id中文名称*/
+	public void setMynameid(String mynameid) {
+		this.mynameid = mynameid;
+	}
+	/**设置主键*/
+	public void setId(Integer value) {
+		this.id = value;
+	}
+	/**获取主键*/
+	
+
+	@Id @GeneratedValue(generator="custom-id")
+	@GenericGenerator(name="custom-id", strategy = "identity")
+	@Column(name = "id",  unique = false, nullable = false, insertable = true, updatable = true, length = 11)
+	public Integer getId() {
+		return this.id;
+	}
+	
+	/**获取地区  */
+	
+
+	@Column(name = "areaid", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Integer getAreaid() {
+		return this.areaid;
+	}
+	/**设置地区  */
+
+	public void setAreaid(Integer value) {
+		this.areaid = value;
+	}
+	/**获取药房名称  */
+	
+
+	@Column(name = "cname", unique = false, nullable = true, insertable = true, updatable = true, length = 80)
+	public String getCname() {
+		return this.cname;
+	}
+	/**设置药房名称  */
+
+	public void setCname(String value) {
+		this.cname = value;
+	}
+	/**获取药房地址  */
+	
+
+	@Column(name = "addr", unique = false, nullable = true, insertable = true, updatable = true, length = 80)
+	public String getAddr() {
+		return this.addr;
+	}
+	/**设置药房地址  */
+
+	public void setAddr(String value) {
+		this.addr = value;
+	}
+	/**获取药房电话  */
+	
+
+	@Column(name = "tele", unique = false, nullable = true, insertable = true, updatable = true, length = 30)
+	public String getTele() {
+		return this.tele;
+	}
+	/**设置药房电话  */
+
+	public void setTele(String value) {
+		this.tele = value;
+	}
+	/**获取药房性质 （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}*/
+	
+
+	@Column(name = "attr", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getAttr() {
+		return this.attr;
+	}
+	/**设置药房性质 （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}*/
+
+	public void setAttr(String value) {
+		this.attr = value;
+	}
+	/**获取咨询药师姓名  */
+	
+
+	@Column(name = "docname", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDocname() {
+		return this.docname;
+	}
+	/**设置咨询药师姓名  */
+
+	public void setDocname(String value) {
+		this.docname = value;
+	}
+	/**获取咨询药师电话  */
+	
+
+	@Column(name = "doctele", unique = false, nullable = true, insertable = true, updatable = true, length = 30)
+	public String getDoctele() {
+		return this.doctele;
+	}
+	/**设置咨询药师电话  */
+
+	public void setDoctele(String value) {
+		this.doctele = value;
+	}
+	/**获取药房咨询QQ  */
+	
+
+	@Column(name = "docqq", unique = false, nullable = true, insertable = true, updatable = true, length = 20)
+	public String getDocqq() {
+		return this.docqq;
+	}
+	/**设置药房咨询QQ  */
+
+	public void setDocqq(String value) {
+		this.docqq = value;
+	}
+	/**获取经度lng  */
+	
+
+	@Column(name = "centerlng", columnDefinition="double(11,6) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCenterlng() {
+		return this.centerlng;
+	}
+	/**设置经度lng  */
+
+	public void setCenterlng(Double value) {
+		this.centerlng = value;
+	}
+	/**获取维度lat  */
+	
+
+	@Column(name = "centerlat", columnDefinition="double(11,6) default '0.00'", unique = false, nullable = true, insertable = true, updatable = true, length = 11)
+	public Double getCenterlat() {
+		return this.centerlat;
+	}
+	/**设置维度lat  */
+
+	public void setCenterlat(Double value) {
+		this.centerlat = value;
+	}
+	/**获取图1 320x320 */
+	
+
+	@Column(name = "img1", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg1() {
+		return this.img1;
+	}
+	/**设置图1 320x320 */
+
+	public void setImg1(String value) {
+		this.img1 = value;
+	}
+	/**获取图2 320x320 */
+	
+
+	@Column(name = "img2", unique = false, nullable = true, insertable = true, updatable = true, length = 200)
+	public String getImg2() {
+		return this.img2;
+	}
+	/**设置图2 320x320 */
+
+	public void setImg2(String value) {
+		this.img2 = value;
+	}
+	/**地区String*/
+	private String areaidString;
+	/**获取地区String*/
+	@Transient
+	
+	public String getAreaidString() {
+		return areaidString;
+	}
+	/**设置地区String*/
+	public void setAreaidString(String value) {
+		this.areaidString=value;
+	}
+	/**药房性质String*/
+	private String attrString;
+	/**获取药房性质String*/
+	@Transient
+	
+	public String getAttrString() {
+		return attrString;
+	}
+	/**设置药房性质String*/
+	public void setAttrString(String value) {
+		this.attrString=value;
+	}
+	/**药房性质Map*/
+	private Map<String, Object> attrMap;
+	/**获取药房性质Map*/
+	@Transient
+	
+	public Map<String, Object> getAttrMap() {
+		return attrMap;
+	}
+	/**设置药房性质Map*/
+	public void setAttrMap(Map<String, Object> value) {
+		this.attrMap=value;
+	}
+
+	/**
+	 * 清空ONE MANY对象，用于WS,JSON等场景
+	 */
+	public void makeNullObj(){
+		this.obj1=null;
+		this.obj2=null;
+		this.obj3=null;
+		this.obj4=null;
+		this.obj5=null;
+		this.attrMap=null;
+	}
+	/**
+	 * 非常严格的检查对象，不能空不能0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObjHard(boolean checkId){
+		if (errCheckObj(checkId))
+			return true;
+		if(checkId){
+			if(0==this.id)
+				return true;
+		}
+		return false;
+	}
+	/**
+	 * 较松的的检查对象，不能空，可以是0
+	 * @param checkId 是否检查id
+	 * @return
+	 */
+	public boolean errCheckObj(boolean checkId){
+		if(checkId){
+			if(this.id==null)
+				return true;
+		}
+		return false;
+	}
+	/**备用对象1*/
+	private Object obj1;
+	/**
+	 * 获取备用对象1
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj1() {
+		return obj1;
+	}
+	/**
+	 * 设置备用对象1
+	 * @param obj1
+	 */
+	public void setObj1(Object obj1) {
+		this.obj1 = obj1;
+	}
+	/**备用对象2*/
+	private Object obj2;
+	/**
+	 * 获取备用对象2
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj2() {
+		return obj2;
+	}
+	/**
+	 * 设置备用对象2
+	 * @param obj2
+	 */
+	public void setObj2(Object obj2) {
+		this.obj2 = obj2;
+	}
+	/**备用对象3*/
+	private Object obj3;
+	/**
+	 * 获取备用对象3
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj3() {
+		return obj3;
+	}
+	/**
+	 * 设置备用对象3
+	 * @param obj3
+	 */
+	public void setObj3(Object obj3) {
+		this.obj3 = obj3;
+	}
+	/**备用对象4*/
+	private Object obj4;
+	/**
+	 * 获取备用对象4
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj4() {
+		return obj4;
+	}
+	/**
+	 * 设置备用对象4
+	 * @param obj4
+	 */
+	public void setObj4(Object obj4) {
+		this.obj4 = obj4;
+	}
+	/**备用对象5*/
+	private Object obj5;
+	/**
+	 * 获取备用对象5
+	 * @return Object
+	 */
+	@Transient
+	
+	public Object getObj5() {
+		return obj5;
+	}
+	/**
+	 * 设置备用对象5
+	 * @param obj5
+	 */
+	public void setObj5(Object obj5) {
+		this.obj5 = obj5;
+	}
+	/**
+	 * Hash，同所有字段相加判断
+	 */
+	public int hashCode() {
+		if(getId()==null)
+		return new HashCodeBuilder()
+			.append(getId())
+			.append(getAreaid())
+			.append(getCname())
+			.append(getAddr())
+			.append(getTele())
+			.append(getAttr())
+			.append(getDocname())
+			.append(getDoctele())
+			.append(getDocqq())
+			.append(getCenterlng())
+			.append(getCenterlat())
+			.append(getImg1())
+			.append(getImg2())
+			.toHashCode();
+		return new HashCodeBuilder()
+			.append(getId())
+			.toHashCode();
+	}
+	/**
+	 * 重写，对象是否相同，用ID来判断
+	 */
+	public boolean equals(Object obj) {
+		if(obj instanceof Drugstore == false) return false;
+		if(this == obj) return true;
+		Drugstore other = (Drugstore)obj;
+		return new EqualsBuilder()
+			.append(getId(),other.getId())
+			.isEquals();
+	}
+	/**
+	 * 转文本
+	 */
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this,ToStringStyle.SHORT_PREFIX_STYLE)
+			.append(super.toString())
+			.append(",Id:",getId())
+			.append(",Areaid:",getAreaid())
+			.append(",Cname:",getCname())
+			.append(",Addr:",getAddr())
+			.append(",Tele:",getTele())
+			.append(",Attr:",getAttr())
+			.append(",Docname:",getDocname())
+			.append(",Doctele:",getDoctele())
+			.append(",Docqq:",getDocqq())
+			.append(",Centerlng:",getCenterlng())
+			.append(",Centerlat:",getCenterlat())
+			.append(",Img1:",getImg1())
+			.append(",Img2:",getImg2())
+			.toString();
+
+	}
+	/**
+	 * 返回JSON之不显示第0级，对于一些不能传递的对象，不进行json编码，比如password明文，用得较少。
+	 * @return
+	 */
+	public String toJsonNotshow(){
+		String[] excludesProperties={"null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第1级，nowshow+notshow1('notshow1'+xxxObj+xxxString+xxxList)
+	 * <br>在内部服务通讯时，防止get页面参数过大，通常设置为notshow1，返回时可以是notshow或notshow1
+	 * @return
+	 */
+	public String toJsonNotshow1(){
+		String[] excludesProperties={"myname","mynameid","areaidString","attrString","attrMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+	/**
+	 * 返回JSON之不显示第2级，nowshow+notshow1+notshow2，用于外部服务通讯，符合对方的api要求
+	 * @return
+	 */
+	public String toJsonNotshow2(){
+		String[] excludesProperties={"myname","mynameid","areaidString","attrString","attrMap","obj1","obj2","obj3","obj4","obj5","null"};
+		String ret=JsonUtilAli.toJSONString(this, null, excludesProperties);
+		return ret;
+	}
+
+/*
+//精简构造 实体药店
+Drugstore drugstore = new Drugstore(
+	areaid , //Integer 地区   
+	cname , //String 药房名称   
+	addr , //String 药房地址   
+	tele , //String 药房电话   
+	attr , //String 药房性质  （加盟、直营、签约） {'加盟':'加盟','直营':'直营','签约':'签约'}
+	docname , //String 咨询药师姓名   
+	doctele , //String 咨询药师电话   
+	docqq , //String 药房咨询QQ   
+	centerlng , //Double 经度lng default=0.0  
+	centerlat , //Double 维度lat default=0.0  
+	img1 , //String 图1  320x320 
+	img2 , //String 图2  320x320 
+	null
+);
+*/
+}

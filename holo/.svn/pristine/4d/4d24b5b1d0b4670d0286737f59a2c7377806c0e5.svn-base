@@ -1,0 +1,341 @@
+package com.zmax.yijian.web.controller.restful;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.criteria.Order;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zmax.exception.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecYjCartOrderrService;
+import com.zmax.yijian.common.conf.Conf;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.common.dal.bean.wx.WaJsapiPaymentParam;
+import com.zmax.yijian.common.utils.AESUtil;
+import com.zmax.yijian.web.controller.restful.entity.ClientInfo;
+import com.zmax.yijian.web.controller.restful.entity.RestPage;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.string.StringUtilz;
+
+import sun.awt.SunHints.Value;
+/**
+ * RestFul控制 
+ * 
+ * 
+ *
+ */
+@Component
+public class RestSpecUtils {
+	
+	/** 日志实例 */
+	private static final Logger logger = Logger.getLogger(RestSpecUtils.class);
+
+	@Autowired
+	RestUtils restUtils;
+	
+
+	@Autowired
+	MemberService memberService;
+	@Autowired
+	DoctorService doctorService;	
+	@Autowired
+	SpecYjCartOrderrService specYjCartOrderrService;
+	@Autowired
+	MemberdoctorService memberdoctorService;
+	@Autowired
+	DoctorProductService doctorProductService;
+	@Autowired
+	OrderrdetailService orderrdetailService;
+	@Autowired
+	ProductService productService;
+	/**
+	 * 查询前做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param clazzName
+	 * @param ph
+	 * @param restPage
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void queryBefore(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,String clazzName,PageHelper ph) throws BoException, NeedLoginException, RightException, Exception{
+		if("Orderr".equals(clazzName)){
+		}
+	}
+	/**
+	 * 查询后做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param clazzName
+	 * @param ph
+	 * @param restPage
+	 * @param list
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void queryAfter(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,String clazzName,PageHelper ph, List list) throws BoException, NeedLoginException, RightException, Exception{
+		
+		if (list == null || list.size() == 0)
+			return;
+		//医生药架
+		if(list.get(0) instanceof DoctorProduct){
+			//药加String
+			for (int i = 0; i < list.size(); i++) {
+				DoctorProduct doctorProduct=(DoctorProduct)list.get(i);
+				productService.addString(null, doctorProduct.getProductIdProductObj());
+			}
+		}
+		//私人医生,我的患者
+		if(list.get(0) instanceof Memberdoctor){
+			if(restUtils.isMember(tokenUser)){
+				//私人医生
+				for (int i = 0; i < list.size(); i++) {
+					Memberdoctor obj=(Memberdoctor)list.get(i);
+					//医生的详细信息
+					if(null!=obj.getDoctorIdDoctorObj()){
+						doctorService.addString(null, obj.getDoctorIdDoctorObj());
+					}
+						
+				}			
+			}
+			if(restUtils.isDoctor(tokenUser)){
+				//我的患者
+				for (int i = 0; i < list.size(); i++) {
+					Memberdoctor obj=(Memberdoctor)list.get(i);
+					//患者的详细信息
+					if(null!=obj.getMemberIdMemberObj()){
+						memberService.addString(null, obj.getMemberIdMemberObj());
+					}
+						
+				}					
+			}
+
+		}
+		//聊天记录
+		if(list.get(0) instanceof Dmmsg){
+			Dmmsg dmmsg=(Dmmsg)list.get(0);
+			if(restUtils.isMember(tokenUser)){//会员一点开，未查看就变成0
+				Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{dmmsg.getMemberId(),dmmsg.getDoctorId()});
+				if(memberdoctor==null){
+					logger.debug("添加未读消息的时候，没找到memberdoctor！");
+				}else{
+					memberdoctor.setMmsgnotread(0);
+					memberdoctorService.update(null, memberdoctor);
+				}
+			}
+			if(restUtils.isDoctor(tokenUser)){//医生一点开，未查看就变成0
+				Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{dmmsg.getMemberId(),dmmsg.getDoctorId()});
+				if(memberdoctor==null){
+					logger.debug("添加未读消息的时候，没找到memberdoctor！");
+				}else{
+					memberdoctor.setDmsgnotread(0);
+					memberdoctorService.update(null, memberdoctor);
+				}
+			}	
+		}
+	}
+	/**
+	 * Get前做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param clazzName
+	 * @param id
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void ggetBefore(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,String clazzName,Serializable id) throws BoException, NeedLoginException, RightException, Exception{
+
+	}
+	/**
+	 * Get后做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void ggetAfter(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+		//订单
+		if(obj instanceof Orderr){
+			//订单加订单详细
+			Orderr orderr=(Orderr)obj;
+			orderr.setListorderrdetail(orderrdetailService.listfindWithpage(null, null, "orderrId=?", null, new Pagination(1, 20), new Object[]{orderr.getId()}));
+		}
+	}
+	/**
+	 * GetEdit前做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param clazzName
+	 * @param id
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void ggeteditBefore(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,String clazzName,Serializable id) throws BoException, NeedLoginException, RightException, Exception{
+
+	}
+	/**
+	 * GetEdit后做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void ggeteditAfter(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+
+	}
+	/**
+	 * REST创建前要做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void createBefore(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+		//医患聊天记录
+		if(obj instanceof Dmmsg){
+			if(restUtils.isMember(tokenUser)){
+				((Dmmsg)obj).setMemberId(tokenUser.getId());
+				
+			}
+			if(restUtils.isDoctor(tokenUser)){
+				((Dmmsg)obj).setDoctorId(tokenUser.getId());
+			}			
+		}
+		//药师患者聊天记录
+		if(obj instanceof Dgmmsg){
+			if(restUtils.isMember(tokenUser)){
+				((Dgmmsg)obj).setMemberId(tokenUser.getId());
+				
+			}
+		}
+		
+		//药品加入我的药架
+		if(obj instanceof DoctorProduct){
+			///////////医生
+			if(restUtils.isDoctor(tokenUser)){
+				DoctorProduct doctorProduct=(DoctorProduct)obj;
+				//设置医生id
+				doctorProduct.setDoctorId(tokenUser.getId());
+				//查重
+				if(null!=doctorProductService.getFirst(null, null, "doctorId=? and productId=?", null, new Object[]{doctorProduct.getDoctorId(),doctorProduct.getProductId()}))
+					throw new BoException("药品已经存在");
+			}else{
+				throw new NeedLoginException();
+			}			
+		}
+		//订单
+		if(obj instanceof Orderr){
+			///////////医生 开药签
+			if(restUtils.isDoctor(tokenUser)){
+				Orderr orderr=(Orderr)obj;
+				//设置医生id
+				orderr.setDoctorWr(tokenUser.getId());
+				orderr.setIotype(0);
+				orderr.setStatusCarriageType(1);
+
+			}else{
+				throw new NeedLoginException();
+			}			
+		}
+	}
+	/**
+	 * REST创建后要做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void createAfter(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+		//医生给患者开药
+		if(obj instanceof Orderr){
+			///////////医生
+			if(restUtils.isDoctor(tokenUser)){
+				specYjCartOrderrService.createOrderrdetailAfterDoctorMakeOrderrToMember(tokenUser, (Orderr)obj);
+			}
+		}
+		if(obj instanceof Dmmsg){
+			Dmmsg dmmsg=(Dmmsg)obj;
+			if(restUtils.isMember(tokenUser)){//会员端提交，医生未读加1
+				Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{dmmsg.getMemberId(),dmmsg.getDoctorId()});
+				if(memberdoctor==null){
+					logger.debug("添加未读消息的时候，没找到memberdoctor！");
+				}else{
+					memberdoctor.setDmsgnotread(memberdoctor.getDmsgnotread()+1);
+					memberdoctorService.update(null, memberdoctor);
+				}
+			}
+			if(restUtils.isDoctor(tokenUser)){//医生端提交，会员未读加1
+				Memberdoctor memberdoctor=(Memberdoctor)memberdoctorService.getFirst(null, null, "memberId=? and doctorId=?", null, new Object[]{dmmsg.getMemberId(),dmmsg.getDoctorId()});
+				if(memberdoctor==null){
+					logger.debug("添加未读消息的时候，没找到memberdoctor！");
+				}else{
+					memberdoctor.setMmsgnotread(memberdoctor.getMmsgnotread()+1);
+					memberdoctorService.update(null, memberdoctor);
+				}
+			}	
+		}
+	}
+	/**
+	 * REST更新前要做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void updateBefore(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+
+	}
+	
+	/**
+	 * REST更新后要做的事
+	 * @param request
+	 * @param clientInfo
+	 * @param tokenUser
+	 * @param obj
+	 * @throws BoException
+	 * @throws NeedLoginException
+	 * @throws Exception
+	 */
+	public void updateAfter(HttpServletRequest request,ClientInfo clientInfo,RestPage restPage, User tokenUser,Object obj) throws BoException, NeedLoginException, RightException, Exception{
+		
+	}
+}

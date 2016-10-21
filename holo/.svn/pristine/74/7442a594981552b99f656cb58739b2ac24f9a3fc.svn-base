@@ -1,0 +1,52 @@
+<!--OrderrList，订单列表-->\
+
+<ion-view view-title="订单列表" cache-view="false" hide-tabs="false">
+    <ion-nav-buttons side="right">
+        <h4></h4>
+    </ion-nav-buttons>
+    <ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Orderr/{{obj.id}}" collection-item-width="'100%'" collection-item-height="140px" style="border: none;margin-top: 20px">
+                <p style="margin-left: -30%;font-size: 12px;margin-top: -10px">
+                    <span>{{obj.gmtCreateString}}</span><span>   {{obj.statusCarriageTypeString}}</span><span>  {{obj.drugstoreIdDrugstoreObj.cname}}</span>
+                    <br>
+                    <span>订单号：{{obj.sn}}</span>
+                </p>
+                <div style="height: 1px;width: 600px;background-color: #eeeeee"></div>
+                <img ng-src="{{obj.img1}}" reset-img style="height: 40px;margin-left: -30%;margin-top: 10px"/>
+                <!--<h2>{{obj.title}}</h2>-->
+                <div class="item" style="font-size: 12px;color: #8c8c8c;width: 500px;border: none;margin-top: -55px;background: none">
+                    <span style="font-size: 14px;color: black">{{obj.title}}</span><br>
+                    <span style="font-size: 12px;color: red">￥ {{obj.sumprice}}</span>
+                </div>
+                <div style="background-color: #f5f6f5;height: 20px;width: 600px;margin-left: -50%"></div>
+                <!--<p>-->
+                <!---->
+                <!--<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>-->
+                <!--<span class="item-note ago" am-time-ago="obj.gmtPay"></span>-->
+                <!--<span>开单类型:{{obj.iotypeString}}</span>-->
+                <!--<span>支付状态:{{obj.statusString}}</span>-->
+                <!--<span>收发货状态:{{obj.statusgoodsString}}</span>-->
+                <!--<span>提货方式:{{obj.statusCarriageTypeString}}</span>-->
+                <!--<span>会员:{{obj.memberIdString}}</span>-->
+                <!--<span>总价:{{obj.sumprice}}</span>-->
+                <!--<span>商品名:{{obj.title}}</span>-->
+                <!--<span>图1:{{obj.img1}}</span>-->
+                <!--<span>取药点:{{obj.drugstoreIdString}}</span>-->
+                <!--<span>推荐医生:{{obj.doctorIdString}}</span>-->
+                <!--<span>所属业务员:{{obj.sellerIdString}}</span>-->
+                <!--<span>取药操作员:{{obj.operIdString}}</span>-->
+                <!--<span>商品数量:{{obj.productnums}}</span>-->
+                <!--<span>诊断:{{obj.diagnose}}</span>-->
+                <!--<span>可用优惠券数量:{{obj.pomotionticketnums}}</span>-->
+                <!--<span>订单详细列表:{{obj.listorderrdetail}}</span>-->
+                <!--<span>微信支付H5对象:{{obj.paywxh5}}</span>-->
+                <!--</p>-->
+            </ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

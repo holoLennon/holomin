@@ -1,0 +1,66 @@
+
+
+
+<script type="text/javascript">
+	parent.$.messager.progress('close');
+</script>
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+		<br/>
+		<table class="table table-hover table-condensed">
+	<@z.pmt key="51.Manufacturer.id">
+		<tr><th>用户ID</th><td>
+		${manufacturer.id}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.gmtCreate">
+		<tr><th>创建时间</th><td>
+		${manufacturer.gmtCreateString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.statusValidOrNot">
+		<tr><th>状态</th><td>
+		${manufacturer.statusValidOrNotString}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.name">
+		<tr><th>名称</th><td>
+		${manufacturer.name}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.img">
+		<tr><th>图</th><td>
+		${manufacturer.img}
+		<br/><img src="${manufacturer.img}" />
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.idbiz">
+		<tr><th>营业执照号</th><td>
+		${manufacturer.idbiz}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.contentname">
+		<tr><th>联系人</th><td>
+		${manufacturer.contentname}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.tele">
+		<tr><th>联系电话</th><td>
+		${manufacturer.tele}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.fax">
+		<tr><th>传真</th><td>
+		${manufacturer.fax}
+		</td></tr>
+	</@z.pmt>
+	<@z.pmt key="51.Manufacturer.mobile">
+		<tr><th>手机号</th><td>
+		${manufacturer.mobile}
+		</td></tr>
+	</@z.pmt>
+		</table>
+	</div>
+</div>
+

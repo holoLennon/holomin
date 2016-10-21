@@ -1,0 +1,51 @@
+<!--ProductList，商品列表-->
+<ion-view view-title="商品列表"  cache-view="false" hide-tabs="false " >
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+        <ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+        <ion-list class="list" cache-view='false' hide-tabs="false">
+            <ion-item class="item-avatar" bindonce collection-repeat="obj in list" href="#/tab/Product/{{obj.id}}" collection-item-width="'100%'" collection-item-height="20%">
+                <img ng-src="{{obj.img1}}" reset-img />
+                <h2>{{obj.myname}}</h2>
+                <br>
+				<!--<span style="font-size:14px">序号ID:{{obj.id}}</span></br>-->
+				<!--<span class="item-note ago" am-time-ago="obj.gmtCreate"></span>-->
+				<!--<span class="item-note ago" am-time-ago="obj.gmtModified"></span>-->
+				<!--<span class="item-note ago" am-time-ago="obj.gmtRelease"></span>-->
+				<!--<span style="font-size:14px">状态:{{obj.statusApplyPassRefuseString}}</span></br>-->
+				<!--<span>是否处方药:{{obj.statusRecipeString}}</span>-->
+				<span style="font-size:14px">使用方法:{{obj.statusUsedString}}</span></br>
+				<!--<span>用法用量:{{obj.usemount}}</span></br>-->
+				<!--<span>商品目录:{{obj.productchannelIdString}}</span></br>-->
+				<!--<span>厂商产地:{{obj.manufacturerIdString}}</span></br>-->
+				<!--&lt;!&ndash;<span>排列顺序:{{obj.priority}}</span>&ndash;&gt;-->
+				<!--<span>商品编号:{{obj.productno}}</span></br>-->
+				<!--<span>商品名:{{obj.title}}</span></br>-->
+				<span style="font-size:14px">通用名:{{obj.commonname}}</span></br>
+				<!--<span style="font-size:14px">批准文号:{{obj.allowno}}</span></br>-->
+				<!--<span>规格型号:{{obj.productstyle}}</span></br>-->
+				<!--<span>图1:{{obj.img1}}</span>-->
+				<!--<span>图2:{{obj.img2}}</span>-->
+				<!--<span>图3:{{obj.img3}}</span>-->
+				<!--<span>图4:{{obj.img4}}</span>-->
+				<!--<span>图5:{{obj.img5}}</span>-->
+				<!--<span>图6:{{obj.img6}}</span>-->
+				<!--<span>条码:{{obj.imgbarcode}}</span>-->
+				<!--<span>点击次数:{{obj.hittimes}}</span>-->
+				<!--<span>购买次数:{{obj.buytimes}}</span>-->
+				<!--<span>商品单位:{{obj.punitString}}</span>-->
+				<!--<span>市场价:{{obj.marketprice}}</span>-->
+				<!--<span>优惠价:{{obj.price}}</span>-->
+				<!--<span>运费:{{obj.carriagePrice}}</span>-->
+				<!--<span>库存:{{obj.store}}</span>-->
+				<!--<span style="font-size:16px">功能主治:{{obj.intro}}</span>-->
+				<!--<span style="font-size:16px">生成地址:{{obj.genurl}}</span>-->
+				</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+        <ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+    </ion-content>
+</ion-view>

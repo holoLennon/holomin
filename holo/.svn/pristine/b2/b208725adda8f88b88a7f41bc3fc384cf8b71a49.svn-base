@@ -1,0 +1,478 @@
+/**使用者角色 '5':'会员','6':'医生'*/
+var roleId=6;
+/**
+ * 商家-配置路由
+ */
+app.config(function($stateProvider, $urlRouterProvider,$logProvider,ENV) {
+    $logProvider.debugEnabled(ENV.debug);
+    console.log("app.config.route");
+    $stateProvider
+
+        //菜单
+        .state('tab', {
+            url: "/tab",
+            abstract: true,
+            templateUrl: "views/pub/tabs_b.html",
+            controller: 'tabCtrl'
+        })
+        ///////////////////a
+        //商品类型包含商品列表 首页，新品
+        .state('tab.ProductTypeLinkProductListHome', {
+            url: '/ProductTypeLinkProductListHome',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-a/ProductTypeLinkProductListHome.html',
+                    controller: 'ProductTypeLinkProductListHomeCtrl'
+                }
+            }
+        })
+        //商品详细
+        .state('tab.Product', {
+            url: '/Product/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-a/Product.html',
+                    controller: 'ProductCtrl'
+                }
+            }
+        })
+        //商品类型列表
+        .state('tab.ProductTypeList', {
+            url: '/ProductTypeList',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab-b/ProductTypeList.html',
+                    controller: 'ProductTypeListCtrl'
+                }
+            }
+        })
+        //商品类型包含商品列表
+        .state('tab.ProductTypeLinkProductList', {
+            url: '/ProductTypeLinkProductList',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab-b/ProductTypeLinkProductList.html',
+                    controller: 'ProductTypeLinkProductListCtrl'
+                }
+            }
+        })
+        //建设中跳转
+        .state('tab.Madingpage', {
+            url: '/Madingpage',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab-b/Madingpage.html'
+
+                }
+            }
+        })
+        //建设中跳转
+        .state('tab.Madingpagefuwu', {
+            url: '/Madingpagefuwu',
+            views: {
+                'tab_b-c': {
+                    templateUrl: 'views/tab-b/Madingpage.html'
+
+                }
+            }
+        })
+        //建设中跳转
+        .state('tab.Madingpageme', {
+            url: '/Madingpageme',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab-b/Madingpage.html'
+
+                }
+            }
+        })
+        //医生的药架列表
+        .state('tab.DoctorProductList', {
+            url: '/DoctorProductList/:act',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-d/DoctorProductList.html',
+                    controller: 'DoctorProductListCtrl'
+                }
+            }
+        })
+        ///////////////////b
+        //医患关系列表
+        .state('tab.MemberdoctorList', {
+            url: '/MemberdoctorList',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/MemberdoctorList.html',
+                    controller: 'MemberdoctorListCtrl'
+                }
+            }
+        })
+        //诊室坐诊中医患列表
+        .state('tab.MdoctorLista', {
+            url: '/MdoctorLista',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/MemberdoctorList1.html',
+                    controller: 'MemberdoctorList1Ctrl'
+                }
+            }
+        })
+        //////从诊室坐诊进来的医患聊天记录列表
+        .state('tab.Dmmsg2016List', {
+            url: '/Dmmsg2016List/:fromto/:memberId/:doctorId',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab-d/Dmmsg2016List.html',
+                    controller: 'DmmsgListCtrl'
+                }
+            }
+        })
+        // 我的二维码
+        .state('tab.Erweima', {
+            url: '/Erweima',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-a/Erweima.html'
+                    //controller: 'ErweimaCtrl'
+                }
+            }
+        })
+         //搜索
+        .state('tab.ProductListSearch', {
+            url: '/ProductListSearch/:kw',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-a/ProductListSearch.html',
+                    controller: 'ProductListSearchCtrl'
+                }
+            }
+        })
+        //////医患聊天记录列表
+        .state('tab.DmmsgList', {
+            url: '/DmmsgList/:fromto/:memberId/:doctorId',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab-d/DmmsgList.html',
+                    controller: 'DmmsgListCtrl'
+                }
+            }
+        })
+
+        //1：医患聊天查看病例单列表
+        .state('tab.Orderr2016Lista', {
+            url: '/Orderr2016Lista/:act/:memberId',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/Orderr2016List.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        .state('tab.OrderrListb', {
+            url: '/OrderrListb/:act/:memberId',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/OrderrList.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+
+        //1：医患聊天查看病例订单详细
+
+        //从患者过来的订单详细
+        .state('tab.Orderr', {
+            url: '/Orderr/:id',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/Orderr.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从诊室坐诊过来的订单详细
+        .state('tab.Orderr2016', {
+            url: '/Orderr2016/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/Orderr.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+
+
+        //2：开药笺
+        .state('tab.Orderr16yaojian', {
+            url: '/Orderr16yaojian/:id',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/Orderr16yaojian.html',
+                    controller: 'OrderrBCtrl'
+                }
+            }
+        })
+        //2：开药笺
+        .state('tab.Orderr2016yaojian', {
+            url: '/Orderr2016yaojian/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/Orderr6yaojian.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //3:我的药笺订单
+        .state('tab.OrderrLista', {
+            url: '/OrderrLista/:act/:memberId',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/OrderrLista.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        //3:开完药笺以后查看已开药笺
+        .state('tab.OrderrListz', {
+            url: '/OrderrListz/:act/:memberId',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/OrderrListb.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        .state('tab.Orderr16Listz', {
+            url: '/Orderr16Listz/:act/:memberId',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/OrderrLista.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        //3:我的药笺订单详细
+        .state('tab.Orderra', {
+            url: '/Orderra/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/Orderra.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从患者过来的我的药笺订单详细
+        .state('tab.Orderrb', {
+            url: '/Orderrb/:id',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-b/Orderra.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //4:我的订单
+        .state('tab.OrderrListme', {
+            url: '/OrderrListme/:act/:memberId',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/OrderrListme.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        //4:我的订单详细
+        .state('tab.Orderrme', {
+            url: '/Orderrme/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-b/Orderrme.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //从我的过来的订单详细
+        .state('tab.Orderr6me', {
+            url: '/Orderr6me/:id',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-b/Orderrmed.html',
+                    controller: 'OrderrCtrl'
+                }
+            }
+        })
+        //5:收入结算
+        .state('tab.OrderrListshouru', {
+            url: '/OrderrListshouru/:act',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-b/OrderrList.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+        //6:我里面的我的订单
+        .state('tab.OrderrListme1', {
+            url: '/OrderrListme1/:act/:memberId',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-b/OrderrListmed.html',
+                    controller: 'OrderrListCtrl'
+                }
+            }
+        })
+
+
+        //医生的药架列表,0版在d中
+        .state('tab.DoctorProduct2016ListB', {
+            url: '/DoctorProduct2016ListB/:act',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-d/DoctorProductList.html',
+                    controller: 'DoctorProductListCtrl'
+                }
+            }
+        })
+        //从患者里面选择药架商品
+        .state('tab.DoctorProductListB', {
+            url: '/DoctorProductListB/:act',
+            views: {
+                'tab_b-b': {
+                    templateUrl: 'views/tab_b-d/Doctor16ProductList.html',
+                    controller: 'DoctorProductListCtrl'
+                }
+            }
+        })
+        ///////////////////c
+        .state('tab.Fuwu', {
+            url: '/Fuwu',
+            views: {
+                'tab_b-c': {
+                    templateUrl: 'views/tab_b-c/Fuwu.html',
+                    controller: 'FuWuCtrl'
+                }
+            }
+        })
+        ///////////////////d
+        //////我的
+        .state('tab.my', {
+            url: '/my',
+            views: {
+                'tab_b-d': {
+                    controller: 'myCtrl',
+                    templateUrl: 'views/tab_b-d/my.html'
+
+                }
+            }
+        })
+        .state('tab.my1', {
+            url: '/my1/:id',
+            views: {
+                'tab_b-d': {
+                    controller: 'myCtrl',
+                    templateUrl: 'views/tab_b-d/my.html'
+
+                }
+            }
+        })
+
+        .state('tab.Erweima1', {
+            url: '/Erweima1',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-a/Erweima.html',
+                    controller: 'myCtrl'
+                }
+            }
+        })
+        .state('tab.Problem', {
+            url: '/Problem',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/Problem.html'
+
+                }
+            }
+        })
+        .state('tab.Proclamation', {
+            url: '/Proclamation',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/Proclamation.html'
+
+                }
+            }
+        })
+        .state('tab.Shezhi_b', {
+            url: '/Shezhi_b',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab-d/Shezhi.html',
+                    controller: 'myCtrl'
+                    //controller: 'ShezhiCtrl'
+                }
+            }
+        })
+        .state('tab.Yijian', {
+            url: '/Yijian',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab-d/yijian.html'
+                }
+            }
+        })
+        // 我的二维码
+        .state('tab.Doctor_qrcode', {
+            url: '/Doctor_qrcode/:id',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/Doctor_qrcode.html',
+                    controller: 'DoctorCtrl'
+                }
+            }
+        })
+        //首页扫描我的二维码
+        .state('tab.Doctor_qrcodea', {
+            url: '/Doctor_qrcodea/:id',
+            views: {
+                'tab_b-a': {
+                    templateUrl: 'views/tab_b-d/Doctor_qrcode.html',
+                    controller: 'DoctorCtrl'
+                }
+            }
+        })
+        // 我的结算
+        .state('tab.Doctor_count', {
+            url: '/Doctor_count',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/Doctor_count.html',
+                    controller: 'DoctorCtrl'
+                }
+            }
+        })
+        //  个人信息
+        .state('tab.Editdoctor', {
+            url: '/Editdoctor',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/Editdoctor.html',
+                    controller: 'DoctorCtrl'
+                }
+            }
+        })
+        //  修改密码
+        .state('tab.User', {
+            url: '/User/:id',
+            views: {
+                'tab_b-d': {
+                    templateUrl: 'views/tab_b-d/User.html',
+                    controller: 'UserCtrl'
+                }
+            }
+        })
+
+    ;
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/tab/ProductTypeLinkProductListHome');
+});

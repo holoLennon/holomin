@@ -1,0 +1,38 @@
+<script type="text/javascript">
+	$(function() {
+		editHtmlInit('${base}/user/OperLog/update.html');
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+	<div data-options="region:'center',border:false">
+		<form id="form" method="post">
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+			<br/>
+			<table class="table table-hover table-condensed">
+				<input id="id" name="id" type="hidden" value="${operLog.id}" />
+	<@z.pmt key="42.OperLog.ckey">
+				<@p.text label="db.OperLog.ckey" nameid="ckey"  value="${operLog.ckey}" help="" dataoptions="validType:['length[0,50]',]" moreopt=""/>
+	</@z.pmt>
+	<@z.pmt key="42.OperLog.userId">
+				<@p.searchforid label="db.OperLog.userId" nameid="userId" value="${operLog.userId}" stringvalue="${operLog.userIdString}" help="" dataoptions="searcher:searchOtherId" url="/user/User/index.html?queryhq=&newobj=" needField="mynameid" moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OperLog.fid">
+				<@p.textnumber label="db.OperLog.fid" nameid="fid"  value="${operLog.fid}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OperLog.tid">
+				<@p.textnumber label="db.OperLog.tid" nameid="tid"  value="${operLog.tid}" help="" dataoptions="min:-999999999,max:999999999," moreopt="" />
+	</@z.pmt>
+	<@z.pmt key="42.OperLog.cmemo">
+				<@p.textarea label="db.OperLog.cmemo" nameid="cmemo" value="${operLog.cmemo}" help="" dataoptions="validType:['length[0,1000]',]" moreopt="" />
+	</@z.pmt>
+			</table>
+			<br/>
+			<a class="easyui-linkbutton" data-options="iconCls:'cancel'" href="javascript:void(0)" onclick="javascript:$('#w2').window('close')">关闭</a>
+			<a class="easyui-linkbutton" data-options="iconCls:'tick'" href="javascript:void(0)" onclick="javascript:$('#form').submit()">提交</a>
+		</form>
+	</div>
+</div>
+

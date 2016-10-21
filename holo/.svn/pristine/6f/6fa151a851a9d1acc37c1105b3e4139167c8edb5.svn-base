@@ -1,0 +1,29 @@
+<!--Drugstore，实体药店详细信息-->
+<ion-view view-title='实体药店'   cache-view='false' hide-tabs="false">
+  <ion-nav-buttons side="right">
+		<h4></h4>
+	  <a ng-if="vm.isedit==false" class="button icon ion-edit" ng-click="vm.isedit=true"></a>
+	  <a ng-if="vm.isedit==true" class="button button-dark icon ion-close" ng-click="vm.isedit=false;clickx()"></a>
+	  <a ng-if="vm.isedit==true" class="button button-balanced icon ion-checkmark" ng-click="vm.isedit=false;save()"></a>
+  </ion-nav-buttons>
+  <ion-content class="has-header" >
+
+	<!--<ul class="list" ng-if="obj && vm.isedit==false">-->
+		<!--<li class="item">序号ID:{{obj.id}}</li>-->
+		<!--<li class="item">地区:{{obj.areaidString}}</li>-->
+		<!--<li class="item">药房名称:{{obj.cname}}</li>-->
+		<!--<li class="item">药房地址:{{obj.addr}}</li>-->
+		<!--<li class="item">药房电话:{{obj.tele}}</li>-->
+		<!--<li class="item">药房性质:{{obj.attrString}}</li>-->
+		<!--<li class="item">咨询药师姓名:{{obj.docname}}</li>-->
+		<!--<li class="item">咨询药师电话:{{obj.doctele}}</li>-->
+		<!--<li class="item">药房咨询QQ:{{obj.docqq}}</li>-->
+		<!--<li class="item">经度lng:{{obj.centerlng}}</li>-->
+		<!--<li class="item">维度lat:{{obj.centerlat}}</li>-->
+		<!--<li class="item">图1</li>-->
+		<!--<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img1}}' style="height:120px"></li>-->
+		<!--<li class="item">图2</li>-->
+		<!--<li class="item" style="height:120px"><img reset-img ng-src='{{obj.img2}}' style="height:120px"></li>-->
+	<!--</ul>-->
+  </ion-content>
+</ion-view>

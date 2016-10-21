@@ -1,0 +1,45 @@
+<!--DruggistList，药剂师列表-->
+<ion-view view-title="药师列表"  cache-view="false" hide-tabs="false">
+	<ion-nav-buttons side="right">
+		<h4></h4>
+	</ion-nav-buttons>
+	<ion-content class="has-tabs has-header">
+		<ion-refresher pulling-text="下拉刷新..." on-refresh="doRefresh()"></ion-refresher>
+		<ion-list class="list">
+			<ion-item class="item-avatar" bindonce collection-repeat="obj in list"  collection-item-width="'100%'" collection-item-height="150px" ng-click="yaoshizixun()" >
+				<a>
+					<img src="res/img/yaoshitouxiang.png" style="max-width: 60px;max-height: 60px;margin-left: -55px"/>
+					<!--<img ng-src="{{obj.img1}}" reset-img style="max-width: 60px;max-height: 60px;margin-left: -55px"  />-->
+					<!--<a href="#/tab/DgmmsgList/0/{{meuser.id}}/{{obj.id}}">-->
+					<h2 style="margin-left: 20px;margin-top: -65px">{{obj.myname}}</h2>
+					<p style="margin-top: 5px;margin-left: 20px;padding-bottom:3px">
+						<!--<span>用户ID:{{obj.id}}</span>-->
+						<!--<span>医科目录:{{obj.productchannelIdString}}</span>-->
+						<!--<span>头像:{{obj.img1}}</span>-->
+						<!--<span>姓名:{{obj.name}}</span>-->
+
+						<span>职称:{{obj.dlevelString}}</span></br>
+						<span>单位:{{obj.company}}</span></br>
+						<span>电话:{{obj.mobile}}</span></br>
+						<span>座机:{{obj.tele}}</span></br>
+						<!--<span>用户性别:{{obj.usersexString}}</span>-->
+						<!--<span>证件类型:{{obj.idtypeString}}</span>-->
+					</p>
+
+					<p style=" position:absolute; left:3%;width: 100%;">
+						<span>执照号码:{{obj.licenseno}}</span>
+						<span>擅长:内科</span>
+						<!--<span style="float: right">近两周回复：110</span>-->
+					</p>
+
+					<!--<p style=" position:absolute; left:3%;width: 100%;margin-top: 10px">-->
+					<!-- -->
+					<!--</p>-->
+				</a>
+			</ion-item>
+
+		</ion-list>
+		<ion-infinite-scroll on-infinite="more()" distance="1%" ng-if="page.hasNextPage"></ion-infinite-scroll>
+		<ion-spinner class="topic-spinner ng-hide" ng-show="!list" ng-style="{'top':getHalfHeight()+'px'}"></ion-spinner>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,1 @@
+cd roote/ && mvn install && cd zeprj/ && mvn install && cd zesprj-webmvcs/ && mvn install && cd ../../../../

@@ -1,0 +1,380 @@
+/*
+ * MyisouController Powered By zmax
+ * 
+ * 
+ */
+
+package com.zmax.yijian.web.controller.base;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zmax.exception.*;
+import com.zmax.conf.AttrStatic;
+import com.zmax.utils.easyui.*;
+import com.zmax.utils.page.PageHelper;
+import com.zmax.utils.page.Pagination;
+import com.zmax.utils.clazz.ClassUtils;
+import com.zmax.utils.string.StringUtilz;
+import com.zmax.yijian.biz.service.common.*;
+import com.zmax.yijian.biz.service.my.*;
+import com.zmax.yijian.biz.service.spec.SpecService;
+import com.zmax.yijian.common.dal.bean.*;
+import com.zmax.yijian.web.controller.base.base.BaseController;
+
+/**
+ * 最基本的增删改查
+ * @author 张闽昕
+ * @version 1.0
+ * @since - 2012
+ */
+@Controller
+@RequestMapping("/user/Myisou")
+public class BaseMyisouController extends BaseController {
+	/**日志实例*/
+	private static final Logger logger = Logger.getLogger(BaseMyisouController.class);
+	public String LIST_ACTION = "redirect:/user/Myisou/index.html";
+	public String NOW_PAGE="/user";
+	@Autowired 
+	CommonzSvrUitls commonzUitls;
+	@Autowired 
+	CommonzSvrUitlsSpec commonzSvrUitlsSpec;
+	@Autowired 
+	SpecService specService;	
+	@Autowired 
+	MyisouService myisouService;
+	@Autowired
+	PermitCheckUtils PermitCheckUtils;	
+	@Autowired
+	SessionUserUtils sessionUserUtils;	
+	/**
+	 * 首页
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param obj 默认的对象
+	 * @param queryhq 查询hql
+	 * @param newobj 在此新增对象的默认值
+	 * @return
+	 */
+	@RequestMapping(value="/index")
+	public String index(HttpServletRequest request,HttpServletResponse response,ModelMap model,Myisou obj,String queryhq,String newobj,String other) {
+		if(obj==null)
+			obj=new Myisou();
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.csindex(sessionUser,obj, true, true,other);
+			model.addAttribute("myisou", obj);
+			model.addAttribute("queryhq", queryhq);
+			model.addAttribute("newobj", newobj);
+			model.addAttribute("other", other);
+			return commonzSvrUitlsSpec.changeHtml(request, sessionUser, NOW_PAGE+"/Myisou/index","Myisou","index");
+		} 
+		catch (NeedLoginException e) {
+			return err(e.getMessage());
+		}
+		catch (BoException e) {
+			return err("操作失败！"+e.getMessage());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return err("操作失败!");
+		}
+	}
+	/**
+	 * 获取数据表格
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param search 对象，里面放着需要被搜索的值
+	 * @param ph
+	 * @param queryhq
+	 */
+	@RequestMapping("/grid")
+	public void grid(HttpServletRequest request,HttpServletResponse response,ModelMap model,Myisou search, PageHelper ph,String queryhq) {
+		try{
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			Grid page = myisouService.csgrid(sessionUser, search, ph, queryhq, true, true);
+			writeJson(request, response, page);
+		} 
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}
+
+	/**
+	 * 显示内容
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="/show")
+	public String show(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id) {
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			Myisou myisou=myisouService.csshow(sessionUser, id, true, true);
+			model.addAttribute("myisou",myisou);
+			return commonzSvrUitlsSpec.changeHtml(request, sessionUser, NOW_PAGE+"/Myisou/show","Myisou","show");
+		}
+		catch (NeedLoginException e) {
+			return err(e.getMessage());
+		}
+		catch (BoException e) {
+			return err("操作失败！"+e.getMessage());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return err("操作失败!");
+		}
+	}
+
+	/**
+	 * 新增请求
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param myisou
+	 * @param copyfrom 新建时有可能会从另外一个对象复制产生
+	 * @param copyfromwhere 条件 ex. id=1
+	 * @return
+	 */
+	@RequestMapping(value="/new")
+	public String newget(HttpServletRequest request,HttpServletResponse response,ModelMap model,Myisou myisou,String copyfrom,String copyfromwhere){
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisou=myisouService.csnewget(sessionUser, myisou, copyfrom, copyfromwhere, true, true);
+			model.addAttribute("myisou",myisou);
+			return commonzSvrUitlsSpec.changeHtml(request, sessionUser, NOW_PAGE+"/Myisou/new","Myisou","new");
+		}
+		catch (NeedLoginException e) {
+			return err(e.getMessage());
+		}
+		catch (BoException e) {
+			return err("操作失败！"+e.getMessage());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return err("操作失败!");
+		}
+	}
+
+	/**
+	 * 新增提交
+	 * @param myisou
+	 * @param errors
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @param copyfrom 新建时有可能会从另外一个对象复制产生
+	 * @param copyfromwhere 条件 ex. id=1
+	 * @return
+	 */
+	@RequestMapping(value="/create")
+	public void create(@Valid Myisou myisou,BindingResult errors,ModelMap model,HttpServletRequest request,HttpServletResponse response,String copyfrom,String copyfromwhere)  {
+		if(errors.hasErrors()) {
+			FieldError err0=(FieldError)errors.getAllErrors().get(0);
+			writeJson(request, response, new Json(false,"添加失败！"+err0.getField()+":"+err0.getDefaultMessage()));
+			return ;
+		}
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.saveCreate(sessionUser,new Myisou(),myisou, copyfrom, copyfromwhere, true, true);
+			writeJson(request, response, new Json(true,"添加成功！"));
+		}
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}
+	/**
+	 * 编辑请求
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="/edit")
+	public String edit(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id)  {
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			Myisou myisou=myisouService.csedit(sessionUser, id, true, true);
+			model.addAttribute("myisou",myisou);
+			request.getSession().setAttribute("myisou_in_edit"+myisou.getId(), myisou.getId());
+			putToken(request);
+			return commonzSvrUitlsSpec.changeHtml(request, sessionUser, NOW_PAGE+"/Myisou/edit","Myisou","edit");
+		} 
+		catch (NeedLoginException e) {
+			return err(e.getMessage());
+		}
+		catch (BoException e) {
+			return err("操作失败！"+e.getMessage());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return err("操作失败!");
+		}
+	}
+	/**
+	 * 编辑提交
+	 * @param myisou
+	 * @param errors
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/update")
+	public void update(@Valid Myisou myisou,BindingResult errors,ModelMap model,HttpServletRequest request,HttpServletResponse response)  {
+		if(errors.hasErrors()) {
+			FieldError err0=(FieldError)errors.getAllErrors().get(0);
+			writeJson(request, response, new Json(false,"修改失败！"+err0.getField()+":"+err0.getDefaultMessage()));
+			return ;
+		}
+		//先从session找回不能改的值
+		Integer id=(Integer)request.getSession().getAttribute("myisou_in_edit"+myisou.getId());
+		if(id==null){
+			writeJson(request, response, new Json(false,"长时间未使用，数据丢失"));
+			return ;
+		}		
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.updateUpdate(sessionUser, myisou, id, true, true);
+			writeJson(request, response, new Json(true,"修改成功！"));
+		} 
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}
+	/**
+	 * 删除
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="/del",method=RequestMethod.POST)
+	public void delete(HttpServletRequest request,HttpServletResponse response,ModelMap model,Integer id) {
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.deleteOneById(sessionUser, id, true, true);
+			writeJson(request, response, new Json(true,"删除成功！"));
+		} 
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}
+
+
+	/**
+	 * 批量删除
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(value="/delbatch",method=RequestMethod.POST)
+	public void delbatch(HttpServletRequest request,HttpServletResponse response,ModelMap model) {
+		String[] ids=request.getParameterValues("ids[]");
+		if(ids==null || ids.length==0){
+			writeJson(request, response, new Json(true,"没有勾选数据！"));
+			return;
+		}
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.deleteBatch(sessionUser, ids, true, true);
+			writeJson(request, response, new Json(true,"删除成功！"));
+		} 
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}
+
+
+	/**
+	 * 批量更新某一数据
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param setfield
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(value="/updatebatch",method=RequestMethod.POST)
+	public void updatebatch(HttpServletRequest request,HttpServletResponse response,ModelMap model,String setfield) {
+		String[] ids=request.getParameterValues("ids[]");
+		if(ids==null || ids.length==0){
+			writeJson(request, response, new Json(true,"没有勾选数据！"));
+			return;
+		}
+		try {
+			User sessionUser=sessionUserUtils.userFromRequestWithException(request);
+			myisouService.updateBatchByIds(sessionUser, ids, setfield, true, true);
+			writeJson(request, response, new Json(true,"操作完成！"));
+		} 
+		catch (NeedLoginException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		} 
+		catch (BoException e) {
+			writeJson(request, response, new Json(false,"操作失败！"+e.getMessage()));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			writeJson(request, response, new Json(false,"操作失败！"));
+		}
+	}		
+}
